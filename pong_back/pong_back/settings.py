@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-	'users'
+	'users',
+	'stats'
 ]
 
 MIDDLEWARE = [
@@ -124,5 +125,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Settings #
 MEDIA_ROOT = "../media/"
+MEDIA_URL = "/public/"
 STATIC_URL = "static/"
 STATIC_ROOL = "../front_pong/"

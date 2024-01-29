@@ -20,9 +20,9 @@ class Migration(migrations.Migration):
             fields=[
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
                 ('is_2fa', models.BooleanField(default=False)),
-                ('profile_picture', models.ImageField(blank=True, default='', upload_to='users/')),
+                ('profilePicture', models.ImageField(blank=True, default='', upload_to='users/')),
                 ('friends', models.ManyToManyField(blank=True, related_name='friends', to=settings.AUTH_USER_MODEL)),
-                ('pending_friends_from', models.ManyToManyField(blank=True, related_name='pending_friends_from', to=settings.AUTH_USER_MODEL)),
+                ('pendingFriendsFrom', models.ManyToManyField(blank=True, related_name='pendingFriendsFrom', to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]

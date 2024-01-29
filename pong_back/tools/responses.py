@@ -1,13 +1,15 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from enum import Enum
 
-class HttpResponseBadRequest(HttpResponse):
-	status_code = 400
+class tResponses(Enum):
+	BAD_REQUEST = 400
+	UNAUTHORIZED = 401
+	FORBIDDEN = 403
+	NOT_FOUND = 404
+	OKAY = 200
 
-class HttpResponseUnauthorized(HttpResponse):
-	status_code = 401
-
-class HttpResponseForbidden(HttpResponse):
-	status_code = 403
-
-class HttpResponseNotFound(HttpResponse):
-	status_code = 404
+	def request(self, message="") -> HttpResponse:
+		if message != "":
+			return (JsonResponse({"message": message}, status=self.value))
+		return (HttpResponse(message, status=self.value))
+	
