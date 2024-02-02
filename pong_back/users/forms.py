@@ -3,7 +3,7 @@ from django.forms import ModelForm
 from .models import Profile
 
 class PasswordForm(forms.Form):
-	actualPassword = forms.CharField(widget=forms.PasswordInput(), required=True)
+	actualPassword = forms.CharField(widget=forms.PasswordInput(), required=True, max_length=32)
 	newPassword = forms.CharField(widget=forms.PasswordInput(), max_length=32, required=True)
 
 class PictureForm(ModelForm):

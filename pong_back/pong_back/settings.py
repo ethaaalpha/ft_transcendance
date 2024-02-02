@@ -37,8 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+	'authentification',
 	'users',
-	'stats'
+	'stats',
+	'friends'
 ]
 
 MIDDLEWARE = [
@@ -128,3 +130,10 @@ MEDIA_ROOT = "../media/"
 MEDIA_URL = "/public/"
 STATIC_URL = "static/"
 STATIC_ROOL = "../front_pong/"
+
+# Auth #
+API_CALLBACK = "http://localhost:8000/auth/callback"
+API_URL = "https://api.intra.42.fr/oauth/authorize"
+API_UUID = "u-s4t2ud-45ce7bc515b8b21e8a60214ec587495181e86923fa57aa7017a3a437781f8162"
+API_SECRET = "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"
+API_TOKEN = "https://api.intra.42.fr/oauth/token"

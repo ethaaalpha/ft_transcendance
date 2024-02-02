@@ -3,4 +3,6 @@ from django.http import HttpResponse, HttpRequest
 
 # Create your views here.
 def index(request: HttpRequest):
-	return(render(request, "index.html"))
+	if (request.user.is_authenticated):
+		return(render(request, "index.html"))
+	return (render(request, 'unlogged.html'))

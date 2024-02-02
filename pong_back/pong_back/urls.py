@@ -15,18 +15,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-
-from users.views import getData
-from users.decorators import logged_required
-
-from home.views import index
-
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from home.views import index
+from users.decorators import logged_required
+import users.views
+import friends.views
+
 urlpatterns = [
 	path('admin/', admin.site.urls),
-	path('dashboard', logged_required(getData), name="test-view"),
+	path('dashboard', logged_required(users.views.entryPoint)),
+	path('dashboard/friends', logged_required(friends.views.entryPoint)),
+	path('auth/', include('authentification.urls')),
 	path('', index, name="index")
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -2,9 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth import update_session_auth_hash
 from django.http import HttpResponse, HttpRequest
+from django.utils.timezone import now
 from tools.responses import tResponses
 from django.conf import settings
 from uuid import uuid4
+from datetime import timedelta
 import os
 
 # instance corresponding to the instanse of imagefield automaticcly passed
@@ -24,12 +26,12 @@ def generateUniqueImageID(instance, filename):
 
 class Profile(models.Model):
 	user: User = models.OneToOneField(User, on_delete=models.CASCADE, blank=False, primary_key=True)
-	friends = models.ManyToManyField(User, related_name="friends", blank=True)
+	friends = models.ManyToManyField(User, blank=True, symmetrical=True, related_name="friends")
 	pendingFriendsFrom = models.ManyToManyField(User, related_name="pendingFriendsFrom", symmetrical=False, blank=True)
 	is_2fa = models.BooleanField(default=False)
 	profilePicture = models.ImageField(upload_to=generateUniqueImageID, default="default_e04bed5e-0be0-441b-9616-41f09b84aaf7.png", blank=True) #have to be resize
 	blockedUsers = models.ManyToManyField(User, related_name="blockedUsers", symmetrical=False, blank=True)
-
+	lastPasswordChange = models.DateTimeField(default=now, blank=True)
 	# shortcut to user #
 	def getUsername(self):
 		return (self.user.username)
@@ -63,7 +65,21 @@ class Profile(models.Model):
 			
 			return (public | private)
 	
-	def changePassword(self, request: HttpRequest) -> HttpResponse:
+	def changePassword(self, newPassword):
+		delay: timedelta = now() - self.lastPasswordChange
+
+		if (delay < timedelta(minutes=5)):
+			return tResponses.FORBIDDEN.request("You must wait at least 5 minutes between each password changes !")
+		if (self.user.check_password(newPassword)):
+			return tResponses.FORBIDDEN.request("You can't reuse this password !")
+		
+		self.user.set_password(newPassword)
+		self.user.save()
+		self.lastPasswordChange = now()
+		self.save()
+		return (tResponses.OKAY.request("You successfully change your password !"))
+
+	def form_changePassword(self, request: HttpRequest) -> HttpResponse:
 		from .forms import PasswordForm
 		form: PasswordForm = PasswordForm(request.POST)
 
@@ -76,14 +92,14 @@ class Profile(models.Model):
 				return (tResponses.FORBIDDEN.request(message="Password do not match !"))
 
 			# OK - Now able to change the password !
-			self.user.set_password(password)
-			self.user.save()
-			update_session_auth_hash(request, self.user)
-			return (tResponses.OKAY.request("Password successfully changed !"))
+			value: HttpResponse = self.changePassword(password)
+			if value.status_code == 200:
+				update_session_auth_hash(request, self.user)
+			return (value)
 		else:
 			return (tResponses.BAD_REQUEST.request(message="Form isn't valid !"))
 		
-	def changeProfilePicture(self, request: HttpRequest) -> HttpResponse:
+	def form_changeProfilePicture(self, request: HttpRequest) -> HttpResponse:
 		from .forms import PictureForm
 		
 		oldPicture = self.profilePicture.path
@@ -97,3 +113,24 @@ class Profile(models.Model):
 			return (tResponses.OKAY.request(message="Profile picture successfully changed !"))
 		else:
 			return (tResponses.BAD_REQUEST.request(message="Image is not valid !"))
+	
+	# Will check if the passed user is blocked
+	def is_block(self, target: User):
+		if target in self.blockedUsers.all():
+			return True
+		return False
+	
+	def is_friend(self, target: User):
+		if target in self.friends.all():
+			return True
+		return False
+	
+	def is_pendingFriend(self, target: User):
+		if target in self.pendingFriendsFrom.all():
+			return True
+		return False
+	
+	# Forbidden to have 42_ at the beggining
+	# def form_registerUser()
+	def registerUser(username: str, email: str, password=None):
+		
