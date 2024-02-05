@@ -1,12 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.contrib.auth import update_session_auth_hash
+from django.utils.crypto import get_random_string
+from django.contrib.auth import update_session_auth_hash, login, authenticate
 from django.http import HttpResponse, HttpRequest
 from django.utils.timezone import now
 from tools.responses import tResponses
 from django.conf import settings
 from uuid import uuid4
 from datetime import timedelta
+from stats.models import Stats
 import os
 
 # instance corresponding to the instanse of imagefield automaticcly passed
@@ -83,6 +85,9 @@ class Profile(models.Model):
 		from .forms import PasswordForm
 		form: PasswordForm = PasswordForm(request.POST)
 
+		if (self.getUsername()[:3] == '42_'):
+			return (tResponses.FORBIDDEN.request("User from 42 might always use 42 portal to connect themselves !"))
+
 		if (form.is_valid()):
 			actualPassword = form.cleaned_data['actualPassword']
 			password = form.cleaned_data['newPassword']
@@ -130,7 +135,53 @@ class Profile(models.Model):
 			return True
 		return False
 	
-	# Forbidden to have 42_ at the beggining
-	# def form_registerUser()
-	def registerUser(username: str, email: str, password=None):
+	# return 1 in case of failure then 0
+	def login(request: HttpRequest, username:str, password=None):
+		user = User.objects.filter(username=username).first()
+	
+		if (password):
+			user = authenticate(username=username, password=password)
+		if user:
+			Profile.createUserOnetoOne(user)
+			login(request, user)
+			return 0
+		return 1
+
+	
+	# return 0 if success then 1 
+	def login42(request: HttpRequest, username: str, email: str):
+		username = f'42_{username}'
+		existing_account = User.objects.filter(username=username).first()
+
+		if not existing_account: #mean that we want to login
+			existing_account = Profile.registerUser(username, email)
+			if not existing_account :
+				return 1			
 		
+		Profile.createUserOnetoOne(existing_account)
+		login(request, existing_account)
+		return (0)
+	
+	# This will create all the related content of the user like Profile, Stats and others0
+	def createUserOnetoOne(user: User):
+		if not hasattr(user, 'profile'):
+			profile = Profile(user=user)
+			profile.save()
+		if not hasattr(user, 'stats'):
+			stats = Stats(user=user)
+			stats.save()
+
+
+	# Return an user on success or an None object
+	def registerUser(username: str, email: str, password=None) -> User:
+		target = User.objects.filter(username=username).first()
+
+		if target:
+			return None
+		if not password:
+			password = get_random_string(length=32)
+
+		newUser = User.objects.create_user(username, email, password)
+		Profile.createUserOnetoOne(newUser)
+		return newUser
+	
