@@ -1,9 +1,10 @@
 <html>
 	<body>
-		<p>Coucou bienvenue sur le site {{ user.username }}</p>
+		<p>Coucou bienvenue sur le site <strong>{{ user.username }}</strong> </p>
 		<script></script>
 		<div id="content"></div>
-<!-- 
+
+		<h1>Password change</h1>
 		<form action="/dashboard?filter=password" method="post">
 			{% csrf_token %}
 			<label for="actual-password">Actual password :</label><br>
@@ -11,13 +12,30 @@
   			<label for="password">New password:</label><br>
   			<input type="text" id="password" name="newPassword">
 			<input type="submit" value="changerlemotpasse">
-		</form> -->
+		</form>
 
+		<h1>Profile picture change</h1>
 		<form action="/dashboard?filter=profilePicture" method="post" enctype="multipart/form-data">
 			{% csrf_token %}
 			<label for="profilePicture">la nouvel photo bg</label><br>
  			<input type="file" name="profilePicture"><br>
 			<input type="submit" value="Changer la photo de profile">
+		</form>
+
+		<h1>Friends</h1>
+		<form action="/dashboard/friends" method="post">
+			{% csrf_token %}
+			<label for="action">Action :</label><br>
+ 			<input type="text" id="action" name="action"><br>
+  			<label for="username">Username:</label><br>
+  			<input type="text" id="username" name="username">
+			<input type="submit" value="action on friend system">
+		</form>
+
+		<h1>Logout</h1>
+		<form action="/auth/logout" method="post">
+			{% csrf_token %}
+			<input type="submit" value="Se déconnecter">
 		</form>
 	</body>
 </html>

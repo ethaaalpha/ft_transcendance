@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 from django.contrib.auth import logout as djangoLogout
 from uuid import uuid4
 from requests.models import PreparedRequest
+from .forms import RegisterForm, LoginForm
 import requests
 
 
@@ -47,12 +48,25 @@ def login(request: HttpRequest):
 				request.prepare_url(settings.API_URL, params)
 				return redirect(request.url) # Ici redirige vers la page de 42 pour l'authentification !
 			case "intern":
-				return ()
+				return login_internal(request)
 			case _:
 				return tResponses.BAD_REQUEST.request("Unrecognize authentification mode !")
 	else:
 		return tResponses.BAD_REQUEST.request("Get request not supported here !")
 
+# This for internal auth user not 42 users
+def login_internal(request: HttpRequest):
+	form = LoginForm(request.POST)
+	if (form.is_valid()):
+		username = form.cleaned_data['username']
+		password = form.cleaned_data['password']
+
+		if Profile.login(request, username, password):
+			return tResponses.BAD_REQUEST.request("Credentials invalid !")
+		return tResponses.OKAY.request(f"You successfully log as {username} !")
+	return tResponses.BAD_REQUEST.request("Form isn't valid !")
+
+# Callback handle redirected request form 42 API
 def callback(request: HttpRequest):
 	if (request.method == "GET"):
 		params = ["code", "state"]
@@ -73,7 +87,12 @@ def callback(request: HttpRequest):
 		}
 		response = requests.post(settings.API_TOKEN, params=paramsApi).json()
 		if "access_token" in response:
-			print (response["access_token"]) # CONTINUER ICI
+			header = {"Authorization" : f'Bearer {response['access_token']}'}
+			userInfo = requests.get(settings.API_INFO, headers=header).json()
+
+			if (Profile.login42(request, userInfo['login'], userInfo['email'])):
+				return tResponses.FORBIDDEN.request("You can't log with this account !")
+			return redirect("/")
 		else:
 			return tResponses.BAD_REQUEST.request("Authentification error !")
 	else:
@@ -92,8 +111,25 @@ def reset_password(request: HttpRequest):
 	else:
 		return tResponses.BAD_REQUEST.request("Get request not supported here !")
 
+# This will register the user and authentificate him !
 def register(request: HttpRequest):
 	if (request.method == "POST"):
-		return tResponses.OKAY.request("TU AS FAIT UN REGISTER POST")
+		form = RegisterForm(request.POST)
+
+		if form.is_valid():
+			username = form.cleaned_data['username']
+			email = form.cleaned_data['email']
+			password = form.cleaned_data['password']
+
+			if (User.objects.filter(username=username).exists()): #prohibit duplicate user
+				return tResponses.FORBIDDEN.request("This username is already used !")
+			
+			user = Profile.registerUser(username, email, password)
+			if not user:
+				return tResponses.FORBIDDEN.request("You can't register now, retry later !")
+			
+			Profile.login(request, username)
+			return tResponses.OKAY.request(f'User successfully registered and logged as {username} !')
+		return tResponses.BAD_REQUEST.request("Form isn't valid !")
 	else:
 		return tResponses.BAD_REQUEST.request("Get request not supported here !")
