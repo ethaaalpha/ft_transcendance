@@ -25,9 +25,6 @@ SECRET_KEY = 'django-insecure-r2=)ru12*q)l-&becymd(@z1^iqkde#4)8%5(96s4m%gx!0l^j
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -36,11 +33,12 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+	'daphne',
     'django.contrib.staticfiles',
 	'authentification',
 	'users',
 	'stats',
-	'friends'
+	'friends',
 ]
 
 MIDDLEWARE = [
@@ -73,6 +71,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'pong_back.wsgi.application'
 
+ASGI_APPLICATION = 'pong_back.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -147,3 +146,11 @@ CONFIG_USER_LENGTH_MIN = 3
 
 CONFIG_EMAIL_LENGTH_MAX = 254
 CONFIG_EMAIL_LENGTH_MIN = 5
+
+
+# Nginx conf
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+ALLOWED_HOSTS = [ 'localhost' ]
