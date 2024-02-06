@@ -6,6 +6,10 @@ services:
     build:
       context: docker/
       dockerfile: daphne.dockerfile
+    volumes:
+      - daphne:/workdir/
+    restart: on-failure
+
   nginx:
     container_name: nginx
     build:
@@ -17,3 +21,11 @@ services:
       - .env
     ports:
       - 443:443
+    restart: on-failure
+
+volumes:
+  daphne:
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: /Users/ethaaalpha/42/ft_transcendance/
