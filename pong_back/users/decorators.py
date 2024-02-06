@@ -18,7 +18,7 @@ def not_logged_required(function):
 
 # def owner_required(function):
 #     """
-#     Warning
+#     Warningw
 #     -------
 #     To use this @decorator you must use this syntax :
 # 	 * wrapped (request, ownerUsername, *args, **kwargs)
