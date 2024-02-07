@@ -140,7 +140,7 @@ STATICFILES_DIRS = [
 API_CALLBACK = "https://localhost:8000/auth/callback"
 API_URL = "https://api.intra.42.fr/oauth/authorize"
 API_UUID = "u-s4t2ud-45ce7bc515b8b21e8a60214ec587495181e86923fa57aa7017a3a437781f8162"
-API_SECRET = "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"
+API_SECRET = "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"
 API_TOKEN = "https://api.intra.42.fr/oauth/token"
 API_INFO = "https://api.intra.42.fr/v2/me"
 
