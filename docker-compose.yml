@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  daphne:
+    container_name: daphne
+    build:
+      context: docker/
+      dockerfile: daphne.dockerfile
+    volumes:
+      - .:/workdir/
+    restart: on-failure
+
+  nginx:
+    container_name: nginx
+    build:
+      context: docker/
+      dockerfile: nginx.dockerfile
+      args:
+        - DOMAIN=$DOMAIN
+    env_file:
+      - .env
+    ports:
+      - 8000:443
+      - 80:80
+    restart: on-failure
