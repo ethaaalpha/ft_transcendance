@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -128,11 +129,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Settings #
 MEDIA_ROOT = "../media/"
 MEDIA_URL = "/public/"
-STATIC_URL = "static/"
-STATIC_ROOL = "../front_pong/"
+STATIC_URL = "game/static/"
+# STATIC_ROOT = "../pong_front/"
+STATICFILES_DIRS = [
+	BASE_DIR / "../pong_front",
+]
+
 
 # Auth #
-API_CALLBACK = "https://localhost:443/auth/callback"
+API_CALLBACK = "https://localhost:8000/auth/callback"
 API_URL = "https://api.intra.42.fr/oauth/authorize"
 API_UUID = "u-s4t2ud-45ce7bc515b8b21e8a60214ec587495181e86923fa57aa7017a3a437781f8162"
 API_SECRET = "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"

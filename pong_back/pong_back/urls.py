@@ -19,7 +19,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from home.views import index
+from home.views import index, game
 from users.decorators import logged_required
 import users.views
 import friends.views
@@ -29,5 +29,6 @@ urlpatterns = [
 	path('dashboard', logged_required(users.views.entryPoint)),
 	path('dashboard/friends', logged_required(friends.views.entryPoint)),
 	path('auth/', include('authentification.urls')),
-	path('', index, name="index")
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+	path('', index, name="index"),
+	path('game/', game, name='game')
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
