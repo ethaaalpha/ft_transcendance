@@ -1,0 +1,11 @@
+Model Information:
+* title:	Abandoned Pokeball
+* source:	https://sketchfab.com/3d-models/abandoned-pokeball-2a23eac40327431daa893fd9fd62499e
+* author:	Randrana (https://sketchfab.com/xraysatellites)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Abandoned Pokeball" (https://sketchfab.com/3d-models/abandoned-pokeball-2a23eac40327431daa893fd9fd62499e) by Randrana (https://sketchfab.com/xraysatellites) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

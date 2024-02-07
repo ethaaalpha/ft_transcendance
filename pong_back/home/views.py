@@ -6,3 +6,6 @@ def index(request: HttpRequest):
 	if (request.user.is_authenticated):
 		return(render(request, "index.html"))
 	return (render(request, 'unlogged.html'))
+
+def game(request: HttpRequest):
+	return (render(request, 'game.html'))
