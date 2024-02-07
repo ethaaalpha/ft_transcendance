@@ -4,7 +4,7 @@ from tools.responses import tResponses
 from tools.functions import isOtherKeysInList, areKeysFromList
 from .forms import FriendsFrom
 from users.models import Profile
-from activity.tools import ActivityNotifier
+from activity.notifier import ActivityNotifier
 
 def entryPoint(request: HttpRequest):
 	if (request.method == "POST"):
@@ -20,8 +20,10 @@ def entryPoint(request: HttpRequest):
 		form = FriendsFrom(request.POST)
 		if (form.is_valid()):
 			action = form.cleaned_data['action']
-			target = User.objects.filter(username=form.cleaned_data['username']).first()
+			target = Profile.getUserFromUsername(form.cleaned_data['username'])
 
+			if target == request.user:
+				return (tResponses.BAD_REQUEST.request("You're stupid !"))
 			if not target:
 				return (tResponses.NOT_FOUND.request("Target user not found !"))
 			for i in keysList:
@@ -42,14 +44,12 @@ def add(user: User, target: User, targetProfile: Profile):
 		return (tResponses.FORBIDDEN.request("This is already your friend !"))
 	if targetProfile.is_pendingFriend(user):
 		return (tResponses.FORBIDDEN.request("You already send an friend request to this user !"))
-	if targetProfile.getUsername() == user.username:
-		return (tResponses.FORBIDDEN.request("You're stupid !"))
 	if user.profile.is_pendingFriend(target):
 		return (accept(user, target, targetProfile))
 
 	targetProfile.pendingFriendsFrom.add(user)
 	target.save()
-	ActivityNotifier.notify(targetProfile.getUsername(), 'send.message', f"Friend request received from {user.username}")
+	ActivityNotifier.sendFriendRequest(user.username, target.username)
 	return tResponses.OKAY.request(f'You successfully send an friend request to {target.username} !')
 
 def remove(user: User, target: User, targetProfile: Profile):

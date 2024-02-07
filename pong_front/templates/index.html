@@ -50,7 +50,8 @@
 
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-            document.querySelector('#activity-log').value += (data.message + '\n');
+			const stringifiedData = JSON.stringify(data)
+            document.querySelector('#activity-log').value += stringifiedData +'\n';
         };
 
         chatSocket.onclose = function(e) {

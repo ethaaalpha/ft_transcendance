@@ -34,6 +34,7 @@ class Profile(models.Model):
 	profilePicture = models.ImageField(upload_to=generateUniqueImageID, default="default_e04bed5e-0be0-441b-9616-41f09b84aaf7.png", blank=True) #have to be resize
 	blockedUsers = models.ManyToManyField(User, related_name="blockedUsers", symmetrical=False, blank=True)
 	lastPasswordChange = models.DateTimeField(default=now, blank=True)
+	
 	# shortcut to user #
 	def getUsername(self):
 		return (self.user.username)
@@ -136,8 +137,9 @@ class Profile(models.Model):
 		return False
 	
 	# return 1 in case of failure then 0
+	@staticmethod
 	def login(request: HttpRequest, username:str, password=None):
-		user = User.objects.filter(username=username).first()
+		user = Profile.getUserFromUsername(username)
 	
 		if (password):
 			user = authenticate(username=username, password=password)
@@ -149,9 +151,10 @@ class Profile(models.Model):
 
 	
 	# return 0 if success then 1 
+	@staticmethod
 	def login42(request: HttpRequest, username: str, email: str):
 		username = f'42_{username}'
-		existing_account = User.objects.filter(username=username).first()
+		existing_account = Profile.getUserFromUsername(username)
 
 		if not existing_account: #mean that we want to login
 			existing_account = Profile.registerUser(username, email)
@@ -162,7 +165,8 @@ class Profile(models.Model):
 		login(request, existing_account)
 		return (0)
 	
-	# This will create all the related content of the user like Profile, Stats and others0
+	# This will create all the related content of the user like Profile, Stats and others
+	@staticmethod
 	def createUserOnetoOne(user: User):
 		if not hasattr(user, 'profile'):
 			profile = Profile(user=user)
@@ -171,10 +175,10 @@ class Profile(models.Model):
 			stats = Stats(user=user)
 			stats.save()
 
-
 	# Return an user on success or an None object
+	@staticmethod
 	def registerUser(username: str, email: str, password=None) -> User:
-		target = User.objects.filter(username=username).first()
+		target = Profile.getUserFromUsername(username)
 
 		if target:
 			return None
@@ -185,3 +189,7 @@ class Profile(models.Model):
 		Profile.createUserOnetoOne(newUser)
 		return newUser
 	
+	@staticmethod
+	def getUserFromUsername(username: str) -> User | None:
+		user = User.objects.filter(username=username).first()
+		return user if user else None

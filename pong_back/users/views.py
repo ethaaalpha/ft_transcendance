@@ -37,7 +37,7 @@ def entryPoint(request: HttpRequest):
 
 # Will transmit some data of an user applying the filter
 def profile(request: HttpRequest, username: str, filter=None) -> HttpResponse:
-	user: User = User.objects.filter(username=username).first()
+	user: User = Profile.getUserFromUsername(username)
 	restricted = False if (user == request.user) else True
 
 	if (user):
