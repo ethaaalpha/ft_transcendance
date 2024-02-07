@@ -121,7 +121,7 @@ def register(request: HttpRequest):
 			email = form.cleaned_data['email']
 			password = form.cleaned_data['password']
 
-			if (User.objects.filter(username=username).exists()): #prohibit duplicate user
+			if (Profile.getUserFromUsername(username)): #prohibit duplicate user
 				return tResponses.FORBIDDEN.request("This username is already used !")
 			
 			user = Profile.registerUser(username, email, password)

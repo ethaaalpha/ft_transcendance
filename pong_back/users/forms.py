@@ -11,3 +11,4 @@ class PictureForm(ModelForm):
 	class Meta:
 		model = Profile
 		fields = [ "profilePicture" ]
+		required = [ "profilePicture" ]
