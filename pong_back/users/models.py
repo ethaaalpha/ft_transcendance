@@ -17,7 +17,6 @@ import requests
 
 # instance corresponding to the instanse of imagefield automaticcly passed
 def generateUniqueImageID(instance, filename, extension=None):
-	print(f"le filename {filename}")
 	if (filename == "pokemon.png"):
 		return (filename)
 	
@@ -28,7 +27,6 @@ def generateUniqueImageID(instance, filename, extension=None):
 
 	if (os.path.exists(f'{settings.MEDIA_ROOT}{finalPath}')):
 		return generateUniqueImageID(filename)
-	print(finalPath)
 	return finalPath
 
 
@@ -39,6 +37,7 @@ class Profile(models.Model):
 	profilePicture = models.ImageField(upload_to=generateUniqueImageID, default=settings.DEFAULT_PROFILE_PICTURE_NAME, blank=True)
 	blockedUsers = models.ManyToManyField(User, related_name="blockedUsers", symmetrical=False, blank=True)
 	lastPasswordChange = models.DateTimeField(default=now, blank=True)
+	gameTheme = models.CharField(max_length=64, default='default')
 	
 	# shortcut to user #
 	def getUsername(self):
@@ -172,7 +171,6 @@ class Profile(models.Model):
 				img_temp = NamedTemporaryFile(delete=True)
 				img_temp.write(response.content)
 				img_temp.flush()
-				print(response.content)
 				img = InMemoryUploadedFile(img_temp, None, generateUniqueImageID(None, img_temp.name, image.split('.')[-1]), 'image/jpeg', len(response.content), None)
 
 				existing_account.profile.profilePicture = img

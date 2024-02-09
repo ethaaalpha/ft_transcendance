@@ -40,7 +40,8 @@ INSTALLED_APPS = [
 	'users',
 	'stats',
 	'friends',
-	'activity'
+	'activity',
+	'conversations'
 ]
 
 MIDDLEWARE = [
@@ -171,6 +172,9 @@ CHANNEL_LAYERS = {
 
 # Users
 DEFAULT_PROFILE_PICTURE_NAME = 'pokemon.png'
+
+# Messages
+MESSAGE_LENGTH_MAX = 1024
 
 LOGGING = {
 	"version": 1,

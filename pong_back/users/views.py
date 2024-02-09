@@ -1,19 +1,17 @@
 from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from .models import Profile
-from .forms import PasswordForm
 from django.contrib.auth.models import User
 from tools.responses import tResponses
 from tools.functions import isOtherKeysInList
 	
 # Entrypoint to interact with the user part !
-def entryPoint(request: HttpRequest):
+def entryPoint(request: HttpRequest) -> HttpResponse:
 	if (request.method == "GET"):
 		"""
 		Username is not mandatory (if empty -> current session)
 		Filter is not mandatory (if empty -> global data returned)
 		"""
-		print(request.GET)
 		if (isOtherKeysInList(['id', 'filter'], request.GET)):
 			return (tResponses.BAD_REQUEST.request("Extra parameters found !"))
 
