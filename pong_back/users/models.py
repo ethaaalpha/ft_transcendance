@@ -134,11 +134,15 @@ class Profile(models.Model):
 		return False
 	
 	def is_friend(self, target: User):
+		if isinstance(target, Profile):
+			target = target.user
 		if target in self.friends.all():
 			return True
 		return False
 	
 	def is_pendingFriend(self, target: User):
+		if isinstance(target, Profile):
+			target = target.user
 		if target in self.pendingFriendsFrom.all():
 			return True
 		return False

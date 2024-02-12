@@ -5,7 +5,7 @@ from django.utils.timezone import now
 from users.models import Profile
 
 class Conversation(models.Model):
-	participants = models.ManyToManyField(User, related_name='participants', blank=False)
+	participants = models.ManyToManyField(User, related_name='participants')
 	createdAt = models.DateTimeField(auto_now_add=True)
 	
 	def getMessages(self, n = 10):
@@ -25,33 +25,30 @@ class Conversation(models.Model):
 		This will check if there is a conversation between the person passed,
 		if there isn't then it created it and return it.
 		"""
-		peopleUser = [Profile.getUserFromUsername[name] for name in peopleName]
+		peopleUser = [Profile.getUserFromUsername(name) for name in peopleName]
 		if None in peopleName:
 			return None
 
-		existingConversation = Conversation.objects.filter(participants=peopleUser).first()
+		existingConversation = Conversation.objects.filter(participants__in=peopleUser).first()
 		
 		if not existingConversation:
-			existingConversation = Conversation(participants=peopleUser)
+			existingConversation = Conversation.objects.create()
+			existingConversation.participants.set(peopleUser)
 			existingConversation.save()
 		return (existingConversation)
 	
 	@staticmethod
-	def consumer_appendToConversation(data: str):
+	def consumer_appendToConversation(_from: str, _to: str, _content: str):
 		required = ['from', 'to', 'content']
 
-		# security checks of values inside of Websocket send
-		if any(need not in data.keys() for need in required):
-			return
-		if any(key not in required for key in data.keys()):
-			return
-
-		sender = Profile.getUserFromUsername(data['from'])
-		target = Profile.getUserFromUsername(data['to'])
-		content = data['content']
+		sender = Profile.getUserFromUsername(_from)
+		target = Profile.getUserFromUsername(_to)
+		content = _content
 
 		# Prevent from empty values
 		if not sender or not target or not content :
+			return
+		if not target.profile.is_friend(sender):
 			return
 		
 		conversation = Conversation.getConversation([sender, target])

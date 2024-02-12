@@ -18,7 +18,6 @@ class ActivityConsumer(AsyncJsonWebsocketConsumer):
 		self.user = self.scope['user']
 		await self.accept()
 		await self.channel_layer.group_add(getChannelName(await self.getUsername()), self.channel_name)
-		# await self.send_json(content={"this is the test": "oui"})
 
 	async def disconnect(self, code):
 		await self.channel_layer.group_discard(getChannelName(await self.getUsername()), self.channel_name)
@@ -30,7 +29,8 @@ class ActivityConsumer(AsyncJsonWebsocketConsumer):
 				case 'chat':
 					data: dict = content.get('data')
 					print(f'voici la data {data}')
-					await ActivityNotifier.sendPrivateMessage(_from=data.get('from'), _to=data.get('to'), _content=data.get('content'))
+					await ActivityNotifier.sendPrivateMessage(data.get('from'), data.get('to'), data.get('content'))
+					await database_sync_to_async(Conversation.consumer_appendToConversation)(data.get('from'), data.get('to'), data.get('content'))
 					# faire l'enregistrement des données dans la bdd
 				
 	async def send_message(self, event):
