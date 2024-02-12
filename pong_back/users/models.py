@@ -126,7 +126,9 @@ class Profile(models.Model):
 	
 
 	# Will check if the passed user is blocked
-	def is_block(self, target: User):
+	def is_block(self, target):
+		if isinstance(target, Profile):
+			target = target.user
 		if target in self.blockedUsers.all():
 			return True
 		return False

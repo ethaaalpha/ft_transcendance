@@ -69,22 +69,42 @@
     <script>
 		username = null;
 
-        const chatSocket = new WebSocket(
-            'wss://'
-            + window.location.host
-            + '/activity/'
-        );
+		function connect() {
+			const chatSocket = new WebSocket(
+            	'wss://'
+            	+ window.location.host
+           		+ '/activity/'
+       	 	);
+			console.log("Websocket created and connected !");
 
-        chatSocket.onmessage = function(e) {
-            const data = JSON.parse(e.data);
-			const stringifiedData = JSON.stringify(data)
-            document.querySelector('#activity-log').value += stringifiedData +'\n';
-        };
+       		chatSocket.onmessage = function(e) {
+				console.log("j'ai reçu quelque chose !")
+            	const data = JSON.parse(e.data);
+				const stringifiedData = JSON.stringify(data)
+            	document.querySelector('#activity-log').value += stringifiedData +'\n';
+       		};
 
-        chatSocket.onclose = function(e) {
-            console.error('Chat socket closed unexpectedly');
-        };
+        	chatSocket.onclose = function(e) {
+            	console.error('Chat socket closed unexpectedly ! Retrying to connect !');
+				setTimeout(function() {
+					connect();
+				}, 1000);
+        	};
 
+			document.querySelector('#chat-message-submit').onclick = function(e) {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const targetInputDom = document.querySelector('#chat-message-target');
+            const message = messageInputDom.value;
+			data = {'from': username, 'to': targetInputDom.value, 'content': messageInputDom.value}
+			console.log(data)
+            chatSocket.send(JSON.stringify({
+                'event': 'chat',
+				'data': data,
+            }));
+            messageInputDom.value = '';
+       		};
+		}
+		
 		fetch('/dashboard?filter=username')
 			.then(response => response.json())
 			.then(response => {
@@ -101,19 +121,7 @@
 				image.src = response['profilePicture'];
 			})
 
-		document.querySelector('#chat-message-submit').onclick = function(e) {
-            const messageInputDom = document.querySelector('#chat-message-input');
-            const targetInputDom = document.querySelector('#chat-message-target');
-            const message = messageInputDom.value;
-			data = {'from': username, 'to': targetInputDom.value, 'content': messageInputDom.value}
-			console.log(data)
-            chatSocket.send(JSON.stringify({
-                'event': 'chat',
-				'data': data,
-            }));
-            messageInputDom.value = '';
-        };
-
+		connect(); // to connect websocket
 	
     </script>
 	</body>
