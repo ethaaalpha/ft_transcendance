@@ -1,5 +1,6 @@
 from channels.layers import get_channel_layer
 from channels.db import database_sync_to_async
+from asgiref.sync import sync_to_async, async_to_sync
 from users.models import Profile
 from .tools import getChannelName
 
@@ -25,7 +26,7 @@ class ActivityNotifier():
 		content = {
 			'from' : senderName
 		}
-		ActivityNotifier._notify(getChannelName(senderName), content, senderName, targetName, 'friends')
+		async_to_sync (ActivityNotifier._notify)(getChannelName(targetName), content, 'friends', senderName, targetName)
 
 	@staticmethod
 	async def sendPrivateMessage(_from=None, _to=None, _content=None):
@@ -48,7 +49,6 @@ class ActivityNotifier():
 			return
 		if await database_sync_to_async(target.is_block)(fromUser):
 			return
-
 		channel_layer = get_channel_layer()
 		await channel_layer.group_send(channel, {
 			"type" : type,

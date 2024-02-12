@@ -49,6 +49,7 @@ def add(user: User, target: User, targetProfile: Profile):
 
 	targetProfile.pendingFriendsFrom.add(user)
 	target.save()
+	ActivityNotifier.sendFriendRequest(user.username, target.username)
 	return tResponses.OKAY.request(f'You successfully send an friend request to {target.username} !')
 
 def remove(user: User, target: User, targetProfile: Profile):
@@ -84,7 +85,6 @@ def accept(user: User, target: User, targetProfile: Profile):
 	user.profile.friends.add(target)
 	user.profile.pendingFriendsFrom.remove(target)
 	user.save()
-	ActivityNotifier.notify(targetProfile.getUsername(), 'send.message', f"Friend request accepted by {user.username}")
 	return tResponses.OKAY.request(f'You are now friend with {target.username}')
 
 def refuse(user: User, target: User, targetProfile: Profile):

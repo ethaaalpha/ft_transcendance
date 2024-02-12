@@ -31,11 +31,10 @@ class ActivityConsumer(AsyncJsonWebsocketConsumer):
 					data: dict = content.get('data')
 					print(f'voici la data {data}')
 					await ActivityNotifier.sendPrivateMessage(_from=data.get('from'), _to=data.get('to'), _content=data.get('content'))
-					# await self.send_json(content={'message' : 'la cest le chat'})
-				# case 'friends':
-					# await self.send_json(content={'message' : 'la cest les avmis'})
-
+					# faire l'enregistrement des données dans la bdd
+				
 	async def send_message(self, event):
+		print(f"j'envoie a {await self.getUsername()}")
 		await self.send_json(content={
 			'event': event['event'],
 			'data': event['data'] 
