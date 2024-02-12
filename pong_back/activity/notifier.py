@@ -35,12 +35,12 @@ class ActivityNotifier():
 		"""
 		if all(item is None for item in [_from, _to, _content]):
 			return
-		await ActivityNotifier._notify(getChannelName(_to), {'from': _from, 'to': _to, 'content': _content}, 'chat', _from, _to)
+		await ActivityNotifier._notify(getChannelName(_to), {'from': _from, 'to': _to, 'content': _content}, 'chat', _from, _to, friendMandatory=True)
 
 	@staticmethod
-	async def _notify(channel: str, content: str, event: str, _from: str, _to: str, type='send.message'):
+	async def _notify(channel: str, content: str, event: str, _from: str, _to: str, type='send.message', friendMandatory=False):
 		"""
-		Do not use directly ! Please do some security checks before
+		This don't notify if user block, and check for user existence
 		"""
 		fromUser: Profile = await ActivityNotifier._getProfileFromUsername(_from)
 		target: Profile = await ActivityNotifier._getProfileFromUsername(_to)
@@ -49,6 +49,8 @@ class ActivityNotifier():
 			return
 		if await database_sync_to_async(target.is_block)(fromUser):
 			return
+		if friendMandatory and not await database_sync_to_async(target.is_friend)(fromUser):
+			return 
 		channel_layer = get_channel_layer()
 		await channel_layer.group_send(channel, {
 			"type" : type,
