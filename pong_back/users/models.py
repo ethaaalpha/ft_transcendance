@@ -46,7 +46,7 @@ class Profile(models.Model):
 	def getEmail(self):
 		return (self.user.email)
 	
-	def getManyToTab(self, many) -> []:
+	def getManyToTab(self, many):
 		tab = []
 		for value in many.all():
 			tab.append(value.username)
