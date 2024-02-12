@@ -1,48 +1,59 @@
 from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
+from channels.db import database_sync_to_async
 from users.models import Profile
 from .tools import getChannelName
-channel_layer = get_channel_layer()
+
 
 class ActivityNotifier():
 	"""
 	Use to notify client using WebSocket
 	-----
 	sendFriendRequest(sender: str, target: str):
+	sendMessage(sender str, target: str)
 	"""
+
+	@staticmethod
+	@database_sync_to_async
+	def _getProfileFromUsername(username: str) -> Profile:
+		user = Profile.getUserFromUsername(username)
+		if user:
+			return (user.profile)
+		return user
 	
 	@staticmethod
 	def sendFriendRequest(senderName: str, targetName: str):
 		content = {
 			'from' : senderName
 		}
-		ActivityNotifier._notifyBuilder(senderName, targetName, content, 'friend')
+		ActivityNotifier._notify(getChannelName(senderName), content, senderName, targetName, 'friends')
 
 	@staticmethod
-	def _notifyBuilder(sender: str, target: str, content: str, event: str):
+	async def sendPrivateMessage(_from=None, _to=None, _content=None):
 		"""
-		Method that will check user existences and prevent from blocked user !
+		if any of parameters contains None, nothing happend !
 		"""
-		sender = Profile.getUserFromUsername(sender)
-		target = Profile.getUserFromUsername(target)
-
-		# Prevent from inexisting user
-		if not sender or not target or not content:
+		if all(item is None for item in [_from, _to, _content]):
 			return
-		
-		# Blocklist of user
-		if target.profile.is_block(sender) or sender.profile.is_block(target):
-			return
-		ActivityNotifier._notify(getChannelName(target), content, event)
+		await ActivityNotifier._notify(getChannelName(_to), {'from': _from, 'to': _to, 'content': _content}, 'chat', _from, _to)
 
 	@staticmethod
-	def _notify(channel: str, content: str, event: str, type='send.message'):
+	async def _notify(channel: str, content: str, event: str, _from: str, _to: str, type='send.message'):
 		"""
-		Do not use without _notifyBuilder
-		Only from a SYNC context
+		Do not use directly ! Please do some security checks before
 		"""
-		async_to_sync(channel_layer.group_send)(channel, {
+		fromUser: Profile = await ActivityNotifier._getProfileFromUsername(_from)
+		target: Profile = await ActivityNotifier._getProfileFromUsername(_to)
+
+		if not fromUser or not target:
+			return
+		if await database_sync_to_async(target.is_block)(fromUser):
+			return
+
+		channel_layer = get_channel_layer()
+		await channel_layer.group_send(channel, {
 			"type" : type,
 			"event" : event,
-			"data" : content
+			"data" : content,
+			'from': _from,
+			'to': _to
 		})
