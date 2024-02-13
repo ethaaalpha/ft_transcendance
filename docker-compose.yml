@@ -1,19 +1,39 @@
 version: '3.8'
 
 services:
+  postgresql:
+    container_name: postgresql
+    image: postgres:alpine
+    environment:
+      - POSTGRES_USER=ethaniellegrand
+      - POSTGRES_PASSWORD=$DB_PASSWORD
+    volumes:
+      - ./database:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ethaniellegrand"]
+      interval: 2s
+      timeout: 1s
+      retries: 5
+    restart: on-failure
+
   daphne:
     container_name: daphne
     build:
-      context: docker/
+      context: docker/daphne
       dockerfile: daphne.dockerfile
     volumes:
       - .:/workdir/
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    env_file:
+      - .env
     restart: on-failure
 
   nginx:
     container_name: nginx
     build:
-      context: docker/
+      context: docker/nginx
       dockerfile: nginx.dockerfile
       args:
         - DOMAIN=$DOMAIN
@@ -22,4 +42,6 @@ services:
     ports:
       - 8000:443
       - 80:80
-    restart: on-failure
+    depends_on:
+      - daphne
+    # restart: on-failure
