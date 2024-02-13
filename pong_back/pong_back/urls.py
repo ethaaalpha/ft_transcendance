@@ -21,9 +21,11 @@ from django.conf.urls.static import static
 
 from home.views import index, game
 from users.decorators import logged_required
+from activity.consumers import ActivityConsumer
 import users.views
 import friends.views
 import conversations.views
+
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
@@ -34,3 +36,7 @@ urlpatterns = [
 	path('', index, name="index"),
 	path('game/', game, name='game')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+websocket_urlpatterns = [
+	path("activity/", ActivityConsumer.as_asgi()),
+]
