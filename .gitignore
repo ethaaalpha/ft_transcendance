@@ -2,3 +2,7 @@
 ft_transcendance.iml
 .vscode/
 .venv/
+.DS_Store
+pip-log.txt
+pip-delete-this-directory.txt
+__pycache__/
