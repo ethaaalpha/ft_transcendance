@@ -59,7 +59,6 @@ class Menu {
 	}
 
 	onKeyDown(event) {
-		console.log(event.keyCode);
 		switch (event.keyCode) {
 			case 83:
 				if (this.selected == 2){
