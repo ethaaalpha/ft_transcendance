@@ -24,7 +24,7 @@ class Room(models.Model):
 	opponents = models.ManyToManyField(User, related_name='opponents')
 	state = models.BooleanField(default=False)
 	id = models.CharField(primary_key=True, default=roomIdGenerator, blank=False, max_length=8)
-	# matchs = models.ManyToManyField()
+	matchs = models.ManyToManyField(Match, related_name='matchs')
 	# score = models.ArrayField installer postgresql + configurer
 	# type = models.CharField()
 
