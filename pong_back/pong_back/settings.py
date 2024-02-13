@@ -41,7 +41,8 @@ INSTALLED_APPS = [
 	'stats',
 	'friends',
 	'activity',
-	'conversations'
+	'conversations',
+	'game'
 ]
 
 MIDDLEWARE = [

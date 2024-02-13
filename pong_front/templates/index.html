@@ -1,128 +1,186 @@
 <html>
 	<body>
-		<p>Coucou bienvenue sur le site <p id="username"></p></p>
-		<script></script>
 		<div id="content"></div>
 
-		<img id='image' style="width: 100;">
-
-		<div style="display: flex; justify-content: space-between;">
+		<div style="display: flex; justify-content: space-between;" id="logged">
+			<p>Coucou bienvenue sur le site <p id="username"></p></p>
+			<img id='image' style="width: 100;">
 			<div>
 				<h1>Profile picture change</h1>
 				<form action="/dashboard?filter=profilePicture" method="post" enctype="multipart/form-data">
 					{% csrf_token %}
-					<label for="profilePicture">la nouvel photo bg</label><br>
+					<label for="profilePicture">La nouvelle photo de profile !</label><br>
  					<input type="file" name="profilePicture"><br>
 					<input type="submit" value="Changer la photo de profile">
 				</form>
 			</div>
+
 			<div>
 				<h1>Friends</h1>
-				<form action="/dashboard/friends" method="post">
+				<form action="/dashboard/friends" method="post" id="form-friends">
 					{% csrf_token %}
 					<label for="action">Action :</label><br>
 				 	<input type="text" id="action" name="action"><br>
 				 	<label for="username">Username:</label><br>
 				  	<input type="text" id="username" name="username">
-				<input type="submit" value="action on friend system">
+					<input type="submit" value="action on friend system" onclick="processFrom(event)">
 				</form>
 			</div>
+
 			<div>
 				<h1>Password change</h1>
 				<form action="/dashboard?filter=password" method="post">
 					{% csrf_token %}
 					<label for="actual-password">Actual password :</label><br>
-					 <input type="text" id="actualPassword" name="actualPassword"><br>
-					  <label for="password">New password:</label><br>
-					  <input type="text" id="password" name="newPassword">
+					<input type="text" id="actualPassword" name="actualPassword"><br>
+					<label for="password">New password:</label><br>
+					<input type="text" id="password" name="newPassword">
 					<input type="submit" value="changerlemotpasse">
 				</form>		
 			</div>
+
+			<h1>Logout</h1>
+			<form action="/auth/logout" method="post">
+				{% csrf_token %}
+				<input type="submit" value="Se déconnecter">
+			</form>
+		
+			<h1>Send messages</h1>
+			<div style="display: flex;">
+				<div>
+					<input id="chat-message-target" type="text" size="10"><br>
+					<label for="chat-message-target">Target</label>
+				</div>
+				<div>
+					<input id="chat-message-input" type="text" size="100"><br>
+					<label for="chat-message-input">Content</label>
+				</div>
+				<div>
+					<input id="chat-message-submit" type="button" value="Send">
+				</div>
+			</div>
+
+			<div>
+				<h1>Activity</h1>
+				<textarea id="activity-log" cols="30" rows="20"></textarea><br>
+			</div>
+
 		</div>
 		
+		<div id="unlogged">
+			<h1>Login with 42</h1>
+			<form action="/auth/login?mode=42" method="post">
+				{% csrf_token %}
+				<input type="submit" value="Sign in with 42">
+			</form>
 
-		<h1>Logout</h1>
-		<form action="/auth/logout" method="post">
-			{% csrf_token %}
-			<input type="submit" value="Se déconnecter">
-		</form>
-		
-		<h1>Send messages</h1>
-		<div style="display: flex;">
-			<div>
-				<input id="chat-message-target" type="text" size="10"><br>
-				<label for="chat-message-target">Target</label>
-			</div>
-			<div>
-				<input id="chat-message-input" type="text" size="100"><br>
-				<label for="chat-message-input">Content</label>
-			</div>
-			<div>
-				<input id="chat-message-submit" type="button" value="Send">
-			</div>
+			<h1>Login with Intern</h1>
+			<form action="/auth/login?mode=intern" method="post">
+				{% csrf_token %}
+				<label for="username">Username:</label>
+  				<input type="text" id="username" name="username"><br>
+
+				<label for="password">Password:</label>
+  				<input type="password" id="password" name="password"><br>
+				<input type="submit" value="Sign in with Intern">
+			</form>
+
+			<h1>Register with Intern</h1>
+			<form action="/auth/register" method="post">
+				{% csrf_token %}
+				<label for="username">Username:</label>
+  				<input type="text" id="username" name="username"><br>
+
+				<label for="email">Email:</label>
+  				<input type="email" id="email" name="email"><br>
+
+				<label for="password">Password:</label>
+  				<input type="password" id="password" name="password"><br>
+				<br>
+				<input type="submit" value="Register with Intern">
+			</form>
 		</div>
-		
-
-		<h1>Activity</h1>
-		<textarea id="activity-log" cols="30" rows="20"></textarea><br>
-
     <script>
 		username = null;
+		const loggedDisplay = document.getElementById('logged');
+		const unloggedDisplay = document.getElementById('unlogged');
 
-		function connect() {
-			const chatSocket = new WebSocket(
-            	'wss://'
-            	+ window.location.host
-           		+ '/activity/'
-       	 	);
-			console.log("Websocket created and connected !");
+		loggedDisplay.style.visibility = 'hidden'
+		unloggedDisplay.style.visibility = 'hidden'
 
-       		chatSocket.onmessage = function(e) {
-				console.log("j'ai reçu quelque chose !")
-            	const data = JSON.parse(e.data);
-				const stringifiedData = JSON.stringify(data)
-            	document.querySelector('#activity-log').value += stringifiedData +'\n';
-       		};
-
-        	chatSocket.onclose = function(e) {
-            	console.error('Chat socket closed unexpectedly ! Retrying to connect !');
-				setTimeout(function() {
-					connect();
-				}, 1000);
-        	};
-
-			document.querySelector('#chat-message-submit').onclick = function(e) {
-            const messageInputDom = document.querySelector('#chat-message-input');
-            const targetInputDom = document.querySelector('#chat-message-target');
-            const message = messageInputDom.value;
-			data = {'from': username, 'to': targetInputDom.value, 'content': messageInputDom.value}
-			console.log(data)
-            chatSocket.send(JSON.stringify({
-                'event': 'chat',
-				'data': data,
-            }));
-            messageInputDom.value = '';
-       		};
+		async function isLogged() {
+			const response = await fetch('/dashboard')
+			return response.status === 200;
 		}
-		
-		fetch('/dashboard?filter=username')
-			.then(response => response.json())
-			.then(response => {
-				const text = document.getElementById('username');
-				text.innerText = response['username'];
-				username = response['username'];
-				text.style.fontWeight = 'bold';
-			})
 
-		fetch('/dashboard?filter=profilePicture')
-			.then(response => response.json())
-			.then(response => {
-				const image = document.getElementById('image');
-				image.src = response['profilePicture'];
-			})
+		function processFrom(event) {
+			var formContent = new FormData()
+			console.log(formContent.keys)
+			event.preventDefault();
+		}
 
-		connect(); // to connect websocket
-	
+
+		(async () => {
+       		if (await isLogged()) {
+				function connect() {
+					const chatSocket = new WebSocket(
+            			'wss://'
+            			+ window.location.host
+           				+ '/activity/'
+       	 			);
+					console.log("Websocket created and connected !");
+
+       				chatSocket.onmessage = function(e) {
+						console.log("j'ai reçu quelque chose !")
+            			const data = JSON.parse(e.data);
+						const stringifiedData = JSON.stringify(data)
+            			document.querySelector('#activity-log').value += stringifiedData +'\n';
+       				};
+
+        			chatSocket.onclose = function(e) {
+            			console.error('Chat socket closed unexpectedly ! Retrying to connect !');
+						setTimeout(function() {
+							connect();
+						}, 1000);
+        			};
+
+					document.querySelector('#chat-message-submit').onclick = function(e) {
+            			const messageInputDom = document.querySelector('#chat-message-input');
+            			const targetInputDom = document.querySelector('#chat-message-target');
+            			const message = messageInputDom.value;
+						data = {'from': username, 'to': targetInputDom.value, 'content': messageInputDom.value}
+						console.log(data)
+            			chatSocket.send(JSON.stringify({
+            			    'event': 'chat',
+							'data': data,
+            			}));
+            			messageInputDom.value = '';
+       				};
+					
+				}
+
+				fetch('/dashboard?filter=username')
+					.then(response => response.json())
+					.then(response => {
+						const text = document.getElementById('username');
+						text.innerText = response['username'];
+						username = response['username'];
+						text.style.fontWeight = 'bold';
+				})
+
+				fetch('/dashboard?filter=profilePicture')
+					.then(response => response.json())
+					.then(response => {
+						const image = document.getElementById('image');
+						image.src = response['profilePicture'];
+					})
+
+				connect();
+				loggedDisplay.style.visibility = 'visible'
+        	} else {
+				unloggedDisplay.style.visibility = 'visible'
+        	}
+   		})();
     </script>
 	</body>
 </html>
