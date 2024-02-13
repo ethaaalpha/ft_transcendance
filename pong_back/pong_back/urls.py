@@ -23,11 +23,13 @@ from home.views import index, game
 from users.decorators import logged_required
 import users.views
 import friends.views
+import conversations.views
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
 	path('dashboard', logged_required(users.views.entryPoint)),
 	path('dashboard/friends', logged_required(friends.views.entryPoint)),
+	path('dashboard/conversations', logged_required(conversations.views.entryPoint)),
 	path('auth/', include('authentification.urls')),
 	path('', index, name="index"),
 	path('game/', game, name='game')

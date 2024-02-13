@@ -1,24 +1,43 @@
 import json
-
 from asgiref.sync import async_to_sync
-from channels.generic.websocket import WebsocketConsumer
+from channels.db import database_sync_to_async
+from channels.generic.websocket import AsyncJsonWebsocketConsumer
+from .notifier import ActivityNotifier
+from .tools import getChannelName
+from users.models import Profile
+from conversations.models import Conversation
+from django.contrib.auth.models import User
 
-class ActivityConsumer(WebsocketConsumer):
-	def connect(self):
+class ActivityConsumer(AsyncJsonWebsocketConsumer):
+		
+	@database_sync_to_async
+	def getUsername(self):
+		return (self.user.username)
+
+	async def connect(self):
 		self.user = self.scope['user']
-		self.accept()
-		self.send(text_data=json.dumps({"message": f"Bienvenue {self.user.username}"}))
-		async_to_sync(self.channel_layer.group_add)(self.user.username, self.channel_name)
+		await self.accept()
+		await self.channel_layer.group_add(getChannelName(await self.getUsername()), self.channel_name)
 
-	def disconnect(self, code):
-		async_to_sync(self.channel_layer.group_discard)(self.user.username, self.channel_name)
-		return super().disconnect(code)
+	async def disconnect(self, code):
+		await self.channel_layer.group_discard(getChannelName(await self.getUsername()), self.channel_name)
+		return await super().disconnect(code)
+	
+	async def receive_json(self, content: dict, **kwargs):
+		if 'event' in content and 'data' in content:
+			match content['event']:
+				case 'chat':
+					data: dict = content.get('data')
+					print(f'voici la data {data}')
+					await ActivityNotifier.sendPrivateMessage(data.get('from'), data.get('to'), data.get('content'))
+					await database_sync_to_async(Conversation.consumer_appendToConversation)(data.get('from'), data.get('to'), data.get('content'))
+					# faire l'enregistrement des données dans la bdd
+				
+	async def send_message(self, event):
+		print(f"j'envoie a {await self.getUsername()}")
+		await self.send_json(content={
+			'event': event['event'],
+			'data': event['data'] 
+		})
 
-	def send_message(self, event):
-		text_data = event['content']
-		self.send(text_data=json.dumps({"message": text_data}))
-
-	def receive(self, text_data=None):
-		text_data_json = json.loads(text_data)
-		message = text_data_json['message']
-		self.send(text_data=json.dumps({"message": message}))
+	

@@ -90,7 +90,7 @@ def callback(request: HttpRequest):
 			header = {"Authorization" : f'Bearer {response['access_token']}'}
 			userInfo = requests.get(settings.API_INFO, headers=header).json()
 
-			if (Profile.login42(request, userInfo['login'], userInfo['email'])):
+			if (Profile.login42(request, userInfo['login'], userInfo['email'], userInfo['image']['link'])):
 				return tResponses.FORBIDDEN.request("You can't log with this account !")
 			return redirect("/")
 		else:
@@ -121,7 +121,7 @@ def register(request: HttpRequest):
 			email = form.cleaned_data['email']
 			password = form.cleaned_data['password']
 
-			if (User.objects.filter(username=username).exists()): #prohibit duplicate user
+			if (Profile.getUserFromUsername(username)): #prohibit duplicate user
 				return tResponses.FORBIDDEN.request("This username is already used !")
 			
 			user = Profile.registerUser(username, email, password)
