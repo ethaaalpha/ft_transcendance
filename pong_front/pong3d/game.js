@@ -3,7 +3,9 @@ import menu from './menu.js'
 
 class Game {
 	constructor() {
+		this.socket = new WebSocket('wss://localhost:8000/game/');
 		this.movement = new THREE.Vector3(0, 0, 0);
+		this.status = 1;
 		this.speed = 0.3;
 		this.speedBall = 1;
 		this.player1 = null;
@@ -49,6 +51,35 @@ class Game {
 		];
 		this.laser = this.createLaser();
 		this.renderer.domElement.style.display = 'none';
+		this.socketInit(this.socket);
+	}
+
+	socketUpdate(event){
+		var data = JSON.parse(event.data);
+		this.data = data;
+		if (this.data.player1 && this.data.player1.length === 3)
+			this.player1.position.set(this.data.player1[0],this.data.player1[1],this.data.player1[2])
+		if (this.data.player2 && this.data.player2.length === 3)
+			this.player2.position.set(this.data.player2[0],this.data.player2[1],this.data.player2[2])
+		if (this.data.ballPos && this.data.ballPos.length === 3)
+			this.ball.position.set(this.data.ballPos[0],this.data.ballPos[1],this.data.ballPos[2])
+		this.speedBall = this.data.speedBall
+	}
+
+	socketClose(event){
+		console.log('WebSocket connection closed');
+			this.status = 2;
+	}
+
+	socketInit(socket){
+		socket.onopen = function(event) {
+			console.log('WebSocket connection established');
+		};
+		
+		socket.onmessage = (event) => this.socketUpdate(event)
+		
+		socket.onclose = (event) => this.socketClose(event)
+		socket.onerror = (event) => this.socketClose(event)
 	}
 
 	addCube(x, y, w, h, zsize, z, color) {
@@ -135,7 +166,6 @@ class Game {
 				this.isCollision = null;
 			this.ball.position.add(this.ballMovement);
 		}
-		console.log("Ball Movement After Collision:", this.ballMovement.x, this.ballMovement.y, this.ballMovement.z);
 	}
 
 	update() {
@@ -177,12 +207,20 @@ class Game {
 		if (!this.moveUp && !this.moveDown && !this.moveLeft && !this.moveRight) {
 			this.movement.set(0, 0, 0);
 		}
+		this.data = {
+			speedBall: this.speedBall,
+			ballPos: [this.ball.position.x,this.ball.position.y,this.ball.position.z],
+			player1: [this.player1.position.x,this.player1.position.y,this.player1.position.z],
+			player2: [this.player2.position.x,this.player2.position.y,this.player2.position.z],
+			id: 'host',
+		};
+		//this.socket.send(JSON.stringify({event: 'game', data :this.data}));
 	}
-
 	onKeyDown(event) {
 		switch (event.code) {
 			case 'KeyW':
 			case 'KeyZ':
+				this.socket.send(JSON.stringify({event: 'game', data :this.data}));
 				this.moveUp = true;
 				break;
 			case 'KeyS':
@@ -216,6 +254,12 @@ class Game {
 				break;
 		}
 	}
+
+	getStatus() {
+		console.log(this.status)
+		return this.status;
+	}
+
 	onWindowResize() {
 		this.camera.aspect = window.innerWidth / window.innerHeight;
 		this.camera.updateProjectionMatrix();

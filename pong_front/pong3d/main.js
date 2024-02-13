@@ -40,6 +40,9 @@ class App {
 			this.animeId = requestAnimationFrame(() => menu.animate())
 		else if (this.status == 1)
 			game.animate()
+		else if (this.status == 2){
+			this.destroy()
+			return ;}
 		this.animeId = requestAnimationFrame(() => this.animate())
 
 	}
@@ -54,9 +57,11 @@ class App {
 				this.renderer[1].domElement.style.display = 'initial';
 				this.unhideGame == false
 			}
+			this.status = game.getStatus();
 			game.update()
-			//this.status = menu.getStatus();
 		}
+		else if (this.status == 2)
+			return;
 		this.updateId = requestAnimationFrame(() => this.update())
 	}
 	onKeyDown(event){
@@ -76,7 +81,6 @@ class App {
 	}
 	load3D (texture) {
 		this.texture = texture;
-		console.log(texture);
 		texture.mapping = THREE.EquirectangularReflectionMapping;
 		this.scenes[0].background = texture;
 		this.scenes[0].environment = texture;
@@ -154,6 +158,23 @@ class App {
 			i++;
 		}
 	}
+	destroy() {
+        // Remove the renderer's canvas elements from the DOM
+		console.log("coucou")
+        this.appli.removeChild(this.renderer[0].domElement);
+    	this.appli.removeChild(this.renderer[1].domElement);
+
+        // Dispose of any resources
+        //this.disposeResources();
+
+        // Stop any ongoing animations or event listeners
+        // (this would depend on your specific implementation)
+
+        // Set references to null to release memory
+        this.renderer = null;
+        this.camera = null;
+        this.controls = null;
+    }
 
 	start() {
 		document.addEventListener('keydown', (event) => this.onKeyDown(event));
