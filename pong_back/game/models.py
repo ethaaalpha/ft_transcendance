@@ -13,8 +13,8 @@ class Match(models.Model):
 	host = models.ForeignKey(User, on_delete=models.CASCADE, related_name='host', blank=False)
 	invited = models.ForeignKey(User, on_delete=models.CASCADE, related_name='invited', blank=False)
 	id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-	# duration = models.DurationField()
-	# link = models.URLField()
+	# duration = models.DurationField(blank=True)
+	# link = models.URLField(blank=True)
 
 class Room(models.Model):
 	"""

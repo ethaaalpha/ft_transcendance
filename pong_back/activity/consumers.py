@@ -32,7 +32,6 @@ class ActivityConsumer(AsyncJsonWebsocketConsumer):
 					await database_sync_to_async(Conversation.consumer_appendToConversation)(data.get('from'), data.get('to'), data.get('content'))
 				
 	async def send_message(self, event):
-		print(f"j'envoie a {await self.getUsername()}")
 		await self.send_json(content={
 			'event': event['event'],
 			'data': event['data'] 

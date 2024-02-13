@@ -82,11 +82,16 @@ ASGI_APPLICATION = 'pong_back.asgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+		'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'ethaniellegrand',
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': '5432',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -176,6 +181,8 @@ DEFAULT_PROFILE_PICTURE_NAME = 'pokemon.png'
 
 # Messages
 MESSAGE_LENGTH_MAX = 1024
+
+
 
 LOGGING = {
 	"version": 1,

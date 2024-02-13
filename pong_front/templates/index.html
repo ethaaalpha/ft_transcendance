@@ -2,30 +2,33 @@
 	<body>
 		<div id="content"></div>
 
-		<div style="display: flex; justify-content: space-between;" id="logged">
+		<div style="display: flex; justify-content: space-between; flex-wrap: wrap; flex-direction: column;" id="logged">
 			<p>Coucou bienvenue sur le site <p id="username"></p></p>
 			<img id='image' style="width: 100;">
 			<div>
-				<h1>Profile picture change</h1>
-				<form action="/dashboard?filter=profilePicture" method="post" enctype="multipart/form-data">
-					{% csrf_token %}
-					<label for="profilePicture">La nouvelle photo de profile !</label><br>
- 					<input type="file" name="profilePicture"><br>
-					<input type="submit" value="Changer la photo de profile">
-				</form>
+				<div>
+					<h1>Profile picture change</h1>
+					<form action="/dashboard?filter=profilePicture" method="post" enctype="multipart/form-data">
+						{% csrf_token %}
+						<label for="profilePicture">La nouvelle photo de profile !</label><br>
+						 <input type="file" name="profilePicture"><br>
+						<input type="submit" value="Changer la photo de profile">
+					</form>
+				</div>
+	
+				<div>
+					<h1>Friends</h1>
+					<form action="/dashboard/friends" method="post" id="form-friends">
+						{% csrf_token %}
+						<label for="action">Action :</label><br>
+						 <input type="text" id="action" name="action"><br>
+						 <label for="username">Username:</label><br>
+						  <input type="text" id="username" name="username">
+						<input type="submit" value="action on friend system" onclick="processFrom(event)">
+					</form>
+				</div>
 			</div>
-
-			<div>
-				<h1>Friends</h1>
-				<form action="/dashboard/friends" method="post" id="form-friends">
-					{% csrf_token %}
-					<label for="action">Action :</label><br>
-				 	<input type="text" id="action" name="action"><br>
-				 	<label for="username">Username:</label><br>
-				  	<input type="text" id="username" name="username">
-					<input type="submit" value="action on friend system" onclick="processFrom(event)">
-				</form>
-			</div>
+			
 
 			<div>
 				<h1>Password change</h1>
@@ -105,8 +108,8 @@
 		const loggedDisplay = document.getElementById('logged');
 		const unloggedDisplay = document.getElementById('unlogged');
 
-		loggedDisplay.style.visibility = 'hidden'
-		unloggedDisplay.style.visibility = 'hidden'
+		loggedDisplay.style.display = 'none'
+		unloggedDisplay.style.display = 'none'
 
 		async function isLogged() {
 			const response = await fetch('/dashboard')
@@ -176,9 +179,9 @@
 					})
 
 				connect();
-				loggedDisplay.style.visibility = 'visible'
+				loggedDisplay.style.display = 'flex'
         	} else {
-				unloggedDisplay.style.visibility = 'visible'
+				unloggedDisplay.style.display = 'flex'
         	}
    		})();
     </script>
