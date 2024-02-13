@@ -5,3 +5,4 @@ ft_transcendance.iml
 .DS_Store
 pip-log.txt
 pip-delete-this-directory.txt
+__pycache__/
