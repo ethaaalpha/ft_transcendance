@@ -12,7 +12,10 @@ class Conversation(models.Model):
 		"""
 			Return the last max N messages sended ordered by sendAt time
 		"""
-		return (Message.objects.filter(conversation=self).order_by('sendAt')[:n])
+		messagesObj = Message.objects.filter(conversation=self).order_by('-sendAt')[:n]
+		messagesJson = [msg.toJson() for msg in messagesObj]
+
+		return messagesJson
 
 	def addMessage(self, sender: User, content: str):
 
@@ -61,3 +64,11 @@ class Message(models.Model):
 	sender = models.ForeignKey(User, blank=False, on_delete=models.CASCADE)
 	content = models.TextField(max_length=settings.MESSAGE_LENGTH_MAX, blank=False)
 	sendAt = models.DateTimeField(auto_now_add=True)
+
+
+	def toJson(self):
+		return {
+			'sender': self.sender.username,
+			'content': self.content,
+			'sendAt': self.sendAt
+		}
