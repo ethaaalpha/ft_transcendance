@@ -27,6 +27,7 @@ class ActivityConsumer(AsyncJsonWebsocketConsumer):
 		if 'event' in content and 'data' in content:
 			match content['event']:
 				case 'chat':
+					await self.send_json({'message':"test"})
 					data: dict = content.get('data')
 					await ActivityNotifier.sendPrivateMessage(data.get('from'), data.get('to'), data.get('content'))
 					await database_sync_to_async(Conversation.consumer_appendToConversation)(data.get('from'), data.get('to'), data.get('content'))
