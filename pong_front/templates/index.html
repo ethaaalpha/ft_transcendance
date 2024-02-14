@@ -2,10 +2,10 @@
 	<body>
 		<div id="content"></div>
 
-		<div style="display: flex; justify-content: space-between; flex-wrap: wrap; flex-direction: column;" id="logged">
+		<div id="logged" style="display: flex; flex-wrap: wrap; flex-direction: row;">
 			<p>Coucou bienvenue sur le site <p id="username"></p></p>
 			<img id='image' style="width: 100;">
-			<div>
+			<div style="display: flex; flex-wrap: wrap; flex-direction: row; justify-content: space-evenly;">
 				<div>
 					<h1>Profile picture change</h1>
 					<form action="/dashboard?filter=profilePicture" method="post" enctype="multipart/form-data">
@@ -24,50 +24,52 @@
 						 <input type="text" id="action" name="action"><br>
 						 <label for="username">Username:</label><br>
 						  <input type="text" id="username" name="username">
-						<input type="submit" value="action on friend system" onclick="processFrom(event)">
+						<input type="submit" value="action on friend system">
 					</form>
 				</div>
 			</div>
 			
-
-			<div>
-				<h1>Password change</h1>
-				<form action="/dashboard?filter=password" method="post">
+			<div style="display: flex; flex-wrap: wrap; flex-direction: row; justify-content: space-evenly;">
+				<div>
+					<h1>Password change</h1>
+					<form action="/dashboard?filter=password" method="post">
+						{% csrf_token %}
+						<label for="actual-password">Actual password :</label><br>
+						<input type="text" id="actualPassword" name="actualPassword"><br>
+						<label for="password">New password:</label><br>
+						<input type="text" id="password" name="newPassword">
+						<input type="submit" value="changerlemotpasse">
+					</form>		
+				</div>
+	
+				<h1>Logout</h1>
+				<form action="/auth/logout" method="post">
 					{% csrf_token %}
-					<label for="actual-password">Actual password :</label><br>
-					<input type="text" id="actualPassword" name="actualPassword"><br>
-					<label for="password">New password:</label><br>
-					<input type="text" id="password" name="newPassword">
-					<input type="submit" value="changerlemotpasse">
-				</form>		
+					<input type="submit" value="Se déconnecter">
+				</form>
 			</div>
-
-			<h1>Logout</h1>
-			<form action="/auth/logout" method="post">
-				{% csrf_token %}
-				<input type="submit" value="Se déconnecter">
-			</form>
-		
-			<h1>Send messages</h1>
-			<div style="display: flex;">
-				<div>
-					<input id="chat-message-target" type="text" size="10"><br>
-					<label for="chat-message-target">Target</label>
+			
+			<div style="display: flex; flex-wrap: wrap; flex-direction: row;">
+				<h1>Send messages</h1>
+				<div style="display: flex;">
+					<div>
+						<input id="chat-message-target" type="text" size="10"><br>
+						<label for="chat-message-target">Target</label>
+					</div>
+					<div>
+						<input id="chat-message-input" type="text" size="50"><br>
+						<label for="chat-message-input">Content</label>
+					</div>
+					<div>
+						<input id="chat-message-submit" type="button" value="Send">
+					</div>
 				</div>
+	
 				<div>
-					<input id="chat-message-input" type="text" size="100"><br>
-					<label for="chat-message-input">Content</label>
-				</div>
-				<div>
-					<input id="chat-message-submit" type="button" value="Send">
+					<h1>Activity</h1>
+					<textarea id="activity-log" cols="30" rows="20"></textarea><br>
 				</div>
 			</div>
-
-			<div>
-				<h1>Activity</h1>
-				<textarea id="activity-log" cols="30" rows="20"></textarea><br>
-			</div>
-
 		</div>
 		
 		<div id="unlogged">
@@ -116,13 +118,6 @@
 			return response.status === 200;
 		}
 
-		function processFrom(event) {
-			var formContent = new FormData()
-			console.log(formContent.keys)
-			event.preventDefault();
-		}
-
-
 		(async () => {
        		if (await isLogged()) {
 				function connect() {
@@ -134,9 +129,9 @@
 					console.log("Websocket created and connected !");
 
        				chatSocket.onmessage = function(e) {
-						console.log("j'ai reçu quelque chose !")
             			const data = JSON.parse(e.data);
 						const stringifiedData = JSON.stringify(data)
+						console.log(`j'ai reçu quelque chose ! ${stringifiedData}`)
             			document.querySelector('#activity-log').value += stringifiedData +'\n';
        				};
 
@@ -152,7 +147,7 @@
             			const targetInputDom = document.querySelector('#chat-message-target');
             			const message = messageInputDom.value;
 						data = {'from': username, 'to': targetInputDom.value, 'content': messageInputDom.value}
-						console.log(data)
+						console.log(`J'envoie ça ${JSON.stringify(data)}`)
             			chatSocket.send(JSON.stringify({
             			    'event': 'chat',
 							'data': data,
@@ -181,7 +176,7 @@
 				connect();
 				loggedDisplay.style.display = 'flex'
         	} else {
-				unloggedDisplay.style.display = 'flex'
+				unloggedDisplay.style.display = 'block'
         	}
    		})();
     </script>
