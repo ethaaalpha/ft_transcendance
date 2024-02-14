@@ -3,11 +3,13 @@ import menu from './menu.js'
 
 class Game {
 	constructor() {
+		this.lastMessageSentTime = 0;
+		this.messageInterval = 100
 		this.socket = new WebSocket('wss://localhost:8000/game/');
 		this.movement = new THREE.Vector3(0, 0, 0);
 		this.status = 1;
-		this.speed = 0.3;
-		this.speedBall = 1;
+		this.speed = 0.8;
+		this.speedBall = 0.4;
 		this.player1 = null;
 		this.player2 = null;
 		this.ball = null;
@@ -25,7 +27,8 @@ class Game {
 		this.itemTexture = this.textureLoader.load('static/assets/pokeball-texture.jpg');
 	}
 
-	init(renderer, camera, controls, scene) {
+	init(renderer, camera, controls, scene, id) {
+		this.id = id
 		this.renderer = renderer;
 		this.camera = camera;
 		this.controls = controls;
@@ -54,17 +57,18 @@ class Game {
 		this.socketInit(this.socket);
 	}
 
-	socketUpdate(event){
-		var data = JSON.parse(event.data);
-		this.data = data;
-		if (this.data.player1 && this.data.player1.length === 3)
-			this.player1.position.set(this.data.player1[0],this.data.player1[1],this.data.player1[2])
-		if (this.data.player2 && this.data.player2.length === 3)
-			this.player2.position.set(this.data.player2[0],this.data.player2[1],this.data.player2[2])
-		if (this.data.ballPos && this.data.ballPos.length === 3)
-			this.ball.position.set(this.data.ballPos[0],this.data.ballPos[1],this.data.ballPos[2])
-		this.speedBall = this.data.speedBall
-	}
+	// socketUpdate(event){
+	// 	var data = JSON.parse(event.data);
+	// 	this.data = data;
+	// 	console.log(data);
+	// 	if (this.data.player1 && this.data.player1.length === 3)
+	// 		this.player1.position.set(this.data.player1[0],this.data.player1[1],this.data.player1[2])
+	// 	if (this.data.player2 && this.data.player2.length === 3)
+	// 		this.player2.position.set(this.data.player2[0],this.data.player2[1],this.data.player2[2])
+	// 	if (this.data.ballPos && this.data.ballPos.length === 3)
+	// 		this.ball.position.set(this.data.ballPos[0],this.data.ballPos[1],this.data.ballPos[2])
+	// 	this.speedBall = this.data.speedBall
+	// }
 
 	socketClose(event){
 		console.log('WebSocket connection closed');
@@ -76,7 +80,7 @@ class Game {
 			console.log('WebSocket connection established');
 		};
 		
-		socket.onmessage = (event) => this.socketUpdate(event)
+		//socket.onmessage = (event) => this.socketUpdate(event)
 		
 		socket.onclose = (event) => this.socketClose(event)
 		socket.onerror = (event) => this.socketClose(event)
@@ -175,8 +179,6 @@ class Game {
 		const laserVertices = this.laser.geometry.attributes.position;
 		laserVertices.setXYZ(1, 0, -13 - this.ball.position.y, 0);
 		laserVertices.needsUpdate = true;
-		this.checkCollisionWithY(this.player1, collision);
-		this.checkCollisionWithY(this.player2, collision);
 		this.ballMovement.x = this.checkCollisionTarget(this.walls[0], this.ballMovement.x);
 		this.ballMovement.x = this.checkCollisionTarget(this.walls[3], this.ballMovement.x);
 		this.ballMovement.z = this.checkCollisionTarget(this.walls[2], this.ballMovement.z);
@@ -184,6 +186,8 @@ class Game {
 		this.ballMovement.y = this.checkCollisionTarget(this.targets[0], this.ballMovement.y);
 		this.ballMovement.y = this.checkCollisionTarget(this.targets[1], this.ballMovement.y);
 		this.moveBallY(collision);
+		this.checkCollisionWithY(this.player1, collision);
+		this.checkCollisionWithY(this.player2, collision);
 
 		const directionZ = new THREE.Vector3(0, 0, 1).applyEuler(this.cameraRotation);
 		directionZ.y = 0;
@@ -212,15 +216,18 @@ class Game {
 			ballPos: [this.ball.position.x,this.ball.position.y,this.ball.position.z],
 			player1: [this.player1.position.x,this.player1.position.y,this.player1.position.z],
 			player2: [this.player2.position.x,this.player2.position.y,this.player2.position.z],
-			id: 'host',
+			id: this.id,
 		};
-		//this.socket.send(JSON.stringify({event: 'game', data :this.data}));
+		const currentTime = Date.now();
+		if(currentTime - this.lastMessageSentTime >= this.messageInterval){
+			this.sendMessageToServer({event: this.id, data :this.data});
+			this.lastMessageSentTime = currentTime;
+		}
 	}
 	onKeyDown(event) {
 		switch (event.code) {
 			case 'KeyW':
 			case 'KeyZ':
-				this.socket.send(JSON.stringify({event: 'game', data :this.data}));
 				this.moveUp = true;
 				break;
 			case 'KeyS':
@@ -255,8 +262,36 @@ class Game {
 		}
 	}
 
+	async sendMessageToServer(message) {
+		return new Promise((resolve, reject) => {
+			const jsonMessage = JSON.stringify(message);
+			this.socket.send(jsonMessage);
+			this.socket.onmessage = (event) => {
+				try {
+					const response = JSON.parse(event.data);
+					this.data = response.data;
+					if (this.data.player1 && this.data.player1.length === 3)
+						this.player1.position.set(this.data.player1[0],this.data.player1[1],this.data.player1[2])
+					if (this.data.player2 && this.data.player2.length === 3)
+						this.player2.position.set(this.data.player2[0],this.data.player2[1],this.data.player2[2])
+					if (this.data.ballPos && this.data.ballPos.length === 3)
+						//this.ball.position.set(this.data.ballPos[0],this.data.ballPos[1],this.data.ballPos[2])
+					this.id  = event.event
+					console.log(response)
+					resolve(response);
+				} catch (error) {
+					reject(error);
+				}
+			};
+	
+			// Handle errors if any
+			this.socket.onerror = (error) => {
+				reject(error);
+			};
+		});
+	}
+
 	getStatus() {
-		console.log(this.status)
 		return this.status;
 	}
 
@@ -266,8 +301,8 @@ class Game {
 		this.renderer.setSize(window.innerWidth/ 1.8, window.innerHeight / 1.8);
 	}
 
-	run(renderer, camera, controls, scenes) {
-		this.init(renderer, camera, controls, scenes);
+	run(renderer, camera, controls, scenes, id) {
+		this.init(renderer, camera, controls, scenes, id);
 	}
 }
 const game = new Game()
