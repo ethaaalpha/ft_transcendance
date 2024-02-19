@@ -85,7 +85,7 @@ class Game {
 			console.log(response)
 			this.data = response.data;
 			if (this.data.player1 && this.data.player1.length === 3)
-				this.player1.position.set(this.data.player1[0],this.data.player1[1],this.data.player1[2])
+				//this.player1.position.set(this.data.player1[0],this.data.player1[1],this.data.player1[2])
 			if (this.data.player2 && this.data.player2.length === 3)
 				this.player2.position.set(this.data.player2[0],this.data.player2[1],this.data.player2[2])
 			if (this.data.ballPos && this.data.ballPos.length === 3)
@@ -231,7 +231,7 @@ class Game {
 		};
 		const currentTime = Date.now();
 		if(currentTime - this.lastMessageSentTime >= this.messageInterval){
-			this.sendMessageToServer({event: this.id, data :this.data});
+			this.sendMessageToServer({data :this.data});
 			this.lastMessageSentTime = currentTime;
 		}
 	}
