@@ -80,10 +80,21 @@ class Game {
 			console.log('WebSocket connection established');
 		};
 		
-		//socket.onmessage = (event) => this.socketUpdate(event)
+		this.socket.onmessage = (event) => {
+			const response = JSON.parse(event.data);
+			console.log(response)
+			this.data = response.data;
+			if (this.data.player1 && this.data.player1.length === 3)
+				this.player1.position.set(this.data.player1[0],this.data.player1[1],this.data.player1[2])
+			if (this.data.player2 && this.data.player2.length === 3)
+				this.player2.position.set(this.data.player2[0],this.data.player2[1],this.data.player2[2])
+			if (this.data.ballPos && this.data.ballPos.length === 3)
+				//this.ball.position.set(this.data.ballPos[0],this.data.ballPos[1],this.data.ballPos[2])
+			this.id  = event.event
+		};
 		
-		socket.onclose = (event) => this.socketClose(event)
-		socket.onerror = (event) => this.socketClose(event)
+		socket.onclose = (event) => this.socketClose(event);
+		socket.onerror = (event) => this.socketClose(event);
 	}
 
 	addCube(x, y, w, h, zsize, z, color) {
@@ -266,29 +277,26 @@ class Game {
 		return new Promise((resolve, reject) => {
 			const jsonMessage = JSON.stringify(message);
 			this.socket.send(jsonMessage);
-			this.socket.onmessage = (event) => {
-				try {
-					const response = JSON.parse(event.data);
-					this.data = response.data;
-					if (this.data.player1 && this.data.player1.length === 3)
-						this.player1.position.set(this.data.player1[0],this.data.player1[1],this.data.player1[2])
-					if (this.data.player2 && this.data.player2.length === 3)
-						this.player2.position.set(this.data.player2[0],this.data.player2[1],this.data.player2[2])
-					if (this.data.ballPos && this.data.ballPos.length === 3)
-						//this.ball.position.set(this.data.ballPos[0],this.data.ballPos[1],this.data.ballPos[2])
-					this.id  = event.event
-					console.log(response)
-					resolve(response);
-				} catch (error) {
-					reject(error);
-				}
-			};
+			// this.socket.onmessage = (event) => {
+			// 	try {
+			// 		const response = JSON.parse(event.data);
+			// 		this.data = response.data;
+			// 		if (this.data.player1 && this.data.player1.length === 3)
+			// 			this.player1.position.set(this.data.player1[0],this.data.player1[1],this.data.player1[2])
+			// 		if (this.data.player2 && this.data.player2.length === 3)
+			// 			this.player2.position.set(this.data.player2[0],this.data.player2[1],this.data.player2[2])
+			// 		if (this.data.ballPos && this.data.ballPos.length === 3)
+			// 			//this.ball.position.set(this.data.ballPos[0],this.data.ballPos[1],this.data.ballPos[2])
+			// 		this.id  = event.event
+			// 		console.log(response)
+			// 		resolve(response);
+			// 	} catch (error) {
+			// 		reject(error);
+			// 	}
+			}
 	
 			// Handle errors if any
-			this.socket.onerror = (error) => {
-				reject(error);
-			};
-		});
+		);
 	}
 
 	getStatus() {
