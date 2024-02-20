@@ -42,7 +42,8 @@ INSTALLED_APPS = [
 	'friends',
 	'activity',
 	'conversations',
-	'game'
+	'game',
+	'coordination'
 ]
 
 MIDDLEWARE = [

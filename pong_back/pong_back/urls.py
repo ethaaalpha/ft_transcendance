@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 from home.views import index, game
 from users.decorators import logged_required
 from activity.consumers import ActivityConsumer
+from coordination.consumers import CoordinationConsumer
 import users.views
 import friends.views
 import conversations.views
@@ -39,4 +40,5 @@ urlpatterns = [
 
 websocket_urlpatterns = [
 	path("activity/", ActivityConsumer.as_asgi()),
+	path("coordination/", CoordinationConsumer.as_asgi())
 ]

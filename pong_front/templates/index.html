@@ -67,7 +67,8 @@
 	
 				<div>
 					<h1>Activity</h1>
-					<textarea id="activity-log" cols="30" rows="20"></textarea><br>
+					<textarea id="activity-log" cols="30" rows="10"></textarea><br>
+					<button id='button-match' type="button">Join matchmaking !</button>
 				</div>
 			</div>
 		</div>
@@ -157,6 +158,33 @@
 					
 				}
 
+				function coordinationConnect() {
+					const coordinationSocket = new WebSocket(
+						'wss://'
+						+ window.location.host
+						+ '/coordination/'
+					)
+					console.log("Coordination socket created and connected !");
+
+					coordinationSocket.onmessage = function(e) {
+            			const data = JSON.parse(e.data);
+						const stringifiedData = JSON.stringify(data)
+						console.log(`j'ai reçu quelque chose coord! ${stringifiedData}`)
+            			document.querySelector('#activity-log').value += stringifiedData +'\n';
+       				};
+
+					coordinationSocket.onclose = function(e) {
+            			console.error('Chat socket closed unexpectedly ! Retrying to connect !');
+						setTimeout(function() {
+							coordinationConnect();
+						}, 1000);
+        			}
+
+					document.querySelector("#button-match").onclick = function(e) {
+						coordinationSocket.send(JSON.stringify({'event' : 'matchmaking', 'data' : 'empty'}))
+					} 
+				}
+
 				fetch('/dashboard?filter=username')
 					.then(response => response.json())
 					.then(response => {
@@ -174,6 +202,7 @@
 					})
 
 				connect();
+				coordinationConnect();
 				loggedDisplay.style.display = 'flex'
         	} else {
 				unloggedDisplay.style.display = 'block'
