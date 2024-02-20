@@ -209,6 +209,7 @@ class Profile(models.Model):
 			password = get_random_string(length=32)
 
 		newUser = User.objects.create_user(username, email, password)
+		newUser.save()
 		Profile.createUserOnetoOne(newUser)
 		return newUser
 	
