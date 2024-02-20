@@ -1,6 +1,0 @@
-django
-channels
-requests
-daphne
-pillow
-shortuuid
