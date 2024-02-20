@@ -7,8 +7,6 @@ class Matchmaking:
 
 	@staticmethod
 	def addPlayerToQueue(user: User):
-		print("j'ai reçu ici",file=sys.stderr)
-
 		if user not in Matchmaking._stack:
 			Matchmaking._stack.append(user)
 
@@ -21,7 +19,6 @@ class Matchmaking:
 
 			room: Room = Room.createRoom(playerA, Mode.CLASSIC)
 			# this is supposed to start to start the room
-			room.addPlayer(playerB)
-			print("je passe ici pour print", file=sys.stderr)
-			room.sendMessageToUser(playerA)
-			room.sendMessageToUser(playerB)
+			if (room.addPlayer(playerB)) == 0:
+				room.sendMessageNext(playerA, playerB)
+				room.sendMessageNext(playerB, playerA)

@@ -72,21 +72,21 @@ class Room(models.Model):
 		room = Room.objects.filter(id=roomId).first()
 		return (room)
 	
-	def sendMessageToUser(self, user: User):
+	def sendMessageNext(self, user: User, opponent: User):
 		if user in self.opponents.all():
 			channel_layer = get_channel_layer()
-			print("je passe ici pour print effectivem", file=sys.stderr)
 			async_to_sync(channel_layer.group_send)(getChannelName(user.username, 'coord'),
 				{
 					"type" : "send.message",
-					"data" : "tu es bien connectê",
-					"event" : "ouiiiii"
+					"data" : {"opponent" : opponent.username},
+					"event" : "next"
 				}
 			)
 
 	def _runRoom(self):
 		if (self.opponents.count() != int(self.mode)): #mean that there isn't enought of players
 			return
+		print(f"le match doit commencer \nVoici les adversaires : {self.opponents.all()}", file=sys.stderr)
 	
 	def addPlayer(self, player: User) -> int:
 		"""
