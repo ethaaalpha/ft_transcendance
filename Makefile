@@ -9,6 +9,11 @@ reset:
 	mkdir database
 
 pyreset:
-	find pong_back -type d -name 'migrations' -exec rm -rf {} \;
 	find pong_back -type d -name '__pycache__' -exec rm -rf {} \;
+	find pong_back -type d -name 'migrations' -exec rm -rf {} \;
 
+run:
+	docker compose up --build
+
+down:
+	docker compose down -v
