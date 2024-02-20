@@ -1,0 +1,7 @@
+django
+channels
+requests
+daphne
+pillow
+shortuuid
+psycopg2-binary
