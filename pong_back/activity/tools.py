@@ -1,2 +1,2 @@
-def getChannelName(username: str):
-	return f'user-{username}'
+def getChannelName(username: str, type = 'user'):
+	return f'{type}-{username}'

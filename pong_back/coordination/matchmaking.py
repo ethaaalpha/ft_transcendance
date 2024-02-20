@@ -22,5 +22,6 @@ class Matchmaking:
 			room: Room = Room.createRoom(playerA, Mode.CLASSIC)
 			# this is supposed to start to start the room
 			room.addPlayer(playerB)
+			print("je passe ici pour print", file=sys.stderr)
 			room.sendMessageToUser(playerA)
 			room.sendMessageToUser(playerB)
