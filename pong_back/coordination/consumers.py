@@ -17,10 +17,10 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 	async def connect(self):
 		self.user = self.scope['user']
 		await self.accept()
-		await self.channel_layer.group_add(getChannelName(await self.getUsername()), self.channel_name)
+		await self.channel_layer.group_add(getChannelName(await self.getUsername(), 'coord'), self.channel_name)
 
 	async def disconnect(self, code):
-		await self.channel_layer.group_discard(getChannelName(await self.getUsername()), self.channel_name)
+		await self.channel_layer.group_discard(getChannelName(await self.getUsername(), 'coord'), self.channel_name)
 		return await super().disconnect(code)
 	
 	async def receive_json(self, content: dict, **kwargs):

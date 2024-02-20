@@ -13,6 +13,7 @@ pyreset:
 	find pong_back -type d -name 'migrations' -exec rm -rf {} \;
 
 run:
+	mkdir database
 	docker compose up --build
 
 down:

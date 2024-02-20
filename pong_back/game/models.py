@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from datetime import timedelta
 from uuid import uuid4
 import shortuuid
+import sys
 
 def roomIdGenerator():
 	uuid = shortuuid.uuid()[:8]
@@ -58,7 +59,7 @@ class Room(models.Model):
 		Owner will be the first player to join the room
 		Mode must be a value from Room.Mode
 		"""
-		room = Room.objects.create()
+		room = Room.objects.create(mode=mode.value)
 		room.opponents.add(owner)
 		room.save()
 		return room
@@ -72,20 +73,22 @@ class Room(models.Model):
 		return (room)
 	
 	def sendMessageToUser(self, user: User):
-		if user in self.opponents:
+		if user in self.opponents.all():
 			channel_layer = get_channel_layer()
-			async_to_sync(channel_layer.group_send)(getChannelName(user.username),
+			print("je passe ici pour print effectivem", file=sys.stderr)
+			async_to_sync(channel_layer.group_send)(getChannelName(user.username, 'coord'),
 				{
 					"type" : "send.message",
-					"data" : "tu es bien connectê"
+					"data" : "tu es bien connectê",
+					"event" : "ouiiiii"
 				}
 			)
 
-	def _runRoom(self, roomId: str):
-		if (len(self.opponent) != int(self.mode.value)): #mean that there isn't enought of players
+	def _runRoom(self):
+		if (self.opponents.count() != int(self.mode)): #mean that there isn't enought of players
 			return
 	
-	def addPlayer(self, user: User) -> int:
+	def addPlayer(self, player: User) -> int:
 		"""
 		Return values
 		------
@@ -97,13 +100,13 @@ class Room(models.Model):
 		------
 		If the room is full then the room is starting !
 		"""
-		actual = len(self.opponents)
+		actual = self.opponents.count()
 		
-		if (actual >= int(self.mode.value)):
+		if (actual >= int(self.mode)):
 			return 1
-		if (user in self.opponents):
+		if (player in self.opponents.all()):
 			return 2
-		self.opponents.add(User)
+		self.opponents.add(player)
 		self.save()
 
 		# function to check if roomReady !
