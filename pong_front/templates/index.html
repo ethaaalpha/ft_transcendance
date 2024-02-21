@@ -181,7 +181,7 @@
         			}
 
 					document.querySelector("#button-match").onclick = function(e) {
-						coordinationSocket.send(JSON.stringify({'event' : 'matchmaking', 'data' : 'empty'}))
+						coordinationSocket.send(JSON.stringify({'event' : 'matchmaking', 'data' : {'action': 'join'}}))
 					} 
 				}
 
