@@ -49,7 +49,7 @@
 				</form>
 			</div>
 			
-			<div style="display: flex; flex-wrap: wrap; flex-direction: row;">
+			<div style="display: flex; flex-wrap: wrap; flex-direction: row; justify-content: space-between;">
 				<h1>Send messages</h1>
 				<div style="display: flex;">
 					<div>
@@ -69,6 +69,16 @@
 					<h1>Activity</h1>
 					<textarea id="activity-log" cols="30" rows="10"></textarea><br>
 					<button id='button-match' type="button">Join matchmaking !</button>
+				</div>
+				<div style="display: flex;">
+					<div>
+						<input id="room-id-input" type="text" size="20"><br>
+						<label for="room-id-input">Room-ID | Room mode</label>
+					</div>
+					<div>
+						<input id="button-join" type="button" value="Join">
+						<input id="button-create" type="button" value="Create">
+					</div>
 				</div>
 			</div>
 		</div>
@@ -182,7 +192,21 @@
 
 					document.querySelector("#button-match").onclick = function(e) {
 						coordinationSocket.send(JSON.stringify({'event' : 'matchmaking', 'data' : {'action': 'join'}}))
-					} 
+					}
+
+					document.querySelector("#button-join").onclick = function(e) {
+						domInput = document.querySelector("#room-id-input");
+						value = domInput.value;
+						coordinationSocket.send(JSON.stringify({'event' : 'tournament', data: {'room-id': value, 'action': 'join'}}));
+						domInput.value = "";
+					}
+
+					document.querySelector("#button-create").onclick = function(e) {
+						domInput = document.querySelector("#room-id-input");
+						value = domInput.value;
+						coordinationSocket.send(JSON.stringify({'event' : 'create', data: {'mode': value}}));
+						domInput.value = "";
+					}
 				}
 
 				fetch('/dashboard?filter=username')
