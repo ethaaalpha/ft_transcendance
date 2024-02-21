@@ -7,6 +7,8 @@ from users.models import Profile
 from django.contrib.auth.models import User
 from .matchmaking import Matchmaking
 from channels.layers import get_channel_layer
+from game.models import Room
+
 
 class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 		
@@ -20,7 +22,6 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 		await self.channel_layer.group_add(getChannelName(await self.getUsername(), 'coord'), self.channel_name)
 
 	async def disconnect(self, code):
-		from game.models import Room
 
 		# need to leave the matchmaking queue
 		await sync_to_async(Matchmaking.removePlayerToQueue)(self.user)
@@ -31,24 +32,35 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 		await self.channel_layer.group_discard(getChannelName(await self.getUsername(), 'coord'), self.channel_name)
 		return await super().disconnect(code)
 	
+	async def messageResponse(self, event: str, message: str):
+		await self.send_json({'event': event, 'data': {'message': message}})
+
 	async def receive_json(self, content: dict, **kwargs):
 		if 'event' in content and 'data' in content:
 			data = content['data']
 			match content['event']:
-				case 'matchmaking':
+				# to request some matchmaking !
+				case 'matchmaking': 
 					if 'action' not in data:
 						return
 					match data['action']:
 						case 'join':
-							result = await sync_to_async(Matchmaking.addPlayerToQueue)(self.user)
-							await self.send_json({'event': 'matchmaking', 'data': {'message' : result}})
+							await self.messageResponse('matchmaking', await sync_to_async(Matchmaking.addPlayerToQueue)(self.user))
 						case 'quit':
-							result = await sync_to_async(Matchmaking.removePlayerToQueue)(self.user)
-							await self.send_json({'event': 'matchmaking', 'data': {'message' : result}})
+							await self.messageResponse('matchmaking', await sync_to_async(Matchmaking.removePlayerToQueue)(self.user))
 						case _:
 							return
+				# to join a private tournament !
 				case 'join':
-					return 
+					if 'action' not in data and 'room-id' not in data:
+						return
+					match data['action']:
+						case 'join':
+							await self.messageResponse('join', await sync_to_async(Room.joinRoom(self.user, data['room-id'])))
+						case 'quit':
+							await self.messageResponse('join', await sync_to_async(Room.leaveRoom(self.user, data['room-id'])))
+						case _:
+							return
 					sync_to_async()
 
 	async def send_message(self, event):
