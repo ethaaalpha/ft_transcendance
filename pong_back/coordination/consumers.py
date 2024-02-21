@@ -4,7 +4,6 @@ from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from activity.tools import getChannelName
 from users.models import Profile
-from conversations.models import Conversation
 from django.contrib.auth.models import User
 from .matchmaking import Matchmaking
 from channels.layers import get_channel_layer
@@ -34,11 +33,22 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 	
 	async def receive_json(self, content: dict, **kwargs):
 		if 'event' in content and 'data' in content:
+			data = content['data']
 			match content['event']:
 				case 'matchmaking':
-					await sync_to_async(Matchmaking.addPlayerToQueue)(self.user)
+					if 'action' not in data:
+						return
+					match data['action']:
+						case 'join':
+							result = await sync_to_async(Matchmaking.addPlayerToQueue)(self.user)
+							await self.send_json({'event': 'matchmaking', 'data': {'message' : result}})
+						case 'quit':
+							result = await sync_to_async(Matchmaking.removePlayerToQueue)(self.user)
+							await self.send_json({'event': 'matchmaking', 'data': {'message' : result}})
+						case _:
+							return
 				case 'join':
-					#join method with CODE
+					return 
 					sync_to_async()
 
 	async def send_message(self, event):
