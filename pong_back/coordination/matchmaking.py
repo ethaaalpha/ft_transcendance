@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User
-from game.models import Room, Mode
 import sys
 
 class Matchmaking:
@@ -7,6 +6,8 @@ class Matchmaking:
 
 	@staticmethod
 	def addPlayerToQueue(user: User):
+		from game.models import Room, Mode
+
 		if user not in Matchmaking._stack:
 			Matchmaking._stack.append(user)
 
@@ -22,3 +23,8 @@ class Matchmaking:
 			if (room.addPlayer(playerB)) == 0:
 				room.sendMessageNext(playerA, playerB)
 				room.sendMessageNext(playerB, playerA)
+
+	@staticmethod
+	def removePlayerToQueue(user: User):
+		if user in Matchmaking._stack:
+			Matchmaking._stack.remove(user)

@@ -44,4 +44,4 @@ services:
       - 80:80
     depends_on:
       - daphne
-    # restart: on-failure
+    restart: on-failure
