@@ -6,3 +6,5 @@ ft_transcendance.iml
 pip-log.txt
 pip-delete-this-directory.txt
 __pycache__/
+*.pyc
+migrations/
