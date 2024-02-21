@@ -6,20 +6,44 @@ import { RGBELoader } from 'three/module/loaders/RGBELoader.js';
 import menu from './menu.js'
 import game from './game.js'
 
+
+
+const toggleSwitch = document.getElementById('toggle');
+
+  toggleSwitch.addEventListener('change', function() {
+    if (this.checked) {
+      // If toggle is on (checked), user is a host
+      app.id = 'host';
+      // Perform host-related actions here
+    } else {
+      // If toggle is off (unchecked), user is a guest
+      app.id = 'guest';
+      // Perform guest-related actions here
+    }
+  });
+
+let sleepSetTimeout_ctrl;
+
+function sleep(ms) {
+    clearInterval(sleepSetTimeout_ctrl);
+    return new Promise(resolve => sleepSetTimeout_ctrl = setTimeout(resolve, ms));
+}
+
 class App {
 	constructor() {
-	
-	this.settings = null;
-	this.status = 0;
-	this.select = [];
-	this.scenes = [new THREE.Scene(), new THREE.Scene()];
-	this.RGBELoad = new RGBELoader().setPath('static/assets/');
-	this.RGBELoad.load('witcher.hdr', (texture) => {this.load3D(texture)});
-	this.init();
-	this.animate();
-	this.update();
-	this.start();
-	this.unhideGame = false;
+		this.id = 'guest'
+		this.lastFrameTime = performance.now();
+		this.settings = null;
+		this.status = 0;
+		this.select = [];
+		this.scenes = [new THREE.Scene(), new THREE.Scene()];
+		this.RGBELoad = new RGBELoader().setPath('static/assets/');
+		this.RGBELoad.load('witcher.hdr', (texture) => {this.load3D(texture)});
+		this.init();
+		this.animate();
+		this.update();
+		this.start();
+		this.unhideGame = false;
 	}
 	init() {
 
@@ -40,10 +64,16 @@ class App {
 			this.animeId = requestAnimationFrame(() => menu.animate())
 		else if (this.status == 1)
 			game.animate()
+		else if (this.status == 2){
+			this.destroy()
+			return ;}
 		this.animeId = requestAnimationFrame(() => this.animate())
 
 	}
-	update(){
+	async update(){
+		const currentTime = performance.now();
+		this.deltaTime = (currentTime - this.lastFrameTime) / 1000;
+		this.lastFrameTime = currentTime;
 		if (this.status == 0){
 			menu.update()
 			this.status = menu.getStatus();
@@ -54,9 +84,12 @@ class App {
 				this.renderer[1].domElement.style.display = 'initial';
 				this.unhideGame == false
 			}
-			game.update()
-			//this.status = menu.getStatus();
+			this.status = game.getStatus();
+			game.update(this.deltaTime)
 		}
+		else if (this.status == 2)
+			return;
+		await sleep(16)
 		this.updateId = requestAnimationFrame(() => this.update())
 	}
 	onKeyDown(event){
@@ -76,7 +109,6 @@ class App {
 	}
 	load3D (texture) {
 		this.texture = texture;
-		console.log(texture);
 		texture.mapping = THREE.EquirectangularReflectionMapping;
 		this.scenes[0].background = texture;
 		this.scenes[0].environment = texture;
@@ -154,14 +186,21 @@ class App {
 			i++;
 		}
 	}
+	destroy() {
+		console.log("coucou")
+        this.appli.removeChild(this.renderer[0].domElement);
+    	this.appli.removeChild(this.renderer[1].domElement);
+        this.renderer = null;
+        this.camera = null;
+        this.controls = null;
+    }
 
 	start() {
 		document.addEventListener('keydown', (event) => this.onKeyDown(event));
 		document.addEventListener('keyup', (event) => this.onKeyUp(event));
 		document.addEventListener('resize',  () => this.onWindowResize());
 		menu.run(this.renderer[0], this.camera[0], this.controls[0], this.scenes[0]);
-		game.run(this.renderer[1], this.camera[1], this.controls[1], this.scenes[1]);
+		game.run(this.renderer[1], this.camera[1], this.controls[1], this.scenes[1], this.id);
 	}
-	
 };
 const app = new App();
