@@ -2,69 +2,75 @@
 	<body>
 		<div id="content"></div>
 
-		<div style="display: flex; justify-content: space-between;" id="logged">
+		<div id="logged" style="display: flex; flex-wrap: wrap; flex-direction: row;">
 			<p>Coucou bienvenue sur le site <p id="username"></p></p>
 			<img id='image' style="width: 100;">
-			<div>
-				<h1>Profile picture change</h1>
-				<form action="/dashboard?filter=profilePicture" method="post" enctype="multipart/form-data">
+			<div style="display: flex; flex-wrap: wrap; flex-direction: row; justify-content: space-evenly;">
+				<div>
+					<h1>Profile picture change</h1>
+					<form action="/dashboard?filter=profilePicture" method="post" enctype="multipart/form-data">
+						{% csrf_token %}
+						<label for="profilePicture">La nouvelle photo de profile !</label><br>
+						 <input type="file" name="profilePicture"><br>
+						<input type="submit" value="Changer la photo de profile">
+					</form>
+				</div>
+	
+				<div>
+					<h1>Friends</h1>
+					<form action="/dashboard/friends" method="post" id="form-friends">
+						{% csrf_token %}
+						<label for="action">Action :</label><br>
+						 <input type="text" id="action" name="action"><br>
+						 <label for="username">Username:</label><br>
+						  <input type="text" id="username" name="username">
+						<input type="submit" value="action on friend system">
+					</form>
+				</div>
+			</div>
+			
+			<div style="display: flex; flex-wrap: wrap; flex-direction: row; justify-content: space-evenly;">
+				<div>
+					<h1>Password change</h1>
+					<form action="/dashboard?filter=password" method="post">
+						{% csrf_token %}
+						<label for="actual-password">Actual password :</label><br>
+						<input type="text" id="actualPassword" name="actualPassword"><br>
+						<label for="password">New password:</label><br>
+						<input type="text" id="password" name="newPassword">
+						<input type="submit" value="changerlemotpasse">
+					</form>		
+				</div>
+	
+				<h1>Logout</h1>
+				<form action="/auth/logout" method="post">
 					{% csrf_token %}
-					<label for="profilePicture">La nouvelle photo de profile !</label><br>
- 					<input type="file" name="profilePicture"><br>
-					<input type="submit" value="Changer la photo de profile">
+					<input type="submit" value="Se déconnecter">
 				</form>
 			</div>
-
-			<div>
-				<h1>Friends</h1>
-				<form action="/dashboard/friends" method="post" id="form-friends">
-					{% csrf_token %}
-					<label for="action">Action :</label><br>
-				 	<input type="text" id="action" name="action"><br>
-				 	<label for="username">Username:</label><br>
-				  	<input type="text" id="username" name="username">
-					<input type="submit" value="action on friend system" onclick="processFrom(event)">
-				</form>
-			</div>
-
-			<div>
-				<h1>Password change</h1>
-				<form action="/dashboard?filter=password" method="post">
-					{% csrf_token %}
-					<label for="actual-password">Actual password :</label><br>
-					<input type="text" id="actualPassword" name="actualPassword"><br>
-					<label for="password">New password:</label><br>
-					<input type="text" id="password" name="newPassword">
-					<input type="submit" value="changerlemotpasse">
-				</form>		
-			</div>
-
-			<h1>Logout</h1>
-			<form action="/auth/logout" method="post">
-				{% csrf_token %}
-				<input type="submit" value="Se déconnecter">
-			</form>
-		
-			<h1>Send messages</h1>
-			<div style="display: flex;">
-				<div>
-					<input id="chat-message-target" type="text" size="10"><br>
-					<label for="chat-message-target">Target</label>
+			
+			<div style="display: flex; flex-wrap: wrap; flex-direction: row;">
+				<h1>Send messages</h1>
+				<div style="display: flex;">
+					<div>
+						<input id="chat-message-target" type="text" size="10"><br>
+						<label for="chat-message-target">Target</label>
+					</div>
+					<div>
+						<input id="chat-message-input" type="text" size="50"><br>
+						<label for="chat-message-input">Content</label>
+					</div>
+					<div>
+						<input id="chat-message-submit" type="button" value="Send">
+					</div>
 				</div>
+	
 				<div>
-					<input id="chat-message-input" type="text" size="100"><br>
-					<label for="chat-message-input">Content</label>
-				</div>
-				<div>
-					<input id="chat-message-submit" type="button" value="Send">
+					<h1>Activity</h1>
+					<textarea id="activity-log" cols="30" rows="10"></textarea><br>
+					<button id='button-match' type="button">Join matchmaking !</button>
 				</div>
 			</div>
-
-			<div>
-				<h1>Activity</h1>
-				<textarea id="activity-log" cols="30" rows="20"></textarea><br>
-			</div>
-
 		</div>
 		
 		<div id="unlogged">
@@ -105,20 +111,13 @@
 		const loggedDisplay = document.getElementById('logged');
 		const unloggedDisplay = document.getElementById('unlogged');
 
-		loggedDisplay.style.visibility = 'hidden'
-		unloggedDisplay.style.visibility = 'hidden'
+		loggedDisplay.style.display = 'none'
+		unloggedDisplay.style.display = 'none'
 
 		async function isLogged() {
 			const response = await fetch('/dashboard')
 			return response.status === 200;
 		}
-
-		function processFrom(event) {
-			var formContent = new FormData()
-			console.log(formContent.keys)
-			event.preventDefault();
-		}
-
 
 		(async () => {
        		if (await isLogged()) {
@@ -131,9 +130,9 @@
 					console.log("Websocket created and connected !");
 
        				chatSocket.onmessage = function(e) {
-						console.log("j'ai reçu quelque chose !")
             			const data = JSON.parse(e.data);
 						const stringifiedData = JSON.stringify(data)
+						console.log(`j'ai reçu quelque chose ! ${stringifiedData}`)
             			document.querySelector('#activity-log').value += stringifiedData +'\n';
        				};
 
@@ -149,7 +148,7 @@
             			const targetInputDom = document.querySelector('#chat-message-target');
             			const message = messageInputDom.value;
 						data = {'from': username, 'to': targetInputDom.value, 'content': messageInputDom.value}
-						console.log(data)
+						console.log(`J'envoie ça ${JSON.stringify(data)}`)
             			chatSocket.send(JSON.stringify({
             			    'event': 'chat',
 							'data': data,
@@ -157,6 +156,33 @@
             			messageInputDom.value = '';
        				};
 					
+				}
+
+				function coordinationConnect() {
+					const coordinationSocket = new WebSocket(
+						'wss://'
+						+ window.location.host
+						+ '/coordination/'
+					)
+					console.log("Coordination socket created and connected !");
+
+					coordinationSocket.onmessage = function(e) {
+            			const data = JSON.parse(e.data);
+						const stringifiedData = JSON.stringify(data)
+						console.log(`j'ai reçu quelque chose coord! ${stringifiedData}`)
+            			document.querySelector('#activity-log').value += stringifiedData +'\n';
+       				};
+
+					coordinationSocket.onclose = function(e) {
+            			console.error('Chat socket closed unexpectedly ! Retrying to connect !');
+						setTimeout(function() {
+							coordinationConnect();
+						}, 1000);
+        			}
+
+					document.querySelector("#button-match").onclick = function(e) {
+						coordinationSocket.send(JSON.stringify({'event' : 'matchmaking', 'data' : 'empty'}))
+					} 
 				}
 
 				fetch('/dashboard?filter=username')
@@ -176,9 +202,10 @@
 					})
 
 				connect();
-				loggedDisplay.style.visibility = 'visible'
+				coordinationConnect();
+				loggedDisplay.style.display = 'flex'
         	} else {
-				unloggedDisplay.style.visibility = 'visible'
+				unloggedDisplay.style.display = 'block'
         	}
    		})();
     </script>
