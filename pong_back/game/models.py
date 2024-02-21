@@ -5,6 +5,7 @@ from activity.tools import getChannelName
 from django.contrib.auth.models import User
 from datetime import timedelta
 from uuid import uuid4
+from coordination.matchmaking import Matchmaking
 import shortuuid
 import sys
 
@@ -23,13 +24,21 @@ class Match(models.Model):
 	link = models.URLField(blank=True)
 
 class Mode(models.TextChoices):
-		CLASSIC = '2'
-		TOURNAMENT4 = '4'
-		TOURNAMENT8 = '8'
-		TOURNAMENT10 = '10'
-		TOURNAMENT12 = '12'
-		TOURNAMENT14 = '14'
-		TOURNAMENT16 = '16'
+	CLASSIC = '2'
+	TOURNAMENT4 = '4'
+	TOURNAMENT8 = '8'
+	TOURNAMENT10 = '10'
+	TOURNAMENT12 = '12'
+	TOURNAMENT14 = '14'
+	TOURNAMENT16 = '16'
+
+	@staticmethod
+	def fromText(modestr: str):
+		modestr = modestr.upper()
+		for mode in Mode.labels:
+			if mode.upper() == modestr:
+				return getattr(Mode, modestr)
+		return None
 
 class Room(models.Model):
 	# Mode class for the type of the room
@@ -80,32 +89,23 @@ class Room(models.Model):
 			return 0
 
 	def addPlayer(self, player: User) -> int:
-		"""
-		Return values
-		------
-		0: on success
-		1: if room already full
-		2: on other failures
-
-		Action
-		------
-		If the room is full then the room is starting !
-		"""
 		actual = self.opponents.count()
 		
 		if (actual >= int(self.mode)):
-			return 1
+			return ("There is too much player in the room !", False)
 		if (player in self.opponents.all()):
-			return 2
+			return ("You already joined this room !", False)
+		if (Matchmaking.isPlayerInQueue(player)):
+			return ("You are already in matchmaking queue !", False)
 		self.opponents.add(player)
 		self.save()
 
 		# function to check if roomReady !
 		self._runRoom()
-		return 0
+		return ("You successfully join the room !", True)
 	
 	@staticmethod
-	def createRoom(owner: User, mode: Mode):
+	def createRoom(owner: User, mode = Mode.CLASSIC):
 		"""
 		This function create a room and return the object !
 		Owner will be the first player to join the room
@@ -115,6 +115,16 @@ class Room(models.Model):
 		room.opponents.add(owner)
 		room.save()
 		return room
+	
+	@staticmethod
+	def createRoomConsumer(owner: User, mode = Mode.CLASSIC):
+		"""
+		This fonction return the room code or an error !
+		"""
+		if Matchmaking.isPlayerInQueue(owner):
+			return ("You are already in matchmaking queue !", False)
+		room = Room.createRoom(owner, mode)
+		return (room.id, True)
 	
 	@staticmethod
 	def getRoom(roomId: str):
@@ -128,27 +138,22 @@ class Room(models.Model):
 	def joinRoom(player: User, code: str) -> str:
 		targetRoom: Room = Room.getRoom(code)
 		if not targetRoom:
-			return ("Room is inexisting !")
+			return ("Room is inexisting !", False)
 		else:
-			match targetRoom.addPlayer():
-				case 1:
-					return (f"Room is full !")
-				case 2:
-					return (f"You can't join this room !")
-				case 0: #success !
-					return (f"Succefully joined the room {code}")
+			return targetRoom.addPlayer(player)
+
 	
 	@staticmethod
 	def leaveRoom(player: User, code: str) -> str:
 		targetRoom: Room = Room.getRoom(code)
 		if not targetRoom:
-			return ("Room is inexisting !")
+			return ("Room is inexisting !", False)
 		else:
 			match targetRoom.removePlayer():
 				case 1:
-					return (f"Room is already launched can't leave !")
+					return (f"Room is already launched can't leave !", False)
 				case 0: #success !
-					return (f"Succefully left the room {code}")
+					return (f"Succefully left the room {code}", True)
 	
 
 	@staticmethod
