@@ -8,3 +8,4 @@ pip-delete-this-directory.txt
 __pycache__/
 *.pyc
 migrations/
+database/
