@@ -63,7 +63,7 @@ class Room(models.Model):
 		room.save()
 		return room
 	
-	@staticmethod
+  @staticmethod
 	def getRoom(roomId: str):
 		"""
 		If roomID doesn't exist the value returned is None
@@ -109,3 +109,4 @@ class Room(models.Model):
 		# function to check if roomReady !
 		self._runRoom()
 		return 0
+
