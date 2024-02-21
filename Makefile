@@ -1,5 +1,5 @@
 all: 
-	$(MAKE) daphne
+	$(MAKE) run
 
 daphne:
 	docker exec -it daphne bash
