@@ -7,6 +7,7 @@ from users.models import Profile
 from conversations.models import Conversation
 from django.contrib.auth.models import User
 from .matchmaking import Matchmaking
+from channels.layers import get_channel_layer
 
 class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 		
@@ -20,6 +21,14 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 		await self.channel_layer.group_add(getChannelName(await self.getUsername(), 'coord'), self.channel_name)
 
 	async def disconnect(self, code):
+		from game.models import Room
+
+		# need to leave the matchmaking queue
+		await sync_to_async(Matchmaking.removePlayerToQueue)(self.user)
+
+		# need to leave all the rooms not launched
+		await database_sync_to_async(Room.disconnectAPlayer)(self.user)
+
 		await self.channel_layer.group_discard(getChannelName(await self.getUsername(), 'coord'), self.channel_name)
 		return await super().disconnect(code)
 	
@@ -31,11 +40,21 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 				case 'join':
 					#join method with CODE
 					sync_to_async()
-					
-				
+
 	async def send_message(self, event):
 		await self.send_json(content={
 			'event': event['event'],
 			'data': event['data'] 
 		})
+
+	@staticmethod
+	def sendMessageToConsumer(username: str, content: str, event: str):
+		channel_layer = get_channel_layer()
+		async_to_sync(channel_layer.group_send)(getChannelName(username, 'coord'),
+			{
+				"type" : "send.message",
+				"data" : content,
+				"event" : event
+			}
+		)
 
