@@ -9,7 +9,6 @@ from .matchmaking import Matchmaking
 from channels.layers import get_channel_layer
 from game.models import Room, Mode
 
-
 class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 		
 	@database_sync_to_async
