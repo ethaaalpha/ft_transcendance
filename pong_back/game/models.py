@@ -20,8 +20,40 @@ class Match(models.Model):
 	invited = models.ForeignKey(User, on_delete=models.CASCADE, related_name='invited', blank=False)
 	id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
 	duration = models.DurationField(default=timedelta(minutes=0))
-	score = ArrayField(models.IntegerField(default=0), size=2)
+	score = ArrayField(models.IntegerField(default=0), size=2, default=[0, 0])
 	link = models.URLField(blank=True)
+	state = models.IntegerField(default=0) # 0 waiting, 1 started, 2 finish
+
+	@staticmethod
+	def getMatch(id: str):
+		return Match.objects.filter(id=id).first()
+
+	@staticmethod
+	def create(host: User, invited: User) -> str:
+		match = Match.objects.create(host=host, invited=invited)
+		return match.id
+	
+	def addPoint(self, user: User):	
+		person = -1
+		if (user == self.host):
+			person = 0
+		elif (user == self.invited):
+			person = 1
+		else:
+			return
+		self.score[person] += 1
+		self.save()
+
+	def finish(self):
+		#need to define duration
+		#and generate link to blockchain HERE
+		self.state = 2
+		self.save()
+
+	def start(self):
+		self.state = 1
+		self.save()
+
 
 class Mode(models.TextChoices):
 	CLASSIC = '2'
@@ -69,9 +101,20 @@ class Room(models.Model):
 			CoordinationConsumer.sendMessageToConsumer(user.username, data, 'next')
 
 	def _runRoom(self):
+		print(f"la room doit commencer \nVoici les adversaires : {self.opponents.all()}", file=sys.stderr)
 		if (self.opponents.count() != int(self.mode)): #mean that there isn't enought of players
 			return
-		print(f"le match doit commencer \nVoici les adversaires : {self.opponents.all()}", file=sys.stderr)
+		if (int(self.mode) != 2):
+			
+			return 
+		else:
+			matchid = Match.create(self.opponents.all()[0], self.opponents.all()[1])
+			match = Match.getMatch(matchid)
+			match.addPoint(self.opponents.all()[0])
+			print("le match est terminé \n", file=sys.stderr)
+			return
+			# it is a matchmaking
+			# lancer la partie voir avec nico !!!!
 	
 	def removePlayer(self, player: User):
 		"""
