@@ -11,16 +11,26 @@ import sys
 
 def roomIdGenerator():
 	uuid = shortuuid.uuid()[:8]
+	uuid = uuid.upper()
+
 	if Room.objects.filter(id=uuid).exists():
 		return roomIdGenerator()
 	return uuid
 
 class Match(models.Model):
+	"""
+	the score at stored like
+	score[0] = host
+	score[1] = invited
+	"""
+	def default_score():
+		return ([0, 0])
+
 	host = models.ForeignKey(User, on_delete=models.CASCADE, related_name='host', blank=False)
 	invited = models.ForeignKey(User, on_delete=models.CASCADE, related_name='invited', blank=False)
 	id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
 	duration = models.DurationField(default=timedelta(minutes=0))
-	score = ArrayField(models.IntegerField(default=0), size=2, default=[0, 0])
+	score = ArrayField(models.IntegerField(default=0), size=2, default=default_score)
 	link = models.URLField(default="www.localhost.fr")
 	state = models.IntegerField(default=0) # 0 waiting, 1 started, 2 finish
 
@@ -61,26 +71,33 @@ class Match(models.Model):
 		self.save()
 
 		# here make the room update and check for the next match !
+		print(f'Le gagnant du match entre {self.host} et {self.invited} est {self.getWinner()} !!!!', file=sys.stderr)
 		room = self.getAssociatedRoom()
 		room.update()
 
 	def start(self):
-
 		# ici pour avertir les autres joueurs du prochain match !!!
 		self.send(self.host, 'next', {'opponent' : self.invited.username})
 		self.send(self.invited, 'next', {'opponent' : self.host.username})
 		self.state = 1
 		self.save()
 
+		# JUSTE POUR LE DEV
+		print(f'Voici le début du match entre [HOST] {self.host} et [INVITED] {self.invited} !', file=sys.stderr)
+		self.addPoint(self.host)
+		self.finish()
+
+	def getWinner(self) -> User:
+		if self.score[0] > self.score[1]:
+			return self.host
+		return self.invited
 
 class Mode(models.TextChoices):
 	CLASSIC = '2'
 	TOURNAMENT4 = '4'
 	TOURNAMENT8 = '8'
-	TOURNAMENT10 = '10'
-	TOURNAMENT12 = '12'
-	TOURNAMENT14 = '14'
-	TOURNAMENT16 = '16'
+	TOURNAMENT16 = '10'
+	TOURNAMENT32 = '12'
 
 	@staticmethod
 	def fromText(modestr: str):
@@ -88,7 +105,7 @@ class Mode(models.TextChoices):
 		for mode in Mode.labels:
 			if mode.upper() == modestr:
 				return getattr(Mode, modestr)
-		return None
+		return Mode.CLASSIC
 
 class Room(models.Model):
 	# Mode class for the type of the room
@@ -98,7 +115,7 @@ class Room(models.Model):
 	that means that a room can contain multiples matchs (so it's called a tournament).
 	"""
 	opponents = models.ManyToManyField(User, related_name='opponents')
-	numberMatchLastRound = models.IntegerField(default=0)
+	numberMatchsLastRound = models.IntegerField(default=0)
 	state = models.IntegerField(default=0) # 0 waiting, 1 started, 2 finish
 	id = models.CharField(primary_key=True, default=roomIdGenerator, blank=False, max_length=8)
 	matchs = models.ManyToManyField(Match, related_name='matchs')
@@ -117,14 +134,12 @@ class Room(models.Model):
 		if (self.opponents.count() != int(self.mode)): #mean that there isn't enought of players
 			return
 		print(f"la room doit commencer \nVoici les adversaires : {self.opponents.all()}", file=sys.stderr)
-		if (int(self.mode) != 2):
-			self.generateNextMatch(True)
-			return 
-		else:
-			self.generateNextMatch(True)
-			return
-			# it is a matchmaking
-			# lancer la partie voir avec nico !!!!
+		self.state = 1
+		self.save()
+
+		self.next(True)
+		# it is a matchmaking
+		# lancer la partie voir avec nico !!!!
 	
 	def removePlayer(self, player: User):
 		"""
@@ -140,6 +155,13 @@ class Room(models.Model):
 			else:
 				self.save()
 			return 0
+
+	def send(self, user: User, event: str, data: str):
+		from coordination.consumers import CoordinationConsumer
+		if user not in self.opponents.all():
+			return
+		else:
+			CoordinationConsumer.sendMessageToConsumer(user.username, data, event)
 
 	def addPlayer(self, player: User) -> int:
 		actual = self.opponents.count()
@@ -157,29 +179,39 @@ class Room(models.Model):
 		self.update()
 		return ("You successfully join the room !", True)
 	
-	def generateNextMatch(self, first=False):
+	def next(self, first=False):
 		"""
 		Generate the next match seeds !
 		And warn the player !
 		"""
-		if first:
+		matchOpponents = []
+		if first: # first round
 			nPlayer = self.opponents.count()
-			matchOpponents = []
 			for i in range(0, nPlayer, 2):
 				matchOpponents.append(self.opponents.all()[i:i+2])
-			matchs = [Match.getMatch(Match.create(opponents[0], opponents[1])) for opponents in matchOpponents]
-
-			# ici lancer les matchs
-			for m in matchs:
-				m.start()
 
 		else:
-			# faire le check pour voir si c'est la fin !!!
-			lastRoundMatch: list = self.matchs.all()[-self.numberMatchLastRound]
+			if self.numberMatchsLastRound == 1:
+				print(f'Voici le gagnant du tournois {lastMatch.getWinner()}', file=sys.stderr)
+				lastMatch = self.matchs.all()[:1].get()
+				for p in self.opponents.all():
+					self.send(p, 'win', {'message': f'Le gagnant du tournois est {lastMatch.getWinner()}'})
+				# CELA SIGNIFIE LA FIN DU TOURNOIS
+				return
+			
+			# il y a d'autres matchs à faire +_+
+			lastMatchs = list(self.matchs.all()[:self.numberMatchsLastRound])
+			winners = [m.getWinner() for m in lastMatchs]
+			matchOpponents = [[winners[i], winners[i + 1]] for i in range(0, len(winners), 2)]
 
+		matchs = [Match.getMatch(Match.create(opponents[0], opponents[1])) for opponents in matchOpponents]
+		self.numberMatchsLastRound = len(matchs)
+		self.matchs.add(*matchs)
+		self.save()
 
-		#update the value of numberMatchLastRound
-		
+		# ici lancer les matchs
+		for m in matchs:
+			m.start()	
 
 	def update(self):
 		"""
@@ -189,14 +221,16 @@ class Room(models.Model):
 		if self.state == 0:
 			return self._runRoom()
 		elif self.state == 1:
-			if self.numberMatchLastRound == 0:
-				self.generateNextMatch(first=True)
+			# mean that this is the first round !
+			if self.matchs.count() == 0:
+				self.next(True)
 			# check if all the last match has ended !
 			else:
-				for m in self.matchs:
+				for m in self.matchs.all():
 					if m.state == 0 or m.state == 1:
 						return
-				return self.generateNextMatch()
+				return self.next()
+			# faire les nexts matchs etc voir pour les tournois
 	
 	@staticmethod
 	def createRoom(owner: User, mode = Mode.CLASSIC):
@@ -213,10 +247,14 @@ class Room(models.Model):
 	@staticmethod
 	def createRoomConsumer(owner: User, mode = Mode.CLASSIC):
 		"""
-		This fonction return the room code or an error !
+		This fonction return the room code or an error 
+		Check if user already in a room or matchmaking queue
 		"""
 		if Matchmaking.isPlayerInQueue(owner):
 			return ("You are already in matchmaking queue !", False)
+		roomCheck = Room.objects.filter(opponents=owner, state=0).first()
+		if roomCheck:
+			return (f"You are already in a room the id is {roomCheck.id} !", False)
 		room = Room.createRoom(owner, mode)
 		return (room.id, True)
 	
@@ -236,7 +274,6 @@ class Room(models.Model):
 		else:
 			return targetRoom.addPlayer(player)
 
-	
 	@staticmethod
 	def leaveRoom(player: User, code: str) -> str:
 		targetRoom: Room = Room.getRoom(code)
@@ -249,7 +286,6 @@ class Room(models.Model):
 				case 0: #success !
 					return (f"Succefully left the room {code}", True)
 	
-
 	@staticmethod
 	def disconnectAPlayer(player: User):
 		"""
