@@ -21,7 +21,7 @@ class Match(models.Model):
 	id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
 	duration = models.DurationField(default=timedelta(minutes=0))
 	score = ArrayField(models.IntegerField(default=0), size=2, default=[0, 0])
-	link = models.URLField(blank=True)
+	link = models.URLField(default="www.localhost.fr")
 	state = models.IntegerField(default=0) # 0 waiting, 1 started, 2 finish
 
 	@staticmethod
@@ -32,7 +32,14 @@ class Match(models.Model):
 	def create(host: User, invited: User) -> str:
 		match = Match.objects.create(host=host, invited=invited)
 		return match.id
-	
+
+	def send(self, user: User, event: str, data: str):
+		from coordination.consumers import CoordinationConsumer
+		if user != self.host and user != self.invited:
+			return
+		else:
+			CoordinationConsumer.sendMessageToConsumer(user.username, data, event)
+
 	def addPoint(self, user: User):	
 		person = -1
 		if (user == self.host):
@@ -44,13 +51,24 @@ class Match(models.Model):
 		self.score[person] += 1
 		self.save()
 
+	def getAssociatedRoom(self):
+		return Room.objects.filter(matchs=self).first()
+
 	def finish(self):
 		#need to define duration
 		#and generate link to blockchain HERE
 		self.state = 2
 		self.save()
 
+		# here make the room update and check for the next match !
+		room = self.getAssociatedRoom()
+		room.update()
+
 	def start(self):
+
+		# ici pour avertir les autres joueurs du prochain match !!!
+		self.send(self.host, 'next', {'opponent' : self.invited.username})
+		self.send(self.invited, 'next', {'opponent' : self.host.username})
 		self.state = 1
 		self.save()
 
@@ -80,6 +98,7 @@ class Room(models.Model):
 	that means that a room can contain multiples matchs (so it's called a tournament).
 	"""
 	opponents = models.ManyToManyField(User, related_name='opponents')
+	numberMatchLastRound = models.IntegerField(default=0)
 	state = models.IntegerField(default=0) # 0 waiting, 1 started, 2 finish
 	id = models.CharField(primary_key=True, default=roomIdGenerator, blank=False, max_length=8)
 	matchs = models.ManyToManyField(Match, related_name='matchs')
@@ -94,24 +113,15 @@ class Room(models.Model):
 	getNextMatch(user) -> permet de générer le prochain match !
 	"""
 	
-	def sendMessageNext(self, user: User, opponent: User):
-		from coordination.consumers import CoordinationConsumer
-		if user in self.opponents.all():
-			data = {"opponent" : opponent.username}
-			CoordinationConsumer.sendMessageToConsumer(user.username, data, 'next')
-
 	def _runRoom(self):
-		print(f"la room doit commencer \nVoici les adversaires : {self.opponents.all()}", file=sys.stderr)
 		if (self.opponents.count() != int(self.mode)): #mean that there isn't enought of players
 			return
+		print(f"la room doit commencer \nVoici les adversaires : {self.opponents.all()}", file=sys.stderr)
 		if (int(self.mode) != 2):
-			
+			self.generateNextMatch(True)
 			return 
 		else:
-			matchid = Match.create(self.opponents.all()[0], self.opponents.all()[1])
-			match = Match.getMatch(matchid)
-			match.addPoint(self.opponents.all()[0])
-			print("le match est terminé \n", file=sys.stderr)
+			self.generateNextMatch(True)
 			return
 			# it is a matchmaking
 			# lancer la partie voir avec nico !!!!
@@ -144,8 +154,49 @@ class Room(models.Model):
 		self.save()
 
 		# function to check if roomReady !
-		self._runRoom()
+		self.update()
 		return ("You successfully join the room !", True)
+	
+	def generateNextMatch(self, first=False):
+		"""
+		Generate the next match seeds !
+		And warn the player !
+		"""
+		if first:
+			nPlayer = self.opponents.count()
+			matchOpponents = []
+			for i in range(0, nPlayer, 2):
+				matchOpponents.append(self.opponents.all()[i:i+2])
+			matchs = [Match.getMatch(Match.create(opponents[0], opponents[1])) for opponents in matchOpponents]
+
+			# ici lancer les matchs
+			for m in matchs:
+				m.start()
+
+		else:
+			# faire le check pour voir si c'est la fin !!!
+			lastRoundMatch: list = self.matchs.all()[-self.numberMatchLastRound]
+
+
+		#update the value of numberMatchLastRound
+		
+
+	def update(self):
+		"""
+		Update the tournament and send player their next match
+		Check all actual matchs are ended !
+		"""
+		if self.state == 0:
+			return self._runRoom()
+		elif self.state == 1:
+			if self.numberMatchLastRound == 0:
+				self.generateNextMatch(first=True)
+			# check if all the last match has ended !
+			else:
+				for m in self.matchs:
+					if m.state == 0 or m.state == 1:
+						return
+				return self.generateNextMatch()
 	
 	@staticmethod
 	def createRoom(owner: User, mode = Mode.CLASSIC):
