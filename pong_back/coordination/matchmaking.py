@@ -20,10 +20,9 @@ class Matchmaking:
 			Matchmaking._stack.pop()
 
 			room: Room = Room.createRoom(playerA, Mode.CLASSIC)
+			
 			# this is supposed to start to start the room
-			if (room.addPlayer(playerB)) == 0:
-				room.sendMessageNext(playerA, playerB)
-				room.sendMessageNext(playerB, playerA)
+			room.addPlayer(playerB)
 		return ("Successfully added to the matchmaking queue !", True)
 	
 	@staticmethod
