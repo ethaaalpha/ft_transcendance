@@ -61,10 +61,17 @@ class Match(models.Model):
 		self.score[person] += 1
 		self.save()
 
-	def getAssociatedRoom(self):
+	def room(self):
 		return Room.objects.filter(matchs=self).first()
 
-	def finish(self):
+	def finish(self, score = None):
+		"""
+		Function to ended a match, this will run the generation of a blockchain smart contract\n
+		also run the checkup of next match if it is a tournament
+		"""
+		if score:
+			self.score = score
+
 		#need to define duration
 		#and generate link to blockchain HERE
 		self.state = 2
@@ -72,7 +79,7 @@ class Match(models.Model):
 
 		# here make the room update and check for the next match !
 		print(f'Le gagnant du match entre {self.host} et {self.invited} est {self.getWinner()} !!!!', file=sys.stderr)
-		room = self.getAssociatedRoom()
+		room = self.room()
 		room.update()
 
 	def start(self):
