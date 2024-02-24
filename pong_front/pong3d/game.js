@@ -1,13 +1,25 @@
 import * as THREE from 'three';
-import menu from './menu.js'
+import { OrbitControls } from 'three/module/controls/OrbitControls';
+import { RGBELoader } from 'three/module/loaders/RGBELoader.js';
+
+let sleepSetTimeout_ctrl;
+
+function sleep(ms) {
+    clearInterval(sleepSetTimeout_ctrl);
+    return new Promise(resolve => sleepSetTimeout_ctrl = setTimeout(resolve, ms));
+}
 
 class Game {
-	constructor() {
+	constructor(status, resolve, appli, scene, statusCallback) {
+		this.appli = appli
+		this.status = status;
+		this.resolve = resolve;
+		this.scene = scene;
+		this.statusCallback = statusCallback
+		this.lastFrameTime = performance.now();
 		this.lastMessageSentTime = 0;
 		this.messageInterval = 100
-		this.socket = new WebSocket('wss://localhost:8000/game/');
 		this.movement = new THREE.Vector3(0, 0, 0);
-		this.status = 1;
 		this.speed = 0.8;
 		this.speedBall = 0.4;
 		this.player1 = null;
@@ -25,54 +37,53 @@ class Game {
 		this.directionalLight2 = new THREE.DirectionalLight(0x87CEEB, 10);
 		this.textureLoader = new THREE.TextureLoader();
 		this.itemTexture = this.textureLoader.load('static/assets/pokeball-texture.jpg');
+		this.init().then(() => {
+			this.appli.appendChild(this.renderer.domElement);
+			this.animate();
+			this.update();
+		});
 	}
 
-	init(renderer, camera, controls, scene, id) {
-		this.id = id
-		this.renderer = renderer;
-		this.camera = camera;
-		this.controls = controls;
-		this.controls.enableZoom = false;
-		this.scene = scene;
-		this.camera.position.z = 50;
-		this.directionalLight.position.set(30, -20, 100).normalize();
-		this.scene.add(this.directionalLight);
-		this.directionalLight2.position.set(-30, 20, -100).normalize();
-		this.scene.add(this.directionalLight2);
-		this.ball = this.addBall(0, 0, 1, 1, 1, 0);
-		this.player1 = this.addCube(0, -13, 5, 0.8, 5, 0, {transparent: false, map: this.itemTexture}, 0);
-		this.player2 = this.addCube(0, 13, 5, 0.8, 5, 0, {transparent: false, map: this.itemTexture}, 0);
-		this.walls = [
-			this.addCube(15, 0, 1, 30, 29, 0, { color: 0xe4f2f7, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true}),
-			this.addCube(0, 0, 31, 30, 1, 15, { color: 0xe4f2f7, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true}),
-			this.addCube(0, 0, 31, 30, 1, -15, { color: 0xe4f2f7, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true}),
-			this.addCube(-15, 0, 1, 30, 29, 0, { color: 0xe4f2f7, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true})
-		];
-		this.targets = [
-			this.addCube(0, 13.1, 29, 1, 29, 0, { color: 0xe4f2f7, transparent: true, opacity: 0, metalness: 0, roughness: 1, flatShading: true}),
-			this.addCube(0, -13.1, 29, 1, 29, 0, { color: 0xe4f2f7, transparent: true, opacity: 0, metalness: 0, roughness: 1, flatShading: true})
-		];
-		this.laser = this.createLaser();
-		this.renderer.domElement.style.display = 'none';
-		this.socketInit(this.socket);
+	init() {
+		return new Promise((resolve, reject) => {
+			this.renderer = new THREE.WebGLRenderer();
+			this.renderer.setSize(window.innerWidth , window.innerHeight);
+			this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+			this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+			this.controls.enableZoom = false;
+			this.camera.position.z = 50;
+			this.directionalLight.position.set(30, -20, 100).normalize();
+			this.scene.add(this.directionalLight);
+			this.directionalLight2.position.set(-30, 20, -100).normalize();
+			this.scene.add(this.directionalLight2);
+			this.ball = this.addBall(0, 0, 1, 1, 1, 0);
+			this.player1 = this.addCube(0, -13, 5, 0.8, 5, 0, {transparent: false, map: this.itemTexture}, 0);
+			this.player2 = this.addCube(0, 13, 5, 0.8, 5, 0, {transparent: false, map: this.itemTexture}, 0);
+			this.walls = [
+				this.addCube(15, 0, 1, 30, 29, 0, { color: 0xe4f2f7, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true}),
+				this.addCube(0, 0, 31, 30, 1, 15, { color: 0xe4f2f7, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true}),
+				this.addCube(0, 0, 31, 30, 1, -15, { color: 0xe4f2f7, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true}),
+				this.addCube(-15, 0, 1, 30, 29, 0, { color: 0xe4f2f7, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true})
+			];
+			this.targets = [
+				this.addCube(0, 13.1, 29, 1, 29, 0, { color: 0xe4f2f7, transparent: true, opacity: 0, metalness: 0, roughness: 1, flatShading: true}),
+				this.addCube(0, -13.1, 29, 1, 29, 0, { color: 0xe4f2f7, transparent: true, opacity: 0, metalness: 0, roughness: 1, flatShading: true})
+			];
+			this.laser = this.createLaser();
+			this.socket = new WebSocket('wss://localhost:8000/game/');
+			this.socketInit(this.socket);
+			this.keyU = (event) => this.onKeyUp(event)
+			this.keyD = (event) => this.onKeyDown(event)
+			this.onResize = () => this.onWindowResize()
+			document.addEventListener('keydown', this.keyD);
+			document.addEventListener('keyup', this.keyU);
+			window.addEventListener('resize',  this.onResize);
+			resolve();
+			});
 	}
-
-	// socketUpdate(event){
-	// 	var data = JSON.parse(event.data);
-	// 	this.data = data;
-	// 	console.log(data);
-	// 	if (this.data.player1 && this.data.player1.length === 3)
-	// 		this.player1.position.set(this.data.player1[0],this.data.player1[1],this.data.player1[2])
-	// 	if (this.data.player2 && this.data.player2.length === 3)
-	// 		this.player2.position.set(this.data.player2[0],this.data.player2[1],this.data.player2[2])
-	// 	if (this.data.ballPos && this.data.ballPos.length === 3)
-	// 		this.ball.position.set(this.data.ballPos[0],this.data.ballPos[1],this.data.ballPos[2])
-	// 	this.speedBall = this.data.speedBall
-	// }
-
 	socketClose(event){
 		console.log('WebSocket connection closed');
-			this.status = 2;
+			this.status = {status:2};
 	}
 
 	socketInit(socket){
@@ -132,15 +143,11 @@ class Game {
 		return laser;
 	}
 
-	animate() {
-		this.controls.update();
-		this.renderer.render(this.scene, this.camera);
-	}
-
+	
 	checkCollisionWithY(element, collision) {
 		const ballBoundingBox = new THREE.Box3().setFromObject(this.ball);
 		const elementBoundingBox = new THREE.Box3().setFromObject(element);
-
+		
 		collision = ballBoundingBox.intersectsBox(elementBoundingBox);
 		if (collision) {
 			this.ballMovement.set(0, this.ballMovement.y, 0);
@@ -156,11 +163,11 @@ class Game {
 			this.ballMovement.z *= -1;
 		}
 	}
-
+	
 	checkCollisionTarget(element, axes) {
 		const ballBoundingBox = new THREE.Box3().setFromObject(this.ball);
 		const elementBoundingBox = new THREE.Box3().setFromObject(element);
-
+		
 		const collision = ballBoundingBox.intersectsBox(elementBoundingBox);
 		if (collision && !this.isCollision) {
 			this.isCollision = element;
@@ -168,7 +175,7 @@ class Game {
 		}
 		return axes;
 	}
-
+	
 	moveBallY(collision) {
 		this.ballMovement.normalize();
 		this.ballMovement.multiplyScalar(this.speedBall);
@@ -178,12 +185,19 @@ class Game {
 			const elementBoundingBox = new THREE.Box3().setFromObject(this.isCollision);
 			collision = ballBoundingBox.intersectsBox(elementBoundingBox);
 			if (!collision)
-				this.isCollision = null;
-			this.ball.position.add(this.ballMovement);
+			this.isCollision = null;
+		this.ball.position.add(this.ballMovement);
 		}
 	}
 
-	update() {
+	async animate() {
+		this.controls.update();
+		this.renderer.render(this.scene, this.camera);
+		if (this.status['status'] === 1)
+			requestAnimationFrame(() => this.animate());
+	}
+	async update() {
+		await sleep(16);
 		let collision;
 		this.cameraRotation.copy(this.camera.rotation);
 		this.laser.position.copy(this.ball.position);
@@ -234,6 +248,8 @@ class Game {
 			this.sendMessageToServer({data :this.data});
 			this.lastMessageSentTime = currentTime;
 		}
+		if (this.status['status'] === 1)
+			requestAnimationFrame(() => this.update())
 	}
 	onKeyDown(event) {
 		switch (event.code) {
@@ -277,41 +293,23 @@ class Game {
 		return new Promise((resolve, reject) => {
 			const jsonMessage = JSON.stringify(message);
 			this.socket.send(jsonMessage);
-			// this.socket.onmessage = (event) => {
-			// 	try {
-			// 		const response = JSON.parse(event.data);
-			// 		this.data = response.data;
-			// 		if (this.data.player1 && this.data.player1.length === 3)
-			// 			this.player1.position.set(this.data.player1[0],this.data.player1[1],this.data.player1[2])
-			// 		if (this.data.player2 && this.data.player2.length === 3)
-			// 			this.player2.position.set(this.data.player2[0],this.data.player2[1],this.data.player2[2])
-			// 		if (this.data.ballPos && this.data.ballPos.length === 3)
-			// 			//this.ball.position.set(this.data.ballPos[0],this.data.ballPos[1],this.data.ballPos[2])
-			// 		this.id  = event.event
-			// 		console.log(response)
-			// 		resolve(response);
-			// 	} catch (error) {
-			// 		reject(error);
-			// 	}
+			//add error
 			}
-	
-			// Handle errors if any
 		);
-	}
-
-	getStatus() {
-		return this.status;
 	}
 
 	onWindowResize() {
 		this.camera.aspect = window.innerWidth / window.innerHeight;
 		this.camera.updateProjectionMatrix();
-		this.renderer.setSize(window.innerWidth/ 1.8, window.innerHeight / 1.8);
+		this.renderer.setSize(window.innerWidth, window.innerHeight);
 	}
 
-	run(renderer, camera, controls, scenes, id) {
-		this.init(renderer, camera, controls, scenes, id);
+	destroy(){
+		document.removeEventListener('keydown', this.keyD);
+		document.removeEventListener('keyup', this.keyU);
+		window.removeEventListener('resize',  this.onResize);
+		this.statusCallback(this.status);
+		this.resolve(this.status);
 	}
 }
-const game = new Game()
-export default game;
+export default Game;
