@@ -36,7 +36,7 @@ urlpatterns = [
 	path('dashboard/friends', logged_required(friends.views.entryPoint)),
 	path('dashboard/conversations', logged_required(conversations.views.entryPoint)),
 	path('auth/', include('authentification.urls')),
-	path('', index, name="index"),
+	# path('', index, name="index"),
 	path('game/', game, name='game')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

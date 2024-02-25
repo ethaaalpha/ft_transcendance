@@ -1,4 +1,7 @@
 <html>
+	<head>
+		<meta charset="UTF-8">
+	</head>
 	<body>
 		<div id="content"></div>
 
@@ -9,7 +12,6 @@
 				<div>
 					<h1>Profile picture change</h1>
 					<form action="/dashboard?filter=profilePicture" method="post" enctype="multipart/form-data">
-						{% csrf_token %}
 						<label for="profilePicture">La nouvelle photo de profile !</label><br>
 						 <input type="file" name="profilePicture"><br>
 						<input type="submit" value="Changer la photo de profile">
@@ -19,11 +21,10 @@
 				<div>
 					<h1>Friends</h1>
 					<form action="/dashboard/friends" method="post" id="form-friends">
-						{% csrf_token %}
 						<label for="action">Action :</label><br>
 						 <input type="text" id="action" name="action"><br>
 						 <label for="username">Username:</label><br>
-						  <input type="text" id="username" name="username">
+						<input type="text" id="username" name="username">
 						<input type="submit" value="action on friend system">
 					</form>
 				</div>
@@ -33,7 +34,6 @@
 				<div>
 					<h1>Password change</h1>
 					<form action="/dashboard?filter=password" method="post">
-						{% csrf_token %}
 						<label for="actual-password">Actual password :</label><br>
 						<input type="text" id="actualPassword" name="actualPassword"><br>
 						<label for="password">New password:</label><br>
@@ -117,6 +117,20 @@
 			</form>
 		</div>
     <script>
+		function getCsrfToken() {
+  			// Retrieve all cookies
+  			const cookies = document.cookie.split('; ');
+			for (const cookie of cookies) {
+		    	const [name, value] = cookie.split('=');
+		    	if (name === 'csrftoken') {
+		    	  // Return the CSRF token value
+		    	  return decodeURIComponent(value);
+		    	}
+			}
+			return null;
+		}
+
+		console.log(getCsrfToken())
 		username = null;
 		const loggedDisplay = document.getElementById('logged');
 		const unloggedDisplay = document.getElementById('unlogged');
@@ -209,24 +223,37 @@
 					}
 				}
 
-				fetch('/dashboard?filter=username')
-					.then(response => response.json())
-					.then(response => {
-						const text = document.getElementById('username');
-						text.innerText = response['username'];
-						username = response['username'];
-						text.style.fontWeight = 'bold';
+				// Fetch with CSRF token included in headers
+				fetch('/dashboard?filter=username', {
+				  method: 'GET',
+				  headers: {
+				    'Content-Type': 'application/json',
+				    'X-CSRFToken': getCsrfToken(),
+				  },
 				})
+				  .then(response => response.json())
+				  .then(response => {
+				    const text = document.getElementById('username');
+				    text.innerText = response['username'];
+				    username = response['username'];
+				    text.style.fontWeight = 'bold';
+				});
 
-				fetch('/dashboard?filter=profilePicture')
-					.then(response => response.json())
-					.then(response => {
-						const image = document.getElementById('image');
-						image.src = response['profilePicture'];
-					})
+				fetch('/dashboard?filter=profilePicture', {
+				  method: 'GET',
+				  headers: {
+				    'Content-Type': 'application/json',
+				    'X-CSRFToken': getCsrfToken(),
+				  },
+				})
+				  .then(response => response.json())
+				  .then(response => {
+				    const image = document.getElementById('image');
+				    image.src = response['profilePicture'];
+				  });
 
-				connect();
-				coordinationConnect();
+				// connect();
+				// coordinationConnect();
 				loggedDisplay.style.display = 'flex'
         	} else {
 				unloggedDisplay.style.display = 'block'
