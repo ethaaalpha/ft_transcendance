@@ -39,6 +39,9 @@ services:
         - DOMAIN=$DOMAIN
     env_file:
       - .env
+    volumes:
+      - ./media:/usr/share/media
+      - ./pong_front:/usr/share/static
     ports:
       - 8000:443
     depends_on:
