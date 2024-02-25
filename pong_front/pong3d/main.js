@@ -2,11 +2,12 @@ import * as THREE from 'three';
 import { RGBELoader } from 'three/module/loaders/RGBELoader.js';
 import Game from './game.js'
 import Menu from './menu.js';
+import GameLocal from './gameLocal.js';
 
 var view;
 var scene = new THREE.Scene();
 var status = {
-	status:0,
+	status:-1,
 };
 var data_texture;
 var appli = document.querySelector('#app');
@@ -18,9 +19,16 @@ function updateStatus(newStatus) {
 }
 async function initialize() {
 	try {
-        await loadTexture();
-        await createMenu();
-        await createGame();
+		while(1){
+			if (status.status === -1)
+				await loadTexture();
+			if (status.status === 0)
+				await createMenu();
+			if (status.status === 1)
+				await createGame();
+            if (status.status === 2)
+                await createGameLocal();
+		}
     } catch (error) {
         console.error("Error during initialization:", error);
     }
@@ -33,6 +41,7 @@ async function loadTexture() {
             texture.mapping = THREE.EquirectangularReflectionMapping;
 			scene.background = texture
 			scene.environment = texture
+			status.status = 2;
             resolve();
         });
     });
@@ -49,6 +58,12 @@ async function createGame() {
     return new Promise((resolve, reject) => {
 		view = null;
         view = new Game(status, resolve, appli, scene, updateStatus);
+    });
+}
+async function createGameLocal() {
+    return new Promise((resolve, reject) => {
+		view = null;
+        view = new GameLocal(status, resolve, appli, scene, updateStatus);
     });
 }
 

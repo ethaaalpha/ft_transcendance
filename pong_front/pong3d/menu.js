@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/module/controls/OrbitControls';
 import { FontLoader } from 'three/module/loaders/FontLoader';
 import { GLTFLoader } from 'three/module/loaders/GLTFLoader.js';
-import { RGBELoader } from 'three/module/loaders/RGBELoader.js';
 
 class Menu {
 	constructor(status, resolve, appli, scene, statusCallback) {
@@ -49,7 +48,7 @@ class Menu {
 	createTxt (font) {
 		let i = 0;
 		const color = 0xED7D31;
-		const message = ["Play", "Setting", "Other"]
+		const message = ["Matchmaking", "Local", "Tournament"]
 		const yPos = [0, -140, -280] 
 		while (i < 3){
 			this.matDark = new THREE.LineBasicMaterial({
