@@ -28,7 +28,7 @@ class GameLocal {
 		this.movementP1 = new THREE.Vector3(0, 0, 0);
 		this.movementP2 = new THREE.Vector3(0, 0, 0);
 		this.speed = 0.8;
-		this.speedBall = 0.4;
+		this.speedBall = 0.25;
 		this.player1 = null;
 		this.player2 = null;
 		this.p1Score = 0;
@@ -42,7 +42,8 @@ class GameLocal {
 		this.controls = null;
 		this.texture = null;
 		this.uniforms = {
-			amplitude: { value: 0.0 }
+			time: {value: 0.0},
+			amplitude: {value: 0.5},
 		};
 		this.directionalLight = new THREE.DirectionalLight(0x87CEEB, 10);
 		this.directionalLight2 = new THREE.DirectionalLight(0x87CEEB, 10);
@@ -102,7 +103,7 @@ class GameLocal {
 			bevelThickness: 5,
 		} );
 		geometry.center();
-		const tessellateModifier = new TessellateModifier(8, 6);
+		const tessellateModifier = new TessellateModifier(10, 3);
 		geometry = tessellateModifier.modify(geometry);
 		const numFaces = geometry.attributes.position.count / 3;
 
@@ -116,7 +117,7 @@ class GameLocal {
 			const s = table[numFaces % 4];
 			const l = table[numFaces % 4];
 			color.setHSL( h, s, l );
-			const d = 10 * ( 0.8 - Math.random() );
+			const d = 0.7 * ( 0.8 - Math.random() );
 			for ( let i = 0; i < 3; i ++ ) {
 				colors[ index + ( 3 * i ) ] = color.r;
 				colors[ index + ( 3 * i ) + 1 ] = color.g;
@@ -300,7 +301,7 @@ class GameLocal {
 			changed = true
 		}
 		if (changed){
-			updateScoreDisplay(this.p1Score, this.p2Score, this.hudScore);
+			//updateScoreDisplay(this.p1Score, this.p2Score, this.hudScore);
 			await sleep(1500)
 		}
 	}
