@@ -115,6 +115,14 @@
 				<br>
 				<input type="submit" value="Register with Intern">
 			</form>
+
+			<h1>Reset password </h1>
+			<form action="/auth/reset-password" method="post">
+				{% csrf_token %}
+				<label for="username">Username:</label>
+  				<input type="text" id="username" name="username"><br>
+				<input type="submit" value="Send reset-password">
+			</form>
 		</div>
     <script>
 		username = null;

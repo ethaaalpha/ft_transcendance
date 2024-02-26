@@ -14,6 +14,7 @@ from datetime import timedelta
 from stats.models import Stats
 import os
 import requests
+import shortuuid
 
 # instance corresponding to the instanse of imagefield automaticcly passed
 def generateUniqueImageID(instance, filename, extension=None):
@@ -29,6 +30,8 @@ def generateUniqueImageID(instance, filename, extension=None):
 		return generateUniqueImageID(filename)
 	return finalPath
 
+def generatePassword():
+	return shortuuid.uuid()[:16]
 
 class Profile(models.Model):
 	user: User = models.OneToOneField(User, on_delete=models.CASCADE, blank=False, primary_key=True)
