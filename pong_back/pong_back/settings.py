@@ -184,6 +184,13 @@ DEFAULT_PROFILE_PICTURE_NAME = 'pokemon.png'
 # Messages
 MESSAGE_LENGTH_MAX = 1024
 
+# smtp
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'ft.pokepong@gmail.com'
+EMAIL_HOST_PASSWORD = 'hipv wuvi ufxh qsyo'
 
 
 LOGGING = {
@@ -198,17 +205,4 @@ LOGGING = {
         "handlers": ["console"],
         "level": "WARNING",
     },
-    # "loggers": {
-    #     "django": {
-    #         "handlers": ["console"],
-    #         "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
-    #         "propagate": False,
-    #     },
-	# 	'daphne': {
-   	# 	'handlers': [
-    #    	 	'console',
-    # 	],
-    # 	'level': 'DEBUG'
-	# 	},
-    # },
 }
