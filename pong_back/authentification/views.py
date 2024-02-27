@@ -68,7 +68,8 @@ def login_internal(request: HttpRequest):
 		if Profile.login(request, username, password):
 			return tResponses.BAD_REQUEST.request("Credentials invalid !")
 		return tResponses.OKAY.request(f"You successfully log as {username} !")
-	
+	import sys
+	print(form.errors.as_data(), file=sys.stderr)
 	return tResponses.BAD_REQUEST.request("Form isn't valid !")
 
 # Callback handle redirected request form 42 API
