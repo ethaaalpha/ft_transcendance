@@ -17,6 +17,7 @@ function getCookie(name) {
 function fetchData(apiUrl, method, data = null) {
     const csrfToken = getCookie('csrftoken');
 
+	console.log(`la data ${JSON.stringify(data)}`);
 	console.log(`voici le token ${csrfToken}`)
     const headers = {
         'Content-Type': 'application/json',
@@ -29,7 +30,7 @@ function fetchData(apiUrl, method, data = null) {
     };
 
     if (data && (method === 'POST' || method === 'PUT')) {
-        requestOptions.body = JSON.stringify(data);
+		requestOptions.body = data;
     }
 
     return fetch(apiUrl, requestOptions)

@@ -7,14 +7,20 @@ function handleFormSubmit(event) {
 	event.preventDefault();
 
 	// Create a FormData object for the form
-	const formData = new FormData(event.target);
+	// const formData = new FormData(event.target);
 
 	// Now you can proceed with form submission using fetchData or other logic
 	const apiUrl = event.target.action;  // Use the form's action attribute as the API endpoint
 	const method = event.target.method.toUpperCase();
 
-	
-	fetchData(apiUrl, method, formData)
+	const data = new URLSearchParams();
+	for (const pair of new FormData(event.target)) {
+    	data.append(pair[0], pair[1]);
+	}
+
+
+
+	fetchData(apiUrl, method, data)
 		.then(data => {
 			console.log("laaa")
 			console.log('Data:', data);
@@ -55,7 +61,6 @@ async function main() {
     ajaxForms.forEach(form => {
         form.addEventListener('submit', handleFormSubmit);
     });
-	console.log("the end")
 }
 
 main()
