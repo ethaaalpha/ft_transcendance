@@ -19,10 +19,10 @@
 	
 				<div>
 					<h1>Friends</h1>
-					<form action="/api/dashboard/friends" method="post" id="form-friends" class='ajax-form'>
+					<form action="/api/dashboard/friends" method="post" id="form-friends" class='ajax-form' enctype="application/json" >
 						<label for="action">Action :</label><br>
-						 <input type="text" id="action" name="action"><br>
-						 <label for="username">Username:</label><br>
+						<input type="text" id="action" name="action"><br>
+						<label for="username">Username:</label><br>
 						<input type="text" id="username" name="username">
 						<input type="submit" value="action on friend system">
 					</form>
@@ -32,19 +32,17 @@
 			<div style="display: flex; flex-wrap: wrap; flex-direction: row; justify-content: space-evenly;">
 				<div>
 					<h1>Password change</h1>
-					<form action="/api/dashboard?filter=password" method="post" class='ajax-form'>
+					<form action="/api/dashboard?filter=password" method="post" class='ajax-form' enctype="application/json" >
 						<label for="actual-password">Actual password :</label><br>
 						<input type="text" id="actualPassword" name="actualPassword"><br>
 						<label for="password">New password:</label><br>
 						<input type="text" id="password" name="newPassword">
 						<input type="submit" value="changerlemotpasse">
-					</form>		
+					</form>
 				</div>
 	
 				<h1>Logout</h1>
-				<form action="/api/auth/logout" method="post" class='ajax-form'>
-					<input type="submit" value="Se déconnecter">
-				</form>
+				<button type="button" id="auth-logout">Logout</button>
 			</div>
 			
 			<div style="display: flex; flex-wrap: wrap; flex-direction: row; justify-content: space-between;">
@@ -86,7 +84,7 @@
 			<button type="button" id="auth-42">Sign in with 42</button>
 
 			<h1>Login with Intern</h1>
-			<form action="/api/auth/login?mode=intern" method="post" class="ajax-form">
+			<form action="/api/auth/login?mode=intern" method="post" class="ajax-form" enctype="application/json">
 				<label for="username">Username:</label>
   				<input type="text" id="username" name="username"><br>
 				<label for="password">Password:</label>
@@ -95,7 +93,7 @@
 			</form>
 
 			<h1>Register with Intern</h1>
-			<form action="/api/auth/register" method="post" class='ajax-form'>
+			<form action="/api/auth/register" method="post" class='ajax-form' enctype="application/json">
 				<label for="username">Username:</label>
   				<input type="text" id="username" name="username"><br>
 				<label for="email">Email:</label>

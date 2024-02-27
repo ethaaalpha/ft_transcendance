@@ -37,6 +37,16 @@ function loadLogged() {
 			updateUsername(data['username']);
 	});
 	loggedDisplay.style.display = 'flex';
+
+	document.getElementById('auth-logout').onclick = async (event) => {
+		(async () => {
+			await fetchData('/api/auth/logout', 'POST')
+				.then(data => {
+					loggedDisplay.style.display = 'none'
+					unloggedDisplay.style.display = 'block'
+				});
+		})();
+	};;
 }
 
 function loadUnlogged() {

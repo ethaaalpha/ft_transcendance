@@ -17,12 +17,11 @@ function getCookie(name) {
 function fetchData(apiUrl, method, data = null) {
     const csrfToken = getCookie('csrftoken');
 
-	console.log(`la data ${JSON.stringify(data)}`);
-	console.log(`voici le token ${csrfToken}`)
+    console.log(`la data ${JSON.stringify(data)}`);
+    console.log(`voici le token ${csrfToken}`);
+
     const headers = {
-        'Content-Type': 'application/json',
         'X-CSRFTOKEN': csrfToken,
-		// 'Access-Control-Allow-Origin': 'https://localhost:8000'
     };
 
     const requestOptions = {
@@ -31,7 +30,7 @@ function fetchData(apiUrl, method, data = null) {
     };
 
     if (data && (method === 'POST' || method === 'PUT')) {
-		requestOptions.body = data;
+        requestOptions.body = data;
     }
 
     return fetch(apiUrl, requestOptions)
