@@ -1,45 +1,56 @@
-username = null;
 const loggedDisplay = document.getElementById('logged');
 const unloggedDisplay = document.getElementById('unlogged');
-
 
 function handleFormSubmit(event) {
 	event.preventDefault();
 
 	// Create a FormData object for the form
-	// const formData = new FormData(event.target);
+	const formData = new FormData(event.target);
 
 	// Now you can proceed with form submission using fetchData or other logic
 	const apiUrl = event.target.action;  // Use the form's action attribute as the API endpoint
 	const method = event.target.method.toUpperCase();
 
-	const data = new URLSearchParams();
-	for (const pair of new FormData(event.target)) {
-    	data.append(pair[0], pair[1]);
-	}
-
-
-
-	fetchData(apiUrl, method, data)
+	fetchData(apiUrl, method, formData)
 		.then(data => {
-			console.log("laaa")
 			console.log('Data:', data);
-			// Perform actions with the retrieved data
 		},
 		error => console.error('Error:', error))
 }
 
+function updatePP(link){
+	const image = document.getElementById('image');
+	image.src = link;
+}
+
+function updateUsername(username) {
+	const usernameHTML = document.getElementById('username')
+	usernameHTML.innerText = username;
+	usernameHTML.style.fontWeight = 'bold';
+}
 
 function loadLogged() {
 	fetchData('/api/dashboard')
 		.then(data => {
-			console.log(data);
+			console.log(data)
+			updatePP(data['profilePicture']);
+			updateUsername(data['username']);
 	});
+	loggedDisplay.style.display = 'flex';
 }
 
 function loadUnlogged() {
-	unloggedDisplay.style.display = 'block'
+	unloggedDisplay.style.display = 'block';
 
+	document.getElementById('auth-42').onclick = async (event) => {
+		(async () => {
+			await fetchData('/api/auth/login?mode=42')
+				.then(data => {
+					url = data['url']
+					window.location.href = url
+				});
+		})();
+	};;
 }
 
 async function isLogged() {
@@ -52,10 +63,14 @@ async function main() {
 	unloggedDisplay.style.display = 'none';
 
 	isLogged = await isLogged();
-	if (isLogged)
+	if (isLogged) {
+		console.log("utilisateur connecté")
 		loadLogged();
-	else
+	}
+	else {
+		console.log("utilisateur déconnecté")
 		loadUnlogged();
+	}
 
 	const ajaxForms = document.querySelectorAll('.ajax-form');
     ajaxForms.forEach(form => {

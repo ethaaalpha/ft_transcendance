@@ -11,7 +11,6 @@ from requests.models import PreparedRequest
 from .forms import RegisterForm, LoginForm
 import requests
 
-
 """
 	/auth/login
 	/auth/logout
@@ -21,20 +20,28 @@ import requests
 """
 
 def login(request: HttpRequest):
+	if (areKeysFromList(['mode'], request.GET)):
+		return tResponses.BAD_REQUEST.request("Missing parameters !")
+	if isOtherKeysInList(['mode'], request.GET):
+		return tResponses.BAD_REQUEST.request("Extra parameters found !")
+	mode = request.GET['mode']
 	if (request.method == "POST"):
 		"""
 		/auth/login?mode=intern
-		/auth/login?mode=42
 
 		mode must be present to perfom the request !
 		"""
-		if (areKeysFromList(['mode'], request.GET)):
-			return tResponses.BAD_REQUEST.request("Missing parameters !")
-		if isOtherKeysInList(['mode'], request.GET):
-			return tResponses.BAD_REQUEST.request("Extra parameters found !")
-		mode = request.GET['mode']
+		match mode:
+			case "intern":
+				return login_internal(request)
+			case _:
+				return tResponses.BAD_REQUEST.request("Unrecognized authentification mode !")
+	else:
+		"""
+		/auth/login?mode=42
 
-
+		This will return the link to connect to 42 
+		"""
 		match mode:
 			case "42":
 				# possiblement à modifier !
@@ -46,14 +53,10 @@ def login(request: HttpRequest):
 				}
 				request: PreparedRequest = PreparedRequest()
 				request.prepare_url(settings.API_URL, params)
-				# return tResponses.OKAY.request(request.url)
-				return redirect(request.url) # Ici redirige vers la page de 42 pour l'authentification !
-			case "intern":
-				return login_internal(request)
+				return JsonResponse({'url': request.url})
 			case _:
-				return tResponses.BAD_REQUEST.request("Unrecognize authentification mode !")
-	else:
-		return tResponses.BAD_REQUEST.request("Get request not supported here !")
+				return tResponses.BAD_REQUEST.request("Unrecognized authentification mode !")
+	
 
 # This for internal auth user not 42 users
 def login_internal(request: HttpRequest):
@@ -66,8 +69,6 @@ def login_internal(request: HttpRequest):
 			return tResponses.BAD_REQUEST.request("Credentials invalid !")
 		return tResponses.OKAY.request(f"You successfully log as {username} !")
 	
-	import sys
-	print(form.errors.as_data(), file=sys.stderr)
 	return tResponses.BAD_REQUEST.request("Form isn't valid !")
 
 # Callback handle redirected request form 42 API

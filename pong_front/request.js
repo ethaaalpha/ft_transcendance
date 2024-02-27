@@ -22,6 +22,7 @@ function fetchData(apiUrl, method, data = null) {
     const headers = {
         'Content-Type': 'application/json',
         'X-CSRFTOKEN': csrfToken,
+		// 'Access-Control-Allow-Origin': 'https://localhost:8000'
     };
 
     const requestOptions = {
