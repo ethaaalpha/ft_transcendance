@@ -46,6 +46,7 @@ def login(request: HttpRequest):
 				}
 				request: PreparedRequest = PreparedRequest()
 				request.prepare_url(settings.API_URL, params)
+				# return tResponses.OKAY.request(request.url)
 				return redirect(request.url) # Ici redirige vers la page de 42 pour l'authentification !
 			case "intern":
 				return login_internal(request)
