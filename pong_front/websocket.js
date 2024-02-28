@@ -45,6 +45,10 @@ class activityWebsocket {
 
 class coordinationWebsocket {
 
+	constructor () {
+		this.input = document.getElementById('room-id-input');
+	}
+
 	connect() {
 		this.socket = new WebSocket('wss://' + window.location.host + '/api/coordination/');
 
@@ -75,16 +79,14 @@ class coordinationWebsocket {
 			this.socket.send(JSON.stringify({'event' : 'matchmaking', 'data' : {'action': 'join'}}))
 		}
 		document.querySelector("#button-join").onclick = (e) => {
-			domInput = document.querySelector("#room-id-input");
-			value = domInput.value;
+			let value = this.input.value;
 			this.socket.send(JSON.stringify({'event' : 'tournament','data': {'room-id': value, 'action': 'join'}}));
-			domInput.value = "";
+			this.input.value = "";
 		}
 		document.querySelector("#button-create").onclick = (e) => {
-			domInput = document.querySelector("#room-id-input");
-			value = domInput.value;
+			let value = this.input.value;
 			this.socket.send(JSON.stringify({'event' : 'create', 'data': {'mode': value}}));
-			domInput.value = "";
+			this.input.value = "";
 		}
 	}
 }

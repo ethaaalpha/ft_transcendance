@@ -3,7 +3,7 @@
 		<meta charset="UTF-8">
 	</head>
 	<body>
-		<div id="logged" style="display: flex; flex-wrap: wrap; flex-direction: row;">
+		<div class="logged" style="display: flex; flex-wrap: wrap; flex-direction: row;">
 			<div id="title-block" style="background-color: aqua; padding: 2%;">
 				<p id="username"></p>
 				<img id='image' style="width: 100;"><br><br>
@@ -45,7 +45,7 @@
 					<input id="chat-message-submit" type="button" value="Send">
 				</div>
 			</div>
-			<div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+			<div class="logged" style="display: flex; flex-direction: row; flex-wrap: wrap;">
 				<div id="matchmaking" style="background-color: goldenrod; padding: 2%;">
 					<h3>Matchmaking / Tournament</h3>
 					<button id='button-match' type="button">Join matchmaking !</button><br>
@@ -61,7 +61,7 @@
 			</div>
 		</div>
 
-		<div id="unlogged">
+		<div class="unlogged">
 			<h1>Login with 42</h1>
 			<button type="button" id="auth-42">Sign in with 42</button>
 

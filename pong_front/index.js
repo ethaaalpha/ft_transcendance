@@ -1,5 +1,3 @@
-const loggedDisplay = document.getElementById('logged');
-const unloggedDisplay = document.getElementById('unlogged');
 
 function handleFormSubmit(event) {
 	event.preventDefault();
@@ -32,6 +30,13 @@ function updateUsername(username) {
 	usernameHTML.style.fontWeight = 'bold';
 }
 
+function changeClass(className, mode) {
+	const items = document.querySelectorAll(`.${className}`);
+    items.forEach(item => {
+        item.style.display = mode;
+    });
+}
+
 function loadLogged() {
 	fetchData('/api/dashboard')
 		.then(data => {
@@ -39,14 +44,13 @@ function loadLogged() {
 			updatePP(data['profilePicture']);
 			updateUsername(data['username']);
 	});
-	loggedDisplay.style.display = 'flex';
 
 	document.getElementById('auth-logout').onclick = async (event) => {
 		(async () => {
 			await fetchData('/api/auth/logout', 'POST')
 				.then(data => {
-					loggedDisplay.style.display = 'none'
-					unloggedDisplay.style.display = 'block'
+					changeClass('logged', 'none');
+					changeClass('unlogged', 'block');
 				});
 		})();
 	};;
@@ -58,10 +62,12 @@ function loadLogged() {
 	coordination = new coordinationWebsocket();
 	coordination.connect();
 	coordination.registerEvents();
+
+	changeClass('logged', 'flex');
 }
 
 function loadUnlogged() {
-	unloggedDisplay.style.display = 'block';
+	changeClass('unlogged', 'block');
 
 	document.getElementById('auth-42').onclick = async (event) => {
 		(async () => {
@@ -80,8 +86,8 @@ async function isLogged() {
 }
 
 async function main() {
-	loggedDisplay.style.display = 'none';
-	unloggedDisplay.style.display = 'none';
+	changeClass('logged', 'none');
+	changeClass('unlogged', 'none');
 
 	isLogged = await isLogged();
 	if (isLogged) {
