@@ -11,10 +11,18 @@ def validate_username(value):
             _("%(value)s can't start with 42_"),
             params={"value": value},
         )
+	if ' ' in value:
+		raise ValidationError(
+            _("%(value)s can't contain spaces !"),
+            params={"value": value},
+        )
+
+class ResetPassForm(forms.Form):
+	username = forms.CharField(min_length=settings.CONFIG_USER_LENGTH_MIN, max_length=settings.CONFIG_USER_LENGTH_MAX, required=True, validators=[validate_username])
 
 class RegisterForm(forms.Form):
 	username = forms.CharField(min_length=settings.CONFIG_USER_LENGTH_MIN, max_length=settings.CONFIG_USER_LENGTH_MAX, required=True, validators=[validate_username])
-	email = forms.CharField(min_length=settings.CONFIG_EMAIL_LENGTH_MIN, max_length=settings.CONFIG_EMAIL_LENGTH_MAX, required=True)
+	email = forms.EmailField(min_length=settings.CONFIG_EMAIL_LENGTH_MIN, max_length=settings.CONFIG_EMAIL_LENGTH_MAX, required=True)
 	password = forms.CharField(min_length=settings.CONFIG_PASS_LENGTH_MIN, max_length=settings.CONFIG_PASS_LENGTH_MAX, required=True)
 
 class LoginForm(forms.Form):

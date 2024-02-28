@@ -1,14 +1,16 @@
 from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.utils.html import format_html
 from django.contrib.auth.models import User
 from tools.responses import tResponses
 from tools.functions import isOtherKeysInList, areKeysFromList
-from users.models import Profile
+from django.core.mail import send_mail
+from users.models import Profile, generatePassword
 from django.conf import settings
 from django.shortcuts import redirect
 from django.contrib.auth import logout as djangoLogout
 from uuid import uuid4
 from requests.models import PreparedRequest
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, ResetPassForm
 import requests
 
 """
@@ -113,7 +115,31 @@ def logout(request: HttpRequest):
 	
 def reset_password(request: HttpRequest):
 	if (request.method == "POST"):
-		return tResponses.OKAY.request("TU AS FAIT UN RESET_PASSWORD POST")
+		form = ResetPassForm(request.POST)
+
+		if form.is_valid():
+			username = form.cleaned_data['username']
+			user = Profile.getUserFromUsername(username)
+
+			if user:
+				newPass = generatePassword()
+				response = user.profile.changePassword(newPass)
+
+				# send the mail if it's okay !
+				if response.status_code == 200:
+					email_subject = 'PokePong -- Password Reset'
+					email_body = format_html(
+   						"You asked for a password reset. Your new password is {} ."
+						"You will be able to change it in 5 minutes.\n"
+						"Have a nice day.\n"
+						"PokePong team.\n"
+						, newPass
+					)
+					send_mail(email_subject, email_body, from_email=None, recipient_list=[user.email])
+				return response
+			else:
+				return tResponses.BAD_REQUEST.request("Form failed !")
+		return tResponses.BAD_REQUEST.request("Form isn't valid !")
 	else:
 		return tResponses.BAD_REQUEST.request("Get request not supported here !")
 
