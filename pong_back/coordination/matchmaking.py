@@ -9,10 +9,15 @@ class Matchmaking:
 	def addPlayerToQueue(user: User) -> str:
 		from game.models import Room, Mode
 
+		# check is the user is already playing somewhere else !
+		if user.profile.isPlaying == True:
+			return ("Already inside a game !", False)
+
 		if user not in Matchmaking._stack:
 			Matchmaking._stack.append(user)
 		else:
 			return ("Already inside the queue !", False)
+
 		if len(Matchmaking._stack) >= 2: # Run when match 2 players
 			playerA: User = Matchmaking._stack[-1]
 			playerB: User = Matchmaking._stack[-2]

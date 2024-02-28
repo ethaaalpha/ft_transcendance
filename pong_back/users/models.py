@@ -41,6 +41,7 @@ class Profile(models.Model):
 	blockedUsers = models.ManyToManyField(User, related_name="blockedUsers", symmetrical=False, blank=True)
 	lastPasswordChange = models.DateTimeField(default=now, blank=True)
 	gameTheme = models.CharField(max_length=64, default='default')
+	isPlaying = models.BooleanField(default=False)
 	
 	# shortcut to user #
 	def getUsername(self):
@@ -49,6 +50,11 @@ class Profile(models.Model):
 	def getEmail(self):
 		return (self.user.email)
 	
+
+	def setPlaying(self, state: bool):
+		self.isPlaying = state
+		self.save()
+
 	def getManyToTab(self, many):
 		tab = []
 		for value in many.all():

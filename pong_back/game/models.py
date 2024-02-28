@@ -77,6 +77,9 @@ class Match(models.Model):
 		self.state = 2
 		self.save()
 
+		# let free the loser
+		self.getLoser().profile.setPlaying(False)
+
 		# here make the room update and check for the next match !
 		print(f'Le gagnant du match entre {self.host} et {self.invited} est {self.getWinner()} !!!!', file=sys.stderr)
 		room = self.room()
@@ -90,15 +93,20 @@ class Match(models.Model):
 		self.save()
 
 		# JUSTE POUR LE DEV
-		print(f'Voici le début du match entre [HOST] {self.host} et [INVITED] {self.invited} !', file=sys.stderr)
-		self.addPoint(self.host)
-		self.finish()
+		# print(f'Voici le début du match entre [HOST] {self.host} et [INVITED] {self.invited} !', file=sys.stderr)
+		# self.addPoint(self.host)
+		# self.finish()
 
 	def getWinner(self) -> User:
 		if self.score[0] > self.score[1]:
 			return self.host
 		return self.invited
 
+	def getLoser(self) -> User:
+		if self.score[0] > self.score[1]:
+			return self.invited
+		return self.host
+	
 class Mode(models.TextChoices):
 	CLASSIC = '2'
 	TOURNAMENT4 = '4'
@@ -144,6 +152,9 @@ class Room(models.Model):
 		self.state = 1
 		self.save()
 
+		for player in self.opponents.all():
+			player.profile.setPlaying(True)
+
 		self.next(True)
 		# it is a matchmaking
 		# lancer la partie voir avec nico !!!!
@@ -173,6 +184,8 @@ class Room(models.Model):
 	def addPlayer(self, player: User) -> int:
 		actual = self.opponents.count()
 		
+		if (player.profile.isPlaying == True):
+			return ("You are already playing !", False)
 		if (actual >= int(self.mode)):
 			return ("There is too much player in the room !", False)
 		if (player in self.opponents.all()):
@@ -199,13 +212,13 @@ class Room(models.Model):
 
 		else:
 			if self.numberMatchsLastRound == 1:
-				print(f'Voici le gagnant du tournois {lastMatch.getWinner()}', file=sys.stderr)
-				lastMatch = self.matchs.all()[:1].get()
+				lastMatch: Match = self.matchs.all()[:1].get()
+				lastMatch.getWinner().profile.setPlaying(False)
+
 				for p in self.opponents.all():
 					self.send(p, 'win', {'message': f'Le gagnant du tournois est {lastMatch.getWinner()}'})
 				# CELA SIGNIFIE LA FIN DU TOURNOIS
 				return
-			
 			# il y a d'autres matchs à faire +_+
 			lastMatchs = list(self.matchs.all()[:self.numberMatchsLastRound])
 			winners = [m.getWinner() for m in lastMatchs]
@@ -259,6 +272,8 @@ class Room(models.Model):
 		"""
 		if Matchmaking.isPlayerInQueue(owner):
 			return ("You are already in matchmaking queue !", False)
+		if owner.profile.isPlaying == True:
+			return ("You are already in game !", False)
 		roomCheck = Room.objects.filter(opponents=owner, state=0).first()
 		if roomCheck:
 			return (f"You are already in a room the id is {roomCheck.id} !", False)
