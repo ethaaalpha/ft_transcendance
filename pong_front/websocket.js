@@ -11,17 +11,20 @@ class activityWebsocket {
 		this.socket.onmessage = (e) => {
 			const data = JSON.parse(e.data);
 			const stringifiedData = JSON.stringify(data)
+			console.log("j'ai reçu message ici !")
         	document.querySelector('#activity-log').value += stringifiedData +'\n';
 		}
-	}
 
-	registerEvents() {
 		this.socket.onclose = (e) => {
 			console.error('Chat socket closed unexpectedly ! Retrying to connect !');
 			setTimeout(() => {
 				this.connect();
 			}, 1000);
 		};
+	}
+
+	registerEvents() {
+
 		this.catchEventHTML();
 	}
 
@@ -53,15 +56,16 @@ class coordinationWebsocket {
 			const stringifiedData = JSON.stringify(data)
 			document.querySelector('#activity-log').value += stringifiedData +'\n';
 		};
-	}
-
-	registerEvents() {
+		
 		this.socket.onclose = (e) => {
 			console.error('Chat socket closed unexpectedly ! Retrying to connect !');
 			setTimeout(() => {
 				this.connect();
 			}, 1000);
 		};
+	}
+
+	registerEvents() {
 		this.catchEventHTML();
 	}
 
