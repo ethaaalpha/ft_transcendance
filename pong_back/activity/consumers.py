@@ -28,7 +28,7 @@ class ActivityConsumer(AsyncJsonWebsocketConsumer):
 			match content['event']:
 				case 'chat':
 					data: dict = content.get('data')
-					await ActivityNotifier.sendPrivateMessage(data.get('from'), data.get('to'), data.get('content'))
+					await ActivityNotifier.sendPrivateMessage(await self.getUsername(), data.get('to'), data.get('content'))
 					await database_sync_to_async(Conversation.consumer_appendToConversation)(data.get('from'), data.get('to'), data.get('content'))
 				
 	async def send_message(self, event):
