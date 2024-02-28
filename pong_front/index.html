@@ -18,7 +18,7 @@
 			</div>
 			<div id="form-friends" style="background-color: beige; padding: 2%;">
 				<h3>Friends</h3>
-				<form action="/api/dashboard/friends" method="post" class='ajax-form'>
+				<form action="/api/dashboard/friends" method="post" class='ajax-form' enctype="application/json">
 					<label for="action">Action :</label><br>
 					<input type="text" name="action"><br>
 					<label for="username">Username:</label><br>
@@ -28,7 +28,7 @@
 			</div>
 			<div id="form-password" style="background-color: blanchedalmond; padding: 2%;">
 				<h3>Password</h3>
-				<form action="/api/dashboard?filter=password" method="post" class='ajax-form'>
+				<form action="/api/dashboard?filter=password" method="post" class='ajax-form' enctype="application/json">
 					<label for="actual-password">Actual password :</label><br>
 					<input type="text" name="actualPassword"><br>
 					<label for="password">New password:</label><br>
@@ -36,7 +36,7 @@
 					<input type="submit" value="Change-Password">
 				</form>
 			</div>
-			<div id="chat-send" style="background-color: burlywood; padding: 2%;">
+			<div id="chat-send" style="background-color: burlywood; padding: 2%;" enctype="application/json">
 				<h3>Send messages</h3>
 					<label for="chat-message-target">Target</label>
 					<input id="chat-message-target" type="text" size="10"><br>
