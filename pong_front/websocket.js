@@ -1,7 +1,7 @@
 class activityWebsocket {
 
 	connect() {
-		this.socket = new WebSocket('wss://' + window.location.host + 'api/activity/');
+		this.socket = new WebSocket('wss://' + window.location.host + '/api/activity/');
 		
 		this.socket.onopen = function(e) {
 			console.log("Le websocket 'activity' est bien connecté !")
@@ -22,7 +22,6 @@ class activityWebsocket {
 				connect();
 			}, 1000);
 		};
-		
 		this.catchEventHTML();
 	}
 
@@ -44,10 +43,10 @@ class activityWebsocket {
 class coordinationWebsocket {
 
 	connect() {
-		this.socket = new WebSocket('wss://' + window.location.host + 'api/coordination/');
+		this.socket = new WebSocket('wss://' + window.location.host + '/api/coordination/');
 
 		this.socket.onopen = function(e) {
-			console.log("Le websocket 'activity' est bien connecté !")
+			console.log("Le websocket 'coordination' est bien connecté !")
 		}
 
 		this.socket.onmessage = function(e) {
@@ -64,7 +63,6 @@ class coordinationWebsocket {
 				connect();
 			}, 1000);
 		};
-		
 		this.catchEventHTML();
 	}
 

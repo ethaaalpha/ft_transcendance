@@ -50,6 +50,14 @@ function loadLogged() {
 				});
 		})();
 	};;
+
+	activity = new activityWebsocket();
+	activity.connect();
+	activity.registerEvents();
+
+	coordination = new coordinationWebsocket();
+	coordination.connect();
+	coordination.registerEvents();
 }
 
 function loadUnlogged() {
