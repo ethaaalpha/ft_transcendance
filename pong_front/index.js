@@ -4,12 +4,15 @@ const unloggedDisplay = document.getElementById('unlogged');
 function handleFormSubmit(event) {
 	event.preventDefault();
 
+
+	const form = event.currentTarget;
 	// Create a FormData object for the form
-	const formData = new FormData(event.target);
+	const formData = new FormData(form);
 
 	// Now you can proceed with form submission using fetchData or other logic
-	const apiUrl = event.target.action;  // Use the form's action attribute as the API endpoint
-	const method = event.target.method.toUpperCase();
+	console.log(`ici ${form.getAttribute('action')}`)
+	const apiUrl = form.getAttribute('action');  // Use the form's action attribute as the API endpoint
+	const method = form.method.toUpperCase();
 
 	fetchData(apiUrl, method, formData)
 		.then(data => {

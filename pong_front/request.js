@@ -22,6 +22,7 @@ function fetchData(apiUrl, method, data = null) {
 
     const headers = {
         'X-CSRFTOKEN': csrfToken,
+		'Content-Type' : 'application/json'
     };
 
     const requestOptions = {
