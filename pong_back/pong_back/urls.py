@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from home.views import index, game
 from users.decorators import logged_required
@@ -31,18 +32,17 @@ import conversations.views
 
 
 urlpatterns = [
-	path('admin/', admin.site.urls),
-	path('dashboard', logged_required(users.views.entryPoint)),
-	path('dashboard/friends', logged_required(friends.views.entryPoint)),
-	path('dashboard/conversations', logged_required(conversations.views.entryPoint)),
-	path('auth/', include('authentification.urls')),
-	path('', index, name="index"),
-	path('game/', game, name='game')
+	path('api/admin/', ensure_csrf_cookie(admin.site.urls)),
+	path('api/dashboard', ensure_csrf_cookie(logged_required(users.views.entryPoint))),
+	path('api/dashboard/friends', ensure_csrf_cookie(logged_required(friends.views.entryPoint))),
+	path('api/dashboard/conversations', ensure_csrf_cookie(logged_required(conversations.views.entryPoint))),
+	path('api/auth/', include('authentification.urls')),
+	path('api/game/', ensure_csrf_cookie(game), name='game')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 websocket_urlpatterns = [
-	path("activity/", ActivityConsumer.as_asgi()),
-	path("game/", GameConsumer.as_asgi()),
-	path("coordination/", CoordinationConsumer.as_asgi()),
+	path("api/activity/", ActivityConsumer.as_asgi()),
+	path("api/game/", GameConsumer.as_asgi()),
+	path("api/coordination/", CoordinationConsumer.as_asgi()),
 ]
 

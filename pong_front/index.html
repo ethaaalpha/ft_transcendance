@@ -1,0 +1,93 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+	</head>
+	<body>
+		<div id="logged" style="display: flex; flex-wrap: wrap; flex-direction: row;">
+			<div id="title-block" style="background-color: aqua; padding: 2%;">
+				<p id="username"></p>
+				<img id='image' style="width: 100;"><br><br>
+				<button type="button" id="auth-logout">Logout</button>
+			</div>
+			<div id="form-profile-picture", style="background-color: antiquewhite; padding: 2%;">
+				<h3>Profile picture !</h3>
+				<form action="/api/dashboard?filter=profilePicture" method="post" class='ajax-form' enctype="multipart/form-data">
+					<input type="file" name="profilePicture"><br><br><br>
+					<input type="submit" value="Change-ProfilePCT">
+				</form>
+			</div>
+			<div id="form-friends" style="background-color: beige; padding: 2%;">
+				<h3>Friends</h3>
+				<form action="/api/dashboard/friends" method="post" class='ajax-form' enctype="application/json">
+					<label for="action">Action :</label><br>
+					<input type="text" name="action"><br>
+					<label for="username">Username:</label><br>
+					<input type="text" name="username">
+					<input type="submit" value="Friend-Action">
+				</form>
+			</div>
+			<div id="form-password" style="background-color: blanchedalmond; padding: 2%;">
+				<h3>Password</h3>
+				<form action="/api/dashboard?filter=password" method="post" class='ajax-form' enctype="application/json">
+					<label for="actual-password">Actual password :</label><br>
+					<input type="text" name="actualPassword"><br>
+					<label for="password">New password:</label><br>
+					<input type="text" name="newPassword">
+					<input type="submit" value="Change-Password">
+				</form>
+			</div>
+			<div id="chat-send" style="background-color: burlywood; padding: 2%;" enctype="application/json">
+				<h3>Send messages</h3>
+					<label for="chat-message-target">Target</label>
+					<input id="chat-message-target" type="text" size="10"><br>
+					<label for="chat-message-input">Content</label>
+					<input id="chat-message-input" type="text" size="20"><br>
+					<input id="chat-message-submit" type="button" value="Send">
+				</div>
+			</div>
+			<div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+				<div id="matchmaking" style="background-color: goldenrod; padding: 2%;">
+					<h3>Matchmaking / Tournament</h3>
+					<button id='button-match' type="button">Join matchmaking !</button><br>
+					<label for="room-id-input">Room-ID | Room mode</label>
+					<input id="room-id-input" type="text" size="20"><br>
+					<input id="button-join" type="button" value="Join">
+					<input id="button-create" type="button" value="Create">
+				</div>
+				<div id="console-log" style="background-color: darkkhaki; padding: 2%;">
+					<h3>Log output</h3>
+					<textarea id="activity-log" cols="40" rows="20"></textarea><br>
+				</div>
+			</div>
+		</div>
+
+		<div id="unlogged">
+			<h1>Login with 42</h1>
+			<button type="button" id="auth-42">Sign in with 42</button>
+
+			<h1>Login with Intern</h1>
+			<form action="/api/auth/login?mode=intern" method="post" class="ajax-form" enctype="application/json">
+				<label for="username">Username:</label>
+  				<input type="text" name="username"><br>
+				<label for="password">Password:</label>
+  				<input type="password name="password><br>
+				<input type="submit" value="Sign in with Intern">
+			</form>
+
+			<h1>Register with Intern</h1>
+			<form action="/api/auth/register" method="post" class='ajax-form' enctype="application/json">
+				<label for="username">Username:</label>
+  				<input type="text" name="username"><br>
+				<label for="email">Email:</label>
+  				<input type="email" name="email"><br>
+				<label for="password">Password:</label>
+  				<input type="password" name="password"><br>
+				<input type="submit" value="Register with Intern">
+			</form>
+		</div>
+
+		<script src='/static/request.js'></script>
+		<script src='/static/websocket.js'></script>
+		<script src='/static/index.js'></script>
+	</body>
+</html>

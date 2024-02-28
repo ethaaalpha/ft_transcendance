@@ -137,7 +137,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Settings #
 MEDIA_ROOT = "../media/"
-MEDIA_URL = "/public/"
+MEDIA_URL = "media/"
 STATIC_URL = "game/static/"
 # STATIC_ROOT = "../pong_front/"
 STATICFILES_DIRS = [
@@ -146,7 +146,7 @@ STATICFILES_DIRS = [
 
 
 # Auth #
-API_CALLBACK = "https://localhost:8000/auth/callback"
+API_CALLBACK = "https://localhost:8000/api/auth/callback"
 API_URL = "https://api.intra.42.fr/oauth/authorize"
 API_UUID = "u-s4t2ud-45ce7bc515b8b21e8a60214ec587495181e86923fa57aa7017a3a437781f8162"
 API_SECRET = "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"
@@ -205,4 +205,17 @@ LOGGING = {
         "handlers": ["console"],
         "level": "WARNING",
     },
+    # "loggers": {
+    #     "django": {
+    #         "handlers": ["console"],
+    #         "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+    #         "propagate": False,
+    #     },
+	# 	'daphne': {
+   	# 	'handlers': [
+    #    	 	'console',
+    # 	],
+    # 	'level': 'DEBUG'
+	# 	},
+    # },
 }
