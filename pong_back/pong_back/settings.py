@@ -138,8 +138,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Settings #
 MEDIA_ROOT = "../media/"
 MEDIA_URL = "media/"
-STATIC_URL = "game/static/"
-# STATIC_ROOT = "../pong_front/"
+STATIC_URL = "static/"
+STATIC_ROOT = "../pong_front/static"
 STATICFILES_DIRS = [
 	BASE_DIR / "../pong_front",
 ]
@@ -165,7 +165,6 @@ CONFIG_EMAIL_LENGTH_MIN = 5
 
 # Nginx conf
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-# SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 ALLOWED_HOSTS = [ 'localhost' ]

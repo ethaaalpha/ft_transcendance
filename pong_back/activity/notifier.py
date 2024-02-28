@@ -45,18 +45,12 @@ class ActivityNotifier():
 		fromUser: Profile = await ActivityNotifier._getProfileFromUsername(_from)
 		target: Profile = await ActivityNotifier._getProfileFromUsername(_to)
 
-
 		if not fromUser or not target:
 			return
-		
 		if await database_sync_to_async(target.is_block)(fromUser):
 			return
-
 		if friendMandatory and not await database_sync_to_async(target.is_friend)(fromUser):
 			return 
-		import sys
-		print('je cuic arrive2 ici', file=sys.stderr)
-		
 		channel_layer = get_channel_layer()
 		await channel_layer.group_send(channel, {
 			"type" : type,

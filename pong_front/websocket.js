@@ -1,4 +1,5 @@
 class activityWebsocket {
+	
 
 	connect() {
 		this.socket = new WebSocket('wss://' + window.location.host + '/api/activity/');
@@ -32,7 +33,7 @@ class activityWebsocket {
 		document.querySelector('#chat-message-submit').onclick = (e) => {
 			const messageInputDom = document.querySelector('#chat-message-input');
 			const targetInputDom = document.querySelector('#chat-message-target');
-			const data = {'from': username, 'to': targetInputDom.value, 'content': messageInputDom.value}
+			const data = {'to': targetInputDom.value, 'content': messageInputDom.value}
 			this.socket.send(JSON.stringify({
 				'event': 'chat',
 				'data': data,
@@ -56,7 +57,7 @@ class coordinationWebsocket {
 			const stringifiedData = JSON.stringify(data)
 			document.querySelector('#activity-log').value += stringifiedData +'\n';
 		};
-		
+
 		this.socket.onclose = (e) => {
 			console.error('Chat socket closed unexpectedly ! Retrying to connect !');
 			setTimeout(() => {
