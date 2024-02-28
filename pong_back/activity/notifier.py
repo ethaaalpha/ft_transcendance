@@ -26,7 +26,7 @@ class ActivityNotifier():
 		content = {
 			'from' : senderName
 		}
-		async_to_sync (ActivityNotifier._notify)(getChannelName(targetName), content, 'friends', senderName, targetName)
+		async_to_sync (ActivityNotifier._notify)(getChannelName(targetName, 'activity'), content, 'friends', senderName, targetName)
 
 	@staticmethod
 	async def sendPrivateMessage(_from=None, _to=None, _content=None):
@@ -35,7 +35,7 @@ class ActivityNotifier():
 		"""
 		if all(item is None for item in [_from, _to, _content]):
 			return
-		await ActivityNotifier._notify(getChannelName(_to), {'from': _from, 'to': _to, 'content': _content}, 'chat', _from, _to, friendMandatory=True)
+		await ActivityNotifier._notify(getChannelName(_to, 'activity'), {'from': _from, 'to': _to, 'content': _content}, 'chat', _from, _to, friendMandatory=True)
 
 	@staticmethod
 	async def _notify(channel: str, content: str, event: str, _from: str, _to: str, type='send.message', friendMandatory=False):
@@ -45,12 +45,18 @@ class ActivityNotifier():
 		fromUser: Profile = await ActivityNotifier._getProfileFromUsername(_from)
 		target: Profile = await ActivityNotifier._getProfileFromUsername(_to)
 
+
 		if not fromUser or not target:
 			return
+		
 		if await database_sync_to_async(target.is_block)(fromUser):
 			return
+
 		if friendMandatory and not await database_sync_to_async(target.is_friend)(fromUser):
 			return 
+		import sys
+		print('je cuic arrive2 ici', file=sys.stderr)
+		
 		channel_layer = get_channel_layer()
 		await channel_layer.group_send(channel, {
 			"type" : type,

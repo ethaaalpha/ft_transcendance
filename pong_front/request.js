@@ -17,8 +17,8 @@ function getCookie(name) {
 function fetchData(apiUrl, method, data = null) {
     const csrfToken = getCookie('csrftoken');
 
-    console.log(`la data ${JSON.stringify(data)}`);
-    console.log(`voici le token ${csrfToken}`);
+    // console.log(`la data ${JSON.stringify(data)}`);
+    // console.log(`voici le token ${csrfToken}`);
 
     const headers = {
         'X-CSRFTOKEN': csrfToken,

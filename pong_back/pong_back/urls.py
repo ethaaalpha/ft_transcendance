@@ -32,7 +32,7 @@ import conversations.views
 
 
 urlpatterns = [
-	path('api/admin/', ensure_csrf_cookie(admin.site.urls)),
+	path('api/admin/', admin.site.urls),
 	path('api/dashboard', ensure_csrf_cookie(logged_required(users.views.entryPoint))),
 	path('api/dashboard/friends', ensure_csrf_cookie(logged_required(friends.views.entryPoint))),
 	path('api/dashboard/conversations', ensure_csrf_cookie(logged_required(conversations.views.entryPoint))),
