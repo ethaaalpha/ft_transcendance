@@ -29,10 +29,15 @@ class GameLocal {
 		this.movementP2 = new THREE.Vector3(0, 0, 0);
 		this.speed = 0.8;
 		this.speedBall = 0.25;
+		this.frame = 0;
+		this.cycleScore = 0.5;
+		this.sign = true
+		this.explode = false;
 		this.player1 = null;
 		this.player2 = null;
 		this.p1Score = 0;
 		this.p2Score = 0;
+		this.score = null;
 		this.ball = null;
 		this.walls = [];
 		this.laser = null;
@@ -42,8 +47,7 @@ class GameLocal {
 		this.controls = null;
 		this.texture = null;
 		this.uniforms = {
-			time: {value: 0.0},
-			amplitude: {value: 0.5},
+			amplitude: {value: 0.0},
 		};
 		this.directionalLight = new THREE.DirectionalLight(0x87CEEB, 10);
 		this.directionalLight2 = new THREE.DirectionalLight(0x87CEEB, 10);
@@ -95,6 +99,12 @@ class GameLocal {
 	}
 
 	async scoreInit(font){
+		if (this.score) {
+			this.scene.remove(this.score);
+			this.score.geometry.dispose();
+			this.score.material.dispose();
+			this.score = null;
+		}
 		let geometry = new TextGeometry( `${this.p1Score}  -  ${this.p2Score}`, {
 			font: font,
 			size: 40,
@@ -103,28 +113,29 @@ class GameLocal {
 			bevelThickness: 5,
 		} );
 		geometry.center();
-		const tessellateModifier = new TessellateModifier(10, 3);
+		const tessellateModifier = new TessellateModifier(0.5, 2000);
 		geometry = tessellateModifier.modify(geometry);
 		const numFaces = geometry.attributes.position.count / 3;
 
 		const colors = new Float32Array( numFaces * 3 * 3 );
 		const displacement = new Float32Array( numFaces * 3 * 3 );
 		const color = new THREE.Color();
-		let table = [0.2, 0.5, 0.7, 0.9]
 		for ( let f = 0; f < numFaces; f ++ ) {
 			const index = 9 * f;
-			const h = 80 * table[numFaces % 4];
-			const s = table[numFaces % 4];
-			const l = table[numFaces % 4];
+			const h = 0.5 + Math.random(0.5);
+			const s = 0.5;
+			const l = 1.0;
 			color.setHSL( h, s, l );
-			const d = 0.7 * ( 0.8 - Math.random() );
+			const dx = Math.random() * 2 - 1;
+			const dy = Math.random() * 2 - 1;
+			const dz = Math.random() * 2 - 1;
 			for ( let i = 0; i < 3; i ++ ) {
 				colors[ index + ( 3 * i ) ] = color.r;
 				colors[ index + ( 3 * i ) + 1 ] = color.g;
 				colors[ index + ( 3 * i ) + 2 ] = color.b;
-				displacement[ index + ( 3 * i ) ] = d;
-				displacement[ index + ( 3 * i ) + 1 ] = d;
-				displacement[ index + ( 3 * i ) + 2 ] = d;
+				displacement[ index + ( 3 * i ) ] = dx;
+				displacement[ index + ( 3 * i ) + 1 ] = dy;
+				displacement[ index + ( 3 * i ) + 2 ] = dz;
 			}
 		}
 		geometry.setAttribute( 'customColor', new THREE.BufferAttribute( colors, 3 ) );
@@ -138,9 +149,9 @@ class GameLocal {
 		this.score = new THREE.Mesh(geometry, shaderMaterial);
 		this.score.scale.set(0.5, 0.5, 0.5)
 		this.scene.add(this.score);
-		this.score.position.set(0, 22, 0);
+		this.score.position.set(1, 22, 0);
 	}
-
+	
 	addCube(x, y, w, h, zsize, z, color) {
 		const geometry = new THREE.BoxGeometry(1, 1, 1);
 		const material = new THREE.MeshStandardMaterial(color);
@@ -224,8 +235,21 @@ class GameLocal {
 	}
 
 	async animate() {
-		const time = Date.now() * 0.001;
-		this.uniforms.amplitude.value = 1.0 + Math.sin(time * 0.5)
+		if(this.explode == true){
+			this.uniforms.amplitude.value = 1.0 * this.cycleScore
+			this.cycleScore += 0.1;
+		}
+		else{
+			if (this.cycleScore >= 0.8)
+				this.sign = false
+			if(this.cycleScore <= 0)
+				this.sign = true
+			if (this.sign)
+				this.cycleScore += 0.0025;
+			else 
+				this.cycleScore -= 0.0025;
+			this.uniforms.amplitude.value = 1.0 * this.cycleScore
+		}
 		this.controls.update();
 		this.renderer.render(this.scene, this.camera);
 		if (this.status['status'] === 2)
@@ -301,8 +325,15 @@ class GameLocal {
 			changed = true
 		}
 		if (changed){
+			this.explode = true;
 			//updateScoreDisplay(this.p1Score, this.p2Score, this.hudScore);
 			await sleep(1500)
+			await this.load3d();
+
+			this.explode = false;
+			this.uniforms.amplitude.value = 0.0;
+			this.cycleScore = 0.1
+
 		}
 	}
 
@@ -327,6 +358,10 @@ class GameLocal {
 		this.moveP1();
 		this.moveP2();
 		await sleep(16);
+		if (this.p1Score || this.p2Score == 5){
+			this.status.status = 0
+			this.destroy();
+		}
 		if (this.status['status'] === 2)
 			requestAnimationFrame(() => this.update())
 	}

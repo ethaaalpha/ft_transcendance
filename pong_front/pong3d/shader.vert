@@ -10,7 +10,7 @@ void main() {
 vNormal = normal;
 vColor = customColor;
 
-vec3 newPosition = position + normal * amplitude * displacement;
+vec3 newPosition = position + displacement * amplitude;
 gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );
 
 			}
