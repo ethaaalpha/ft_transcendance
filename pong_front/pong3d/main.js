@@ -41,7 +41,7 @@ async function loadTexture() {
             texture.mapping = THREE.EquirectangularReflectionMapping;
 			scene.background = texture
 			scene.environment = texture
-			status.status = 0;
+			status.status = 2;
             resolve();
         });
     });
