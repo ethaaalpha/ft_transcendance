@@ -303,11 +303,34 @@ class Game {
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 	}
 
-	destroy(){
-		document.removeEventListener('keydown', this.keyD);
-		document.removeEventListener('keyup', this.keyU);
-		window.removeEventListener('resize',  this.onResize);
-		this.statusCallback(this.status);
+	
+	destroy() {
+		document.removeEventListener('keydown',this.keyD);
+		window.removeEventListener('resize',this.onResize);
+		this.appli.removeChild(this.renderer.domElement);
+		this.directionalLight.dispose();
+		this.directionalLight2.dispose();
+		this.renderer.dispose();
+		this.controls.dispose();
+		this.scene.clear();
+		if (this.texture) {
+			this.texture.dispose();
+		}
+		this.appli = null;
+		this.renderer = null;
+		this.camera = null;
+		this.controls = null;
+		this.scene = null;
+		this.directionalLight = null;
+		this.directionalLight2 = null;
+		this.clock = null;
+		this.RGBELoad = null;
+		this.app = null;
+		this.texture = null;
+		this.loadergl = null;
+		this.loader = null;
+		this.RGBELoad = null;
+		this.statusCallback(this.status)
 		this.resolve(this.status);
 	}
 }
