@@ -5,12 +5,7 @@ import { TessellateModifier } from 'three/module/modifiers/TessellateModifier.js
 import { TextGeometry } from 'three/module/geometries/TextGeometry.js';
 import { FontLoader } from 'three/module/loaders/FontLoader.js';
 
-let sleepSetTimeout_ctrl;
-
-function sleep(ms) {
-    clearInterval(sleepSetTimeout_ctrl);
-    return new Promise(resolve => sleepSetTimeout_ctrl = setTimeout(resolve, ms));
-}
+import { sleep } from './utilsPong.js'
 
 async function loadShader(url) {
     const response = await fetch(url);
@@ -322,6 +317,7 @@ class GameLocal {
 			this.player1.position.set(0, -13, 0)
 			this.player2.position.set(0, 13, 0)
 			this.laser.position.copy(this.ball.position);
+			console.log(this.p1Score);
 			changed = true
 		}
 		if (changed){
@@ -358,7 +354,7 @@ class GameLocal {
 		this.moveP1();
 		this.moveP2();
 		await sleep(16);
-		if (this.p1Score || this.p2Score == 5){
+		if (this.p1Score >= 5 || this.p2Score >= 5){
 			this.status.status = 0
 			this.destroy();
 		}
@@ -443,11 +439,33 @@ class GameLocal {
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 	}
 
-	destroy(){
-		document.removeEventListener('keydown', this.keyD);
-		document.removeEventListener('keyup', this.keyU);
-		window.removeEventListener('resize',  this.onResize);
-		this.statusCallback(this.status);
+	destroy() {
+		document.removeEventListener('keydown',this.keyD);
+		window.removeEventListener('resize',this.onResize);
+		this.appli.removeChild(this.renderer.domElement);
+		this.directionalLight.dispose();
+		this.directionalLight2.dispose();
+		this.renderer.dispose();
+		this.controls.dispose();
+		this.scene.clear();
+		if (this.texture) {
+			this.texture.dispose();
+		}
+		this.appli = null;
+		this.renderer = null;
+		this.camera = null;
+		this.controls = null;
+		this.scene = null;
+		this.directionalLight = null;
+		this.directionalLight2 = null;
+		this.clock = null;
+		this.RGBELoad = null;
+		this.app = null;
+		this.texture = null;
+		this.loadergl = null;
+		this.loader = null;
+		this.RGBELoad = null;
+		this.statusCallback(this.status)
 		this.resolve(this.status);
 	}
 }

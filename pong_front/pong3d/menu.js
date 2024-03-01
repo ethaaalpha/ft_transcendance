@@ -177,7 +177,6 @@ class Menu {
 	}
 	destroy() {
 		document.removeEventListener('keydown',this.keyD);
-		console.log("coucou");
     	window.removeEventListener('resize',this.onResize);
 		this.appli.removeChild(this.renderer.domElement);
 		this.directionalLight.dispose();
@@ -195,25 +194,19 @@ class Menu {
 				}
 			});
 		});
-		if (this.texture) {
-			this.texture.dispose();
-		}
 		this.appli = null;
     	this.renderer = null;
     	this.camera = null;
     	this.controls = null;
-    	this.scene = null;
     	this.directionalLight = null;
     	this.directionalLight2 = null;
     	this.animMixer = null;
     	this.clock = null;
     	this.RGBELoad = null;
     	this.app = null;
-    	this.texture = null;
 		this.loadergl = null;
     	this.loader = null;
     	this.RGBELoad = null;
-		this.animMixer = null;
 		this.button.length = 0;
 		this.statusCallback(this.status)
 		this.resolve(this.status);
@@ -222,7 +215,6 @@ class Menu {
 		this.status = {
 			status: this.selected+1
 		};
-		console.log (this.status);
 	}
 	onWindowResize() {
 		this.camera.aspect = window.innerWidth / window.innerHeight;

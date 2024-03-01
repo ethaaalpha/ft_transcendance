@@ -3,31 +3,37 @@ import { RGBELoader } from 'three/module/loaders/RGBELoader.js';
 import Game from './game.js'
 import Menu from './menu.js';
 import GameLocal from './gameLocal.js';
+import { sleep } from './utilsPong.js';
 
 var view;
-var scene = new THREE.Scene();
+const scene = new THREE.Scene();
+const renderer = new THREE.WebGLRenderer();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+//const controls = new OrbitControls(this.camera, this.renderer.domElement);
+//controls.enableZoom = false;
+
 var status = {
 	status:-1,
 };
-var data_texture;
 var appli = document.querySelector('#app');
 if (!appli) {
 	console.log("coucou");
 }
 function updateStatus(newStatus) {
-    status= newStatus;
+    status.status= 0;
 }
 async function initialize() {
 	try {
 		while(1){
 			if (status.status === -1)
 				await loadTexture();
-			if (status.status === 0)
+			else if (status.status === 0)
 				await createMenu();
-			if (status.status === 1)
+			else if (status.status === 1)
 				await createGame();
-            if (status.status === 2)
+            else if (status.status === 2)
                 await createGameLocal();
+            await sleep(1500)
 		}
     } catch (error) {
         console.error("Error during initialization:", error);
@@ -41,7 +47,7 @@ async function loadTexture() {
             texture.mapping = THREE.EquirectangularReflectionMapping;
 			scene.background = texture
 			scene.environment = texture
-			status.status = 2;
+			status.status = 0;
             resolve();
         });
     });
@@ -69,4 +75,3 @@ async function createGameLocal() {
 
 initialize();
 
-//delete texture
