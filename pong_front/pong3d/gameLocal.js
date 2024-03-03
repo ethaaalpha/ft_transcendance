@@ -13,11 +13,15 @@ async function loadShader(url) {
 }
 
 class GameLocal {
-	constructor(status, resolve, appli, scene, statusCallback) {
-		this.appli = appli
+	constructor(status, resolve,statusCallback, gameData) {
+		this.renderer = gameData.rendererGameLocal;
+		this.camera = gameData.camera;
+		this.appli = gameData.appli;
 		this.status = status;
 		this.resolve = resolve;
-		this.scene = scene;
+		this.scene = gameData.sceneGameLocal;
+		this.directionalLight = gameData.directionalLight;
+		this.directionalLight2 = gameData.directionalLight2;
 		this.statusCallback = statusCallback
 		this.messageInterval = 100
 		this.movementP1 = new THREE.Vector3(0, 0, 0);
@@ -44,10 +48,10 @@ class GameLocal {
 		this.uniforms = {
 			amplitude: {value: 0.0},
 		};
-		this.directionalLight = new THREE.DirectionalLight(0x87CEEB, 10);
-		this.directionalLight2 = new THREE.DirectionalLight(0x87CEEB, 10);
 		this.textureLoader = new THREE.TextureLoader();
 		this.itemTexture = this.textureLoader.load('static/assets/pokeball-texture.jpg');
+		this.controls = gameData.controlsGameLocal;
+		this.controls.enableZoom = false;
 		this.init().then(() => {
 			this.appli.appendChild(this.renderer.domElement);
 			this.animate();
@@ -57,12 +61,7 @@ class GameLocal {
 
 	init() {
 		return new Promise((resolve, reject) => {
-			this.renderer = new THREE.WebGLRenderer();
-			this.renderer.setSize(window.innerWidth , window.innerHeight);
-			this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-			this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-			this.controls.enableZoom = false;
-			this.camera.position.z = 50;
+			this.camera.position.set(0, 0, 60);
 			this.directionalLight.position.set(30, -20, 100).normalize();
 			this.scene.add(this.directionalLight);
 			this.directionalLight2.position.set(-30, 20, -100).normalize();
@@ -89,6 +88,7 @@ class GameLocal {
 	}
 
 	load3d(){
+		console.log("try to load")
 		const loader = new FontLoader();
 		loader.load( 'static/fonts/helvetiker_regular.typeface.json', (font) => this.scoreInit(font))
 	}
@@ -117,10 +117,10 @@ class GameLocal {
 		const color = new THREE.Color();
 		for ( let f = 0; f < numFaces; f ++ ) {
 			const index = 9 * f;
-			const h = 0.5 + Math.random(0.5);
-			const s = 0.5;
-			const l = 1.0;
-			color.setHSL( h, s, l );
+			const r = Math.random();
+			const g = Math.random();
+			const b = Math.random();
+			color.setRGB(r, g, b);
 			const dx = Math.random() * 2 - 1;
 			const dy = Math.random() * 2 - 1;
 			const dz = Math.random() * 2 - 1;
@@ -247,8 +247,11 @@ class GameLocal {
 		}
 		this.controls.update();
 		this.renderer.render(this.scene, this.camera);
-		if (this.status['status'] === 2)
+		if (this.status['status'] === 2){
 			requestAnimationFrame(() => this.animate());
+		}
+		else
+			this.destroy();
 	}
 
 	moveP1(){
@@ -317,15 +320,16 @@ class GameLocal {
 			this.player1.position.set(0, -13, 0)
 			this.player2.position.set(0, 13, 0)
 			this.laser.position.copy(this.ball.position);
-			console.log(this.p1Score);
 			changed = true
 		}
 		if (changed){
 			this.explode = true;
 			//updateScoreDisplay(this.p1Score, this.p2Score, this.hudScore);
 			await sleep(1500)
-			await this.load3d();
-
+			console.log(this.p1Score)
+			console.log(this.p2Score)
+			if (this.p1Score < 5 && this.p2Score < 5)
+				await this.load3d();
 			this.explode = false;
 			this.uniforms.amplitude.value = 0.0;
 			this.cycleScore = 0.1
@@ -356,7 +360,6 @@ class GameLocal {
 		await sleep(16);
 		if (this.p1Score >= 5 || this.p2Score >= 5){
 			this.status.status = 0
-			this.destroy();
 		}
 		if (this.status['status'] === 2)
 			requestAnimationFrame(() => this.update())
@@ -445,8 +448,8 @@ class GameLocal {
 		this.appli.removeChild(this.renderer.domElement);
 		this.directionalLight.dispose();
 		this.directionalLight2.dispose();
-		this.renderer.dispose();
-		this.controls.dispose();
+		//this.renderer.dispose();
+		//this.controls.dispose();
 		this.scene.clear();
 		if (this.texture) {
 			this.texture.dispose();

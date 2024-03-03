@@ -308,8 +308,6 @@ class Game {
 		document.removeEventListener('keydown',this.keyD);
 		window.removeEventListener('resize',this.onResize);
 		this.appli.removeChild(this.renderer.domElement);
-		this.directionalLight.dispose();
-		this.directionalLight2.dispose();
 		this.renderer.dispose();
 		this.controls.dispose();
 		this.scene.clear();
