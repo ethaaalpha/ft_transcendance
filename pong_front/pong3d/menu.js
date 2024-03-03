@@ -4,37 +4,32 @@ import { FontLoader } from 'three/module/loaders/FontLoader';
 import { GLTFLoader } from 'three/module/loaders/GLTFLoader.js';
 
 class Menu {
-	constructor(status, resolve, appli, scene, statusCallback) {
+	constructor(status, resolve, statusCallback, gameData) {
 		this.status = status
-		this.scene = scene
+		this.renderer = gameData.rendererMenu;
+		this.camera = gameData.camera;
+		this.scene = gameData.sceneMenu;
 		this.resolve = resolve;
-		this.statusCallback = statusCallback
-		this.appli = appli
+		this.statusCallback = statusCallback;
+		this.directionalLight = gameData.directionalLight;
+		this.directionalLight2 = gameData.directionalLight2;
+		this.raycaster = gameData.raycaster;
+		this.clock = gameData.clock;
+		this.appli = gameData.appli
 		this.button = [];
-		this.directionalLight = new THREE.DirectionalLight(0xffffff, 8);
-		this.directionalLight2 = new THREE.DirectionalLight(0xffffff, 2);
 		this.animMixer = null;
-		this.clock = new THREE.Clock();
-		this.app = null;
 		this.load3D();
+		this.controls = gameData.controlsMenu;
 		this.init();
 	}
 	
 	init() {
-		this.renderer = new THREE.WebGLRenderer();
-		this.renderer.setSize(window.innerWidth , window.innerHeight);
-		this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 		this.appli.appendChild(this.renderer.domElement);
-		this.controls.enableZoom = false;
 		this.directionalLight.position.set(100, 100, 500).normalize();
 		this.scene.add(this.directionalLight);
 		this.directionalLight2.position.set(-100, 100, -500).normalize();
 		this.scene.add(this.directionalLight2);
-		this.camera.position.z = 620;
-		this.controls.minZoom = 1
-		this.controls.maxZoom = 50
-		this.raycaster = new THREE.Raycaster();
+		this.camera.position.z = 700;
 		this.selected = 0;
 		this.mainButton = this.button[0];
 		this.onResize = () => this.onWindowResize();
@@ -181,8 +176,8 @@ class Menu {
 		this.appli.removeChild(this.renderer.domElement);
 		this.directionalLight.dispose();
 		this.directionalLight2.dispose();
-		this.renderer.dispose();
-		this.controls.dispose();
+		//this.renderer.dispose();
+		//this.controls.dispose();
 		this.scene.clear();
 		this.matDark.dispose();
 		this.matLite.dispose();
@@ -203,7 +198,6 @@ class Menu {
     	this.animMixer = null;
     	this.clock = null;
     	this.RGBELoad = null;
-    	this.app = null;
 		this.loadergl = null;
     	this.loader = null;
     	this.RGBELoad = null;
