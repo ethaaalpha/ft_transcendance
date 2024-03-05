@@ -6,3 +6,4 @@ pillow
 shortuuid
 psycopg2-binary
 web3
+channels-redis
