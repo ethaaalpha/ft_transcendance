@@ -80,6 +80,12 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 						return
 					# handle le chat message !
 					await sync_to_async(Match.speakConsumer)(user, data.get('content'))
+				case 'invite':
+					return
+				case 'accept':
+					return
+				case 'refuse':
+					return
 
 	async def send_message(self, event):
 		await self.send_json(content={
