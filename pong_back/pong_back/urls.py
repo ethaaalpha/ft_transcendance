@@ -20,7 +20,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.decorators.csrf import ensure_csrf_cookie
 
-from home.views import index, game
 from users.decorators import logged_required
 from activity.consumers import ActivityConsumer
 from game.consumers import GameConsumer
@@ -37,7 +36,6 @@ urlpatterns = [
 	path('api/dashboard/friends', ensure_csrf_cookie(logged_required(friends.views.entryPoint))),
 	path('api/dashboard/conversations', ensure_csrf_cookie(logged_required(conversations.views.entryPoint))),
 	path('api/auth/', include('authentification.urls')),
-	path('api/game/', ensure_csrf_cookie(game), name='game')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 websocket_urlpatterns = [
