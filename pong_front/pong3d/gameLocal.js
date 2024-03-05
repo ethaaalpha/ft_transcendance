@@ -117,10 +117,10 @@ class GameLocal {
 		const color = new THREE.Color();
 		for ( let f = 0; f < numFaces; f ++ ) {
 			const index = 9 * f;
-			const r = Math.random();
-			const g = Math.random();
-			const b = Math.random();
-			color.setRGB(r, g, b);
+			const r = Math.random() * 0.2 + 0.4;
+			const g = Math.random() * 0.2 + 0.4;
+			const b = Math.random() * 0.2 + 0.4;
+			color.setHSL(r, g, b);
 			const dx = Math.random() * 2 - 1;
 			const dy = Math.random() * 2 - 1;
 			const dz = Math.random() * 2 - 1;
@@ -324,6 +324,8 @@ class GameLocal {
 		}
 		if (changed){
 			this.explode = true;
+			this.ballMovement.x = 0;
+			this.ballMovement.z = 0;
 			//updateScoreDisplay(this.p1Score, this.p2Score, this.hudScore);
 			await sleep(1500)
 			console.log(this.p1Score)
