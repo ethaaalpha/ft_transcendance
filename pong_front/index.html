@@ -36,16 +36,23 @@
 					<input type="submit" value="Change-Password">
 				</form>
 			</div>
-			<div id="chat-send" style="background-color: burlywood; padding: 2%;" enctype="application/json">
-				<h3>Send messages</h3>
+			<div id="chat-send" style="background-color: burlywood; padding: 2%; display: flex; flex-direction: row;" enctype="application/json">
+				<div>
+					<h3>Send MP</h3>
 					<label for="chat-message-target">Target</label>
 					<input id="chat-message-target" type="text" size="10"><br>
 					<label for="chat-message-input">Content</label>
-					<input id="chat-message-input" type="text" size="20"><br>
+					<input id="chat-message-input" type="text" size="15"><br>
 					<input id="chat-message-submit" type="button" value="Send">
 				</div>
+				<div>
+					<h3>Local Chat</h3>
+					<label for="local-message-input">Content</label>
+					<input id="local-message-input" type="text" size="15"><br>
+					<input id="local-message-submit" type="button" value="Send">
+				</div>
 			</div>
-			<div class="logged" style="display: flex; flex-direction: row; flex-wrap: wrap;">
+			<div class="logged" style="display: flex; flex-direction: row;">
 				<div id="matchmaking" style="background-color: goldenrod; padding: 2%;">
 					<h3>Matchmaking / Tournament</h3>
 					<button id='button-match' type="button">Join matchmaking !</button><br>

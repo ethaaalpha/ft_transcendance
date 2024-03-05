@@ -50,7 +50,6 @@ class Profile(models.Model):
 	def getEmail(self):
 		return (self.user.email)
 	
-
 	def setPlaying(self, state: bool):
 		self.isPlaying = state
 		self.save()
