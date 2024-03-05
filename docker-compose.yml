@@ -31,6 +31,8 @@ services:
     depends_on:
       postgresql:
         condition: service_healthy
+      redis:
+        condition: service_started
     env_file:
       - .env
     restart: on-failure
