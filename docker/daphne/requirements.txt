@@ -5,3 +5,4 @@ daphne
 pillow
 shortuuid
 psycopg2-binary
+web3

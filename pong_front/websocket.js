@@ -88,5 +88,14 @@ class coordinationWebsocket {
 			this.socket.send(JSON.stringify({'event' : 'create', 'data': {'mode': value}}));
 			this.input.value = "";
 		}
+		document.querySelector('#local-message-submit').onclick = (e) => {
+			const messageInputDom = document.querySelector('#local-message-input');
+			const data = {'content': messageInputDom.value}
+			this.socket.send(JSON.stringify({
+				'event': 'chat',
+				'data': data,
+			}));
+			messageInputDom.value = '';
+		};
 	}
 }

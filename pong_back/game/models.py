@@ -1,12 +1,12 @@
 from django.db import models
-from asgiref.sync import async_to_sync
 from django.contrib.postgres.fields import ArrayField
-from activity.tools import getChannelName
 from django.contrib.auth.models import User
+from django.db.models import Q
 from datetime import timedelta
 from uuid import uuid4
 from coordination.matchmaking import Matchmaking
 import shortuuid
+import time
 import sys
 
 def roomIdGenerator():
@@ -35,14 +35,37 @@ class Match(models.Model):
 	state = models.IntegerField(default=0) # 0 waiting, 1 started, 2 finish
 
 	@staticmethod
-	def getMatch(id: str):
-		return Match.objects.filter(id=id).first()
+	def speakConsumer(speaker: User, content: str):
+		if not speaker.profile.isPlaying:
+			return
+		currentMatch = Match.getMatch(user=speaker)
+		if not currentMatch:
+			return
+		currentMatch.speak(speaker, content)
+
+	@staticmethod
+	def getMatch(**kwargs):
+		"""
+		This value can be an user or a Match ID (user, id)
+		"""
+		id = kwargs.get('id')
+		user = kwargs.get('user')
+		if (id):
+			return Match.objects.filter(id=id).first()
+		elif (user):
+			return Match.objects.filter(Q(host=user, state=1) | Q(invited=user, state=1)).first()
 
 	@staticmethod
 	def create(host: User, invited: User) -> str:
 		match = Match.objects.create(host=host, invited=invited)
 		return match.id
 
+	def speak(self, sender: User, content: str):
+		if sender != self.host and sender != self.invited:
+			return
+		target = self.host if sender == self.invited else self.invited
+		self.room().send(target, 'chat', {"from": sender.username, "content": content})
+	
 	def send(self, user: User, event: str, data: str):
 		from coordination.consumers import CoordinationConsumer
 		if user != self.host and user != self.invited:
@@ -95,6 +118,7 @@ class Match(models.Model):
 		# JUSTE POUR LE DEV
 		# print(f'Voici le début du match entre [HOST] {self.host} et [INVITED] {self.invited} !', file=sys.stderr)
 		# self.addPoint(self.host)
+		# time.sleep(5)
 		# self.finish()
 
 	def getWinner(self) -> User:
@@ -224,7 +248,7 @@ class Room(models.Model):
 			winners = [m.getWinner() for m in lastMatchs]
 			matchOpponents = [[winners[i], winners[i + 1]] for i in range(0, len(winners), 2)]
 
-		matchs = [Match.getMatch(Match.create(opponents[0], opponents[1])) for opponents in matchOpponents]
+		matchs = [Match.getMatch(id=Match.create(opponents[0], opponents[1])) for opponents in matchOpponents]
 		self.numberMatchsLastRound = len(matchs)
 		self.matchs.add(*matchs)
 		self.save()
