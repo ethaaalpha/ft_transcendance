@@ -172,9 +172,15 @@ ALLOWED_HOSTS = [ 'localhost' ]
 
 # Channel layer
 CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
-    }
+    # "default": {
+    #     "BACKEND": "channels.layers.InMemoryChannelLayer"
+    # },
+	"default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],
+        },
+    },
 }
 
 # Users
