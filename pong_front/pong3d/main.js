@@ -54,7 +54,7 @@ async function initialize() {
 }
 async function loadTexture() {
     return new Promise((resolve, reject) => {
-        var RGBELoad = new RGBELoader().setPath('static/assets/');
+        var RGBELoad = new RGBELoader().setPath('/static/assets/');
         RGBELoad.load('witcher.hdr', (texture) => {
             texture.mapping = THREE.EquirectangularReflectionMapping;
 			gameData.sceneMenu.background = texture

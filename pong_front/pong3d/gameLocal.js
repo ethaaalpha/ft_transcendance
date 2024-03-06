@@ -49,7 +49,7 @@ class GameLocal {
 			amplitude: {value: 0.0},
 		};
 		this.textureLoader = new THREE.TextureLoader();
-		this.itemTexture = this.textureLoader.load('static/assets/pokeball-texture.jpg');
+		this.itemTexture = this.textureLoader.load('/static/assets/pokeball-texture.jpg');
 		this.controls = gameData.controlsGameLocal;
 		this.controls.enableZoom = false;
 		this.init().then(() => {
@@ -90,7 +90,7 @@ class GameLocal {
 	load3d(){
 		console.log("try to load")
 		const loader = new FontLoader();
-		loader.load( 'static/fonts/helvetiker_regular.typeface.json', (font) => this.scoreInit(font))
+		loader.load( '/static/fonts/helvetiker_regular.typeface.json', (font) => this.scoreInit(font))
 	}
 
 	async scoreInit(font){
@@ -138,8 +138,8 @@ class GameLocal {
 		//
 		const shaderMaterial = new THREE.ShaderMaterial( {
 		 	uniforms: this.uniforms,
-		 	vertexShader: await loadShader('static/pong3d/shader.vert'),
-		 	fragmentShader: await loadShader('static/pong3d/shader.frag'),
+		 	vertexShader: await loadShader('/static/pong3d/shader.vert'),
+		 	fragmentShader: await loadShader('/static/pong3d/shader.frag'),
 		});
 		this.score = new THREE.Mesh(geometry, shaderMaterial);
 		this.score.scale.set(0.5, 0.5, 0.5)
