@@ -14,17 +14,3 @@ def not_logged_required(function):
             return tResponses.UNAUTHORIZED.request("You are already logged !")
         return function(request, *args, **kwargs)
     return wrapped
-
-
-# def owner_required(function):
-#     """
-#     Warningw
-#     -------
-#     To use this @decorator you must use this syntax :
-# 	 * wrapped (request, ownerUsername, *args, **kwargs)
-#     """
-#     def wrapped(request, ownerUsername, *args, **kwargs):
-#         if not (request.user.username == ownerUsername):
-#             return tResponses.FORBIDDEN.request()
-#         return function(request, ownerUsername, *args, **kwargs)
-#     return wrapped

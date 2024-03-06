@@ -137,16 +137,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Settings #
 MEDIA_ROOT = "../media/"
-MEDIA_URL = "/public/"
-STATIC_URL = "game/static/"
-# STATIC_ROOT = "../pong_front/"
+MEDIA_URL = "media/"
+STATIC_URL = "static/"
+STATIC_ROOT = "../pong_front/static"
 STATICFILES_DIRS = [
 	BASE_DIR / "../pong_front",
 ]
 
 
 # Auth #
-API_CALLBACK = "https://localhost:8000/auth/callback"
+API_CALLBACK = "https://localhost:8000/api/auth/callback"
 API_URL = "https://api.intra.42.fr/oauth/authorize"
 API_UUID = "u-s4t2ud-45ce7bc515b8b21e8a60214ec587495181e86923fa57aa7017a3a437781f8162"
 API_SECRET = "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"
@@ -165,7 +165,6 @@ CONFIG_EMAIL_LENGTH_MIN = 5
 
 # Nginx conf
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-# SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 ALLOWED_HOSTS = [ 'localhost' ]
@@ -173,9 +172,15 @@ ALLOWED_HOSTS = [ 'localhost' ]
 
 # Channel layer
 CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
-    }
+    # "default": {
+    #     "BACKEND": "channels.layers.InMemoryChannelLayer"
+    # },
+	"default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],
+        },
+    },
 }
 
 # Users
@@ -184,6 +189,13 @@ DEFAULT_PROFILE_PICTURE_NAME = 'pokemon.png'
 # Messages
 MESSAGE_LENGTH_MAX = 1024
 
+# smtp
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'ft.pokepong@gmail.com'
+EMAIL_HOST_PASSWORD = 'hipv wuvi ufxh qsyo'
 
 
 LOGGING = {
