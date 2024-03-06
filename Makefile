@@ -9,12 +9,18 @@ reset:
 	mkdir database
 
 pyreset:
-	find pong_back -type d -name '__pycache__' -exec rm -rf {} \;
 	find pong_back -type d -name 'migrations' -exec rm -rf {} \;
+	find pong_back -type d -name '__pycache__' -exec rm -rf {} \;
 
 run:
 	mkdir -p database
 	docker compose up --build
 
 down:
+	docker compose down
+
+clean:
 	docker compose down -v
+
+fclean: clean reset pyreset
+	echo "Full reset !"

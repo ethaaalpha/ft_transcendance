@@ -1,16 +1,17 @@
 from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.utils.html import format_html
 from django.contrib.auth.models import User
 from tools.responses import tResponses
 from tools.functions import isOtherKeysInList, areKeysFromList
-from users.models import Profile
+from django.core.mail import send_mail
+from users.models import Profile, generatePassword
 from django.conf import settings
 from django.shortcuts import redirect
 from django.contrib.auth import logout as djangoLogout
 from uuid import uuid4
 from requests.models import PreparedRequest
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, ResetPassForm
 import requests
-
 
 """
 	/auth/login
@@ -21,20 +22,28 @@ import requests
 """
 
 def login(request: HttpRequest):
+	if (areKeysFromList(['mode'], request.GET)):
+		return tResponses.BAD_REQUEST.request("Missing parameters !")
+	if isOtherKeysInList(['mode'], request.GET):
+		return tResponses.BAD_REQUEST.request("Extra parameters found !")
+	mode = request.GET['mode']
 	if (request.method == "POST"):
 		"""
 		/auth/login?mode=intern
-		/auth/login?mode=42
 
 		mode must be present to perfom the request !
 		"""
-		if (areKeysFromList(['mode'], request.GET)):
-			return tResponses.BAD_REQUEST.request("Missing parameters !")
-		if isOtherKeysInList(['mode'], request.GET):
-			return tResponses.BAD_REQUEST.request("Extra parameters found !")
-		mode = request.GET['mode']
+		match mode:
+			case "intern":
+				return login_internal(request)
+			case _:
+				return tResponses.BAD_REQUEST.request("Unrecognized authentification mode !")
+	else:
+		"""
+		/auth/login?mode=42
 
-
+		This will return the link to connect to 42 
+		"""
 		match mode:
 			case "42":
 				# possiblement à modifier !
@@ -46,13 +55,10 @@ def login(request: HttpRequest):
 				}
 				request: PreparedRequest = PreparedRequest()
 				request.prepare_url(settings.API_URL, params)
-				return redirect(request.url) # Ici redirige vers la page de 42 pour l'authentification !
-			case "intern":
-				return login_internal(request)
+				return JsonResponse({'url': request.url})
 			case _:
-				return tResponses.BAD_REQUEST.request("Unrecognize authentification mode !")
-	else:
-		return tResponses.BAD_REQUEST.request("Get request not supported here !")
+				return tResponses.BAD_REQUEST.request("Unrecognized authentification mode !")
+	
 
 # This for internal auth user not 42 users
 def login_internal(request: HttpRequest):
@@ -107,7 +113,31 @@ def logout(request: HttpRequest):
 	
 def reset_password(request: HttpRequest):
 	if (request.method == "POST"):
-		return tResponses.OKAY.request("TU AS FAIT UN RESET_PASSWORD POST")
+		form = ResetPassForm(request.POST)
+
+		if form.is_valid():
+			username = form.cleaned_data['username']
+			user = Profile.getUserFromUsername(username)
+
+			if user:
+				newPass = generatePassword()
+				response = user.profile.changePassword(newPass)
+
+				# send the mail if it's okay !
+				if response.status_code == 200:
+					email_subject = 'PokePong -- Password Reset'
+					email_body = format_html(
+   						"You asked for a password reset. Your new password is {} ."
+						"You will be able to change it in 5 minutes.\n"
+						"Have a nice day.\n"
+						"PokePong team.\n"
+						, newPass
+					)
+					send_mail(email_subject, email_body, from_email=None, recipient_list=[user.email])
+				return response
+			else:
+				return tResponses.BAD_REQUEST.request("Form failed !")
+		return tResponses.BAD_REQUEST.request("Form isn't valid !")
 	else:
 		return tResponses.BAD_REQUEST.request("Get request not supported here !")
 

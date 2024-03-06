@@ -16,6 +16,11 @@ services:
       retries: 5
     restart: on-failure
 
+  redis:
+    container_name: redis
+    image: redis:alpine
+    restart: on-failure
+
   daphne:
     container_name: daphne
     build:
@@ -26,6 +31,8 @@ services:
     depends_on:
       postgresql:
         condition: service_healthy
+      redis:
+        condition: service_started
     env_file:
       - .env
     restart: on-failure
@@ -39,6 +46,9 @@ services:
         - DOMAIN=$DOMAIN
     env_file:
       - .env
+    volumes:
+      - ./media:/usr/share/media
+      - ./pong_front:/usr/share/static
     ports:
       - 8000:443
     depends_on:

@@ -14,6 +14,7 @@ from datetime import timedelta
 from stats.models import Stats
 import os
 import requests
+import shortuuid
 
 # instance corresponding to the instanse of imagefield automaticcly passed
 def generateUniqueImageID(instance, filename, extension=None):
@@ -29,6 +30,8 @@ def generateUniqueImageID(instance, filename, extension=None):
 		return generateUniqueImageID(filename)
 	return finalPath
 
+def generatePassword():
+	return shortuuid.uuid()[:16]
 
 class Profile(models.Model):
 	user: User = models.OneToOneField(User, on_delete=models.CASCADE, blank=False, primary_key=True)
@@ -38,6 +41,7 @@ class Profile(models.Model):
 	blockedUsers = models.ManyToManyField(User, related_name="blockedUsers", symmetrical=False, blank=True)
 	lastPasswordChange = models.DateTimeField(default=now, blank=True)
 	gameTheme = models.CharField(max_length=64, default='default')
+	isPlaying = models.BooleanField(default=False)
 	
 	# shortcut to user #
 	def getUsername(self):
@@ -46,6 +50,10 @@ class Profile(models.Model):
 	def getEmail(self):
 		return (self.user.email)
 	
+	def setPlaying(self, state: bool):
+		self.isPlaying = state
+		self.save()
+
 	def getManyToTab(self, many):
 		tab = []
 		for value in many.all():
