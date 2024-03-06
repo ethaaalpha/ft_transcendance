@@ -98,10 +98,10 @@ class Menu {
 	}
 
 	load3D () {
-		this.loadergl = new GLTFLoader().setPath( 'static/assets/' );
+		this.loadergl = new GLTFLoader().setPath( '/static/assets/' );
 		this.loadergl.load( '/witcher/scene.gltf', (gltf) => {this.createobj(gltf)} );
 		this.loader = new FontLoader();
-		this.loader.load( 'static/fonts/helvetiker_regular.typeface.json', (font) => { this.createTxt(font);});
+		this.loader.load( '/static/fonts/helvetiker_regular.typeface.json', (font) => { this.createTxt(font);});
 	}
 	createobj (gltf) {
 		this.animMixer = new THREE.AnimationMixer(gltf.scene);

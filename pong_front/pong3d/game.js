@@ -35,7 +35,7 @@ class Game {
 		this.directionalLight = new THREE.DirectionalLight(0x87CEEB, 10);
 		this.directionalLight2 = new THREE.DirectionalLight(0x87CEEB, 10);
 		this.textureLoader = new THREE.TextureLoader();
-		this.itemTexture = this.textureLoader.load('static/assets/pokeball-texture.jpg');
+		this.itemTexture = this.textureLoader.load('/static/assets/pokeball-texture.jpg');
 		this.init().then(() => {
 			this.appli.appendChild(this.renderer.domElement);
 			this.animate();
@@ -46,7 +46,7 @@ class Game {
 	init() {
 		return new Promise((resolve, reject) => {
 			this.renderer = new THREE.WebGLRenderer();
-			this.socket = new WebSocket('wss://localhost:8000/game/');
+			this.socket = new WebSocket('wss://localhost:8000/api/game/');
 			this.renderer.setSize(window.innerWidth , window.innerHeight);
 			this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 			this.controls = new OrbitControls(this.camera, this.renderer.domElement);
