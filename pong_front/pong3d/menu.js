@@ -176,8 +176,6 @@ class Menu {
 		this.appli.removeChild(this.renderer.domElement);
 		this.directionalLight.dispose();
 		this.directionalLight2.dispose();
-		//this.renderer.dispose();
-		//this.controls.dispose();
 		this.scene.clear();
 		this.matDark.dispose();
 		this.matLite.dispose();

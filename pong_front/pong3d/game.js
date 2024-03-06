@@ -22,8 +22,9 @@ class Game {
 		this.scene = gameData.sceneGameLocal;
 		this.directionalLight = gameData.directionalLight;
 		this.directionalLight2 = gameData.directionalLight2;
-		this.statusCallback = statusCallback
-		this.messageInterval = 100
+		this.statusCallback = statusCallback;
+		this.lastMessageSentTime = 0;
+		this.messageInterval = 20;
 		this.movement = new THREE.Vector3(0, 0, 0);
 		this.speed = 0.8;
 		this.speedBall = 0.25;
@@ -83,12 +84,12 @@ class Game {
 			document.addEventListener('keyup', this.keyU);
 			window.addEventListener('resize',  this.onResize);
 			this.load3d();
+			this.socketInit(this.socket);
 			resolve();
 			});
 	}
 
 	load3d(){
-		console.log("try to load")
 		const loader = new FontLoader();
 		loader.load( '/static/fonts/helvetiker_regular.typeface.json', (font) => this.scoreInit(font))
 	}
@@ -158,7 +159,7 @@ class Game {
 		
 		this.socket.onmessage = (event) => {
 			const response = JSON.parse(event.data);
-			console.log(response)
+			//console.log(response)
 			this.data = response.data;
 			if (this.data.player1 && this.data.player1.length === 3)
 				//this.player1.position.set(this.data.player1[0],this.data.player1[1],this.data.player1[2])
@@ -166,7 +167,7 @@ class Game {
 				this.player2.position.set(this.data.player2[0],this.data.player2[1],this.data.player2[2])
 			if (this.data.ballPos && this.data.ballPos.length === 3)
 				//this.ball.position.set(this.data.ballPos[0],this.data.ballPos[1],this.data.ballPos[2])
-			this.id  = event.event
+			this.id = event.event
 		};
 		
 		socket.onclose = (event) => this.socketClose(event);
@@ -373,7 +374,6 @@ class Game {
 		return new Promise((resolve, reject) => {
 			const jsonMessage = JSON.stringify(message);
 			this.socket.send(jsonMessage);
-			//add error
 			}
 		);
 	}
@@ -389,8 +389,6 @@ class Game {
 		document.removeEventListener('keydown',this.keyD);
 		window.removeEventListener('resize',this.onResize);
 		this.appli.removeChild(this.renderer.domElement);
-		//this.renderer.dispose();
-		//this.controls.dispose();
 		this.scene.clear();
 		if (this.texture) {
 			this.texture.dispose();
