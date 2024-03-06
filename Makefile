@@ -1,6 +1,14 @@
+FOLDER = three
+
 all: 
 	$(MAKE) run
 
+checkFolder:
+	if [ ! -d $(FOLDER) ]; then \
+		mkdir -p libs/three && \
+		wget https://github.com/mrdoob/three.js/archive/refs/tags/r162.tar.gz && \
+		tar -zxvf r162.tar.gz -C libs/three; \
+	fi
 daphne:
 	docker exec -it daphne bash
 
@@ -14,6 +22,8 @@ pyreset:
 
 run:
 	mkdir -p database
+	mkdir -p libs
+	$(MAKE) checkFolder
 	docker compose up --build
 
 down:
@@ -24,3 +34,5 @@ clean:
 
 fclean: clean reset pyreset
 	echo "Full reset !"
+
+.PHONY: checkFolder
