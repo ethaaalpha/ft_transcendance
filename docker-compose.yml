@@ -41,7 +41,6 @@ services:
       - .env
     ports:
       - 8000:443
-      - 80:80
     depends_on:
       - daphne
     restart: on-failure

@@ -1,41 +1,57 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/module/controls/OrbitControls';
 
-let sleepSetTimeout_ctrl;
+import { TessellateModifier } from 'three/module/modifiers/TessellateModifier.js';
+import { TextGeometry } from 'three/module/geometries/TextGeometry.js';
+import { FontLoader } from 'three/module/loaders/FontLoader.js';
 
-function sleep(ms) {
-    clearInterval(sleepSetTimeout_ctrl);
-    return new Promise(resolve => sleepSetTimeout_ctrl = setTimeout(resolve, ms));
+import { sleep } from './utilsPong.js'
+
+async function loadShader(url) {
+    const response = await fetch(url);
+    return response.text();
 }
 
-class Game {
-	constructor(status, resolve, appli, scene, statusCallback) {
-		this.appli = appli
+class GameLocal {
+	constructor(status, resolve,statusCallback, gameData) {
+		this.renderer = gameData.rendererGameLocal;
+		this.camera = gameData.camera;
+		this.appli = gameData.appli;
 		this.status = status;
 		this.resolve = resolve;
-		this.scene = scene;
+		this.scene = gameData.sceneGameLocal;
+		this.directionalLight = gameData.directionalLight;
+		this.directionalLight2 = gameData.directionalLight2;
 		this.statusCallback = statusCallback
-		this.lastFrameTime = performance.now();
-		this.lastMessageSentTime = 0;
 		this.messageInterval = 100
-		this.movement = new THREE.Vector3(0, 0, 0);
+		this.movementP1 = new THREE.Vector3(0, 0, 0);
+		this.movementP2 = new THREE.Vector3(0, 0, 0);
 		this.speed = 0.8;
-		this.speedBall = 0.4;
+		this.speedBall = 0.25;
+		this.frame = 0;
+		this.cycleScore = 0.5;
+		this.sign = true
+		this.explode = false;
 		this.player1 = null;
 		this.player2 = null;
+		this.p1Score = 0;
+		this.p2Score = 0;
+		this.score = null;
 		this.ball = null;
 		this.walls = [];
-		this.targets = [];
 		this.laser = null;
 		this.ballMovement = new THREE.Vector3(0, -1, 0);
 		this.isCollision = null;
 		this.cameraRotation = new THREE.Euler();
 		this.controls = null;
 		this.texture = null;
-		this.directionalLight = new THREE.DirectionalLight(0x87CEEB, 10);
-		this.directionalLight2 = new THREE.DirectionalLight(0x87CEEB, 10);
+		this.uniforms = {
+			amplitude: {value: 0.0},
+		};
 		this.textureLoader = new THREE.TextureLoader();
 		this.itemTexture = this.textureLoader.load('static/assets/pokeball-texture.jpg');
+		this.controls = gameData.controlsGameLocal;
+		this.controls.enableZoom = false;
 		this.init().then(() => {
 			this.appli.appendChild(this.renderer.domElement);
 			this.animate();
@@ -45,13 +61,7 @@ class Game {
 
 	init() {
 		return new Promise((resolve, reject) => {
-			this.renderer = new THREE.WebGLRenderer();
-			this.socket = new WebSocket('wss://localhost:8000/game/');
-			this.renderer.setSize(window.innerWidth , window.innerHeight);
-			this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-			this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-			this.controls.enableZoom = false;
-			this.camera.position.z = 50;
+			this.camera.position.set(0, 0, 60);
 			this.directionalLight.position.set(30, -20, 100).normalize();
 			this.scene.add(this.directionalLight);
 			this.directionalLight2.position.set(-30, 20, -100).normalize();
@@ -65,48 +75,78 @@ class Game {
 				this.addCube(0, 0, 31, 30, 1, -15, { color: 0xe4f2f7, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true}),
 				this.addCube(-15, 0, 1, 30, 29, 0, { color: 0xe4f2f7, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true})
 			];
-			this.targets = [
-				this.addCube(0, 13.1, 29, 1, 29, 0, { color: 0xe4f2f7, transparent: true, opacity: 0, metalness: 0, roughness: 1, flatShading: true}),
-				this.addCube(0, -13.1, 29, 1, 29, 0, { color: 0xe4f2f7, transparent: true, opacity: 0, metalness: 0, roughness: 1, flatShading: true})
-			];
 			this.laser = this.createLaser();
-			this.socketInit(this.socket);
 			this.keyU = (event) => this.onKeyUp(event)
 			this.keyD = (event) => this.onKeyDown(event)
 			this.onResize = () => this.onWindowResize()
 			document.addEventListener('keydown', this.keyD);
 			document.addEventListener('keyup', this.keyU);
 			window.addEventListener('resize',  this.onResize);
+			this.load3d();
 			resolve();
 			});
 	}
-	socketClose(event){
-		console.log('WebSocket connection closed');
-			this.status = {status:2};
+
+	load3d(){
+		console.log("try to load")
+		const loader = new FontLoader();
+		loader.load( 'static/fonts/helvetiker_regular.typeface.json', (font) => this.scoreInit(font))
 	}
 
-	socketInit(socket){
-		socket.onopen = function(event) {
-			console.log('WebSocket connection established');
-		};
-		
-		this.socket.onmessage = (event) => {
-			const response = JSON.parse(event.data);
-			console.log(response)
-			this.data = response.data;
-			if (this.data.player1 && this.data.player1.length === 3)
-				//this.player1.position.set(this.data.player1[0],this.data.player1[1],this.data.player1[2])
-			if (this.data.player2 && this.data.player2.length === 3)
-				this.player2.position.set(this.data.player2[0],this.data.player2[1],this.data.player2[2])
-			if (this.data.ballPos && this.data.ballPos.length === 3)
-				//this.ball.position.set(this.data.ballPos[0],this.data.ballPos[1],this.data.ballPos[2])
-			this.id  = event.event
-		};
-		
-		socket.onclose = (event) => this.socketClose(event);
-		socket.onerror = (event) => this.socketClose(event);
-	}
+	async scoreInit(font){
+		if (this.score) {
+			this.scene.remove(this.score);
+			this.score.geometry.dispose();
+			this.score.material.dispose();
+			this.score = null;
+		}
+		let geometry = new TextGeometry( `${this.p1Score}  -  ${this.p2Score}`, {
+			font: font,
+			size: 40,
+			height: 5,
+			curveSegments: 5,
+			bevelThickness: 5,
+		} );
+		geometry.center();
+		const tessellateModifier = new TessellateModifier(0.5, 2000);
+		geometry = tessellateModifier.modify(geometry);
+		const numFaces = geometry.attributes.position.count / 3;
 
+		const colors = new Float32Array( numFaces * 3 * 3 );
+		const displacement = new Float32Array( numFaces * 3 * 3 );
+		const color = new THREE.Color();
+		for ( let f = 0; f < numFaces; f ++ ) {
+			const index = 9 * f;
+			const r = Math.random() * 0.2 + 0.4;
+			const g = Math.random() * 0.2 + 0.4;
+			const b = Math.random() * 0.2 + 0.4;
+			color.setHSL(r, g, b);
+			const dx = Math.random() * 2 - 1;
+			const dy = Math.random() * 2 - 1;
+			const dz = Math.random() * 2 - 1;
+			for ( let i = 0; i < 3; i ++ ) {
+				colors[ index + ( 3 * i ) ] = color.r;
+				colors[ index + ( 3 * i ) + 1 ] = color.g;
+				colors[ index + ( 3 * i ) + 2 ] = color.b;
+				displacement[ index + ( 3 * i ) ] = dx;
+				displacement[ index + ( 3 * i ) + 1 ] = dy;
+				displacement[ index + ( 3 * i ) + 2 ] = dz;
+			}
+		}
+		geometry.setAttribute( 'customColor', new THREE.BufferAttribute( colors, 3 ) );
+		geometry.setAttribute( 'displacement', new THREE.BufferAttribute( displacement, 3 ) );
+		//
+		const shaderMaterial = new THREE.ShaderMaterial( {
+		 	uniforms: this.uniforms,
+		 	vertexShader: await loadShader('static/pong3d/shader.vert'),
+		 	fragmentShader: await loadShader('static/pong3d/shader.frag'),
+		});
+		this.score = new THREE.Mesh(geometry, shaderMaterial);
+		this.score.scale.set(0.5, 0.5, 0.5)
+		this.scene.add(this.score);
+		this.score.position.set(1, 22, 0);
+	}
+	
 	addCube(x, y, w, h, zsize, z, color) {
 		const geometry = new THREE.BoxGeometry(1, 1, 1);
 		const material = new THREE.MeshStandardMaterial(color);
@@ -190,11 +230,115 @@ class Game {
 	}
 
 	async animate() {
+		if(this.explode == true){
+			this.uniforms.amplitude.value = 1.0 * this.cycleScore
+			this.cycleScore += 0.1;
+		}
+		else{
+			if (this.cycleScore >= 0.8)
+				this.sign = false
+			if(this.cycleScore <= 0)
+				this.sign = true
+			if (this.sign)
+				this.cycleScore += 0.0025;
+			else 
+				this.cycleScore -= 0.0025;
+			this.uniforms.amplitude.value = 1.0 * this.cycleScore
+		}
 		this.controls.update();
 		this.renderer.render(this.scene, this.camera);
-		if (this.status['status'] === 1)
+		if (this.status['status'] === 2){
 			requestAnimationFrame(() => this.animate());
+		}
+		else
+			this.destroy();
 	}
+
+	moveP1(){
+		const directionZ = new THREE.Vector3(0, 0, 1).applyEuler(this.cameraRotation);
+		directionZ.y = 0;
+		const directionX = new THREE.Vector3(1, 0, 0).applyEuler(this.cameraRotation);
+		directionX.y = 0;
+		if (this.moveUpP1) {
+			this.movementP1.sub(directionZ);
+		}
+		if (this.moveDownP1) {
+			this.movementP1.add(directionZ);
+		}
+		if (this.moveLeftP1) {
+			this.movementP1.sub(directionX);
+		}
+		if (this.moveRightP1) {
+			this.movementP1.add(directionX);
+		}
+		this.movementP1.normalize();
+		this.movementP1.multiplyScalar(this.speed);
+		this.player1.position.add(this.movementP1);
+		if (!this.moveUpP1 && !this.moveDownP1 && !this.moveLeftP1 && !this.moveRightP1) {
+			this.movementP1.set(0, 0, 0);
+		}
+	}
+
+	moveP2(){
+		const directionZ = new THREE.Vector3(0, 0, 1).applyEuler(this.cameraRotation);
+		directionZ.y = 0;
+		const directionX = new THREE.Vector3(1, 0, 0).applyEuler(this.cameraRotation);
+		directionX.y = 0;
+		if (this.moveUpP2) {
+			this.movementP2.sub(directionZ);
+		}
+		if (this.moveDownP2) {
+			this.movementP2.add(directionZ);
+		}
+		if (this.moveLeftP2) {
+			this.movementP2.sub(directionX);
+		}
+		if (this.moveRightP2) {
+			this.movementP2.add(directionX);
+		}
+		this.movementP2.normalize();
+		this.movementP2.multiplyScalar(this.speed);
+		this.player2.position.add(this.movementP2);
+		if (!this.moveUpP2 && !this.moveDownP2 && !this.moveLeftP2 && !this.moveRightP2) {
+			this.movementP2.set(0, 0, 0);
+		}
+	}
+
+	async checkPoint(){
+		let changed = false
+		if (this.ball.position.y <= -13){
+			this.p2Score++;
+			this.ball.position.set(0, 0, 0);
+			this.player1.position.set(0, -13, 0)
+			this.player2.position.set(0, 13, 0)
+			this.laser.position.copy(this.ball.position);
+			changed = true
+		}
+		else if (this.ball.position.y >= 13){
+			this.p1Score++;
+			this.ball.position.set(0, 0, 0);
+			this.player1.position.set(0, -13, 0)
+			this.player2.position.set(0, 13, 0)
+			this.laser.position.copy(this.ball.position);
+			changed = true
+		}
+		if (changed){
+			this.explode = true;
+			this.ballMovement.x = 0;
+			this.ballMovement.z = 0;
+			//updateScoreDisplay(this.p1Score, this.p2Score, this.hudScore);
+			await sleep(1500)
+			console.log(this.p1Score)
+			console.log(this.p2Score)
+			if (this.p1Score < 5 && this.p2Score < 5)
+				await this.load3d();
+			this.explode = false;
+			this.uniforms.amplitude.value = 0.0;
+			this.cycleScore = 0.1
+
+		}
+	}
+
 	async update() {
 		let collision;
 		this.cameraRotation.copy(this.camera.rotation);
@@ -206,65 +350,50 @@ class Game {
 		this.ballMovement.x = this.checkCollisionTarget(this.walls[3], this.ballMovement.x);
 		this.ballMovement.z = this.checkCollisionTarget(this.walls[2], this.ballMovement.z);
 		this.ballMovement.z = this.checkCollisionTarget(this.walls[1], this.ballMovement.z);
-		this.ballMovement.y = this.checkCollisionTarget(this.targets[0], this.ballMovement.y);
-		this.ballMovement.y = this.checkCollisionTarget(this.targets[1], this.ballMovement.y);
+		// this.ballMovement.y = this.checkCollisionTarget(this.targets[0], this.ballMovement.y);
+		// this.ballMovement.y = this.checkCollisionTarget(this.targets[1], this.ballMovement.y);
 		this.moveBallY(collision);
 		this.checkCollisionWithY(this.player1, collision);
 		this.checkCollisionWithY(this.player2, collision);
+		await this.checkPoint();
 		
-		const directionZ = new THREE.Vector3(0, 0, 1).applyEuler(this.cameraRotation);
-		directionZ.y = 0;
-		const directionX = new THREE.Vector3(1, 0, 0).applyEuler(this.cameraRotation);
-		directionX.y = 0;
-		if (this.moveUp) {
-			this.movement.sub(directionZ);
+		this.moveP1();
+		this.moveP2();
+		await sleep(16);
+		if (this.p1Score >= 5 || this.p2Score >= 5){
+			this.status.status = 0
 		}
-		if (this.moveDown) {
-			this.movement.add(directionZ);
-		}
-		if (this.moveLeft) {
-			this.movement.sub(directionX);
-		}
-		if (this.moveRight) {
-			this.movement.add(directionX);
-		}
-		this.movement.normalize();
-		this.movement.multiplyScalar(this.speed);
-		this.player1.position.add(this.movement);
-		if (!this.moveUp && !this.moveDown && !this.moveLeft && !this.moveRight) {
-			this.movement.set(0, 0, 0);
-		}
-		this.data = {
-			speedBall: this.speedBall,
-			ballPos: [this.ball.position.x,this.ball.position.y,this.ball.position.z],
-			player1: [this.player1.position.x,this.player1.position.y,this.player1.position.z],
-			player2: [this.player2.position.x,this.player2.position.y,this.player2.position.z],
-			id: this.id,
-		};
-		const currentTime = Date.now();
-		if(currentTime - this.lastMessageSentTime >= this.messageInterval){
-			this.sendMessageToServer({data :this.data});
-			this.lastMessageSentTime = currentTime;
-		}
-		await sleep(30);
-		if (this.status['status'] === 1)
+		if (this.status['status'] === 2)
 			requestAnimationFrame(() => this.update())
 	}
 	onKeyDown(event) {
+		console.log(event.code)
 		switch (event.code) {
 			case 'KeyW':
 			case 'KeyZ':
-				this.moveUp = true;
+				this.moveUpP1 = true;
 				break;
 			case 'KeyS':
-				this.moveDown = true;
+				this.moveDownP1 = true;
 				break;
 			case 'KeyA':
 			case 'KeyQ':
-				this.moveLeft = true;
+				this.moveLeftP1 = true;
 				break;
 			case 'KeyD':
-				this.moveRight = true;
+				this.moveRightP1 = true;
+				break;
+			case 'ArrowUp':
+				this.moveUpP2 = true;
+				break;
+			case 'ArrowDown':
+				this.moveDownP2 = true;
+				break;
+			case 'ArrowLeft':
+				this.moveLeftP2 = true;
+				break;
+			case 'ArrowRight':
+				this.moveRightP2 = true;
 				break;
 		}
 	}
@@ -273,17 +402,29 @@ class Game {
 		switch (event.code) {
 			case 'KeyW':
 			case 'KeyZ':
-				this.moveUp = false;
+				this.moveUpP1 = false;
 				break;
 			case 'KeyS':
-				this.moveDown = false;
+				this.moveDownP1 = false;
 				break;
 			case 'KeyA':
 			case 'KeyQ':
-				this.moveLeft = false;
+				this.moveLeftP1 = false;
 				break;
 			case 'KeyD':
-				this.moveRight = false;
+				this.moveRightP1 = false;
+				break;
+			case 'ArrowUp':
+				this.moveUpP2 = false;
+				break;
+			case 'ArrowDown':
+				this.moveDownP2 = false;
+				break;
+			case 'ArrowLeft':
+				this.moveLeftP2 = false;
+				break;
+			case 'ArrowRight':
+				this.moveRightP2 = false;
 				break;
 		}
 	}
@@ -303,13 +444,14 @@ class Game {
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 	}
 
-	
 	destroy() {
 		document.removeEventListener('keydown',this.keyD);
 		window.removeEventListener('resize',this.onResize);
 		this.appli.removeChild(this.renderer.domElement);
-		this.renderer.dispose();
-		this.controls.dispose();
+		this.directionalLight.dispose();
+		this.directionalLight2.dispose();
+		//this.renderer.dispose();
+		//this.controls.dispose();
 		this.scene.clear();
 		if (this.texture) {
 			this.texture.dispose();
@@ -332,4 +474,4 @@ class Game {
 		this.resolve(this.status);
 	}
 }
-export default Game;
+export default GameLocal;
