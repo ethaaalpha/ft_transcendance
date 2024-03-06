@@ -237,7 +237,7 @@ class GameLocal {
 		else{
 			if (this.cycleScore >= 0.8)
 				this.sign = false
-			if(this.cycleScore <= 0)
+			if(this.cycleScore <= 0.4)
 				this.sign = true
 			if (this.sign)
 				this.cycleScore += 0.0025;

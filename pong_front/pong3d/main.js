@@ -85,7 +85,7 @@ async function createMenu() {
 async function createGame() {
     return new Promise((resolve, reject) => {
 		view = null;
-        view = new Game(status, resolve, appli, scene, updateStatus);
+        view = new Game(status, resolve, updateStatus, gameData);
     });
 }
 async function createGameLocal() {
