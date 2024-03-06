@@ -42,10 +42,10 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 		if await self.getUsername() == 'nmilan2':
 			await self.channel_layer.group_send('nmilan2', {'type': 'send.message', 'data': data})
 			await self.makeChanges(data)
-			await self.channel_layer.group_send('42_nmilan', {'type': 'send.message', 'data': data})
+			await self.channel_layer.group_send('nmilan', {'type': 'send.message', 'data': data})
 		else :
 			print("coucou", sys.stderr)
-			await self.channel_layer.group_send('42_nmilan', {'type': 'send.message', 'data': data})
+			await self.channel_layer.group_send('nmilan', {'type': 'send.message', 'data': data})
 			await self.makeChanges(data)
 			await self.channel_layer.group_send('nmilan2', {'type': 'send.message', 'data': data})
 			
