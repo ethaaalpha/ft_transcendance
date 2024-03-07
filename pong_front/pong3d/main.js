@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { RGBELoader } from 'three/module/loaders/RGBELoader.js';
-import { OrbitControls } from 'three/module/controls/OrbitControls';
+import { OrbitControls } from 'three/module/controls/OrbitControls.js';
 import Game from './game.js'
 import Menu from './menu.js';
 import GameLocal from './gameLocal.js';

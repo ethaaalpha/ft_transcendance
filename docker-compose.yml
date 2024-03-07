@@ -49,7 +49,7 @@ services:
     volumes:
       - ./media:/usr/share/media
       - ./pong_front:/usr/share/static
-      - ./three:/usr/share/migouel
+      - ./libs:/usr/share/libs
     ports:
       - 8000:443
     depends_on:
