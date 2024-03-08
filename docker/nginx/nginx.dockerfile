@@ -7,5 +7,10 @@ RUN openssl req -x509 -nodes -newkey rsa:2048 -keyout "/etc/ssl/keys/${DOMAIN}.k
 
 COPY ${DOMAIN}.conf /etc/nginx/nginx.conf
 
+ADD https://github.com/mrdoob/three.js/archive/refs/tags/r162.tar.gz .
+RUN tar -xvzf r162.tar.gz
+RUN mv three.js-r162/ three
+RUN mv three usr/share/libs/
+
 EXPOSE 443
-CMD ["nginx" , "-g" , "daemon off;"]
+CMD ["nginx", "-g", "daemon off;"]

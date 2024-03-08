@@ -14,6 +14,7 @@ pyreset:
 
 run:
 	mkdir -p database
+	mkdir -p libs
 	docker compose up --build
 
 down:
@@ -24,3 +25,5 @@ clean:
 
 fclean: clean reset pyreset
 	echo "Full reset !"
+
+.PHONY: daphne reset pyreset run down clean fclean

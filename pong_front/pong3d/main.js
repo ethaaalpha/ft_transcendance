@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { RGBELoader } from 'three/module/loaders/RGBELoader.js';
-import { OrbitControls } from 'three/module/controls/OrbitControls';
+import { OrbitControls } from 'three/module/controls/OrbitControls.js';
 import Game from './game.js'
 import Menu from './menu.js';
 import GameLocal from './gameLocal.js';
@@ -85,7 +85,7 @@ async function createMenu() {
 async function createGame() {
     return new Promise((resolve, reject) => {
 		view = null;
-        view = new Game(status, resolve, appli, scene, updateStatus);
+        view = new Game(status, resolve, updateStatus, gameData);
     });
 }
 async function createGameLocal() {
