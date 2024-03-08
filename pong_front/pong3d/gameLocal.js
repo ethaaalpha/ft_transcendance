@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/module/controls/OrbitControls';
+import { OrbitControls } from 'three/module/controls/OrbitControls.js';
 
 import { TessellateModifier } from 'three/module/modifiers/TessellateModifier.js';
 import { TextGeometry } from 'three/module/geometries/TextGeometry.js';
@@ -237,7 +237,7 @@ class GameLocal {
 		else{
 			if (this.cycleScore >= 0.8)
 				this.sign = false
-			if(this.cycleScore <= 0)
+			if(this.cycleScore <= 0.4)
 				this.sign = true
 			if (this.sign)
 				this.cycleScore += 0.0025;

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/module/controls/OrbitControls';
-import { FontLoader } from 'three/module/loaders/FontLoader';
+import { OrbitControls } from 'three/module/controls/OrbitControls.js';
+import { FontLoader } from 'three/module/loaders/FontLoader.js';
 import { GLTFLoader } from 'three/module/loaders/GLTFLoader.js';
 
 class Menu {
@@ -176,8 +176,6 @@ class Menu {
 		this.appli.removeChild(this.renderer.domElement);
 		this.directionalLight.dispose();
 		this.directionalLight2.dispose();
-		//this.renderer.dispose();
-		//this.controls.dispose();
 		this.scene.clear();
 		this.matDark.dispose();
 		this.matLite.dispose();
