@@ -6,7 +6,7 @@ class Matchmaking:
 	@staticmethod
 	def addPlayerToQueue(user: User) -> str:
 		from game.models import Room, Mode
-
+ 
 		# check is the user is already playing somewhere else !
 		if user.profile.isPlaying == True:
 			return ("Already inside a game !", False)
