@@ -1,10 +1,9 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
-from django.db.models import Q, QuerySet
+from django.db.models import Q
 from datetime import timedelta
 from uuid import uuid4
-from coordination.matchmaking import Matchmaking
 import shortuuid
 import sys
 
@@ -109,10 +108,15 @@ class Match(models.Model):
 		room.update()
 
 	def start(self):
+		from .core import Game, GameMap
+
 		print(f'Match {self.id}, voici les adversaires host: {self.host} | invited: {self.invited}', file=sys.stderr)
 		# ici pour avertir les autres joueurs du prochain match !!!
 		self.send(self.host, 'next', {'match-id': str(self.id), 'host': self.host.username, 'invited': self.invited.username, 'statusHost': True})
 		self.send(self.invited, 'next', {'match-id': str(self.id), 'host': self.host.username, 'invited': self.invited.username, 'statusHost': False})
+		GameMap.createGame(self.id, self.host.username, self.invited.username)
+
+		print(f'data = {GameMap.getGame(self.id).toJson()}', file=sys.stderr)
 		self.state = 1
 		self.save()
 
