@@ -1,20 +1,26 @@
+# Directories 
+BACK_DIR			= 'pong_back'
+MEDIA_DIR			= 'media'
+DATABASE_DIR 		= 'database'
+LIBS_DIR			= 'libs'
+
+NEEDED_DIR			= ${DATABASE_DIR} ${LIBS_DIR}
+
+# Files
+DEFAULT_PICTURE		= "pokemon.png"
+
+# Containers
+CONTAINERS		 	= daphne nginx postgresql redis
+CONTAINERS_DEBUG 	= $(addsuffix _debug, $(CONTAINERS))
+
 all: 
 	$(MAKE) run
 
-daphne:
-	docker exec -it daphne bash
-
-reset:
-	rm -rf database/
-	mkdir database
-
-pyreset:
-	find pong_back -type d -name 'migrations' -exec rm -rf {} \;
-	find pong_back -type d -name '__pycache__' -exec rm -rf {} \;
+${CONTAINERS_DEBUG}:
+	docker exec -it $@ sh
 
 run:
-	mkdir -p database
-	mkdir -p libs
+	@mkdir -p ${NEEDED_DIR}
 	docker compose up --build
 
 down:
@@ -23,7 +29,14 @@ down:
 clean:
 	docker compose down -v
 
-fclean: clean reset pyreset
-	echo "Full reset !"
+reset:
+	@rm -rf ${DATABASE_DIR}
+	@find ${MEDIA_DIR} -type f ! -name ${DEFAULT_PICTURE} -exec rm {} +
 
-.PHONY: daphne reset pyreset run down clean fclean
+pyreset:
+	@find ${BACK_DIR} -type d \( -name migrations -o -name __pycache__ \) -exec rm -rf {} +
+
+fclean: clean reset pyreset
+	@echo "Full reset !"
+
+.PHONY: reset pyreset run down clean fclean ${CONTAINERS_DEBUG}

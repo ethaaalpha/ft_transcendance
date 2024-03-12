@@ -1,12 +1,11 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 from datetime import timedelta
 from uuid import uuid4
 from coordination.matchmaking import Matchmaking
 import shortuuid
-import time
 import sys
 
 def roomIdGenerator():
@@ -57,6 +56,7 @@ class Match(models.Model):
 
 	@staticmethod
 	def create(host: User, invited: User) -> str:
+		print(f'voici les valeurs host {host} invit {invited}', file=sys.stderr)
 		match = Match.objects.create(host=host, invited=invited)
 		return match.id
 
@@ -109,6 +109,7 @@ class Match(models.Model):
 		room.update()
 
 	def start(self):
+		print(f'Match {self.id}, voici les adversaires host: {self.host} | invited: {self.invited}', file=sys.stderr)
 		# ici pour avertir les autres joueurs du prochain match !!!
 		self.send(self.host, 'next', {'opponent' : self.invited.username})
 		self.send(self.invited, 'next', {'opponent' : self.host.username})
@@ -207,15 +208,13 @@ class Room(models.Model):
 
 	def addPlayer(self, player: User) -> int:
 		actual = self.opponents.count()
-		
+
 		if (player.profile.isPlaying == True):
 			return ("You are already playing !", False)
 		if (actual >= int(self.mode)):
 			return ("There is too much player in the room !", False)
 		if (player in self.opponents.all()):
 			return ("You already joined this room !", False)
-		if (Matchmaking.isPlayerInQueue(player)):
-			return ("You are already in matchmaking queue !", False)
 		self.opponents.add(player)
 		self.save()
 
@@ -231,8 +230,9 @@ class Room(models.Model):
 		matchOpponents = []
 		if first: # first round
 			nPlayer = self.opponents.count()
+			players = list(self.opponents.all())
 			for i in range(0, nPlayer, 2):
-				matchOpponents.append(self.opponents.all()[i:i+2])
+				matchOpponents.append(players[i:i+2])
 
 		else:
 			if self.numberMatchsLastRound == 1:
@@ -294,13 +294,11 @@ class Room(models.Model):
 		This fonction return the room code or an error 
 		Check if user already in a room or matchmaking queue
 		"""
-		if Matchmaking.isPlayerInQueue(owner):
-			return ("You are already in matchmaking queue !", False)
-		if owner.profile.isPlaying == True:
-			return ("You are already in game !", False)
-		roomCheck = Room.objects.filter(opponents=owner, state=0).first()
-		if roomCheck:
-			return (f"You are already in a room the id is {roomCheck.id} !", False)
+		from coordination.tools import isAvailableToPlay
+
+		check = isAvailableToPlay(owner)
+		if (check[1]):
+			return check
 		room = Room.createRoom(owner, mode)
 		return (room.id, True)
 	
@@ -314,7 +312,12 @@ class Room(models.Model):
 
 	@staticmethod
 	def joinRoom(player: User, code: str) -> str:
+		from coordination.tools import isAvailableToPlay
 		targetRoom: Room = Room.getRoom(code)
+		check = isAvailableToPlay(player)
+
+		if (check[1]):
+			return check 
 		if not targetRoom:
 			return ("Room is inexisting !", False)
 		else:
@@ -340,3 +343,11 @@ class Room(models.Model):
 		playerRooms = Room.objects.filter(opponents=player, state=0).all()
 		for room in playerRooms:
 			room.removePlayer(player)
+	
+	@staticmethod
+	def isInWaitingRoom(player: User) -> bool:
+		"""
+		If player waiting in a room
+		"""
+		room = Room.objects.filter(opponents=player, state=0).first()
+		return room.id if room else False
