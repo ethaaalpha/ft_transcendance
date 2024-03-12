@@ -4,17 +4,20 @@ class Matchmaking:
 	_stack = []
 
 	@staticmethod
+	def isIn(user: User) -> bool:
+		if user in Matchmaking._stack:
+			return True
+		return False
+
+	@staticmethod
 	def addPlayerToQueue(user: User) -> str:
 		from game.models import Room, Mode
+		from coordination.tools import isAvailableToPlay
 
-		# check is the user is already playing somewhere else !
-		if user.profile.isPlaying == True:
-			return ("Already inside a game !", False)
-
-		if user not in Matchmaking._stack:
-			Matchmaking._stack.append(user)
-		else:
-			return ("Already inside the queue !", False)
+		check = isAvailableToPlay(user)
+		if not (check[1]):
+			return check
+		Matchmaking._stack.append(user)
 
 		if len(Matchmaking._stack) >= 2: # Run when match 2 players
 			playerA: User = Matchmaking._stack[-1]
