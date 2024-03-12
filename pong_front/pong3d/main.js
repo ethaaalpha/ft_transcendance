@@ -18,8 +18,8 @@ var gameData = {
         rendererMenu : new THREE.WebGLRenderer(),
         rendererGameLocal : new THREE.WebGLRenderer(),
         camera : new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000),
-        directionalLight : new THREE.DirectionalLight(0x0fffff, 8),
-        directionalLight2 : new THREE.DirectionalLight(0x0fffff, 2),
+        directionalLight : new THREE.DirectionalLight(0xED7F10, 80),
+        directionalLight2 : new THREE.DirectionalLight(0xED7F10, 80),
         clock : new THREE.Clock(),
         raycaster : new THREE.Raycaster(),
         appli : appli,
@@ -46,7 +46,7 @@ async function initialize() {
 				await createGame();
             else if (status.status === 2)
                 await createGameLocal();
-            await sleep(1500)
+            //await sleep(1500)
 		}
     } catch (error) {
         console.error("Error during initialization:", error);
@@ -69,7 +69,7 @@ async function loadTexture() {
 			controlsGameLocal.enableZoom = false;
             gameData.controlsGameLocal = controlsGameLocal;
 
-			status.status = 0;
+			status.status = 1;
             resolve();
         });
     });
