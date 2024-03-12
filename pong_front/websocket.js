@@ -89,11 +89,11 @@ class coordinationWebsocket {
 			this.input.value = "";
 		}
 		document.querySelector('#button-invitation').onclick = (e) => {
-			const invInputDom = document.querySelector('#label-invitation-action');
-			const actInputDom = document.querySelector('#label-invitation-username'); // A VERIFIER PAR PITIE
-			const data = {'target': invInputDom.value}
+			const actInputDom = document.querySelector('#label-invitation-action');
+			const userInputDom = document.querySelector('#label-invitation-username'); // A VERIFIER PAR PITIE
+			const data = {'target': userInputDom.value}
 			this.socket.send(JSON.stringify({
-				'event': actInputDom.value,
+				'event': userInputDom.value,
 				'data': data,
 			}));
 			invInputDom.value = '';
