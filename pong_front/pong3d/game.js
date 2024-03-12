@@ -24,7 +24,7 @@ class Game {
 		this.directionalLight2 = gameData.directionalLight2;
 		this.statusCallback = statusCallback;
 		this.lastMessageSentTime = 0;
-		this.messageInterval = 20;
+		this.messageInterval = 60;
 		this.movement = new THREE.Vector3(0, 0, 0);
 		this.speed = 0.8;
 		this.speedBall = 0.25;
@@ -40,7 +40,7 @@ class Game {
 		this.ball = null;
 		this.walls = [];
 		this.laser = null;
-		this.ballMovement = new THREE.Vector3(0, -1, 0);
+		this.ballMovement = new THREE.Vector3(0, 0, 0);
 		this.isCollision = null;
 		this.cameraRotation = new THREE.Euler();
 		this.controls = null;
@@ -61,20 +61,21 @@ class Game {
 	
 	init() {
 		return new Promise((resolve, reject) => {
+			console.log("test1")
 			this.socket = new WebSocket('wss://localhost:8000/api/game/');
 			this.camera.position.set(0, 0, 60);
-			this.directionalLight.position.set(30, -20, 100).normalize();
+			this.directionalLight.position.set(0, -18, 0).normalize();
 			this.scene.add(this.directionalLight);
-			this.directionalLight2.position.set(-30, 20, -100).normalize();
+			this.directionalLight2.position.set(0, 18, 0).normalize();
 			this.scene.add(this.directionalLight2);
 			this.ball = this.addBall(0, 0, 1, 1, 1, 0);
 			this.player1 = this.addCube(0, -13, 5, 0.8, 5, 0, {transparent: false, map: this.itemTexture}, 0);
 			this.player2 = this.addCube(0, 13, 5, 0.8, 5, 0, {transparent: false, map: this.itemTexture}, 0);
 			this.walls = [
-				this.addCube(15, 0, 1, 30, 29, 0, { color: 0xe4f2f7, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true}),
-				this.addCube(0, 0, 31, 30, 1, 15, { color: 0xe4f2f7, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true}),
-				this.addCube(0, 0, 31, 30, 1, -15, { color: 0xe4f2f7, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true}),
-				this.addCube(-15, 0, 1, 30, 29, 0, { color: 0xe4f2f7, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true})
+				this.addCube(15, 0, 1, 30, 29, 0, { color: 0x05ff00, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true}),
+				this.addCube(0, 0, 31, 30, 1, 15, { color: 0x05ff00, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true}),
+				this.addCube(0, 0, 31, 30, 1, -15, { color: 0x05ff00, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true}),
+				this.addCube(-15, 0, 1, 30, 29, 0, { color: 0x05ff00, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true})
 			];
 			this.laser = this.createLaser();
 			this.keyU = (event) => this.onKeyUp(event)
@@ -109,7 +110,7 @@ class Game {
 			bevelThickness: 5,
 		} );
 		geometry.center();
-		const tessellateModifier = new TessellateModifier(0.5, 2000);
+		const tessellateModifier = new TessellateModifier(0.8, 1500);
 		geometry = tessellateModifier.modify(geometry);
 		const numFaces = geometry.attributes.position.count / 3;
 
@@ -118,9 +119,14 @@ class Game {
 		const color = new THREE.Color();
 		for ( let f = 0; f < numFaces; f ++ ) {
 			const index = 9 * f;
-			const r = Math.random() * 0.2 + 0.4;
-			const g = Math.random() * 0.2 + 0.4;
-			const b = Math.random() * 0.2 + 0.4;
+			const choice = Math.random();
+			let r;
+			if (choice <= 0.5)
+				r = Math.random() * 0.05 + 0.335;
+			else
+				r = Math.random() * 0.05 + 0.075;
+			const g = Math.random() * 0.1 + 0.9;
+			const b = 0.5;
 			color.setHSL(r, g, b);
 			const dx = Math.random() * 2 - 1;
 			const dy = Math.random() * 2 - 1;
@@ -168,6 +174,7 @@ class Game {
 			if (this.data.ballPos && this.data.ballPos.length === 3)
 				//this.ball.position.set(this.data.ballPos[0],this.data.ballPos[1],this.data.ballPos[2])
 			this.id = event.event
+			this.ballMovement.set(this.data.ballVec[0], this.data.ballVec[1], this.data.ballVec[2])
 		};
 		
 		socket.onclose = (event) => this.socketClose(event);
@@ -262,9 +269,9 @@ class Game {
 			this.cycleScore += 0.1;
 		}
 		else{
-			if (this.cycleScore >= 0.8)
+			if (this.cycleScore >= 0.35)
 				this.sign = false
-			if(this.cycleScore <= 0)
+			if(this.cycleScore <= 0.15)
 				this.sign = true
 			if (this.sign)
 				this.cycleScore += 0.0025;
@@ -288,11 +295,9 @@ class Game {
 		this.ballMovement.x = this.checkCollisionTarget(this.walls[3], this.ballMovement.x);
 		this.ballMovement.z = this.checkCollisionTarget(this.walls[2], this.ballMovement.z);
 		this.ballMovement.z = this.checkCollisionTarget(this.walls[1], this.ballMovement.z);
-		// this.ballMovement.y = this.checkCollisionTarget(this.targets[0], this.ballMovement.y);
-		// this.ballMovement.y = this.checkCollisionTarget(this.targets[1], this.ballMovement.y);
 		this.moveBallY(collision);
 		this.checkCollisionWithY(this.player1, collision);
-		this.checkCollisionWithY(this.player2, collision);
+		//this.checkCollisionWithY(this.player2, collision);
 		
 		const directionZ = new THREE.Vector3(0, 0, 1).applyEuler(this.cameraRotation);
 		directionZ.y = 0;
@@ -318,7 +323,8 @@ class Game {
 		}
 		this.data = {
 			speedBall: this.speedBall,
-			ballPos: [this.ball.position.x,this.ball.position.y,this.ball.position.z],
+			ballVec: [this.ballMovement.x, this.ballMovement.y, this.ballMovement.z],
+			ballPos: []
 			player1: [this.player1.position.x,this.player1.position.y,this.player1.position.z],
 			player2: [this.player2.position.x,this.player2.position.y,this.player2.position.z],
 			id: this.id,

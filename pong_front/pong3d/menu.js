@@ -42,7 +42,7 @@ class Menu {
 
 	createTxt (font) {
 		let i = 0;
-		const color = 0xED7D31;
+		const color = 0x05FF00;
 		const message = ["Matchmaking", "Local", "Tournament"]
 		const yPos = [0, -140, -280] 
 		while (i < 3){
