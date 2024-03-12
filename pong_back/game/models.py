@@ -111,8 +111,8 @@ class Match(models.Model):
 	def start(self):
 		print(f'Match {self.id}, voici les adversaires host: {self.host} | invited: {self.invited}', file=sys.stderr)
 		# ici pour avertir les autres joueurs du prochain match !!!
-		self.send(self.host, 'next', {'opponent' : self.invited.username})
-		self.send(self.invited, 'next', {'opponent' : self.host.username})
+		self.send(self.host, 'next', {'match-id': str(self.id), 'host': self.host.username, 'invited': self.invited.username, 'statusHost': True})
+		self.send(self.invited, 'next', {'match-id': str(self.id), 'host': self.host.username, 'invited': self.invited.username, 'statusHost': False})
 		self.state = 1
 		self.save()
 
@@ -297,7 +297,7 @@ class Room(models.Model):
 		from coordination.tools import isAvailableToPlay
 
 		check = isAvailableToPlay(owner)
-		if (check[1]):
+		if not (check[1]):
 			return check
 		room = Room.createRoom(owner, mode)
 		return (room.id, True)
@@ -316,7 +316,7 @@ class Room(models.Model):
 		targetRoom: Room = Room.getRoom(code)
 		check = isAvailableToPlay(player)
 
-		if (check[1]):
+		if not (check[1]):
 			return check 
 		if not targetRoom:
 			return ("Room is inexisting !", False)
