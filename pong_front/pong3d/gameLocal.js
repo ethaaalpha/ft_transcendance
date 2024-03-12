@@ -232,7 +232,7 @@ class GameLocal {
 	async animate() {
 		if(this.explode == true){
 			this.uniforms.amplitude.value = 1.0 * this.cycleScore
-			this.cycleScore += 0.1;
+			this.cycleScore += 7;
 		}
 		else{
 			if (this.cycleScore >= 0.8)
