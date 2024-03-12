@@ -5,6 +5,7 @@ from activity.tools import getChannelName
 from users.models import Profile
 from django.contrib.auth.models import User
 from .matchmaking import Matchmaking
+from .invitations import InvitationStack
 from channels.layers import get_channel_layer
 from game.models import Room, Mode, Match
 
@@ -81,6 +82,7 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 					# handle le chat message !
 					await sync_to_async(Match.speakConsumer)(user, data.get('content'))
 				case 'invite':
+					# await sync_to_async(InvitationStack.invite())
 					return
 				case 'accept':
 					return

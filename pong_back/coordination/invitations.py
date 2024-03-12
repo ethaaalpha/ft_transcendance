@@ -24,6 +24,13 @@ class InvitationStack:
 	stack = []
 
 	@staticmethod
+	def find(initier: User, target: User) -> Invitation | None:
+		for invitation in InvitationStack.stack:
+			if (invitation.initier == initier and invitation.target == target):
+				return (invitation)
+		return (None)
+
+	@staticmethod
 	def invite(initier: User, target: User) -> str:
 		InvitationStack.update()
 		# check doublon
@@ -45,17 +52,27 @@ class InvitationStack:
 		"""
 		Target is the person who refuse the invitation !
 		"""
-		for invitation in InvitationStack.stack:
-			if (invitation.initier == initier and invitation.target == target):
-				Invitation.notifyInitier(f"{target.username} has refused your invitation to play !")
-				InvitationStack.stack.remove(invitation)
-				return ("You refused this invitation !")				
+		invitation: Invitation = InvitationStack.find(initier, target)
+		if invitation:
+			Invitation.notifyInitier(f"{target.username} has refused your invitation to play !")
+			InvitationStack.stack.remove(invitation)
+			return ("You refused this invitation !")				
 
 		return ("This invitation do not exist anymore !")
 	
 	@staticmethod
-	def accept() -> str:
-		return ("test")
+	def accept(initier: User, target: User) -> str:
+		InvitationStack.update()
+		"""
+		Target is the person who accept the invitation !
+		"""
+		invitation: Invitation = InvitationStack.find(initier, target)
+		if invitation:
+			Invitation.notifyInitier(f"{target.username} has accepted your invitation !")
+			Invitation.notifyTarget(f"{initier.username} has accepted your invitation !")
+			InvitationStack.stack.remove(invitation)
+			# create match here !!
+		return ("This invitation do not exist !")
 	
 	@staticmethod
 	def update():
