@@ -15,7 +15,9 @@ if (!appli) {
 var data = null;
 const socketTmp = new WebSocket("wss://localhost:8081/api/coordination/")
 socketTmp.onmessage = (event) => {
-    console.log(event.data)
+    const tmp = JSON.parse(event.data)
+    if (tmp.event == "next")
+        data = tmp.data;
 }
 var gameData = {
         sceneGameLocal : new THREE.Scene(),
@@ -49,7 +51,7 @@ async function initialize() {
 			else if (status.status === 0)
 				await createMenu();
 			else if (status.status === 1){
-                await waitForData();          
+                await waitForData();
     		    await createGame();
             }
             else if (status.status === 2)
@@ -89,7 +91,6 @@ async function loadTexture() {
 
 async function createMenu() {
     return new Promise((resolve, reject) => {
-		
 		view = null;
         view = new Menu(status, resolve, updateStatus, gameData);
     });
@@ -97,7 +98,10 @@ async function createMenu() {
 async function createGame() {
     return new Promise((resolve, reject) => {
 		view = null;
-        view = new GameInv(status, resolve, updateStatus, gameData);
+        if (data.statusHost == true)
+            view = new Game(status, resolve, updateStatus, gameData, data);
+        else
+            view = new GameInv(status, resolve, updateStatus, gameData, data);
     });
 }
 async function createGameLocal() {
@@ -114,6 +118,7 @@ function waitForData() {
                 clearInterval(intervalId);
                 resolve();
             }
+            console.log(data)
         }, 500);
     });
 }
