@@ -12,7 +12,7 @@ async function loadShader(url) {
     return response.text();
 }
 
-class Game {
+class GameInv {
 	constructor(status, resolve,statusCallback, gameData, invited) {
 		this.renderer = gameData.rendererGameLocal;
 		this.camera = gameData.camera;
@@ -20,7 +20,7 @@ class Game {
 		this.invited = invited
 		this.status = status;
 		this.resolve = resolve;
-		this.scene = gameData.sceneGameLocal;
+		this.scene = gameData.sceneGameInv;
 		this.directionalLight = gameData.directionalLight;
 		this.directionalLight2 = gameData.directionalLight2;
 		this.statusCallback = statusCallback;
@@ -52,6 +52,7 @@ class Game {
 		this.textureLoader = new THREE.TextureLoader();
 		this.itemTexture = this.textureLoader.load('/static/assets/pokeball-texture.jpg');
 		this.controls = gameData.controlsGameLocal;
+		this.controls.rotateSpeed = -1;
 		this.init().then(() => {
 			this.appli.appendChild(this.renderer.domElement);
 			this.animate();
@@ -61,8 +62,8 @@ class Game {
 	
 	init() {
 		return new Promise((resolve, reject) => {
+			console.log("test1")
 			this.socket = new WebSocket('wss://localhost:8081/api/game/');
-			this.camera.rotation.z += Math.PI
 			this.camera.position.set(0, 0, 60);
 			if (this.invited)
 
@@ -104,7 +105,7 @@ class Game {
 			this.score.material.dispose();
 			this.score = null;
 		}
-		let geometry = new TextGeometry( `${this.p1Score}  -  ${this.p2Score}`, {
+		let geometry = new TextGeometry( `${this.p2Score} - ${this.p1Score}`, {
 			font: font,
 			size: 40,
 			height: 5,
@@ -144,15 +145,18 @@ class Game {
 		}
 		geometry.setAttribute( 'customColor', new THREE.BufferAttribute( colors, 3 ) );
 		geometry.setAttribute( 'displacement', new THREE.BufferAttribute( displacement, 3 ) );
+		//
 		const shaderMaterial = new THREE.ShaderMaterial( {
 		 	uniforms: this.uniforms,
 		 	vertexShader: await loadShader('/static/pong3d/shader.vert'),
 		 	fragmentShader: await loadShader('/static/pong3d/shader.frag'),
 		});
 		this.score = new THREE.Mesh(geometry, shaderMaterial);
+		//this.score.rotation.y += Math.PI;
+		this.score.rotation.z += Math.PI;
 		this.score.scale.set(0.5, 0.5, 0.5)
 		this.scene.add(this.score);
-		this.score.position.set(1, 22, 0);
+		this.score.position.set(-1, -22, 0);
 	}
 	socketClose(event){
 		console.log('WebSocket connection closed');
@@ -166,6 +170,7 @@ class Game {
 		
 		this.socket.onmessage = (event) => {
 			const response = JSON.parse(event.data);
+			//console.log(response)
 			this.data = response.data;
 			if (this.data.player1 && this.data.player1.length === 3)
 				//this.player1.position.set(this.data.player1[0],this.data.player1[1],this.data.player1[2])
@@ -196,6 +201,7 @@ class Game {
 		const material = new THREE.MeshBasicMaterial({map: this.itemTexture});
 		const cube = new THREE.Mesh(geometry, material);
 		cube.position.set(x, y, z);
+		cube.rotation.z += Math.PI;
 		cube.scale.set(w, h, zsize);
 		this.scene.add(cube);
 		return cube;
@@ -207,7 +213,7 @@ class Game {
 
 		const points = [];
 		points.push(new THREE.Vector3(0, 0, 0));
-		points.push(new THREE.Vector3(0, -13, 0));
+		points.push(new THREE.Vector3(0, 13, 0));
 
 		geometry.setFromPoints(points);
 
@@ -258,8 +264,8 @@ class Game {
 			const elementBoundingBox = new THREE.Box3().setFromObject(this.isCollision);
 			collision = ballBoundingBox.intersectsBox(elementBoundingBox);
 			if (!collision)
-			this.isCollision = null;
-		this.ball.position.add(this.ballMovement);
+				this.isCollision = null;
+			this.ball.position.add(this.ballMovement);
 		}
 	}
 
@@ -280,6 +286,7 @@ class Game {
 			this.uniforms.amplitude.value = 1.0 * this.cycleScore
 		}
 		this.controls.update();
+		this.camera.rotation.z += Math.PI;
 		this.renderer.render(this.scene, this.camera);
 		if (this.status['status'] === 1)
 			requestAnimationFrame(() => this.animate());
@@ -289,7 +296,7 @@ class Game {
 		this.cameraRotation.copy(this.camera.rotation);
 		this.laser.position.copy(this.ball.position);
 		const laserVertices = this.laser.geometry.attributes.position;
-		laserVertices.setXYZ(1, 0, -13 - this.ball.position.y, 0);
+		laserVertices.setXYZ(1, 0, 13 - this.ball.position.y, 0);
 		laserVertices.needsUpdate = true;
 		this.ballMovement.x = this.checkCollisionTarget(this.walls[0], this.ballMovement.x);
 		this.ballMovement.x = this.checkCollisionTarget(this.walls[3], this.ballMovement.x);
@@ -317,7 +324,7 @@ class Game {
 		}
 		this.movement.normalize();
 		this.movement.multiplyScalar(this.speed);
-		this.player1.position.add(this.movement);
+		this.player2.position.add(this.movement);
 		if (!this.moveUp && !this.moveDown && !this.moveLeft && !this.moveRight) {
 			this.movement.set(0, 0, 0);
 		}
@@ -417,4 +424,4 @@ class Game {
 		this.resolve(this.status);
 	}
 }
-export default Game;
+export default GameInv;
