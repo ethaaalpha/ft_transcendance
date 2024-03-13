@@ -16,12 +16,11 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-r2=)ru12*q)l-&becymd(@z1^iqkde#4)8%5(96s4m%gx!0l^j'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -79,16 +78,11 @@ WSGI_APPLICATION = 'pong_back.wsgi.application'
 
 ASGI_APPLICATION = 'pong_back.asgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
 		'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'ethaniellegrand',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
         'PASSWORD': os.getenv('DB_PASSWORD'),
         'HOST': os.getenv('DB_HOST'),
         'PORT': '5432',
@@ -113,7 +107,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -125,17 +118,12 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.0/howto/static-files/
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-# Settings #
+# Media / Static settings #
 MEDIA_ROOT = "../media/"
 MEDIA_URL = "media/"
 STATIC_URL = "static/"
@@ -144,15 +132,15 @@ STATICFILES_DIRS = [
 	BASE_DIR / "../pong_front",
 ]
 
+# API - 42 #
+API_CALLBACK = os.getenv('API_CALLBACK')
+API_URL = os.getenv('API_URL')
+API_UUID = os.getenv('API_UUID')
+API_SECRET = os.getenv('API_SECRET')
+API_TOKEN = os.getenv('API_TOKEN')
+API_INFO = os.getenv('API_INFO')
 
-# Auth #
-API_CALLBACK = "https://localhost:8000/api/auth/callback"
-API_URL = "https://api.intra.42.fr/oauth/authorize"
-API_UUID = "u-s4t2ud-45ce7bc515b8b21e8a60214ec587495181e86923fa57aa7017a3a437781f8162"
-API_SECRET = "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"
-API_TOKEN = "https://api.intra.42.fr/oauth/token"
-API_INFO = "https://api.intra.42.fr/v2/me"
-
+# Inputs | Default Configs
 CONFIG_PASS_LENGTH_MAX = 32
 CONFIG_PASS_LENGTH_MIN = 5
 
@@ -162,15 +150,18 @@ CONFIG_USER_LENGTH_MIN = 3
 CONFIG_EMAIL_LENGTH_MAX = 254
 CONFIG_EMAIL_LENGTH_MIN = 5
 
+DEFAULT_PROFILE_PICTURE_NAME = 'pokemon.png'
 
-# Nginx conf
+MESSAGE_LENGTH_MAX = 1024
+
+# Nginx Configuration
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 ALLOWED_HOSTS = [ 'localhost' ]
 
 
-# Channel layer
+# Channel Layer Configuration
 CHANNEL_LAYERS = {
     # "default": {
     #     "BACKEND": "channels.layers.InMemoryChannelLayer"
@@ -183,21 +174,15 @@ CHANNEL_LAYERS = {
     },
 }
 
-# Users
-DEFAULT_PROFILE_PICTURE_NAME = 'pokemon.png'
-
-# Messages
-MESSAGE_LENGTH_MAX = 1024
-
-# smtp
+# Mailing
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'ft.pokepong@gmail.com'
-EMAIL_HOST_PASSWORD = 'hipv wuvi ufxh qsyo'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
-
+# Debugging
 LOGGING = {
 	"version": 1,
     "disable_existing_loggers": False,

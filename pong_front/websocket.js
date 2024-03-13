@@ -88,14 +88,17 @@ class coordinationWebsocket {
 			this.socket.send(JSON.stringify({'event' : 'create', 'data': {'mode': value}}));
 			this.input.value = "";
 		}
-		document.querySelector('#local-message-submit').onclick = (e) => {
-			const messageInputDom = document.querySelector('#local-message-input');
-			const data = {'content': messageInputDom.value}
+		document.querySelector('#button-invitation').onclick = (e) => {
+			const actInputDom = document.querySelector('#label-invitation-action');
+			const userInputDom = document.querySelector('#label-invitation-username'); // A VERIFIER PAR PITIE
+			const data = {'target': userInputDom.value}
 			this.socket.send(JSON.stringify({
-				'event': 'chat',
+				'event': userInputDom.value,
 				'data': data,
 			}));
-			messageInputDom.value = '';
+			invInputDom.value = '';
+			actInputDom.value = '';
 		};
+		
 	}
 }
