@@ -179,8 +179,6 @@ class Room(models.Model):
 			setInMatch(player)
 
 		self.next(True)
-		# it is a matchmaking
-		# lancer la partie voir avec nico !!!!
 	
 	def removePlayer(self, player: User):
 		"""
