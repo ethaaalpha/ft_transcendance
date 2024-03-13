@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+import socket
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -158,8 +159,8 @@ MESSAGE_LENGTH_MAX = 1024
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-ALLOWED_HOSTS = [ 'localhost' ]
 
+ALLOWED_HOSTS = ['localhost', socket.gethostbyname(socket.gethostname())]
 
 # Channel Layer Configuration
 CHANNEL_LAYERS = {

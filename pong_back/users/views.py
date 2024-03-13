@@ -61,5 +61,7 @@ def postData(request: HttpRequest, filter: str) -> HttpResponse:
 			return (userProfile.form_changePassword(request))
 		case "profilePicture":
 			return (userProfile.form_changeProfilePicture(request))
+		case "email":
+			return (userProfile.form_changeEmail(request))
 		case _:
 			return (tResponses.BAD_REQUEST.request())

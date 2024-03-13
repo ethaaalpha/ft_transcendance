@@ -8,8 +8,6 @@ from .matchmaking import Matchmaking
 from .invitations import InvitationStack
 from channels.layers import get_channel_layer
 from game.models import Room, Mode, Match
-import sys
-
 
 class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 		

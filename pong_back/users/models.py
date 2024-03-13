@@ -11,6 +11,7 @@ from django.conf import settings
 from uuid import uuid4
 from datetime import timedelta
 from stats.models import Stats
+import users.forms as UForm
 import os
 import requests
 import shortuuid
@@ -98,8 +99,7 @@ class Profile(models.Model):
 		return (tResponses.OKAY.request("You successfully change your password !"))
 
 	def form_changePassword(self, request: HttpRequest) -> HttpResponse:
-		from .forms import PasswordForm
-		form: PasswordForm = PasswordForm(request.POST)
+		form: UForm.PasswordForm = UForm.PasswordForm(request.POST)
 
 		if (self.getUsername()[:3] == '42_'):
 			return (tResponses.FORBIDDEN.request("User from 42 might always use 42 portal to connect themselves !"))
@@ -110,7 +110,7 @@ class Profile(models.Model):
 
 			# Security check to request the password changes !
 			if not (self.user.check_password(actualPassword)):
-				return (tResponses.FORBIDDEN.request(message="Password do not match !"))
+				return (tResponses.FORBIDDEN.request("Password do not match !"))
 
 			# OK - Now able to change the password !
 			value: HttpResponse = self.changePassword(password)
@@ -118,13 +118,11 @@ class Profile(models.Model):
 				update_session_auth_hash(request, self.user)
 			return (value)
 		else:
-			return (tResponses.BAD_REQUEST.request(message="Form isn't valid !"))
+			return (tResponses.BAD_REQUEST.request("Form isn't valid !"))
 		
 	def form_changeProfilePicture(self, request: HttpRequest) -> HttpResponse:
-		from .forms import PictureForm
-		
 		oldPicture = self.profilePicture.path
-		form: PictureForm = PictureForm(request.POST, request.FILES)
+		form: UForm.PictureForm = UForm.PictureForm(request.POST, request.FILES)
 
 		if (form.is_valid()):
 			if (os.path.exists(oldPicture) and os.path.basename(oldPicture) != settings.DEFAULT_PROFILE_PICTURE_NAME):
@@ -132,10 +130,28 @@ class Profile(models.Model):
 
 			self.profilePicture = form.cleaned_data['profilePicture']
 			self.save()
-			return (tResponses.OKAY.request(message="Profile picture successfully changed !"))
+			return (tResponses.OKAY.request("Profile picture successfully changed !"))
 		else:
-			return (tResponses.BAD_REQUEST.request(message="Image is not valid !"))
+			return (tResponses.BAD_REQUEST.request("Image is not valid !"))
 	
+	def form_changeEmail(self, request: HttpRequest) -> HttpResponse:
+		user: User = request.user
+		form: UForm.EmailForm = UForm.EmailForm(request.POST)
+
+		if (form.is_valid()):
+			activeEmail = form.cleaned_data['activeEmail']
+			newEmail = form.cleaned_data['newEmail']
+
+			if (activeEmail != user.email):
+				return (tResponses.BAD_REQUEST.request("Email do not match with active one !"))
+			if (activeEmail == newEmail):
+				return (tResponses.BAD_REQUEST.request("Email musn't be the same !"))
+
+			user.email = newEmail
+			user.save()
+			return (tResponses.OKAY.request("You successfully change your mail !"))
+		else:
+			return (tResponses.BAD_REQUEST.request("Email are not valid !"))
 
 	# Will check if the passed user is blocked
 	def is_block(self, target):
