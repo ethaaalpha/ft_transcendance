@@ -15,6 +15,7 @@ if (!appli) {
 var data = null;
 const socketTmp = new WebSocket("wss://localhost:8081/api/coordination/")
 socketTmp.onmessage = (event) => {
+    console.log(event)
     const tmp = JSON.parse(event.data)
     if (tmp.event == "next")
         data = tmp.data;

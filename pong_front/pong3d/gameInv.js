@@ -329,11 +329,13 @@ class GameInv {
 			this.movement.set(0, 0, 0);
 		}
 		this.data = {
+			score: [this.p1Score, this.p2Score],
+
 			speedBall: this.speedBall,
 			ballVec: [this.ballMovement.x, this.ballMovement.y, this.ballMovement.z],
-			//ballPos: [],
-			player1: [this.player1.position.x,this.player1.position.y,this.player1.position.z],
-			player2: [this.player2.position.x,this.player2.position.y,this.player2.position.z],
+			ballPos: [this.ball.position.x, this.ball.position.y, this.ball.position.z],
+			p1Pos: null,
+			p2Pos: [this.player2.position.x,this.player2.position.y,this.player2.position.z],
 			id: this.id,
 		};
 		const currentTime = Date.now();
