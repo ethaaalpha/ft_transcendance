@@ -1,6 +1,7 @@
 import uuid
 import json
 import sys
+import re
 import asyncio
 from asgiref.sync import async_to_sync
 from channels.db import database_sync_to_async
@@ -21,13 +22,13 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 
 	async def connect(self):
 		self.user = self.scope['user']
-		#self.matchId = getMatch(await self.getUsername())
+		self.matchId = str(GameMap.getMatchID(await self.getUsername()))
 		print(await self.getUsername(), sys.stderr)
 		await self.accept()
-		await self.channel_layer.group_add(await self.getUsername(), self.channel_name)
+		await self.channel_layer.group_add(self.matchId, self.channel_name)
 
 	async def disconnect(self, code):
-		await self.channel_layer.group_discard(await self.getUsername(), self.channel_name)
+		await self.channel_layer.group_discard(self.matchId, self.channel_name)
 		return await super().disconnect(code)
 	
 	async def makeChanges(self, data: dict):
@@ -45,7 +46,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 	
 	async def receive_json(self, content: dict, **kwargs):
 		data = content['data']
-		GameMap._gameStack[self.matchId].updateBall
+		GameMap.getGame(self.matchId).updateBall(data)
 			
 	async def send_message(self, event):
 		content={
