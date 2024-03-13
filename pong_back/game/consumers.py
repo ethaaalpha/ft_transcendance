@@ -29,24 +29,14 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 
 	async def disconnect(self, code):
 		await self.channel_layer.group_discard(self.matchId, self.channel_name)
+		if GameMap.getGame(self.matchId):
+			GameMap.removeGame(self.matchId)
 		return await super().disconnect(code)
-	
-	async def makeChanges(self, data: dict):
-		tmp = [data['player2'][0], data['player2'][1] *  -1, data['player2'][2]]
-		data['player2'][0] = data['player1'][0]
-		data['player2'][1] = data['player1'][1]
-		data['player2'][2] = data['player1'][2]
-		data['player2'][1] *= -1
-		data['player1'] = tmp
-		if data['ballVec'][1] == 0:
-			if await self.getUsername() == 'nmilan2':
-				data['ballVec'][1] = -1
-			else :
-				data['ballVec'][1] = 1
 	
 	async def receive_json(self, content: dict, **kwargs):
 		data = content['data']
-		GameMap.getGame(self.matchId).updateBall(data)
+		#print(data, file=sys.stderr)
+		await GameMap.getGame(self.matchId).updateBall(data)
 			
 	async def send_message(self, event):
 		content={
@@ -55,9 +45,9 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 		await self.send_json(content)
   	
 	@staticmethod
-	def sendMessageToConsumer(matchId: str, content: str, event: str):
+	async def sendMessageToConsumer(matchId: str, content: str, event: str):
 		channel_layer = get_channel_layer()
-		async_to_sync(channel_layer.group_send)(matchId, {
+		await channel_layer.group_send(matchId, {
 				"type" : "send.message",
 				"data" : content,
 				"event" : event

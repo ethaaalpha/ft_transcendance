@@ -25,7 +25,7 @@ class Game {
 		this.directionalLight2 = gameData.directionalLight2;
 		this.statusCallback = statusCallback;
 		this.lastMessageSentTime = 0;
-		this.messageInterval = 60;
+		this.messageInterval = 10;
 		this.movement = new THREE.Vector3(0, 0, 0);
 		this.speed = 0.8;
 		this.speedBall = 0.25;
@@ -41,8 +41,8 @@ class Game {
 		this.ball = null;
 		this.walls = [];
 		this.laser = null;
-		this.ballMovement = new THREE.Vector3(0, 0, 0);
-		this.isCollision = null;
+		this.ballMovement = new THREE.Vector3(0, -0.25, 0);
+		this.isCollision = false;
 		this.cameraRotation = new THREE.Euler();
 		this.controls = null;
 		this.texture = null;
@@ -62,10 +62,7 @@ class Game {
 	init() {
 		return new Promise((resolve, reject) => {
 			this.socket = new WebSocket('wss://localhost:8081/api/game/');
-			this.camera.rotation.z += Math.PI
 			this.camera.position.set(0, 0, 60);
-			if (this.invited)
-
 			this.directionalLight.position.set(0, -18, 0).normalize();
 			this.scene.add(this.directionalLight);
 			this.directionalLight2.position.set(0, 18, 0).normalize();
@@ -166,16 +163,12 @@ class Game {
 		
 		this.socket.onmessage = (event) => {
 			const response = JSON.parse(event.data);
-			console.log(response)
 			this.data = response.data;
-			if (this.data.player1 && this.data.player1.length === 3)
-				//this.player1.position.set(this.data.player1[0],this.data.player1[1],this.data.player1[2])
-			if (this.data.player2 && this.data.player2.length === 3)
-				this.player2.position.set(this.data.player2[0],this.data.player2[1],this.data.player2[2])
+			if (this.data.p2Pos && this.data.p2Pos.length === 3)
+				this.player2.position.set(this.data.p2Pos[0],this.data.p2Pos[1],this.data.p2Pos[2])
 			if (this.data.ballPos && this.data.ballPos.length === 3)
-				//this.ball.position.set(this.data.ballPos[0],this.data.ballPos[1],this.data.ballPos[2])
-			this.id = event.event
-			this.ballMovement.set(this.data.ballVec[0], this.data.ballVec[1], this.data.ballVec[2])
+				this.ball.position.set(this.data.ballPos[0], this.data.ballPos[1], this.data.ballPos[2])
+
 		};
 		
 		socket.onclose = (event) => this.socketClose(event);
@@ -218,14 +211,12 @@ class Game {
 	}
 
 	
-	checkCollisionWithY(element, collision) {
+	checkCollisionWithP2(element, collision) {
 		const ballBoundingBox = new THREE.Box3().setFromObject(this.ball);
 		const elementBoundingBox = new THREE.Box3().setFromObject(element);
-		
 		collision = ballBoundingBox.intersectsBox(elementBoundingBox);
-		if (collision) {
+		if (collision && this.ballMovement.y > 0) {
 			this.ballMovement.set(0, this.ballMovement.y, 0);
-			this.isCollision = element;
 			const relativeCollision = new THREE.Vector3();
 			relativeCollision.subVectors(this.ball.position, element.position);
 			const dotProduct = this.ballMovement.dot(relativeCollision);
@@ -235,6 +226,28 @@ class Game {
 			this.ballMovement.y *= -1;
 			this.ballMovement.x *= -1;
 			this.ballMovement.z *= -1;
+			this.ballMovement.normalize();
+			this.ballMovement.multiplyScalar(this.speedBall)
+		}
+	}
+
+	checkCollisionWithP1(element, collision) {
+		const ballBoundingBox = new THREE.Box3().setFromObject(this.ball);
+		const elementBoundingBox = new THREE.Box3().setFromObject(element);
+		collision = ballBoundingBox.intersectsBox(elementBoundingBox);
+		if (collision && this.ballMovement.y < 0) {
+			this.ballMovement.set(0, this.ballMovement.y, 0);
+			const relativeCollision = new THREE.Vector3();
+			relativeCollision.subVectors(this.ball.position, element.position);
+			const dotProduct = this.ballMovement.dot(relativeCollision);
+			this.ballMovement.sub(relativeCollision.multiplyScalar(2 * dotProduct));
+			this.ballMovement.reflect(relativeCollision.normalize());
+			this.ballMovement.y *= -1;
+			this.ballMovement.x *= -1;
+			this.ballMovement.z *= -1;
+			this.ballMovement.normalize();
+			this.ballMovement.multiplyScalar(this.speedBall)
+			console.log(this.ballMovement)
 		}
 	}
 	
@@ -244,23 +257,21 @@ class Game {
 		
 		const collision = ballBoundingBox.intersectsBox(elementBoundingBox);
 		if (collision && !this.isCollision) {
-			this.isCollision = element;
+			this.isCollision = true;
 			axes *= -1;
 		}
 		return axes;
 	}
 	
 	moveBallY(collision) {
-		this.ballMovement.normalize();
-		this.ballMovement.multiplyScalar(this.speedBall);
-		this.ball.position.add(this.ballMovement);
+		//this.ballMovement.normalize();
+		//this.ballMovement.multiplyScalar(this.speedBall);
 		while (this.isCollision) {
 			const ballBoundingBox = new THREE.Box3().setFromObject(this.ball);
 			const elementBoundingBox = new THREE.Box3().setFromObject(this.isCollision);
 			collision = ballBoundingBox.intersectsBox(elementBoundingBox);
 			if (!collision)
 			this.isCollision = null;
-		this.ball.position.add(this.ballMovement);
 		}
 	}
 
@@ -296,9 +307,9 @@ class Game {
 		this.ballMovement.x = this.checkCollisionTarget(this.walls[3], this.ballMovement.x);
 		this.ballMovement.z = this.checkCollisionTarget(this.walls[2], this.ballMovement.z);
 		this.ballMovement.z = this.checkCollisionTarget(this.walls[1], this.ballMovement.z);
-		this.moveBallY(collision);
-		this.checkCollisionWithY(this.player1, collision);
-		this.checkCollisionWithY(this.player2, collision);
+		//this.moveBallY(collision);
+		this.checkCollisionWithP1(this.player1, collision);
+		this.checkCollisionWithP2(this.player2, collision);
 		
 		const directionZ = new THREE.Vector3(0, 0, 1).applyEuler(this.cameraRotation);
 		directionZ.y = 0;
@@ -322,6 +333,7 @@ class Game {
 		if (!this.moveUp && !this.moveDown && !this.moveLeft && !this.moveRight) {
 			this.movement.set(0, 0, 0);
 		}
+		//console.log(this.ballMovement)
 		this.data = {
 			score: [this.p1Score, this.p2Score],
 			speedBall: this.speedBall,
@@ -330,13 +342,10 @@ class Game {
 			p1Pos: [this.player1.position.x,this.player1.position.y,this.player1.position.z],
 			p2Pos: null,
 			id: this.id,
+			isCollision: this.isCollision
 		};
-		const currentTime = Date.now();
-		if(currentTime - this.lastMessageSentTime >= this.messageInterval){
-			this.sendMessageToServer({data :this.data});
-			this.lastMessageSentTime = currentTime;
-		}
-		await sleep(30);
+		this.sendMessageToServer({data :this.data});
+		await sleep(16);
 		if (this.status['status'] === 1)
 			requestAnimationFrame(() => this.update())
 	}
