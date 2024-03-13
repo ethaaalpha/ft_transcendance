@@ -93,7 +93,7 @@ class coordinationWebsocket {
 			const userInputDom = document.querySelector('#label-invitation-username'); // A VERIFIER PAR PITIE
 			const data = {'target': userInputDom.value}
 			this.socket.send(JSON.stringify({
-				'event': userInputDom.value,
+				'event': actInputDom.value,
 				'data': data,
 			}));
 			userInputDom.value = '';

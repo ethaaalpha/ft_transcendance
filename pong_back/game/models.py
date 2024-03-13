@@ -1,4 +1,5 @@
 from django.db import models
+from coordination.tools import setInMatch, setOutMatch
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -100,7 +101,7 @@ class Match(models.Model):
 		self.save()
 
 		# let free the loser
-		self.getLoser().profile.setPlaying(False)
+		setOutMatch(self.getLoser())
 
 		# here make the room update and check for the next match !
 		print(f'Le gagnant du match entre {self.host} et {self.invited} est {self.getWinner()} !!!!', file=sys.stderr)
@@ -175,7 +176,7 @@ class Room(models.Model):
 		self.save()
 
 		for player in self.opponents.all():
-			player.profile.setPlaying(True)
+			setInMatch(player)
 
 		self.next(True)
 		# it is a matchmaking
@@ -234,7 +235,7 @@ class Room(models.Model):
 		else:
 			if self.numberMatchsLastRound == 1:
 				lastMatch: Match = self.matchs.all()[:1].get()
-				lastMatch.getWinner().profile.setPlaying(False)
+				setOutMatch(lastMatch.getWinner())
 
 				for p in self.opponents.all():
 					self.send(p, 'win', {'message': f'Le gagnant du tournois est {lastMatch.getWinner()}'})
