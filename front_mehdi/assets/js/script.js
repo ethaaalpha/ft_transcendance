@@ -1,34 +1,60 @@
 
 function signIn() {
 	var username = document.getElementById("username").value;
-	var passwordConfirm = document.getElementById("passwordConfirm");
 	var password = document.getElementById("password").value;
-	var email = document.getElementById("email");
 	
     var formData = new FormData();
     
     formData.append("username", username);
     formData.append("password", password);
 
-	
-	if (username === "") {
-		passwordConfirm.classList.remove("d-none");
-		email.classList.remove("d-none");
-	} else {
-		fetchData("/api/auth/login?mode=intern", 'POST', formData).then(
-			(data) => {
-                if (data.status === 200) {
-                    console.log("Connexion réussie");
-                    hideElement("loginForm");
-                    unhideElement("home");
-                } else {
-                    console.log("Erreur de connexion");
-                }
-            }
-		).catch(error => {//ca marche pas ca encore, VOIR ETHAN
-            console.error('Error:', error);
-		});
-	}
+	fetchData("/api/auth/login?mode=intern", 'POST', formData).then(
+		(data) => {
+			if (data.status === 200) {
+				console.log("Connexion réussie");
+				hideElement("loginForm");
+				unhideElement("home");
+			} else {
+				console.log("Erreur de connexion");
+			}
+		}
+	).catch(error => {//ca marche pas ca encore, VOIR ETHAN
+		console.error('Error:', error);
+	});
+}
+
+function signUp() {
+	console.log("je suis dans signUp");
+
+	unhideElement("passwordConfirm");
+	unhideElement("signUp2");
+	unhideElement("email");
+	hideElement("42");
+	hideElement("signInButton");
+	hideElement("signUpButton");
+}
+
+function signUp2() {
+	var username = document.getElementById("username").value;
+	var password = document.getElementById("password").value;
+	// var passwordConfirm = document.getElementById("passwordConfirm");
+	var email = document.getElementById("email").value;
+
+    var formData = new FormData();
+    
+    formData.append("username", username);
+    formData.append("password", password);
+    formData.append("email", email);
+
+	fetchData("/api/auth/register", 'POST', formData)
+    .then(() => {
+		console.log("Register réussie");
+        hideElement("loginForm");
+        unhideElement("home");
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
 
 function signOut() {
@@ -58,21 +84,6 @@ function unhideElement(elementId) {
 		element.classList.remove("d-none");
 	}
 }
-
-
-
-
-
-// function hideLoginForm() {
-// 	var loginForm = document.getElementById("loginForm");
-// 	loginForm.classList.add("d-none");
-// 	unhideDashBoard();
-// }
-
-// function unhideDashBoard() {
-// 	var dashBoard1 = document.getElementById("dashBoard");
-// 	dashBoard1.classList.remove("d-none");
-// }
 
 
 // if (identifiant === "") {
