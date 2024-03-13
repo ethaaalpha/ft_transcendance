@@ -27,10 +27,10 @@
 					<button type="button" class="btn btn-primary btn-block col-6" id="signInButton" onclick="signIn()">Sign-in</button>
 				</div>
 				<div class="mb-3 text-center mx-auto">
-					<button type="button" class="btn btn-primary btn-block col-6" id="signUpButton" onclick="signUp()">Sign-Up</button>
+					<button type="button" class="btn btn-primary btn-block col-6" id="signUpButton" onclick="sceneSignUp()">Sign-Up</button>
 				</div>
 				<div class="text-center mx-auto">
-					<button type="submit" class="btn btn-primary btn-block " id="42" >42</button>
+					<button type="button" class="btn btn-primary btn-block col-6" id="signWith42Button" onclick="signWith42()">Sign with 42</button>
 				</div>
 				
 				<!-- SIGN UP -->
@@ -41,8 +41,8 @@
 					<input type="email" class="form-control d-none" id="email" placeholder="Email adress">
 					<!-- <small id="emailHelp" class="form-text text-muted">We'll sell your email on darkweb.</small> -->
 				</div>
-				<div id="signUp2" class="mb-3 text-center mx-auto d-none">
-					<button type="button" class="btn btn-primary btn-block col-6" onclick="signUp2()">Sign-Up2</button>
+				<div id="signUpButton2" class="mb-3 text-center mx-auto d-none">
+					<button type="button" class="btn btn-primary btn-block col-6" onclick="signUp()">Sign-Up2</button>
 				</div>
 			</form>
 		</div>
@@ -52,14 +52,13 @@
 		<!-- HOME -->
 		<div class="container d-none" id="home">
 			<div class="row align-items-center justify-content-center vh-100">
-				<div class="mb-3 text-center mx-auto">
-					<button type="button" class="btn btn-primary btn-block col-6" onclick="signOut()">Sign-out</button>
-				</div>	
 				<div class="col-lg-7 login-form custom-height">
 					LE JEU DE NICOLAS
 				</div>
 				<div class="col-lg-4 login-form custom-height">
-					LE CHAT DE MEHDI
+					<div class="mb-3 text-center mx-auto">
+						<button type="button" class="btn btn-primary btn-block col-6" onclick="signOut()">Sign-out</button>
+					</div>
 				</div>
 			</div>
 		</div>
