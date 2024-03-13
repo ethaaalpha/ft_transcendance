@@ -108,23 +108,16 @@ class Match(models.Model):
 		room.update()
 
 	def start(self):
-		from .core import Game, GameMap
+		from .core import GameMap
 
 		print(f'Match {self.id}, voici les adversaires host: {self.host} | invited: {self.invited}', file=sys.stderr)
 		# ici pour avertir les autres joueurs du prochain match !!!
 		self.send(self.host, 'next', {'match-id': str(self.id), 'host': self.host.username, 'invited': self.invited.username, 'statusHost': True})
 		self.send(self.invited, 'next', {'match-id': str(self.id), 'host': self.host.username, 'invited': self.invited.username, 'statusHost': False})
-		GameMap.createGame(self.id, self.host.username, self.invited.username)
+		GameMap.createGame(str(self.id), self.host.username, self.invited.username)
 
-		print(f'data = {GameMap.getGame(self.id).toJson()}', file=sys.stderr)
 		self.state = 1
 		self.save()
-
-		# JUSTE POUR LE DEV
-		# print(f'Voici le début du match entre [HOST] {self.host} et [INVITED] {self.invited} !', file=sys.stderr)
-		# self.addPoint(self.host)
-		# time.sleep(5)
-		# self.finish()
 
 	def getWinner(self) -> User:
 		if self.score[0] > self.score[1]:

@@ -47,7 +47,7 @@ class GameMap:
     
     @staticmethod
     def getMatchID(username):
-        for val in GameMap._gameMap.values:
+        for val in GameMap._gameMap.values():
             if val.p1 == username or val.p2 == username:
                 return (val.matchId)
         return None
