@@ -50,6 +50,8 @@ services:
       - ./media:/usr/share/media
       - ./pong_front:/usr/share/static
       - ./libs:/usr/share/libs
+      - ./front_mehdi:/usr/share/test
+
     ports:
       - 8000:443
     depends_on:
