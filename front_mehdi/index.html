@@ -11,35 +11,47 @@
 
 
 
-	<div class="container">
-		<div class="row align-items-center justify-content-center vh-100">
-		<div class="col-md-6 col-lg-4 login-form" id="loginForm">
+	  <!-- SIGN IN -->
+	  <div class="container" id="loginForm">
+		<div class="row align-items-center justify-content-center vh-100">	
+		<div class="col-md-6 col-lg-4 login-form">
 			<h1 class="title fw-bold">Sign-in</h1>
 			<form>
-			<div class="mb-3 col-8 mx-auto">
-				<input type="text" class="form-control" id="identifiant" placeholder="Username">
-			</div>
-			<div class="mb-3 col-8 mx-auto">
-				<input type="password" class="form-control" id="password" placeholder="Password">
-			</div>
-			<div id="passwordConfirm" class="mb-3 col-8 mx-auto d-none">
-				<input type="text" class="form-control" placeholder="Confirm password">
-			</div>
-			<div id="email" class="mb-3 col-8 mx-auto d-none">
-				<input type="email" class="form-control" placeholder="Email adress">
-				<small id="emailHelp" class="form-text text-muted">We'll sell your email on darkweb.</small>
-			</div>
-			<div class="mb-3 text-center mx-auto">
-				<button type="button" class="btn btn-primary btn-block col-6" onclick="checkAndUnhideFields()">Sign-in</button>
-			</div>
-			<div class="text-center mx-auto">
-				<button type="submit" class="btn btn-primary btn-block ">42</button>
-			</div>
-		</form>
+				<div class="mb-3 col-8 mx-auto">
+					<input type="text" class="form-control" id="username" placeholder="Username">
+				</div>
+				<div class="mb-3 col-8 mx-auto">
+					<input type="password" class="form-control" id="password" placeholder="Password">
+				</div>
+				<div id="passwordConfirm" class="mb-3 col-8 mx-auto d-none">
+					<input type="text" class="form-control" placeholder="Confirm password">
+				</div>
+				<div id="email" class="mb-3 col-8 mx-auto d-none">
+					<input type="email" class="form-control" placeholder="Email adress">
+					<small id="emailHelp" class="form-text text-muted">We'll sell your email on darkweb.</small>
+				</div>
+				<div class="mb-3 text-center mx-auto">
+					<button type="button" class="btn btn-primary btn-block col-6" onclick="checkAndUnhideFields()">Sign-in</button>
+				</div>
+				<div class="text-center mx-auto">
+					<button type="submit" class="btn btn-primary btn-block ">42</button>
+				</div>
+			</form>
+		</div>
+		</div>
 	</div>
-		<div class="col-md-6 col-lg-4 login-form d-none" id="Wesh">WESH tes co</div>
-	</div>
-</div>
+		
+		<!-- HOME -->
+		<div class="container d-none" id="dashBoard">
+			<div class="row align-items-center justify-content-center vh-100">	
+				<div class="col-lg-7 login-form custom-height">
+					LE JEU DE NICOLAS
+				</div>
+				<div class="col-lg-4 login-form custom-height">
+					LE CHAT DE MEHDI
+				</div>
+			</div>
+		</div>
 
 
 
