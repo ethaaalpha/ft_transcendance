@@ -10,7 +10,7 @@ def isAvailableToPlay(player: User):
 		return ('Already in matchmaking queue !', False)
 	id = Room.isInWaitingRoom(player)
 	if (id != False):
-		return (f'Already waiting to playing in a room (id {id}!', False)
+		return (f'Already waiting to playing in a room ({id})!', False)
 	return ('Available', True)
 
 def setInMatch(player: User):

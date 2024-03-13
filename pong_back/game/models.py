@@ -213,6 +213,7 @@ class Room(models.Model):
 			return ("You already joined this room !", False)
 		self.opponents.add(player)
 		self.save()
+		self.updateCountsAll()
 
 		# function to check if roomReady !
 		self.update()
@@ -271,6 +272,18 @@ class Room(models.Model):
 						return
 				return self.next()
 			# faire les nexts matchs etc voir pour les tournois
+
+	def updateCountsAll(self):
+		from coordination.consumers import CoordinationConsumer
+		"""
+		Send a message to all the player to tell them how much player there is actually in the room
+		"""
+		count = self.opponents.count()
+
+		for p in self.opponents.all():
+			data = {'room-id': self.id, 'count': count}
+			CoordinationConsumer.sendMessageToConsumer(p.username, data, 'count')
+		return
 	
 	@staticmethod
 	def createRoom(owner: User, mode = Mode.CLASSIC):
@@ -282,6 +295,7 @@ class Room(models.Model):
 		room = Room.objects.create(mode=mode.value)
 		room.opponents.add(owner)
 		room.save()
+		room.updateCountsAll()
 		return room
 	
 	@staticmethod
@@ -329,6 +343,7 @@ class Room(models.Model):
 				case 1:
 					return (f"Room is already launched can't leave !", False)
 				case 0: #success !
+					targetRoom.updateCountsAll()
 					return (f"Succefully left the room {code}", True)
 	
 	@staticmethod
@@ -339,6 +354,7 @@ class Room(models.Model):
 		playerRooms = Room.objects.filter(opponents=player, state=0).all()
 		for room in playerRooms:
 			room.removePlayer(player)
+			room.updateCountsAll()
 	
 	@staticmethod
 	def isInWaitingRoom(player: User) -> bool:
@@ -347,3 +363,4 @@ class Room(models.Model):
 		"""
 		room = Room.objects.filter(opponents=player, state=0).first()
 		return room.id if room else False
+	
