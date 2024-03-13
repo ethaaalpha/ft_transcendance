@@ -4,6 +4,7 @@ import { OrbitControls } from 'three/module/controls/OrbitControls.js';
 import Game from './game.js'
 import Menu from './menu.js';
 import GameLocal from './gameLocal.js';
+import GameInv from './gameInv.js';
 import { sleep } from './utilsPong.js';
 
 var view;
@@ -11,15 +12,20 @@ var appli = document.querySelector('#app');
 if (!appli) {
     console.log("coucou");
 }
-
+var data = null;
+const socketTmp = new WebSocket("wss://localhost:8081/api/coordination/")
+socketTmp.onmessage = (event) => {
+    console.log(event.data)
+}
 var gameData = {
         sceneGameLocal : new THREE.Scene(),
+        sceneGameInv : new THREE.Scene(),
         sceneMenu : new THREE.Scene(),
         rendererMenu : new THREE.WebGLRenderer(),
         rendererGameLocal : new THREE.WebGLRenderer(),
         camera : new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000),
-        directionalLight : new THREE.DirectionalLight(0x0fffff, 8),
-        directionalLight2 : new THREE.DirectionalLight(0x0fffff, 2),
+        directionalLight : new THREE.DirectionalLight(0xED7F10, 80),
+        directionalLight2 : new THREE.DirectionalLight(0xED7F10, 80),
         clock : new THREE.Clock(),
         raycaster : new THREE.Raycaster(),
         appli : appli,
@@ -42,11 +48,13 @@ async function initialize() {
 				await loadTexture();
 			else if (status.status === 0)
 				await createMenu();
-			else if (status.status === 1)
-				await createGame();
+			else if (status.status === 1){
+                await waitForData();          
+    		    await createGame();
+            }
             else if (status.status === 2)
                 await createGameLocal();
-            await sleep(1500)
+            //await sleep(1500)
 		}
     } catch (error) {
         console.error("Error during initialization:", error);
@@ -57,10 +65,14 @@ async function loadTexture() {
         var RGBELoad = new RGBELoader().setPath('/static/assets/');
         RGBELoad.load('witcher.hdr', (texture) => {
             texture.mapping = THREE.EquirectangularReflectionMapping;
+            var textureRev = texture.clone()
+            textureRev.flipY = false;
 			gameData.sceneMenu.background = texture
 			gameData.sceneMenu.environment = texture
             gameData.sceneGameLocal.background = texture
 			gameData.sceneGameLocal.environment = texture
+            gameData.sceneGameInv.background = textureRev
+			gameData.sceneGameInv.environment = textureRev
 
             var controlsMenu = new OrbitControls(gameData.camera, gameData.rendererMenu.domElement);
 			controlsMenu.enableZoom = false;
@@ -85,13 +97,24 @@ async function createMenu() {
 async function createGame() {
     return new Promise((resolve, reject) => {
 		view = null;
-        view = new Game(status, resolve, updateStatus, gameData);
+        view = new GameInv(status, resolve, updateStatus, gameData);
     });
 }
 async function createGameLocal() {
     return new Promise((resolve, reject) => {
 		view = null;
         view = new GameLocal(status, resolve, updateStatus, gameData);
+    });
+}
+function waitForData() {
+    socketTmp.send(JSON.stringify({'event': 'matchmaking', 'data': {'action' : 'join'}}))
+    return new Promise((resolve) => {
+        const intervalId = setInterval(() => {
+            if (data) {
+                clearInterval(intervalId);
+                resolve();
+            }
+        }, 500);
     });
 }
 

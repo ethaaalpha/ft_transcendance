@@ -5,7 +5,7 @@ services:
     container_name: postgresql
     image: postgres:alpine
     environment:
-      - POSTGRES_USER=ethaniellegrand
+      - POSTGRES_USER=$DB_USER
       - POSTGRES_PASSWORD=$DB_PASSWORD
     volumes:
       - ./database:/var/lib/postgresql/data
@@ -51,9 +51,9 @@ services:
       - ./pong_front:/usr/share/static
       - ./libs:/usr/share/libs
       - ./front_mehdi:/usr/share/test
-
-    ports:
-      - 8000:443
+    ports: 
+      - $PORT_HTTP:80
+      - $PORT_HTTPS:443
     depends_on:
       - daphne
     restart: on-failure

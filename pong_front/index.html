@@ -26,6 +26,14 @@
 					<input type="submit" value="Friend-Action">
 				</form>
 			</div>
+			<div id="form-invitation" style="background-color: cornsilk; padding: 2%;">
+				<h3>Invitation</h3>
+				<label id="label-invitation-action" for="action">Action :</label><br>
+				<input type="text" name="action"><br>
+				<label id="label-invitation-username" for="username">Username :</label><br>
+				<input type="text" name="username">
+				<input id="button-invitation" type="submit" value="Invitation Response">
+			</div>
 			<div id="form-password" style="background-color: blanchedalmond; padding: 2%;">
 				<h3>Password</h3>
 				<form action="/api/dashboard?filter=password" method="post" class='ajax-form' enctype="application/json">
