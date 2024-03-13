@@ -1,0 +1,42 @@
+ .login-form {
+	padding: 40px;
+	border-radius: 40px;
+	border: 1px solid rgba(5, 255, 0, 0.29);
+	background: linear-gradient(334deg, rgba(255, 255, 255, 0.10) 13.43%, rgba(255, 255, 255, 0.40) 97.55%);
+	box-shadow: 0px 4px 24px -1px rgba(0, 0, 0, 0.20);
+	backdrop-filter: blur(10px);
+	margin: 20vh auto;
+}
+
+.login-form h1 {
+	color: #05FF00;
+	font-family: "Roboto Mono", monospace;
+	/* font-style: normal; */
+	/* mix-blend-mode: overlay; */
+}
+
+.login-form input {
+	border-radius: 5px;
+	background-color: rgba(68, 68, 68, 0.5);
+}
+/* .login-form input[type="password"],
+.login-form button {
+} */
+
+.login-form button {
+	background-color: #05FF00;
+	color: black;
+	font-family: "Roboto Mono", monospace;
+	font-weight: 700;
+	
+  }
+
+  
+  
+  body {
+	background-image: url('../images/background.jpeg');
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+  }
