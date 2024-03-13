@@ -1,21 +1,64 @@
-function checkAndUnhideFields() {
+
+function signIn() {
 	var username = document.getElementById("username").value;
 	var passwordConfirm = document.getElementById("passwordConfirm");
 	var password = document.getElementById("password").value;
 	var email = document.getElementById("email");
 	
+    var formData = new FormData();
+    
+    formData.append("username", username);
+    formData.append("password", password);
 	
 	if (username === "") {
 		passwordConfirm.classList.remove("d-none");
 		email.classList.remove("d-none");
 	} else {
 
-		fetchData("/api/auth/login?mode=intern", 'POST', data={'username': username, 'password': password})
-
-		hideLoginForm();
-		unhideDashBoard1();
+		fetchData("/api/auth/login?mode=intern", 'POST', formData).then(
+			(data) => {
+				// console.log(`mehdi avale ma bite ${data.status}`)
+                if (data.status === 200) {
+                    // Connexion réussie
+                    console.log("Connexion réussie");
+                    hideLoginForm();
+                    unhideDashBoard1();
+                } else {
+                    // Erreur de connexion
+                    console.log("Erreur de connexion");
+                    // Gérer l'affichage de l'erreur ou autre action à effectuer
+                }
+            }
+		).catch(error => {
+            // Erreur de fetch
+            console.error('Error:', error);
+            // Gérer l'affichage de l'erreur ou autre action à effectuer
+        });
 	}
+
+
+		// fetchData("/api/auth/login?mode=intern", 'POST', formData).then(
+		// 	(data) => console.log(data.status)
+		// )
+		// /// CATCH ERROR OR LOGIN HERE
+
+		// // hideLoginForm();
+		// // unhideDashBoard1();
+
 }
+
+function signOut() {
+
+	fetchData("/api/auth/logout", 'POST').then(
+		// (data) => {}
+	).catch(error => {
+		// Erreur de fetch
+		console.error('Error:', error);
+		// Gérer l'affichage de l'erreur ou autre action à effectuer
+	});
+
+}
+
 
 
 function hideLoginForm() {
@@ -77,6 +120,6 @@ function fetchData(apiUrl, method, data = null) {
     }
 
     return fetch(apiUrl, requestOptions)
-        .then(response => response.json())
+        .then(response => response)
         .catch(error => console.error('Error:', error));
 }
