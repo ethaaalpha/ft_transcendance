@@ -1,4 +1,21 @@
 
+//check at loundr if log
+(async function() {
+    const logged = await isLogged();
+    if (logged) {
+        unhideElement("home");
+    } else {
+        unhideElement("loginForm");
+    }
+})();
+
+async function isLogged() {
+    const response = await fetch('/api/dashboard');
+    return response.status === 200;
+}
+
+
+
 function signIn() {
 	var username = document.getElementById("username").value;
 	var password = document.getElementById("password").value;
