@@ -25,7 +25,7 @@ class GameInv {
 		this.directionalLight2 = gameData.directionalLight2;
 		this.statusCallback = statusCallback;
 		this.lastMessageSentTime = 0;
-		this.messageInterval = 60;
+		this.messageInterval = 10;
 		this.movement = new THREE.Vector3(0, 0, 0);
 		this.speed = 0.8;
 		this.speedBall = 0.25;
@@ -41,7 +41,7 @@ class GameInv {
 		this.ball = null;
 		this.walls = [];
 		this.laser = null;
-		this.ballMovement = new THREE.Vector3(0, 0, 0);
+		this.ballMovement = new THREE.Vector3(0, -0.25, 0);
 		this.isCollision = null;
 		this.cameraRotation = new THREE.Euler();
 		this.controls = null;
@@ -62,11 +62,8 @@ class GameInv {
 	
 	init() {
 		return new Promise((resolve, reject) => {
-			console.log("test1")
 			this.socket = new WebSocket('wss://localhost:8081/api/game/');
 			this.camera.position.set(0, 0, 60);
-			if (this.invited)
-
 			this.directionalLight.position.set(0, -18, 0).normalize();
 			this.scene.add(this.directionalLight);
 			this.directionalLight2.position.set(0, 18, 0).normalize();
@@ -152,7 +149,6 @@ class GameInv {
 		 	fragmentShader: await loadShader('/static/pong3d/shader.frag'),
 		});
 		this.score = new THREE.Mesh(geometry, shaderMaterial);
-		//this.score.rotation.y += Math.PI;
 		this.score.rotation.z += Math.PI;
 		this.score.scale.set(0.5, 0.5, 0.5)
 		this.scene.add(this.score);
@@ -170,16 +166,11 @@ class GameInv {
 		
 		this.socket.onmessage = (event) => {
 			const response = JSON.parse(event.data);
-			//console.log(response)
 			this.data = response.data;
-			if (this.data.player1 && this.data.player1.length === 3)
-				//this.player1.position.set(this.data.player1[0],this.data.player1[1],this.data.player1[2])
-			if (this.data.player2 && this.data.player2.length === 3)
-				this.player2.position.set(this.data.player2[0],this.data.player2[1],this.data.player2[2])
+			if (this.data.p1Pos && this.data.p1Pos.length === 3)
+				this.player1.position.set(this.data.p1Pos[0],this.data.p1Pos[1],this.data.p1Pos[2])
 			if (this.data.ballPos && this.data.ballPos.length === 3)
-				//this.ball.position.set(this.data.ballPos[0],this.data.ballPos[1],this.data.ballPos[2])
-			this.id = event.event
-			this.ballMovement.set(this.data.ballVec[0], this.data.ballVec[1], this.data.ballVec[2])
+				this.ball.position.set(this.data.ballPos[0], this.data.ballPos[1], this.data.ballPos[2])
 		};
 		
 		socket.onclose = (event) => this.socketClose(event);
@@ -258,14 +249,14 @@ class GameInv {
 	moveBallY(collision) {
 		this.ballMovement.normalize();
 		this.ballMovement.multiplyScalar(this.speedBall);
-		this.ball.position.add(this.ballMovement);
+		//this.ball.position.add(this.ballMovement);
 		while (this.isCollision) {
 			const ballBoundingBox = new THREE.Box3().setFromObject(this.ball);
 			const elementBoundingBox = new THREE.Box3().setFromObject(this.isCollision);
 			collision = ballBoundingBox.intersectsBox(elementBoundingBox);
 			if (!collision)
 				this.isCollision = null;
-			this.ball.position.add(this.ballMovement);
+			//this.ball.position.add(this.ballMovement);
 		}
 	}
 
@@ -302,9 +293,9 @@ class GameInv {
 		this.ballMovement.x = this.checkCollisionTarget(this.walls[3], this.ballMovement.x);
 		this.ballMovement.z = this.checkCollisionTarget(this.walls[2], this.ballMovement.z);
 		this.ballMovement.z = this.checkCollisionTarget(this.walls[1], this.ballMovement.z);
-		this.moveBallY(collision);
-		this.checkCollisionWithY(this.player1, collision);
-		this.checkCollisionWithY(this.player2, collision);
+		//this.moveBallY(collision);
+		//this.checkCollisionWithY(this.player1, collision);
+		//this.checkCollisionWithY(this.player2, collision);
 		
 		const directionZ = new THREE.Vector3(0, 0, 1).applyEuler(this.cameraRotation);
 		directionZ.y = 0;
@@ -343,7 +334,7 @@ class GameInv {
 			this.sendMessageToServer({data :this.data});
 			this.lastMessageSentTime = currentTime;
 		}
-		await sleep(30);
+		await sleep(16);
 		if (this.status['status'] === 1)
 			requestAnimationFrame(() => this.update())
 	}
