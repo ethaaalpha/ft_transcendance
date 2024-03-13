@@ -96,7 +96,7 @@ class coordinationWebsocket {
 				'event': userInputDom.value,
 				'data': data,
 			}));
-			invInputDom.value = '';
+			userInputDom.value = '';
 			actInputDom.value = '';
 		};
 		
