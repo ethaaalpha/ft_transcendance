@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.files import File
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.files.temp import NamedTemporaryFile
 from django.utils.crypto import get_random_string
@@ -42,6 +41,7 @@ class Profile(models.Model):
 	lastPasswordChange = models.DateTimeField(default=now, blank=True)
 	gameTheme = models.CharField(max_length=64, default='default')
 	isPlaying = models.BooleanField(default=False)
+	state = models.IntegerField(default=0)
 	
 	# shortcut to user #
 	def getUsername(self):
@@ -52,6 +52,10 @@ class Profile(models.Model):
 	
 	def setPlaying(self, state: bool):
 		self.isPlaying = state
+		self.save()
+
+	def setState(self, state: int):
+		self.state = state
 		self.save()
 
 	def getManyToTab(self, many):

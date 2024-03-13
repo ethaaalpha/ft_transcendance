@@ -43,15 +43,15 @@ class InvitationStack:
 		# check doublon
 		for invitation in InvitationStack.stack:
 			if (invitation.initier == initier):
-				return ("You already invited somebody please wait at least 30 seconds between each invite !")
+				return ("You already invited somebody please wait at least 30 seconds between each invite !", False)
 		# check if they are friend
 		if not (initier.profile.is_friend(target)):
-			return ("You must be friend with this person to do that !")
+			return ("You must be friend with this person to do that !", False)
 		
 		newInvitation = Invitation(initier, target)
 		InvitationStack.stack.append(newInvitation)
 		newInvitation.notify('target', 'invite', f"You are invited to play with {initier.username}")
-		return (f"Match invitation succefully send to {target.username} !")
+		return (f"Match invitation succefully send to {target.username} !", True)
 	
 	@staticmethod
 	def refuse(initier: User, target: User) -> str:
@@ -59,13 +59,12 @@ class InvitationStack:
 		"""
 		Target is the person who refuse the invitation !
 		"""
-		invitation: Invitation = InvitationStack.find(initier, target)
-		if invitation:
-			Invitation.notify('initier', 'refuse', f"{target.username} has refused your invitation to play !")
-			InvitationStack.stack.remove(invitation)
-			return ("You refused this invitation !")				
-
-		return ("This invitation do not exist anymore !")
+		inv: Invitation = InvitationStack.find(initier, target)
+		if inv:
+			inv.notify('initier', 'refuse', f"{target.username} has refused your invitation to play !")
+			InvitationStack.stack.remove(inv)
+			return ("You refused this invitation !", True)				
+		return ("This invitation do not exist anymore !", False)
 	
 	@staticmethod
 	def accept(initier: User, target: User) -> str:
@@ -73,23 +72,23 @@ class InvitationStack:
 		"""
 		Target is the person who accept the invitation !
 		"""
-		invitation: Invitation = InvitationStack.find(initier, target)
-		if invitation:
-			Invitation.notify('initier', 'accept', f"{target.username} has accepted your invitation !")
-			Invitation.notify('target', 'accept', f"{initier.username} has accepted your invitation !")
-			InvitationStack.stack.remove(invitation)
+		inv: Invitation = InvitationStack.find(initier, target)
+		if inv:
+			inv.notify('initier', 'accept', f"{target.username} has accepted your invitation !")
+			inv.notify('target', 'accept', f"{initier.username} has accepted your invitation !")
+			InvitationStack.stack.remove(inv)
 
 			initierCheck = isAvailableToPlay(initier)
 			targetCheck = isAvailableToPlay(target)
 
 			if initierCheck[1] or targetCheck[1]:
-				Invitation.notify('all', 'refuse', "Something bad happend you can't play together !")
+				inv.notify('all', 'refuse', "Something bad happend you can't play together !")
 			
 			# create match here !!
-			InvitationStack.stack.remove(invitation)
 			room: Room = Room.createRoom(initier)
 			room.addPlayer(target)
-		return ("This invitation do not exist !")
+			return ("You successfully accepted an invitation !", True)
+		return ("This invitation do not exist !", False)
 	
 	@staticmethod
 	def update():

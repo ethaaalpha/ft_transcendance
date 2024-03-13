@@ -11,12 +11,11 @@ DEFAULT_PICTURE		= "pokemon.png"
 
 # Containers
 CONTAINERS		 	= daphne nginx postgresql redis
-CONTAINERS_DEBUG 	= $(addsuffix _debug, $(CONTAINERS))
 
 all: 
 	$(MAKE) run
 
-${CONTAINERS_DEBUG}:
+${CONTAINERS}:
 	docker exec -it $@ sh
 
 run:
