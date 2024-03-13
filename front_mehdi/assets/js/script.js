@@ -9,68 +9,70 @@ function signIn() {
     
     formData.append("username", username);
     formData.append("password", password);
+
 	
 	if (username === "") {
 		passwordConfirm.classList.remove("d-none");
 		email.classList.remove("d-none");
 	} else {
-
 		fetchData("/api/auth/login?mode=intern", 'POST', formData).then(
 			(data) => {
-				// console.log(`mehdi avale ma bite ${data.status}`)
                 if (data.status === 200) {
-                    // Connexion réussie
                     console.log("Connexion réussie");
-                    hideLoginForm();
-                    unhideDashBoard1();
+                    hideElement("loginForm");
+                    unhideElement("home");
                 } else {
-                    // Erreur de connexion
                     console.log("Erreur de connexion");
-                    // Gérer l'affichage de l'erreur ou autre action à effectuer
                 }
             }
-		).catch(error => {
-            // Erreur de fetch
+		).catch(error => {//ca marche pas ca encore, VOIR ETHAN
             console.error('Error:', error);
-            // Gérer l'affichage de l'erreur ou autre action à effectuer
-        });
+		});
 	}
-
-
-		// fetchData("/api/auth/login?mode=intern", 'POST', formData).then(
-		// 	(data) => console.log(data.status)
-		// )
-		// /// CATCH ERROR OR LOGIN HERE
-
-		// // hideLoginForm();
-		// // unhideDashBoard1();
-
 }
 
 function signOut() {
+    fetchData("/api/auth/logout", 'POST')
+    .then(() => {
+		console.log("Deconexion réussie");
+        hideElement("home");
+        unhideElement("loginForm");
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
 
-	fetchData("/api/auth/logout", 'POST').then(
-		// (data) => {}
-	).catch(error => {
-		// Erreur de fetch
-		console.error('Error:', error);
-		// Gérer l'affichage de l'erreur ou autre action à effectuer
-	});
 
+// HIDE OR NOT
+function hideElement(elementId) {
+	var element = document.getElementById(elementId);
+	if (element) {
+		element.classList.add("d-none");
+	}
+}
+
+function unhideElement(elementId) {
+	var element = document.getElementById(elementId);
+	if (element) {
+		element.classList.remove("d-none");
+	}
 }
 
 
 
-function hideLoginForm() {
-	var loginForm = document.getElementById("loginForm");
-	loginForm.classList.add("d-none");
-	unhideDashBoard1();
-}
 
-function unhideDashBoard1() {
-	var dashBoard1 = document.getElementById("dashBoard");
-	dashBoard1.classList.remove("d-none");
-}
+
+// function hideLoginForm() {
+// 	var loginForm = document.getElementById("loginForm");
+// 	loginForm.classList.add("d-none");
+// 	unhideDashBoard();
+// }
+
+// function unhideDashBoard() {
+// 	var dashBoard1 = document.getElementById("dashBoard");
+// 	dashBoard1.classList.remove("d-none");
+// }
 
 
 // if (identifiant === "") {
