@@ -10,7 +10,11 @@
   <body>
 
 
+	<div id="liveAlertPlaceholder"></div>
+	<!-- <button type="button" class="btn btn-primary" id="liveAlertBtn">Show live alert</button>		 -->
 
+
+	  
 	<div class="container d-none" id="loginForm">
 		<div class="row align-items-center justify-content-center vh-100">	
 			<div class="col-md-6 col-lg-4 login-form">
@@ -50,18 +54,21 @@
 	</div>
 		
 		<!-- HOME -->
-		<div class="container d-none" id="home">
-			<div class="row align-items-center justify-content-center vh-100">
-				<div class="col-lg-7 login-form custom-height">
-					LE JEU DE NICOLAS
-				</div>
-				<div class="col-lg-4 login-form custom-height">
-					<div class="mb-3 text-center mx-auto">
-						<button type="button" class="btn btn-primary btn-block col-6" onclick="signOut()">Sign-out</button>
-					</div>
+	<div class="container d-none" id="home">
+		<div class="row align-items-center justify-content-center vh-100">
+			<!-- <div class="col-lg-7 login-form custom-height">
+				LE JEU DE NICOLAS
+			</div> -->
+			<div class="col-lg-7 game-style custom-height">
+				<canvas id="myCanvas" width="400" height="200">LE JEU DE NICOLAS</canvas>
+			</div>
+			<div class="col-lg-4 login-form custom-height">
+				<div class="mb-3 text-center mx-auto">
+					<button type="button" class="btn btn-primary btn-block col-6" onclick="signOut()">Sign-out</button>
 				</div>
 			</div>
 		</div>
+	</div>
 
 
 

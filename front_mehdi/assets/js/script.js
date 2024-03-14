@@ -1,4 +1,33 @@
+//alertes
+const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
 
+const appendAlert = (message, type) => {
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = [
+    `<div class="alert alert-${type} alert-dismissible fade show" role="alert">`,
+    `   <div>${message}</div>`,
+    '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+    '</div>'
+  ].join('');
+
+  alertPlaceholder.append(wrapper);
+
+  // Masquer l'alerte après 5 secondes
+  setTimeout(() => {
+    wrapper.querySelector('.alert').remove();
+  }, 5000);
+};
+
+const alertTrigger = document.getElementById('liveAlertBtn');
+if (alertTrigger) {
+  alertTrigger.addEventListener('click', () => {
+    appendAlert('Nice, you triggered this alert message!', 'success');
+  });
+}
+
+
+
+//when enter press click on signin
 document.addEventListener("DOMContentLoaded", function() {
     const usernameInput = document.getElementById("username");
     const passwordInput = document.getElementById("password");
@@ -49,6 +78,7 @@ function signIn() {
 				console.log("Connexion réussie");
 				hideElement("loginForm");
 				unhideElement("home");
+                appendAlert('Connexion réussie!', 'success'); // Afficher l'alerte de succès
 			} else {
 				console.log("Erreur de connexion");
 			}
@@ -111,30 +141,30 @@ function signWith42() {
 		
 	}
 
-	//gestion de scenes
-	function sceneSignUp() {
-		unhideElement("passwordConfirm");
-		unhideElement("signUpButton2");
-		unhideElement("email");
-		hideElement("signWith42Button");
-		hideElement("signInButton");
-		hideElement("signUpButton");
+//gestion de scenes
+function sceneSignUp() {
+	unhideElement("passwordConfirm");
+	unhideElement("signUpButton2");
+	unhideElement("email");
+	hideElement("signWith42Button");
+	hideElement("signInButton");
+	hideElement("signUpButton");
+}
+
+// HIDE OR NOT
+function hideElement(elementId) {
+	var element = document.getElementById(elementId);
+	if (element) {
+		element.classList.add("d-none");
 	}
-	
-	// HIDE OR NOT
-	function hideElement(elementId) {
-		var element = document.getElementById(elementId);
-		if (element) {
-			element.classList.add("d-none");
-		}
+}
+
+function unhideElement(elementId) {
+	var element = document.getElementById(elementId);
+	if (element) {
+		element.classList.remove("d-none");
 	}
-	
-	function unhideElement(elementId) {
-		var element = document.getElementById(elementId);
-		if (element) {
-			element.classList.remove("d-none");
-		}
-	}
+}
 	
 	
 	// if (identifiant === "") {
@@ -148,42 +178,42 @@ function signWith42() {
 				// }
 				
 				
-				function getCookie(name) {
-					let cookieValue = null;
-					if (document.cookie && document.cookie !== '') {
-						const cookies = document.cookie.split(';');
-						for (let i = 0; i < cookies.length; i++) {
-							const cookie = cookies[i].trim();
-							// Does this cookie string begin with the name we want?
-							if (cookie.substring(0, name.length + 1) === (name + '=')) {
-								cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-								break;
-							}
-						}
-					}
-					return cookieValue;
-				}
-				
-				function fetchData(apiUrl, method, data = null) {
-					const csrfToken = getCookie('csrftoken');
-					
-					// console.log(`la data ${JSON.stringify(data)}`);
-					// console.log(`voici le token ${csrfToken}`);
-					
-					const headers = {
-						'X-CSRFTOKEN': csrfToken,
-					};
-					
-					const requestOptions = {
-						method: method,
-						headers: headers,
-					};
-					
-					if (data && (method === 'POST' || method === 'PUT')) {
-						requestOptions.body = data;
-					}
-					
-					return fetch(apiUrl, requestOptions)
-					.then(response => response)
-					.catch(error => console.error('Error:', error));
-				}
+function getCookie(name) {
+	let cookieValue = null;
+	if (document.cookie && document.cookie !== '') {
+		const cookies = document.cookie.split(';');
+		for (let i = 0; i < cookies.length; i++) {
+			const cookie = cookies[i].trim();
+			// Does this cookie string begin with the name we want?
+			if (cookie.substring(0, name.length + 1) === (name + '=')) {
+				cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+				break;
+			}
+		}
+	}
+	return cookieValue;
+}
+
+function fetchData(apiUrl, method, data = null) {
+	const csrfToken = getCookie('csrftoken');
+	
+	// console.log(`la data ${JSON.stringify(data)}`);
+	// console.log(`voici le token ${csrfToken}`);
+	
+	const headers = {
+		'X-CSRFTOKEN': csrfToken,
+	};
+	
+	const requestOptions = {
+		method: method,
+		headers: headers,
+	};
+	
+	if (data && (method === 'POST' || method === 'PUT')) {
+		requestOptions.body = data;
+	}
+	
+	return fetch(apiUrl, requestOptions)
+	.then(response => response)
+	.catch(error => console.error('Error:', error));
+}
