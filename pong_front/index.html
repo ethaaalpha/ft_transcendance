@@ -109,6 +109,13 @@
   				<input type="password" name="password"><br>
 				<input type="submit" value="Register with Intern">
 			</form>
+
+			<h1>Forgot Password</h1>
+			<form action="/api/auth/reset-password" method="post" class='reloader' enctype="application/json">
+				<label for="username">Username:</label>
+  				<input type="text" name="username"><br>
+				<input type="submit" value="Ask for reset-password">
+			</form>
 		</div>
 
 		<script src='/static/request.js'></script>

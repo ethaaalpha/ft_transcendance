@@ -4,9 +4,10 @@ from django.conf import settings
 from users.models import Profile
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+from tools.functions import is42
 
 def validate_username(value):
-	if value[:3] == "42_":
+	if is42(value):
 		raise ValidationError(
             _("%(value)s can't start with 42_"),
             params={"value": value},
@@ -18,7 +19,7 @@ def validate_username(value):
         )
 
 class ResetPassForm(forms.Form):
-	username = forms.CharField(min_length=settings.CONFIG_USER_LENGTH_MIN, max_length=settings.CONFIG_USER_LENGTH_MAX, required=True, validators=[validate_username])
+	username = forms.CharField(min_length=settings.CONFIG_USER_LENGTH_MIN, max_length=settings.CONFIG_USER_LENGTH_MAX, required=True)
 
 class RegisterForm(forms.Form):
 	username = forms.CharField(min_length=settings.CONFIG_USER_LENGTH_MIN, max_length=settings.CONFIG_USER_LENGTH_MAX, required=True, validators=[validate_username])

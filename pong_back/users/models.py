@@ -11,6 +11,7 @@ from django.conf import settings
 from uuid import uuid4
 from datetime import timedelta
 from stats.models import Stats
+from tools.functions import is42
 import users.forms as UForm
 import os
 import requests
@@ -101,7 +102,7 @@ class Profile(models.Model):
 	def form_changePassword(self, request: HttpRequest) -> HttpResponse:
 		form: UForm.PasswordForm = UForm.PasswordForm(request.POST)
 
-		if (self.getUsername()[:3] == '42_'):
+		if (is42(self.getUsername())):
 			return (tResponses.FORBIDDEN.request("User from 42 might always use 42 portal to connect themselves !"))
 
 		if (form.is_valid()):
@@ -142,7 +143,7 @@ class Profile(models.Model):
 			activeEmail = form.cleaned_data['actualEmail']
 			newEmail = form.cleaned_data['newEmail']
 
-			if user.username[:3] == "42_":
+			if is42(self.getUsername()):
 				return (tResponses.FORBIDDEN.request("User from 42 can't change their email !"))
 			if (activeEmail != user.email):
 				return (tResponses.BAD_REQUEST.request("Email do not match with active one !"))
