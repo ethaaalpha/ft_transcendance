@@ -39,6 +39,7 @@ def profile(request: HttpRequest, username: str, filter=None) -> HttpResponse:
 	restricted = False if (user == request.user) else True
 
 	if (user):
+		Profile.createUserOnetoOne(user)
 		userProfile: dict = user.profile.toJson(restricted=restricted)
 
 		# Build the filter dictionnary

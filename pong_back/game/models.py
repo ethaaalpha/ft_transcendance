@@ -192,6 +192,7 @@ class Room(models.Model):
 			if (self.opponents.count() == 0):
 				self.delete()
 			else:
+				self.updateCountsAll()
 				self.save()
 			return 0
 
@@ -343,7 +344,6 @@ class Room(models.Model):
 				case 1:
 					return (f"Room is already launched can't leave !", False)
 				case 0: #success !
-					targetRoom.updateCountsAll()
 					return (f"Succefully left the room {code}", True)
 	
 	@staticmethod
@@ -354,7 +354,6 @@ class Room(models.Model):
 		playerRooms = Room.objects.filter(opponents=player, state=0).all()
 		for room in playerRooms:
 			room.removePlayer(player)
-			room.updateCountsAll()
 	
 	@staticmethod
 	def isInWaitingRoom(player: User) -> bool:
