@@ -116,18 +116,6 @@ function signUp() {
     });
 }
 
-function signOut() {
-	fetchData("/api/auth/logout", 'POST')
-    .then(() => {
-		console.log("Deconexion réussie");
-        hideElement("home");
-        unhideElement("loginForm");
-    })
-    .catch(error => {
-		console.error('Error:', error);
-    });
-}
-
 function signWith42() {
 	fetchData("/api/auth/login?mode=42")
     .then((data) => {
@@ -137,13 +125,46 @@ function signWith42() {
 				window.location.href = dataJSON.url;
 			}
 			)
-		})
-		
+		})	
 	}
+	
+function forgotPassword() {
+	var username = document.getElementById("username").value;
+	
+    var formData = new FormData();
+    
+    formData.append("username", username);
+	
+	fetchData("/api/auth/reset-password", 'POST', formData).then(
+	(data) => {
+		if (data.status === 200) {
+			console.log("password sent!");
+		} else {
+			console.log("Erreur de connexion");
+		}
+    })
+    .catch(error => {
+		console.error('Error:', error);
+    });
+}
+	
+//HOME
+	
+function signOut() {
+	fetchData("/api/auth/logout", 'POST')
+	.then(() => {
+		console.log("Deconexion réussie");
+		hideElement("home");
+		unhideElement("loginForm");
+	})
+	.catch(error => {
+		console.error('Error:', error);
+	});
+}
 
-//gestion de scenes
-function sceneSignUp() {
-	unhideElement("passwordConfirm");
+	//gestion de scenes
+	function sceneSignUp() {
+		unhideElement("passwordConfirm");
 	unhideElement("signUpButton2");
 	unhideElement("email");
 	hideElement("signWith42Button");
