@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from .models import Profile
 from django.contrib.auth.models import User

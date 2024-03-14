@@ -18,7 +18,7 @@ def roomIdGenerator():
 
 class Match(models.Model):
 	"""
-	the score at stored like
+	The score is scored as the order
 	score[0] = host
 	score[1] = invited
 	"""
@@ -56,7 +56,6 @@ class Match(models.Model):
 
 	@staticmethod
 	def create(host: User, invited: User) -> str:
-		print(f'voici les valeurs host {host} invit {invited}', file=sys.stderr)
 		match = Match.objects.create(host=host, invited=invited)
 		return match.id
 
@@ -73,18 +72,10 @@ class Match(models.Model):
 		else:
 			CoordinationConsumer.sendMessageToConsumer(user.username, data, event)
 
-	def addPoint(self, user: User):	
-		person = -1
-		if (user == self.host):
-			person = 0
-		elif (user == self.invited):
-			person = 1
-		else:
-			return
-		self.score[person] += 1
-		self.save()
-
 	def room(self):
+		"""
+		This retrieve the parent room !
+		"""
 		return Room.objects.filter(matchs=self).first()
 
 	def finish(self, score = None):
@@ -96,9 +87,7 @@ class Match(models.Model):
 			self.score = score
 
 		#need to define duration
-		#and generate link to blockchain HERE
-		self.state = 2
-		self.save()
+		self.setState(2)
 
 		# let free the loser
 		setOutMatch(self.getLoser())
@@ -116,9 +105,7 @@ class Match(models.Model):
 		self.send(self.host, 'next', {'match-id': str(self.id), 'host': self.host.username, 'invited': self.invited.username, 'statusHost': True})
 		self.send(self.invited, 'next', {'match-id': str(self.id), 'host': self.host.username, 'invited': self.invited.username, 'statusHost': False})
 		GameMap.createGame(str(self.id), self.host.username, self.invited.username)
-
-		self.state = 1
-		self.save()
+		self.setState(1)
 
 	def getWinner(self) -> User:
 		if self.score[0] > self.score[1]:
@@ -129,6 +116,23 @@ class Match(models.Model):
 		if self.score[0] > self.score[1]:
 			return self.invited
 		return self.host
+	
+	def toJson(self) -> dict | None:
+		if (self.state != 2):
+			return None
+		else:
+			return {
+				'id': self.id,
+				'host': self.host.username,
+				'invited': self.invited.username,
+				'score': self.score,
+				'link': self.link,
+				}
+		
+	def setState(self, state: int):
+		self.state = state
+		self.save()
+	
 	
 class Mode(models.TextChoices):
 	CLASSIC = '2'

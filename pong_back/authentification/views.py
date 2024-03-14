@@ -1,6 +1,5 @@
-from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.http import HttpRequest, JsonResponse
 from django.utils.html import format_html
-from django.contrib.auth.models import User
 from tools.responses import tResponses
 from tools.functions import isOtherKeysInList, areKeysFromList
 from django.core.mail import send_mail
