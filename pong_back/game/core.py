@@ -1,9 +1,10 @@
 import game.consumers as C
-
+import sys
 
 class Game:
     def __init__(self, matchId, p1, p2):
         self.matchId = matchId
+        self.speedBall = 0.40
         self.p1 = p1
         self.p2 = p2
         self.score = [0, 0]
@@ -11,16 +12,42 @@ class Game:
         self.p2Pos = [0, 13, 0]
         self.ballPos = [0, 0, 0]
         self.ballVec = [0, -1, 0]
-    def updateBall(self, data: dict):
-        self.score = data['score']
-        if (data['p1Pos']):
-            self.p1Pos = data['p1Pos']
-        if (data['p2Pos']):
-            self.p2Pos = data['p2Pos']
-        self.ballPos = data['ballPos']
-        self.ballVec = data['ballVec']
-        C.GameConsumer.sendMessageToConsumer(self.matchId, self.toJson())
-        
+        self.goalP = False
+        self.ready = [True, True]
+    @staticmethod
+    async def addVec(vec1, vec2):
+        for i in range(len(vec1)):
+            vec1[i] += (vec2[i])
+    async def makeReady(self, name):
+        if (name == self.p1):
+            self.ready[0] = True
+        elif (name == self.p2):
+            self.ready[1] = True
+        if(self.ready[0] == True and self.ready[1] == True):
+            self.goalP = False
+
+    async def updateBall(self, data: dict):
+        print(self.ready, file=sys.stderr)
+        if self.ready[0] == True and self.ready[1] == True:
+            if (data['p1Pos']):
+                self.p1Pos = data['p1Pos']
+            if (data['p2Pos']):
+                self.p2Pos = data['p2Pos']
+            if data['p1Pos']:
+                self.ballVec = data['ballVec']
+            if (data['p1Pos']):
+                await Game.addVec(self.ballPos, self.ballVec)
+            if (self.ballPos[1] > 13.5):
+                await self.goal(0)
+            if (self.ballPos[1] < -13.5):
+                await self.goal(1)
+            await C.GameConsumer.sendMessageToConsumer(self.matchId, self.toJson(), {'event': 'move'})
+    async def goal(self, i):
+        self.score[i] += 1
+        self.ballPos = [0, 0, 0]
+        self.ready = [False, False]
+        self.goalP = True
+
     def toJson(self):
         return {
 			'score': self.score,
@@ -28,6 +55,8 @@ class Game:
 			'p2Pos': self.p2Pos,
             'ballPos': self.ballPos,
             'ballVec': self.ballVec,
+            'speedBall': self.speedBall,
+            'goalP': self.goalP
 		}
         
 class GameMap:
@@ -47,7 +76,7 @@ class GameMap:
     
     @staticmethod
     def getMatchID(username):
-        for val in GameMap._gameMap.values:
+        for val in GameMap._gameMap.values():
             if val.p1 == username or val.p2 == username:
                 return (val.matchId)
         return None
