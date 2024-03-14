@@ -256,13 +256,19 @@ class Game {
 		}
 	}
 	
-	checkCollisionTarget(element, axes) {
+	checkCollisionTarget(element, axes , type) {
 		const ballBoundingBox = new THREE.Box3().setFromObject(this.ball);
 		const elementBoundingBox = new THREE.Box3().setFromObject(element);
 		
+		let testAxes;
+		if (type == true)
+			testAxes = axes < 0
+		else
+			testAxes = axes > 0
 		const collision = ballBoundingBox.intersectsBox(elementBoundingBox);
-		if (collision && !this.isCollision) {
-			this.isCollision = true;
+		if(collision)
+			console.log(testAxes)
+		if (collision && testAxes) {
 			axes *= -1;
 		}
 		return axes;
@@ -329,18 +335,17 @@ class Game {
 	}
 
 	async update() {
-		if (this.goalP == false)
-		{
+		if (this.goalP == false){
 			let collision;
 			this.cameraRotation.copy(this.camera.rotation);
 			this.laser.position.copy(this.ball.position);
 			const laserVertices = this.laser.geometry.attributes.position;
 			laserVertices.setXYZ(1, 0, -13 - this.ball.position.y, 0);
 			laserVertices.needsUpdate = true;
-			this.ballMovement.x = this.checkCollisionTarget(this.walls[0], this.ballMovement.x);
-			this.ballMovement.x = this.checkCollisionTarget(this.walls[3], this.ballMovement.x);
-			this.ballMovement.z = this.checkCollisionTarget(this.walls[2], this.ballMovement.z);
-			this.ballMovement.z = this.checkCollisionTarget(this.walls[1], this.ballMovement.z);
+			this.ballMovement.x = this.checkCollisionTarget(this.walls[0], this.ballMovement.x, false);
+			this.ballMovement.x = this.checkCollisionTarget(this.walls[3], this.ballMovement.x, true);
+			this.ballMovement.z = this.checkCollisionTarget(this.walls[2], this.ballMovement.z, true);
+			this.ballMovement.z = this.checkCollisionTarget(this.walls[1], this.ballMovement.z, false);
 			//this.moveBallY(collision);
 			this.checkCollisionWithP1(this.player1, collision);
 			this.checkCollisionWithP2(this.player2, collision);
@@ -382,7 +387,6 @@ class Game {
 		}
 		else
 			await this.checkPoint();
-		console.log(this.goalP)
 		await sleep(16);
 		if (this.status['status'] === 1)
 			requestAnimationFrame(() => this.update())

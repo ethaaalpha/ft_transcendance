@@ -171,6 +171,11 @@ class GameInv {
 				this.player1.position.set(this.data.p1Pos[0],this.data.p1Pos[1],this.data.p1Pos[2])
 			if (this.data.ballPos && this.data.ballPos.length === 3)
 				this.ball.position.set(this.data.ballPos[0], this.data.ballPos[1], this.data.ballPos[2])
+			if (this.data.score && this.data.score.length === 2){
+				this.p1Score = this.data.score[0];
+				this.p2Score = this.data.score[1];
+			}
+			this.goalP = this.data.goalP
 		};
 		
 		socket.onclose = (event) => this.socketClose(event);
@@ -214,25 +219,25 @@ class GameInv {
 	}
 
 	
-	checkCollisionWithY(element, collision) {
-		const ballBoundingBox = new THREE.Box3().setFromObject(this.ball);
-		const elementBoundingBox = new THREE.Box3().setFromObject(element);
+	// checkCollisionWithY(element, collision) {
+	// 	const ballBoundingBox = new THREE.Box3().setFromObject(this.ball);
+	// 	const elementBoundingBox = new THREE.Box3().setFromObject(element);
 		
-		collision = ballBoundingBox.intersectsBox(elementBoundingBox);
-		if (collision) {
-			this.ballMovement.set(0, this.ballMovement.y, 0);
-			this.isCollision = element;
-			const relativeCollision = new THREE.Vector3();
-			relativeCollision.subVectors(this.ball.position, element.position);
-			const dotProduct = this.ballMovement.dot(relativeCollision);
-			this.ballMovement.sub(relativeCollision.multiplyScalar(2 * dotProduct));
-			this.ballMovement.reflect(relativeCollision.normalize());
-			this.ballMovement.multiplyScalar 
-			this.ballMovement.y *= -1;
-			this.ballMovement.x *= -1;
-			this.ballMovement.z *= -1;
-		}
-	}
+	// 	collision = ballBoundingBox.intersectsBox(elementBoundingBox);
+	// 	if (collision) {
+	// 		this.ballMovement.set(0, this.ballMovement.y, 0);
+	// 		this.isCollision = element;
+	// 		const relativeCollision = new THREE.Vector3();
+	// 		relativeCollision.subVectors(this.ball.position, element.position);
+	// 		const dotProduct = this.ballMovement.dot(relativeCollision);
+	// 		this.ballMovement.sub(relativeCollision.multiplyScalar(2 * dotProduct));
+	// 		this.ballMovement.reflect(relativeCollision.normalize());
+	// 		this.ballMovement.multiplyScalar 
+	// 		this.ballMovement.y *= -1;
+	// 		this.ballMovement.x *= -1;
+	// 		this.ballMovement.z *= -1;
+	// 	}
+	// }
 	
 	checkCollisionTarget(element, axes) {
 		const ballBoundingBox = new THREE.Box3().setFromObject(this.ball);
@@ -247,8 +252,8 @@ class GameInv {
 	}
 	
 	moveBallY(collision) {
-		this.ballMovement.normalize();
-		this.ballMovement.multiplyScalar(this.speedBall);
+		// this.ballMovement.normalize();
+		// this.ballMovement.multiplyScalar(this.speedBall);
 		//this.ball.position.add(this.ballMovement);
 		while (this.isCollision) {
 			const ballBoundingBox = new THREE.Box3().setFromObject(this.ball);
@@ -282,58 +287,88 @@ class GameInv {
 		if (this.status['status'] === 1)
 			requestAnimationFrame(() => this.animate());
 	}
-	async update() {
-		let collision;
-		this.cameraRotation.copy(this.camera.rotation);
-		this.laser.position.copy(this.ball.position);
-		const laserVertices = this.laser.geometry.attributes.position;
-		laserVertices.setXYZ(1, 0, 13 - this.ball.position.y, 0);
-		laserVertices.needsUpdate = true;
-		this.ballMovement.x = this.checkCollisionTarget(this.walls[0], this.ballMovement.x);
-		this.ballMovement.x = this.checkCollisionTarget(this.walls[3], this.ballMovement.x);
-		this.ballMovement.z = this.checkCollisionTarget(this.walls[2], this.ballMovement.z);
-		this.ballMovement.z = this.checkCollisionTarget(this.walls[1], this.ballMovement.z);
-		//this.moveBallY(collision);
-		//this.checkCollisionWithY(this.player1, collision);
-		//this.checkCollisionWithY(this.player2, collision);
-		
-		const directionZ = new THREE.Vector3(0, 0, 1).applyEuler(this.cameraRotation);
-		directionZ.y = 0;
-		const directionX = new THREE.Vector3(1, 0, 0).applyEuler(this.cameraRotation);
-		directionX.y = 0;
-		if (this.moveUp) {
-			this.movement.sub(directionZ);
-		}
-		if (this.moveDown) {
-			this.movement.add(directionZ);
-		}
-		if (this.moveLeft) {
-			this.movement.sub(directionX);
-		}
-		if (this.moveRight) {
-			this.movement.add(directionX);
-		}
-		this.movement.normalize();
-		this.movement.multiplyScalar(this.speed);
-		this.player2.position.add(this.movement);
-		if (!this.moveUp && !this.moveDown && !this.moveLeft && !this.moveRight) {
-			this.movement.set(0, 0, 0);
-		}
-		this.data = {
-			score: [this.p1Score, this.p2Score],
 
-			speedBall: this.speedBall,
-			ballVec: [this.ballMovement.x, this.ballMovement.y, this.ballMovement.z],
-			ballPos: [this.ball.position.x, this.ball.position.y, this.ball.position.z],
-			p1Pos: null,
-			p2Pos: [this.player2.position.x,this.player2.position.y,this.player2.position.z],
-			id: this.id,
-		};
-		const currentTime = Date.now();
-		if(currentTime - this.lastMessageSentTime >= this.messageInterval){
-			this.sendMessageToServer({event : "move", data :this.data});
-			this.lastMessageSentTime = currentTime;
+	async checkPoint(){
+		let changed = false
+		if (this.goalP){
+			this.player1.position.set(0, -13, 0)
+			this.player2.position.set(0, 13, 0)
+			this.laser.position.copy(this.ball.position);
+			changed = true
 		}
+		if (changed){
+			this.explode = true;
+			this.ballMovement.x = 0;
+			this.ballMovement.z = 0;
+			//updateScoreDisplay(this.p1Score, this.p2Score, this.hudScore);
+			await sleep(1500)
+			console.log(this.p1Score)
+			console.log(this.p2Score)
+			if (this.p1Score < 5 && this.p2Score < 5)
+				await this.load3d();
+			this.explode = false;
+			this.uniforms.amplitude.value = 0.0;
+			this.cycleScore = 0.1
+			this.sendMessageToServer({event : "ready"})
+			this.goalP = false
+		}
+	}
+	async update() {
+		if (this.goalP == false){
+			let collision;
+			this.cameraRotation.copy(this.camera.rotation);
+			this.laser.position.copy(this.ball.position);
+			const laserVertices = this.laser.geometry.attributes.position;
+			laserVertices.setXYZ(1, 0, 13 - this.ball.position.y, 0);
+			laserVertices.needsUpdate = true;
+			this.ballMovement.x = this.checkCollisionTarget(this.walls[0], this.ballMovement.x);
+			this.ballMovement.x = this.checkCollisionTarget(this.walls[3], this.ballMovement.x);
+			this.ballMovement.z = this.checkCollisionTarget(this.walls[2], this.ballMovement.z);
+			this.ballMovement.z = this.checkCollisionTarget(this.walls[1], this.ballMovement.z);
+			//this.moveBallY(collision);
+			//this.checkCollisionWithY(this.player1, collision);
+			//this.checkCollisionWithY(this.player2, collision);
+			
+			const directionZ = new THREE.Vector3(0, 0, 1).applyEuler(this.cameraRotation);
+			directionZ.y = 0;
+			const directionX = new THREE.Vector3(1, 0, 0).applyEuler(this.cameraRotation);
+			directionX.y = 0;
+			if (this.moveUp) {
+				this.movement.sub(directionZ);
+			}
+			if (this.moveDown) {
+				this.movement.add(directionZ);
+			}
+			if (this.moveLeft) {
+				this.movement.sub(directionX);
+			}
+			if (this.moveRight) {
+				this.movement.add(directionX);
+			}
+			this.movement.normalize();
+			this.movement.multiplyScalar(this.speed);
+			this.player2.position.add(this.movement);
+			if (!this.moveUp && !this.moveDown && !this.moveLeft && !this.moveRight) {
+				this.movement.set(0, 0, 0);
+			}
+			this.data = {
+				score: [this.p1Score, this.p2Score],
+
+				speedBall: this.speedBall,
+				ballVec: [this.ballMovement.x, this.ballMovement.y, this.ballMovement.z],
+				ballPos: [this.ball.position.x, this.ball.position.y, this.ball.position.z],
+				p1Pos: null,
+				p2Pos: [this.player2.position.x,this.player2.position.y,this.player2.position.z],
+				id: this.id,
+			};
+			const currentTime = Date.now();
+			if(currentTime - this.lastMessageSentTime >= this.messageInterval){
+				this.sendMessageToServer({event : "move", data :this.data});
+				this.lastMessageSentTime = currentTime;
+			}
+		}
+		else
+			await this.checkPoint();
 		await sleep(16);
 		if (this.status['status'] === 1)
 			requestAnimationFrame(() => this.update())
