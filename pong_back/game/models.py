@@ -4,6 +4,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
 from django.db.models import Q
 from datetime import timedelta
+from django.utils import timezone
 from uuid import uuid4
 import shortuuid
 import sys
@@ -31,6 +32,7 @@ class Match(models.Model):
 	duration = models.DurationField(default=timedelta(minutes=0))
 	score = ArrayField(models.IntegerField(default=0), size=2, default=default_score)
 	link = models.URLField(default="www.localhost.fr")
+	date = models.DateTimeField(auto_now_add=True)
 	state = models.IntegerField(default=0) # 0 waiting, 1 started, 2 finish
 
 	@staticmethod
@@ -58,6 +60,12 @@ class Match(models.Model):
 	def create(host: User, invited: User) -> str:
 		match = Match.objects.create(host=host, invited=invited)
 		return match.id
+
+	@staticmethod
+	def historic(user: User, since, n=50) -> list:
+		matchs = Match.objects.filter(Q(host=user, date__gte=since) | Q(invited=user, date__gte=since)).filter(state=2)[:n]
+		data = [m.toJson() for m in matchs]
+		return (data)
 
 	def speak(self, sender: User, content: str):
 		if sender != self.host and sender != self.invited:
@@ -117,6 +125,10 @@ class Match(models.Model):
 			return self.invited
 		return self.host
 	
+	def setState(self, state: int):
+		self.state = state
+		self.save()
+
 	def toJson(self) -> dict | None:
 		if (self.state != 2):
 			return None
@@ -129,10 +141,6 @@ class Match(models.Model):
 				'link': self.link,
 				}
 		
-	def setState(self, state: int):
-		self.state = state
-		self.save()
-	
 	
 class Mode(models.TextChoices):
 	CLASSIC = '2'
