@@ -31,7 +31,8 @@ class Game {
 		this.speedBall = 0.25;
 		this.frame = 0;
 		this.cycleScore = 0.5;
-		this.sign = true
+		this.goalP = false;
+		this.sign = true;
 		this.explode = false;
 		this.player1 = null;
 		this.player2 = null;
@@ -61,7 +62,7 @@ class Game {
 	
 	init() {
 		return new Promise((resolve, reject) => {
-			this.socket = new WebSocket('wss://localhost:8081/api/game/');
+			this.socket = new WebSocket('wss://probable-space-tribble-pg5wg6jqq59c7qq7-443.app.github.dev/api/game/');
 			this.camera.position.set(0, 0, 60);
 			this.directionalLight.position.set(0, -18, 0).normalize();
 			this.scene.add(this.directionalLight);
@@ -161,14 +162,18 @@ class Game {
 			console.log('WebSocket connection established');
 		};
 		
-		this.socket.onmessage = (event) => {
+		this.socket.onmessage = async (event) => {
 			const response = JSON.parse(event.data);
 			this.data = response.data;
 			if (this.data.p2Pos && this.data.p2Pos.length === 3)
-				this.player2.position.set(this.data.p2Pos[0],this.data.p2Pos[1],this.data.p2Pos[2])
+			this.player2.position.set(this.data.p2Pos[0],this.data.p2Pos[1],this.data.p2Pos[2]);
 			if (this.data.ballPos && this.data.ballPos.length === 3)
-				this.ball.position.set(this.data.ballPos[0], this.data.ballPos[1], this.data.ballPos[2])
-
+				this.ball.position.set(this.data.ballPos[0], this.data.ballPos[1], this.data.ballPos[2]);
+			if (this.data.score && this.data.score.length === 2){
+				this.p1Score = this.data.score[0];
+				this.p2Score = this.data.score[1];
+			}
+			this.goalP = this.data.goalP
 		};
 		
 		socket.onclose = (event) => this.socketClose(event);
@@ -296,55 +301,88 @@ class Game {
 		if (this.status['status'] === 1)
 			requestAnimationFrame(() => this.animate());
 	}
+
+	async checkPoint(){
+		let changed = false
+		if (this.goalP){
+			this.player1.position.set(0, -13, 0)
+			this.player2.position.set(0, 13, 0)
+			this.laser.position.copy(this.ball.position);
+			changed = true
+		}
+		if (changed){
+			this.explode = true;
+			this.ballMovement.x = 0;
+			this.ballMovement.z = 0;
+			//updateScoreDisplay(this.p1Score, this.p2Score, this.hudScore);
+			await sleep(1500)
+			console.log(this.p1Score)
+			console.log(this.p2Score)
+			if (this.p1Score < 5 && this.p2Score < 5)
+				await this.load3d();
+			this.explode = false;
+			this.uniforms.amplitude.value = 0.0;
+			this.cycleScore = 0.1
+			this.sendMessageToServer({event : "ready"})
+			this.goalP = false
+		}
+	}
+
 	async update() {
-		let collision;
-		this.cameraRotation.copy(this.camera.rotation);
-		this.laser.position.copy(this.ball.position);
-		const laserVertices = this.laser.geometry.attributes.position;
-		laserVertices.setXYZ(1, 0, -13 - this.ball.position.y, 0);
-		laserVertices.needsUpdate = true;
-		this.ballMovement.x = this.checkCollisionTarget(this.walls[0], this.ballMovement.x);
-		this.ballMovement.x = this.checkCollisionTarget(this.walls[3], this.ballMovement.x);
-		this.ballMovement.z = this.checkCollisionTarget(this.walls[2], this.ballMovement.z);
-		this.ballMovement.z = this.checkCollisionTarget(this.walls[1], this.ballMovement.z);
-		//this.moveBallY(collision);
-		this.checkCollisionWithP1(this.player1, collision);
-		this.checkCollisionWithP2(this.player2, collision);
-		
-		const directionZ = new THREE.Vector3(0, 0, 1).applyEuler(this.cameraRotation);
-		directionZ.y = 0;
-		const directionX = new THREE.Vector3(1, 0, 0).applyEuler(this.cameraRotation);
-		directionX.y = 0;
-		if (this.moveUp) {
-			this.movement.sub(directionZ);
+		if (this.goalP == false)
+		{
+			let collision;
+			this.cameraRotation.copy(this.camera.rotation);
+			this.laser.position.copy(this.ball.position);
+			const laserVertices = this.laser.geometry.attributes.position;
+			laserVertices.setXYZ(1, 0, -13 - this.ball.position.y, 0);
+			laserVertices.needsUpdate = true;
+			this.ballMovement.x = this.checkCollisionTarget(this.walls[0], this.ballMovement.x);
+			this.ballMovement.x = this.checkCollisionTarget(this.walls[3], this.ballMovement.x);
+			this.ballMovement.z = this.checkCollisionTarget(this.walls[2], this.ballMovement.z);
+			this.ballMovement.z = this.checkCollisionTarget(this.walls[1], this.ballMovement.z);
+			//this.moveBallY(collision);
+			this.checkCollisionWithP1(this.player1, collision);
+			this.checkCollisionWithP2(this.player2, collision);
+
+			const directionZ = new THREE.Vector3(0, 0, 1).applyEuler(this.cameraRotation);
+			directionZ.y = 0;
+			const directionX = new THREE.Vector3(1, 0, 0).applyEuler(this.cameraRotation);
+			directionX.y = 0;
+			if (this.moveUp) {
+				this.movement.sub(directionZ);
+			}
+			if (this.moveDown) {
+				this.movement.add(directionZ);
+			}
+			if (this.moveLeft) {
+				this.movement.sub(directionX);
+			}
+			if (this.moveRight) {
+				this.movement.add(directionX);
+			}
+			this.movement.normalize();
+			this.movement.multiplyScalar(this.speed);
+			this.player1.position.add(this.movement);
+			if (!this.moveUp && !this.moveDown && !this.moveLeft && !this.moveRight) {
+				this.movement.set(0, 0, 0);
+			}
+			//console.log(this.ballMovement)
+			this.data = {
+				score: [this.p1Score, this.p2Score],
+				speedBall: this.speedBall,
+				ballVec: [this.ballMovement.x, this.ballMovement.y, this.ballMovement.z],
+				ballPos: [this.ball.position.x, this.ball.position.y, this.ball.position.z],
+				p1Pos: [this.player1.position.x,this.player1.position.y,this.player1.position.z],
+				p2Pos: null,
+				id: this.id,
+				isCollision: this.isCollision,
+			};
+			this.sendMessageToServer({event : "move", data :this.data});
 		}
-		if (this.moveDown) {
-			this.movement.add(directionZ);
-		}
-		if (this.moveLeft) {
-			this.movement.sub(directionX);
-		}
-		if (this.moveRight) {
-			this.movement.add(directionX);
-		}
-		this.movement.normalize();
-		this.movement.multiplyScalar(this.speed);
-		this.player1.position.add(this.movement);
-		if (!this.moveUp && !this.moveDown && !this.moveLeft && !this.moveRight) {
-			this.movement.set(0, 0, 0);
-		}
-		//console.log(this.ballMovement)
-		this.data = {
-			score: [this.p1Score, this.p2Score],
-			speedBall: this.speedBall,
-			ballVec: [this.ballMovement.x, this.ballMovement.y, this.ballMovement.z],
-			ballPos: [this.ball.position.x, this.ball.position.y, this.ball.position.z],
-			p1Pos: [this.player1.position.x,this.player1.position.y,this.player1.position.z],
-			p2Pos: null,
-			id: this.id,
-			isCollision: this.isCollision
-		};
-		this.sendMessageToServer({data :this.data});
+		else
+			await this.checkPoint();
+		console.log(this.goalP)
 		await sleep(16);
 		if (this.status['status'] === 1)
 			requestAnimationFrame(() => this.update())
