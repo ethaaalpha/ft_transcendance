@@ -13,7 +13,7 @@ if (!appli) {
     console.log("coucou");
 }
 var data = null;
-const socketTmp = new WebSocket("wss://localhost:8081/api/coordination/")
+const socketTmp = new WebSocket("wss://probable-space-tribble-pg5wg6jqq59c7qq7-443.app.github.dev/api/coordination/")
 socketTmp.onmessage = (event) => {
     console.log(event)
     const tmp = JSON.parse(event.data)

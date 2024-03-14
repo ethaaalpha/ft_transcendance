@@ -62,7 +62,7 @@ class GameInv {
 	
 	init() {
 		return new Promise((resolve, reject) => {
-			this.socket = new WebSocket('wss://localhost:8081/api/game/');
+			this.socket = new WebSocket('wss://probable-space-tribble-pg5wg6jqq59c7qq7-443.app.github.dev/api/game/');
 			this.camera.position.set(0, 0, 60);
 			this.directionalLight.position.set(0, -18, 0).normalize();
 			this.scene.add(this.directionalLight);
@@ -331,7 +331,7 @@ class GameInv {
 		};
 		const currentTime = Date.now();
 		if(currentTime - this.lastMessageSentTime >= this.messageInterval){
-			this.sendMessageToServer({data :this.data});
+			this.sendMessageToServer({event : "move", data :this.data});
 			this.lastMessageSentTime = currentTime;
 		}
 		await sleep(16);

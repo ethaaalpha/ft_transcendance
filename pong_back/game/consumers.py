@@ -34,9 +34,13 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 		return await super().disconnect(code)
 	
 	async def receive_json(self, content: dict, **kwargs):
-		data = content['data']
-		#print(data, file=sys.stderr)
-		await GameMap.getGame(self.matchId).updateBall(data)
+		if content['event'] == 'move':
+			data = content['data']
+			#print(data, file=sys.stderr)
+			await GameMap.getGame(self.matchId).updateBall(data)
+		elif content['event'] == 'ready':
+			await GameMap.getGame(self.matchId).makeReady(await self.getUsername())
+
 			
 	async def send_message(self, event):
 		content={
