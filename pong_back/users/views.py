@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from .models import Profile
 from django.contrib.auth.models import User
@@ -39,6 +38,7 @@ def profile(request: HttpRequest, username: str, filter=None) -> HttpResponse:
 	restricted = False if (user == request.user) else True
 
 	if (user):
+		Profile.createUserOnetoOne(user)
 		userProfile: dict = user.profile.toJson(restricted=restricted)
 
 		# Build the filter dictionnary
@@ -61,5 +61,7 @@ def postData(request: HttpRequest, filter: str) -> HttpResponse:
 			return (userProfile.form_changePassword(request))
 		case "profilePicture":
 			return (userProfile.form_changeProfilePicture(request))
+		case "email":
+			return (userProfile.form_changeEmail(request))
 		case _:
 			return (tResponses.BAD_REQUEST.request())

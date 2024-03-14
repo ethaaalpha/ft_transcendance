@@ -15,3 +15,6 @@ def areKeysFromList(listKey, tab) -> bool:
 		if element not in tabKeys:
 			return True
 	return False
+
+def is42(username: str):
+	return True if username[:3] == "42_" else False
