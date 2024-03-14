@@ -25,16 +25,18 @@ from activity.consumers import ActivityConsumer
 from game.consumers import GameConsumer
 from coordination.consumers import CoordinationConsumer
 
-import users.views
-import friends.views
-import conversations.views
+import users.views as uV
+import friends.views as fV
+import conversations.views as cV
+import stats.views as sV
 
 
 urlpatterns = [
 	path('api/admin/', admin.site.urls),
-	path('api/dashboard', ensure_csrf_cookie(logged_required(users.views.entryPoint))),
-	path('api/dashboard/friends', ensure_csrf_cookie(logged_required(friends.views.entryPoint))),
-	path('api/dashboard/conversations', ensure_csrf_cookie(logged_required(conversations.views.entryPoint))),
+	path('api/dashboard', ensure_csrf_cookie(logged_required(uV.entryPoint))),
+	path('api/dashboard/friends', ensure_csrf_cookie(logged_required(fV.entryPoint))),
+	path('api/dashboard/conversations', ensure_csrf_cookie(logged_required(cV.entryPoint))),
+	path('api/dashboard/match', ensure_csrf_cookie(logged_required(sV.entryPoint))),
 	path('api/auth/', include('authentification.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

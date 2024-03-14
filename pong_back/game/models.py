@@ -1,8 +1,10 @@
 from django.db import models
+from coordination.tools import setInMatch, setOutMatch
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
 from django.db.models import Q
 from datetime import timedelta
+from django.utils import timezone
 from uuid import uuid4
 import shortuuid
 import sys
@@ -17,7 +19,7 @@ def roomIdGenerator():
 
 class Match(models.Model):
 	"""
-	the score at stored like
+	The score is scored as the order
 	score[0] = host
 	score[1] = invited
 	"""
@@ -30,6 +32,7 @@ class Match(models.Model):
 	duration = models.DurationField(default=timedelta(minutes=0))
 	score = ArrayField(models.IntegerField(default=0), size=2, default=default_score)
 	link = models.URLField(default="www.localhost.fr")
+	date = models.DateTimeField(auto_now_add=True)
 	state = models.IntegerField(default=0) # 0 waiting, 1 started, 2 finish
 
 	@staticmethod
@@ -55,9 +58,14 @@ class Match(models.Model):
 
 	@staticmethod
 	def create(host: User, invited: User) -> str:
-		print(f'voici les valeurs host {host} invit {invited}', file=sys.stderr)
 		match = Match.objects.create(host=host, invited=invited)
 		return match.id
+
+	@staticmethod
+	def historic(user: User, since, n=50) -> list:
+		matchs = Match.objects.filter(Q(host=user, date__gte=since) | Q(invited=user, date__gte=since)).filter(state=2)[:n]
+		data = [m.toJson() for m in matchs]
+		return (data)
 
 	def speak(self, sender: User, content: str):
 		if sender != self.host and sender != self.invited:
@@ -72,18 +80,10 @@ class Match(models.Model):
 		else:
 			CoordinationConsumer.sendMessageToConsumer(user.username, data, event)
 
-	def addPoint(self, user: User):	
-		person = -1
-		if (user == self.host):
-			person = 0
-		elif (user == self.invited):
-			person = 1
-		else:
-			return
-		self.score[person] += 1
-		self.save()
-
 	def room(self):
+		"""
+		This retrieve the parent room !
+		"""
 		return Room.objects.filter(matchs=self).first()
 
 	def finish(self, score = None):
@@ -95,12 +95,10 @@ class Match(models.Model):
 			self.score = score
 
 		#need to define duration
-		#and generate link to blockchain HERE
-		self.state = 2
-		self.save()
+		self.setState(2)
 
 		# let free the loser
-		self.getLoser().profile.setPlaying(False)
+		setOutMatch(self.getLoser())
 
 		# here make the room update and check for the next match !
 		print(f'Le gagnant du match entre {self.host} et {self.invited} est {self.getWinner()} !!!!', file=sys.stderr)
@@ -108,23 +106,14 @@ class Match(models.Model):
 		room.update()
 
 	def start(self):
-		from .core import Game, GameMap
+		from .core import GameMap
 
 		print(f'Match {self.id}, voici les adversaires host: {self.host} | invited: {self.invited}', file=sys.stderr)
 		# ici pour avertir les autres joueurs du prochain match !!!
 		self.send(self.host, 'next', {'match-id': str(self.id), 'host': self.host.username, 'invited': self.invited.username, 'statusHost': True})
 		self.send(self.invited, 'next', {'match-id': str(self.id), 'host': self.host.username, 'invited': self.invited.username, 'statusHost': False})
-		GameMap.createGame(self.id, self.host.username, self.invited.username)
-
-		print(f'data = {GameMap.getGame(self.id).toJson()}', file=sys.stderr)
-		self.state = 1
-		self.save()
-
-		# JUSTE POUR LE DEV
-		# print(f'Voici le début du match entre [HOST] {self.host} et [INVITED] {self.invited} !', file=sys.stderr)
-		# self.addPoint(self.host)
-		# time.sleep(5)
-		# self.finish()
+		GameMap.createGame(str(self.id), self.host.username, self.invited.username)
+		self.setState(1)
 
 	def getWinner(self) -> User:
 		if self.score[0] > self.score[1]:
@@ -135,6 +124,23 @@ class Match(models.Model):
 		if self.score[0] > self.score[1]:
 			return self.invited
 		return self.host
+	
+	def setState(self, state: int):
+		self.state = state
+		self.save()
+
+	def toJson(self) -> dict | None:
+		if (self.state != 2):
+			return None
+		else:
+			return {
+				'id': self.id,
+				'host': self.host.username,
+				'invited': self.invited.username,
+				'score': self.score,
+				'link': self.link,
+				}
+		
 	
 class Mode(models.TextChoices):
 	CLASSIC = '2'
@@ -182,11 +188,9 @@ class Room(models.Model):
 		self.save()
 
 		for player in self.opponents.all():
-			player.profile.setPlaying(True)
+			setInMatch(player)
 
 		self.next(True)
-		# it is a matchmaking
-		# lancer la partie voir avec nico !!!!
 	
 	def removePlayer(self, player: User):
 		"""
@@ -200,6 +204,7 @@ class Room(models.Model):
 			if (self.opponents.count() == 0):
 				self.delete()
 			else:
+				self.updateCountsAll()
 				self.save()
 			return 0
 
@@ -221,6 +226,7 @@ class Room(models.Model):
 			return ("You already joined this room !", False)
 		self.opponents.add(player)
 		self.save()
+		self.updateCountsAll()
 
 		# function to check if roomReady !
 		self.update()
@@ -241,7 +247,7 @@ class Room(models.Model):
 		else:
 			if self.numberMatchsLastRound == 1:
 				lastMatch: Match = self.matchs.all()[:1].get()
-				lastMatch.getWinner().profile.setPlaying(False)
+				setOutMatch(lastMatch.getWinner())
 
 				for p in self.opponents.all():
 					self.send(p, 'win', {'message': f'Le gagnant du tournois est {lastMatch.getWinner()}'})
@@ -279,6 +285,18 @@ class Room(models.Model):
 						return
 				return self.next()
 			# faire les nexts matchs etc voir pour les tournois
+
+	def updateCountsAll(self):
+		from coordination.consumers import CoordinationConsumer
+		"""
+		Send a message to all the player to tell them how much player there is actually in the room
+		"""
+		count = self.opponents.count()
+
+		for p in self.opponents.all():
+			data = {'room-id': self.id, 'count': count}
+			CoordinationConsumer.sendMessageToConsumer(p.username, data, 'count')
+		return
 	
 	@staticmethod
 	def createRoom(owner: User, mode = Mode.CLASSIC):
@@ -290,6 +308,7 @@ class Room(models.Model):
 		room = Room.objects.create(mode=mode.value)
 		room.opponents.add(owner)
 		room.save()
+		room.updateCountsAll()
 		return room
 	
 	@staticmethod
@@ -355,3 +374,4 @@ class Room(models.Model):
 		"""
 		room = Room.objects.filter(opponents=player, state=0).first()
 		return room.id if room else False
+	
