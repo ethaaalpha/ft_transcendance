@@ -4,7 +4,7 @@ import sys
 class Game:
     def __init__(self, matchId, p1, p2):
         self.matchId = matchId
-        self.speedBall = 0.25
+        self.speedBall = 0.40
         self.p1 = p1
         self.p2 = p2
         self.score = [0, 0]
@@ -45,7 +45,7 @@ class Game:
     async def goal(self, i):
         self.score[i] += 1
         self.ballPos = [0, 0, 0]
-        self.ready = [False, True]
+        self.ready = [False, False]
         self.goalP = True
 
     def toJson(self):
