@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+import socket
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -141,6 +142,10 @@ API_TOKEN = os.getenv('API_TOKEN')
 API_INFO = os.getenv('API_INFO')
 
 # Inputs | Default Configs
+DJANGO_SUPERUSER_USERNAME=os.getenv('DJANGO_SUPERUSER_USERNAME')
+DJANGO_SUPERUSER_PASSWORD=os.getenv('DJANGO_SUPERUSER_PASSWORD')
+DJANGO_SUPERUSER_EMAIL=os.getenv('DJANGO_SUPERUSER_EMAIL')
+
 CONFIG_PASS_LENGTH_MAX = 32
 CONFIG_PASS_LENGTH_MIN = 5
 
@@ -158,8 +163,8 @@ MESSAGE_LENGTH_MAX = 1024
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-ALLOWED_HOSTS = [ 'localhost' ]
 
+ALLOWED_HOSTS = ['localhost', socket.gethostbyname(socket.gethostname())]
 
 # Channel Layer Configuration
 CHANNEL_LAYERS = {

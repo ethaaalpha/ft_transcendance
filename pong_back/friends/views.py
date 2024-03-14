@@ -1,7 +1,6 @@
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from tools.responses import tResponses
-from tools.functions import isOtherKeysInList, areKeysFromList
 from .forms import FriendsFrom
 from users.models import Profile
 from activity.notifier import ActivityNotifier
