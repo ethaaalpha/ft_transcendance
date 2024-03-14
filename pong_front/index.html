@@ -44,6 +44,16 @@
 					<input type="submit" value="Change-Password">
 				</form>
 			</div>
+			<div id="form-email" style="background-color:plum; padding: 2%;">
+				<h3>Email</h3>
+				<form action="/api/dashboard?filter=email" method="post" class='ajax-form' enctype="application/json">
+					<label for="actual-password">Actual email :</label><br>
+					<input type="text" name="actualEmail"><br>
+					<label for="password">New email :</label><br>
+					<input type="text" name="newEmail">
+					<input type="submit" value="Change-Email">
+				</form>
+			</div>
 			<div id="chat-send" style="background-color: burlywood; padding: 2%; display: flex; flex-direction: row;" enctype="application/json">
 				<div>
 					<h3>Send MP</h3>

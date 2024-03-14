@@ -139,9 +139,11 @@ class Profile(models.Model):
 		form: UForm.EmailForm = UForm.EmailForm(request.POST)
 
 		if (form.is_valid()):
-			activeEmail = form.cleaned_data['activeEmail']
+			activeEmail = form.cleaned_data['actualEmail']
 			newEmail = form.cleaned_data['newEmail']
 
+			if user.username[:3] == "42_":
+				return (tResponses.FORBIDDEN.request("User from 42 can't change their email !"))
 			if (activeEmail != user.email):
 				return (tResponses.BAD_REQUEST.request("Email do not match with active one !"))
 			if (activeEmail == newEmail):
