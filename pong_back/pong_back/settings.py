@@ -164,7 +164,7 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
-ALLOWED_HOSTS = ['localhost', socket.gethostbyname(socket.gethostname())]
+ALLOWED_HOSTS = ['localhost', os.getenv('DOMAIN')]
 
 # Channel Layer Configuration
 CHANNEL_LAYERS = {
