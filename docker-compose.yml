@@ -42,8 +42,6 @@ services:
     build:
       context: docker/nginx
       dockerfile: nginx.dockerfile
-      args:
-        - DOMAIN=$DOMAIN
     env_file:
       - .env
     volumes:
