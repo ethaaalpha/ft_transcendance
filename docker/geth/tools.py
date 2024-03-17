@@ -13,9 +13,9 @@ def	extract_address(content):
 def replace(file, a, b):
 	f = open(file, "r")
 	data = f.read()
-	data.replace(a, b)
+	data = data.replace(a, b)
 
-	with open(file, "r") as mf:
+	with open(file, "w") as mf:
 		mf.write(data)
 	return ("Success")
 
@@ -25,7 +25,7 @@ def getText(file):
 
 def main():
 	args = sys.argv
-	if (len(args) != 3):
+	if (len(args) < 3):
 		return ('Must be used with parameters !')
 	
 	match args[1]:

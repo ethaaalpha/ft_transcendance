@@ -8,5 +8,10 @@ WORKDIR /ethereum
 ADD runner.sh /script/
 ADD tools.py /script/
 ADD genesis.json .
+RUN mkdir -p bnode node1 node2
+
+
+# 30305 -> bnode
+EXPOSE 30305
 
 CMD ["sh" , "/script/runner.sh"]
