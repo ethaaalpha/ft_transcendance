@@ -3,8 +3,9 @@ BACK_DIR			= 'pong_back'
 MEDIA_DIR			= 'media'
 DATABASE_DIR 		= 'database'
 LIBS_DIR			= 'libs'
+BLOCKCHAIN_DIR		= 'blockchain'
 
-NEEDED_DIR			= ${DATABASE_DIR} ${LIBS_DIR}
+NEEDED_DIR			= ${DATABASE_DIR} ${LIBS_DIR} ${BLOCKCHAIN_DIR}
 
 # Files
 DEFAULT_PICTURE		= "pokemon.png"

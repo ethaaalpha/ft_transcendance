@@ -1,57 +1,64 @@
 version: '3.8'
 
 services:
-  postgresql:
-    container_name: postgresql
-    image: postgres:alpine
-    environment:
-      - POSTGRES_USER=$DB_USER
-      - POSTGRES_PASSWORD=$DB_PASSWORD
-    volumes:
-      - ./database:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ethaniellegrand"]
-      interval: 2s
-      timeout: 1s
-      retries: 5
-    restart: on-failure
-
-  redis:
-    container_name: redis
-    image: redis:alpine
-    restart: on-failure
-
-  daphne:
-    container_name: daphne
+  hardhat:
+    container_name: hardhat
     build:
-      context: docker/daphne
-      dockerfile: daphne.dockerfile
+      context: docker/hardhat
+      dockerfile: hardhat.dockerfile
     volumes:
-      - .:/workdir/
-    depends_on:
-      postgresql:
-        condition: service_healthy
-      redis:
-        condition: service_started
-    env_file:
-      - .env
-    restart: on-failure
+      - ./blockchain:/app
+  # postgresql:
+  #   container_name: postgresql
+  #   image: postgres:alpine
+  #   environment:
+  #     - POSTGRES_USER=$DB_USER
+  #     - POSTGRES_PASSWORD=$DB_PASSWORD
+  #   volumes:
+  #     - ./database:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U ethaniellegrand"]
+  #     interval: 2s
+  #     timeout: 1s
+  #     retries: 5
+  #   restart: on-failure
 
-  nginx:
-    container_name: nginx
-    build:
-      context: docker/nginx
-      dockerfile: nginx.dockerfile
-    env_file:
-      - .env
-    volumes:
-      - ./media:/usr/share/media
-      - ./pong_front:/usr/share/static
-      - ./libs:/usr/share/libs
-      - ./front_mehdi:/usr/share/test
-    ports: 
-      - $PORT_HTTP:80
-      - $PORT_HTTPS:443
-    depends_on:
-      - daphne
-    restart: on-failure
+  # redis:
+  #   container_name: redis
+  #   image: redis:alpine
+  #   restart: on-failure
+
+  # daphne:
+  #   container_name: daphne
+  #   build:
+  #     context: docker/daphne
+  #     dockerfile: daphne.dockerfile
+  #   volumes:
+  #     - .:/workdir/
+  #   depends_on:
+  #     postgresql:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_started
+  #   env_file:
+  #     - .env
+  #   restart: on-failure
+
+  # nginx:
+  #   container_name: nginx
+  #   build:
+  #     context: docker/nginx
+  #     dockerfile: nginx.dockerfile
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./media:/usr/share/media
+  #     - ./pong_front:/usr/share/static
+  #     - ./libs:/usr/share/libs
+  #     - ./front_mehdi:/usr/share/test
+  #   ports: 
+  #     - $PORT_HTTP:80
+  #     - $PORT_HTTPS:443
+  #   depends_on:
+  #     - daphne
+  #   restart: on-failure
