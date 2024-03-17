@@ -1,14 +1,27 @@
+## Accounts generations for the nodes !
 # Generating account for the node 1 (signer)
 geth account new --datadir node1 --password <(echo $NODE1_ACCOUNT_PASSWORD) | grep "Public address of the key" > node1.pass
 
 # Generating account for the node 2
 geth account new --datadir node2 --password <(echo $NODE2_ACCOUNT_PASSWORD) | grep "Public address of the key" > node2.pass
 
+
+## Genesis.json
+# Replacement of the generated accounts
 NODE1_PUBLIC__ADDR=$(python /script/tools.py address node1.pass)
 NODE2_PUBLIC__ADDR=$(python /script/tools.py address node2.pass)
 
-echo $NODE1_PUBLIC__ADDR
-echo $NODE2_PUBLIC__ADDR
+python /script/tools.py replace genesis.json 'NETWORK_ID' ${NETWORK_ID}
+python /script/tools.py replace genesis.json 'NODE1_PUBLIC__ADDR' ${NODE1_PUBLIC__ADDR}
+python /script/tools.py replace genesis.json 'NODE2_PUBLIC__ADDR' ${NODE2_PUBLIC__ADDR}
+
+geth --datadir node1 init genesis.json
+geth --datadir node2 init genesis.json
+
+bootnode -genkey bnode/boot.key
+bootnode -nodekey bnode/boot.key -addr :30305
+
+#RECUPERER LE BOOTNODE
 
 # cat genesis.json
 # geth --datadir data init genesis.json
