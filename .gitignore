@@ -10,4 +10,7 @@ __pycache__/
 migrations/
 database/
 libs/
-blockchain/
+node_modules/
+package-lock.json
+package.json
+.log

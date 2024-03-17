@@ -1,13 +1,15 @@
 version: '3.8'
 
 services:
-  hardhat:
-    container_name: hardhat
+  geth:
+    container_name: geth
     build:
-      context: docker/hardhat
-      dockerfile: hardhat.dockerfile
-    volumes:
-      - ./blockchain:/app
+      context: docker/geth
+      dockerfile: geth.dockerfile
+    env_file:
+      - .env
+    # volumes:
+      # - ./blockchain:/ethereum/
   # postgresql:
   #   container_name: postgresql
   #   image: postgres:alpine
