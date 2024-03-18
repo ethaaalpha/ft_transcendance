@@ -11,7 +11,7 @@ ADD genesis.json .
 RUN mkdir -p bnode node1 node2
 
 
-# 30305 -> bnode
-EXPOSE 30305
+# 30305 -> bnode | Others nodes
+EXPOSE 30305 8551 8552
 
 CMD ["sh" , "/script/runner.sh"]
