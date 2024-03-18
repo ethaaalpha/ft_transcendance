@@ -1,4 +1,4 @@
-FROM ethereum/client-go:alltools-latest
+FROM ethereum/client-go:alltools-stable
 
 RUN apk add --no-cache python3 py3-pip
 RUN mkdir -p /ethereum
