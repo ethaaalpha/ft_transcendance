@@ -13,7 +13,7 @@ if (!appli) {
     console.log("coucou");
 }
 var data = null;
-const socketTmp = new WebSocket("wss://probable-space-tribble-pg5wg6jqq59c7qq7-443.app.github.dev/api/coordination/")
+const socketTmp = new WebSocket("wss://" + window.location.host + "/api/coordination/")
 socketTmp.onmessage = (event) => {
     console.log(event)
     const tmp = JSON.parse(event.data)
@@ -57,7 +57,6 @@ async function initialize() {
             }
             else if (status.status === 2)
                 await createGameLocal();
-            //await sleep(1500)
 		}
     } catch (error) {
         console.error("Error during initialization:", error);
@@ -98,11 +97,11 @@ async function createMenu() {
 }
 async function createGame() {
     return new Promise((resolve, reject) => {
-		view = null;
         if (data.statusHost == true)
             view = new Game(status, resolve, updateStatus, gameData, data);
         else
             view = new GameInv(status, resolve, updateStatus, gameData, data);
+        data = null;
     });
 }
 async function createGameLocal() {

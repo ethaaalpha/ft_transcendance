@@ -41,7 +41,9 @@ class Game:
                 await self.goal(0)
             if (self.ballPos[1] < -13.5):
                 await self.goal(1)
-            await C.GameConsumer.sendMessageToConsumer(self.matchId, self.toJson(), {'event': 'move'})
+            await C.GameConsumer.sendMessageToConsumer(self.matchId, self.toJson(), 'move')
+        if self.score[0] >= 5 or self.score[1] >= 5:
+            await C.GameConsumer.sendMessageToConsumer(self.matchId, {}, "end")
     async def goal(self, i):
         self.score[i] += 1
         self.ballPos = [0, 0, 0]

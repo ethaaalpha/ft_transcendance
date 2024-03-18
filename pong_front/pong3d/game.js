@@ -62,7 +62,7 @@ class Game {
 	
 	init() {
 		return new Promise((resolve, reject) => {
-			this.socket = new WebSocket('wss://probable-space-tribble-pg5wg6jqq59c7qq7-443.app.github.dev/api/game/');
+			this.socket = new WebSocket('wss://' + window.location.host +'/api/game/');
 			this.camera.position.set(0, 0, 60);
 			this.directionalLight.position.set(0, -18, 0).normalize();
 			this.scene.add(this.directionalLight);
@@ -164,6 +164,9 @@ class Game {
 		
 		this.socket.onmessage = async (event) => {
 			const response = JSON.parse(event.data);
+			if (response.event == 'end'){
+				this.status.status = 0;
+			}
 			this.data = response.data;
 			if (this.data.p2Pos && this.data.p2Pos.length === 3)
 			this.player2.position.set(this.data.p2Pos[0],this.data.p2Pos[1],this.data.p2Pos[2]);
@@ -252,7 +255,6 @@ class Game {
 			this.ballMovement.z *= -1;
 			this.ballMovement.normalize();
 			this.ballMovement.multiplyScalar(this.speedBall)
-			console.log(this.ballMovement)
 		}
 	}
 	
@@ -266,8 +268,6 @@ class Game {
 		else
 			testAxes = axes > 0
 		const collision = ballBoundingBox.intersectsBox(elementBoundingBox);
-		if(collision)
-			console.log(testAxes)
 		if (collision && testAxes) {
 			axes *= -1;
 		}
@@ -306,6 +306,8 @@ class Game {
 		this.renderer.render(this.scene, this.camera);
 		if (this.status['status'] === 1)
 			requestAnimationFrame(() => this.animate());
+		else
+			this.destroy()
 	}
 
 	async checkPoint(){
@@ -321,11 +323,8 @@ class Game {
 			this.ballMovement.x = 0;
 			this.ballMovement.z = 0;
 			//updateScoreDisplay(this.p1Score, this.p2Score, this.hudScore);
-			await sleep(1500)
-			console.log(this.p1Score)
-			console.log(this.p2Score)
-			if (this.p1Score < 5 && this.p2Score < 5)
-				await this.load3d();
+			await sleep(1500);
+			this.load3d();
 			this.explode = false;
 			this.uniforms.amplitude.value = 0.0;
 			this.cycleScore = 0.1
@@ -372,7 +371,6 @@ class Game {
 			if (!this.moveUp && !this.moveDown && !this.moveLeft && !this.moveRight) {
 				this.movement.set(0, 0, 0);
 			}
-			//console.log(this.ballMovement)
 			this.data = {
 				score: [this.p1Score, this.p2Score],
 				speedBall: this.speedBall,
@@ -449,6 +447,7 @@ class Game {
 		window.removeEventListener('resize',this.onResize);
 		this.appli.removeChild(this.renderer.domElement);
 		this.scene.clear();
+		this.socket.close();
 		if (this.texture) {
 			this.texture.dispose();
 		}
