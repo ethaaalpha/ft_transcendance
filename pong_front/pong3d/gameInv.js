@@ -62,7 +62,7 @@ class GameInv {
 	
 	init() {
 		return new Promise((resolve, reject) => {
-			this.socket = new WebSocket('wss://probable-space-tribble-pg5wg6jqq59c7qq7-443.app.github.dev/api/game/');
+			this.socket = new WebSocket('wss://' + window.location.host +'/api/game/');
 			this.camera.position.set(0, 0, 60);
 			this.directionalLight.position.set(0, -18, 0).normalize();
 			this.scene.add(this.directionalLight);
@@ -166,16 +166,20 @@ class GameInv {
 		
 		this.socket.onmessage = (event) => {
 			const response = JSON.parse(event.data);
-			this.data = response.data;
-			if (this.data.p1Pos && this.data.p1Pos.length === 3)
-				this.player1.position.set(this.data.p1Pos[0],this.data.p1Pos[1],this.data.p1Pos[2])
-			if (this.data.ballPos && this.data.ballPos.length === 3)
-				this.ball.position.set(this.data.ballPos[0], this.data.ballPos[1], this.data.ballPos[2])
-			if (this.data.score && this.data.score.length === 2){
-				this.p1Score = this.data.score[0];
-				this.p2Score = this.data.score[1];
+			if (response.event == 'end'){
+				this.status.status = 0;
 			}
-			this.goalP = this.data.goalP
+			else 
+				this.data = response.data;
+				if (this.data.p1Pos && this.data.p1Pos.length === 3)
+					this.player1.position.set(this.data.p1Pos[0],this.data.p1Pos[1],this.data.p1Pos[2])
+				if (this.data.ballPos && this.data.ballPos.length === 3)
+					this.ball.position.set(this.data.ballPos[0], this.data.ballPos[1], this.data.ballPos[2])
+				if (this.data.score && this.data.score.length === 2){
+					this.p1Score = this.data.score[0];
+					this.p2Score = this.data.score[1];
+				}
+				this.goalP = this.data.goalP
 		};
 		
 		socket.onclose = (event) => this.socketClose(event);
@@ -286,6 +290,8 @@ class GameInv {
 		this.renderer.render(this.scene, this.camera);
 		if (this.status['status'] === 1)
 			requestAnimationFrame(() => this.animate());
+		else
+			this.destroy()
 	}
 
 	async checkPoint(){
@@ -300,12 +306,8 @@ class GameInv {
 			this.explode = true;
 			this.ballMovement.x = 0;
 			this.ballMovement.z = 0;
-			//updateScoreDisplay(this.p1Score, this.p2Score, this.hudScore);
 			await sleep(1500)
-			console.log(this.p1Score)
-			console.log(this.p2Score)
-			if (this.p1Score < 5 && this.p2Score < 5)
-				await this.load3d();
+			this.load3d();
 			this.explode = false;
 			this.uniforms.amplitude.value = 0.0;
 			this.cycleScore = 0.1
@@ -428,9 +430,11 @@ class GameInv {
 	
 	destroy() {
 		document.removeEventListener('keydown',this.keyD);
+		document.removeEventListener('keydown',this.keyU);
 		window.removeEventListener('resize',this.onResize);
 		this.appli.removeChild(this.renderer.domElement);
 		this.scene.clear();
+		this.socket.CLOSING;
 		if (this.texture) {
 			this.texture.dispose();
 		}
