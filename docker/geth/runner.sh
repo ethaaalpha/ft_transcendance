@@ -29,7 +29,7 @@ ENODE=$(bootnode -nodekeyhex $(cat bnode/boot.key) -writeaddress)
 
 ## Runners
 RUNNER_1="geth --datadir node1 --port 30306 --bootnodes enode://${ENODE}@127.0.0.1:0?discport=30305 --networkid ${NETWORK_ID} --unlock ${NODE1_PUBLIC__ADDR} --password node1/password.txt --authrpc.port 8551 --mine --miner.etherbase ${NODE1_PUBLIC__ADDR}"
-RUNNER_2="geth --datadir node2 --port 30306 --bootnodes enode://${ENODE}@127.0.0.1:0?discport=30305 --networkid ${NETWORK_ID} --unlock ${NODE2_PUBLIC__ADDR} --password node2/password.txt --authrpc.port 8551 --mine --miner.etherbase ${NODE2_PUBLIC__ADDR}"
+RUNNER_2="geth --datadir node2 --port 30307 --bootnodes enode://${ENODE}@127.0.0.1:0?discport=30305 --networkid ${NETWORK_ID} --unlock ${NODE2_PUBLIC__ADDR} --password node2/password.txt --authrpc.port 8552"
 RUNNER_BN="bootnode -nodekey bnode/boot.key -addr :30305"
 ${RUNNER_BN} & ${RUNNER_1} & ${RUNNER_2}
 
