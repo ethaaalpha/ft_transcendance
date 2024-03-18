@@ -8,6 +8,8 @@ services:
       dockerfile: geth.dockerfile
     env_file:
       - .env
+    ports:
+      - 8552:8552
     # volumes:
       # - ./blockchain:/ethereum/
   # postgresql:

@@ -17,11 +17,15 @@ def replace(file, a, b):
 
 	with open(file, "w") as mf:
 		mf.write(data)
+	mf.close()
+	f.close()
 	return ("Success")
 
 def getText(file):
 	f = open(file, "r")
-	return (f.read())
+	data = f.read()
+	f.close()
+	return (data)
 
 def main():
 	args = sys.argv
