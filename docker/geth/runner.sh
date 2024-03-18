@@ -30,15 +30,8 @@ ENODE=$(bootnode -nodekeyhex $(cat bnode/boot.key) -writeaddress)
 ## Runners
 RUNNER_1="geth --datadir node1 --port 30306 --bootnodes enode://${ENODE}@127.0.0.1:0?discport=30305 --networkid ${NETWORK_ID} --unlock ${NODE1_PUBLIC__ADDR} --password node1/password.txt --authrpc.port 8551 --mine --miner.etherbase ${NODE1_PUBLIC__ADDR}"
 RUNNER_2="geth --datadir node2 --port 30307 --bootnodes enode://${ENODE}@127.0.0.1:0?discport=30305 --networkid ${NETWORK_ID} --unlock ${NODE2_PUBLIC__ADDR} --password node2/password.txt --authrpc.port 8552"
-RUNNER_BN="bootnode -nodekey bnode/boot.key -addr :30305"
-${RUNNER_BN} & ${RUNNER_1} & ${RUNNER_2}
-
-# cat genesis.json
-# geth --datadir data init genesis.json
-# geth --datadir data --http --http.addr "0.0.0.0" --http.port "8545" --http.api "eth,web3,personal,net" --networkid 1234 console
-
-# geth account new --datadir data --password <(echo $SIGNER_ACCOUNT_PASSWORD)
-# geth --datadir data2 --networkid 12345 --port 30305 --unlock 0x0000000000000000000000000000000000000001 --mine
-# geth --unlock 0x0000000000000000000000000000000000000001 --mine
-# geth --datadir=data/
-# geth account list --datadir signer > password
+RUNNER_BN="bootnode -nodekey bnode/boot.key -verbosity 7 -addr :30305"
+# echo ${RUNNER_1}
+echo ${RUNNER_2}
+${RUNNER_BN}
+# ${RUNNER_BN} & ${RUNNER_1} & ${RUNNER_2}
