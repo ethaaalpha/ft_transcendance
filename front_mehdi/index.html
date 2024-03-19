@@ -21,35 +21,36 @@
 				<h1 class="title fw-bold">Sign-in</h1>
 				<form>
 				<!-- SIGN IN -->
-				<div class="mb-3 col-8 mx-auto">
+				<div class="form-floating mb-3 col-8 mx-auto">
 					<input type="text" class="form-control" id="username" placeholder="Username">
+					<label for="username">Username</label>
 				</div>
-				<div class="mb-3 col-8 mx-auto">
+				<div class="form-floating mb-3 col-8 mx-auto">
 					<input type="password" class="form-control" id="password" placeholder="Password">
+					<label for="username">Password</label>
 				</div>
 				<div class="mb-3 text-center mx-auto">
-					<button type="button" class="btn btn-primary btn-block col-6" id="signInButton" onclick="signIn()">Sign-in</button>
+					<button type="button" class="btn btn-primary btn-block col-6" id="signInButton" onclick="signIn()">Continue with username</button>
 				</div>
 				<div class="mb-3 text-center mx-auto">
-					<button type="button" class="btn btn-primary btn-block col-6" id="signUpButton" onclick='changeScene("signUp")'>Sign-Up</button>
+					<button type="button" class="btn btn-primary btn-block col-6" id="signWith42Button" onclick="signWith42()">Continue with 42</button>
 				</div>
 				<div class="mb-3 text-center mx-auto">
-					<button type="button" class="btn btn-primary btn-block col-6" id="signWith42Button" onclick="signWith42()">Sign with 42</button>
-				</div>
-				<div class="mb-3 text-center mx-auto">
-					<button type="button" class="btn btn-primary btn-block col-6" id="forgotPasswordButton" onclick="forgotPassword()">Forgot password</button>
+					<button type="button" class="btn btn-primary btn-block col-6" id="forgotPasswordButton" onclick="forgotPassword()">Forgot password?</button>
 				</div>
 				
 				<!-- SIGN UP -->
-				<div class="mb-3 col-8 mx-auto">
+				<div class="form-floating mb-3 col-8 mx-auto">
 					<input type="password" class="form-control d-none" id="passwordConfirm" placeholder="Confirm password">
+					<label for="username">Confirm password</label>
 				</div>
-				<div class="mb-3 col-8 mx-auto">
+				<div class="form-floating mb-3 col-8 mx-auto">
 					<input type="email" class="form-control d-none" id="email" placeholder="Email adress">
+					<label for="username">Email adress</label>
 					<!-- <small id="emailHelp" class="form-text text-muted">We'll sell your email on darkweb.</small> -->
 				</div>
 				<div id="signUpButton2" class="mb-3 text-center mx-auto d-none">
-					<button type="button" class="btn btn-primary btn-block col-6" onclick="signUp()">Sign-Up</button>
+					<button type="button" class="btn btn-primary btn-block col-6" onclick="signUp()">Create an account</button>
 				</div>
 			</form>
 		</div>
@@ -74,9 +75,9 @@
 	</div>
 
 
+    <script src="assets/js/eventListeners.js"></script>
     <script src="assets/js/alerts.js"></script>
     <script src="assets/js/api.js"></script>
-    <script src="assets/js/eventListeners.js"></script>
     <script src="assets/js/scenes.js"></script>
     <script src="assets/js/userManagement.js"></script>
 
