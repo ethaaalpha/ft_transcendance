@@ -10,8 +10,8 @@ services:
       - .env
     ports:
       - 8545:8545
-    # volumes:
-      # - ./blockchain:/ethereum/
+    volumes:
+      - geth:/ethereum/
   # postgresql:
   #   container_name: postgresql
   #   image: postgres:alpine
@@ -66,3 +66,6 @@ services:
   #   depends_on:
   #     - daphne
   #   restart: on-failure
+
+volumes:
+  geth:
