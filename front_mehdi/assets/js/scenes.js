@@ -22,13 +22,13 @@ function changeScene(newScene) {
 		currentScene = "home";
 	}
 	else if (currentScene == "home" && newScene == "signIn") {//sign out
-		hideElement("titleSignUp", "passwordConfirm", "signUpButton", "email", "home");
+		hideElement("titleSignUp", "passwordConfirmDiv", "signUpButton", "emailDiv", "home");
 		unhideElement("titleSignIn", "signWith42Button", "signInButton", "forgotPasswordButton", "signForm");
 		currentScene = "signIn";
 	}
 	else if (currentScene == "signIn" && newScene == "signUp") {//sign up
 		hideElement("titleSignIn", "signWith42Button", "signInButton", "forgotPasswordButton")
-		unhideElement("titleSignUp", "passwordConfirm", "signUpButton", "email");
+		unhideElement("titleSignUp", "passwordConfirmDiv", "signUpButton", "emailDiv");
 	}
 
     console.log("La scène actuelle est maintenant:", currentScene);
