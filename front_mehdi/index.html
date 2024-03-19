@@ -18,7 +18,8 @@
 	<div class="container d-none" id="signForm">
 		<div class="row align-items-center justify-content-center vh-100">	
 			<div class="col-md-6 col-lg-4 login-form">
-				<h1 class="title fw-bold">Sign-in</h1>
+				<h1 id="titleSignIn" class="title fw-bold">SignIn</h1>
+				<h1 id="titleSignUp" class="title fw-bold d-none">SignUp</h1>
 				<form>
 				<!-- SIGN IN -->
 				<div class="form-floating mb-3 col-8 mx-auto">
@@ -49,7 +50,7 @@
 					<label for="username">Email adress</label>
 					<!-- <small id="emailHelp" class="form-text text-muted">We'll sell your email on darkweb.</small> -->
 				</div>
-				<div id="signUpButton2" class="mb-3 text-center mx-auto d-none">
+				<div id="signUpButton" class="mb-3 text-center mx-auto d-none">
 					<button type="button" class="btn btn-primary btn-block col-6" onclick="signUp()">Create an account</button>
 				</div>
 			</form>
