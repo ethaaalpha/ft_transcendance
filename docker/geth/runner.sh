@@ -2,34 +2,33 @@
 # Wroting passwords to files
 echo $NODE1_ACCOUNT_PASSWORD > node1/password.txt
 echo $NODE2_ACCOUNT_PASSWORD > node2/password.txt
-echo $TESTS_ACCOUNT_PASSWORD > test.password.txt
 
 echo 'Generating nodes accounts'
 # Generating account for the node 1 (signer)
-geth account new --datadir node1 --password node1/password.txt 2> temp | grep "Public address of the key" > node1.key
+geth account new --datadir node1 --password node1/password.txt 2> temp | grep "Public address of the key" > keys_acc/node1.key
 
 # Generating account for the node 2
-geth account new --datadir node2 --password node2/password.txt 2> temp| grep "Public address of the key" > node2.key
+geth account new --datadir node2 --password node2/password.txt 2> temp| grep "Public address of the key" > keys_acc/node2.key
 
 # Tests accounts !
 echo 'Generating tests accounts'
-geth account new --datadir node2 --password test.password.txt 2> temp | grep "Public address of the key" > test1.key
-geth account new --datadir node2 --password test.password.txt 2> temp | grep "Public address of the key" > test2.key
-geth account new --datadir node2 --password test.password.txt 2> temp | grep "Public address of the key" > test3.key
-geth account new --datadir node2 --password test.password.txt 2> temp | grep "Public address of the key" > test4.key
-geth account new --datadir node2 --password test.password.txt 2> temp | grep "Public address of the key" > test5.key
+geth account new --datadir node2 --password node2/password.txt 2> temp | grep "Public address of the key" > keys_acc/test1.key
+geth account new --datadir node2 --password node2/password.txt 2> temp | grep "Public address of the key" > keys_acc/test2.key
+geth account new --datadir node2 --password node2/password.txt 2> temp | grep "Public address of the key" > keys_acc/test3.key
+geth account new --datadir node2 --password node2/password.txt 2> temp | grep "Public address of the key" > keys_acc/test4.key
+geth account new --datadir node2 --password node2/password.txt 2> temp | grep "Public address of the key" > keys_acc/test5.key
 
 
 ## Genesis.json & Accounts
 # Replacement of the generated accounts
 echo 'Editing genesis.json file !'
-NODE1_PUBLIC__ADDR=$(python /script/tools.py address node1.key)
-NODE2_PUBLIC__ADDR=$(python /script/tools.py address node2.key)
-TEST1_ACCOUNT__ADDR=$(python /script/tools.py address test1.key)
-TEST2_ACCOUNT__ADDR=$(python /script/tools.py address test2.key)
-TEST3_ACCOUNT__ADDR=$(python /script/tools.py address test3.key)
-TEST4_ACCOUNT__ADDR=$(python /script/tools.py address test4.key)
-TEST5_ACCOUNT__ADDR=$(python /script/tools.py address test5.key)
+NODE1_PUBLIC__ADDR=$(python /script/tools.py address keys_acc/node1.key)
+NODE2_PUBLIC__ADDR=$(python /script/tools.py address keys_acc/node2.key)
+TEST1_ACCOUNT__ADDR=$(python /script/tools.py address keys_acc/test1.key)
+TEST2_ACCOUNT__ADDR=$(python /script/tools.py address keys_acc/test2.key)
+TEST3_ACCOUNT__ADDR=$(python /script/tools.py address keys_acc/test3.key)
+TEST4_ACCOUNT__ADDR=$(python /script/tools.py address keys_acc/test4.key)
+TEST5_ACCOUNT__ADDR=$(python /script/tools.py address keys_acc/test5.key)
 
 python /script/tools.py replace genesis.json 'NETWORK_ID' ${NETWORK_ID}
 python /script/tools.py replace genesis.json 'NODE1_PUBLIC__ADDR' ${NODE1_PUBLIC__ADDR}
