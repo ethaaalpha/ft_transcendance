@@ -9,9 +9,8 @@ else
 	echo $NODE1_ACCOUNT_PASSWORD > node1/password.txt
 	echo $NODE2_ACCOUNT_PASSWORD > node2/password.txt
 
-	for i in ${seq 1 6};
-	do
-		echo $NODE2_ACCOUNT_PASSWORD > password.config
+	for i in $(seq 1 6); do
+		printf "$NODE2_ACCOUNT_PASSWORD\n" >> password.config
 	done
 
 	echo 'Generating nodes accounts'
@@ -51,7 +50,9 @@ else
 	python /script/tools.py replace genesis.json 'TEST5_ACCOUNT__ADDR' ${TEST5_ACCOUNT__ADDR}
 	python /script/tools.py replace genesis.json 'INITIAL_SIGNER__ADDRESS' ${NODE1_PUBLIC__ADDR:2}
 
-	printf "${NODE2_ACCOUNT__ADDR},${TEST1_ACCOUNT__ADDR}${TEST2_ACCOUNT__ADDR},\n${TEST3_ACCOUNT__ADDR},\n${TEST4_ACCOUNT__ADDR},\n${TEST5_ACCOUNT__ADDR}" > accounts.config
+	printf "${NODE2_PUBLIC__ADDR},${TEST1_ACCOUNT__ADDR},${TEST2_ACCOUNT__ADDR},${TEST3_ACCOUNT__ADDR},${TEST4_ACCOUNT__ADDR},${TEST5_ACCOUNT__ADDR}" > accounts.config
+	echo $NODE1_PUBLIC__ADDR > n1.config
+
 	# Nodes inits
 	echo 'Initializing nodes !'
 	geth --datadir node1 init genesis.json
@@ -61,18 +62,16 @@ else
 	bootnode -genkey bnode/boot.key
 fi
 
-# ALL_ACCOUNTS_N2=$(cat accounts.config)
-# ALL_PASSWORD_N2=$(cat password.config)
-## Runners
-# echo 'Running bootnode and nodes !'
-# ENODE=$(bootnode -nodekeyhex $(cat bnode/boot.key) -writeaddress)
-# RUNNER_1="geth --datadir node1 --port 30306 --bootnodes enode://${ENODE}@127.0.0.1:0?discport=30305 --networkid ${NETWORK_ID} --unlock ${NODE1_PUBLIC__ADDR} --password node1/password.txt --authrpc.port 8546 --mine --miner.etherbase ${NODE1_PUBLIC__ADDR}"
-# RUNNER_2="geth --datadir node2 --port 30307 --bootnodes enode://${ENODE}@127.0.0.1:0?discport=30305 --networkid ${NETWORK_ID} \
-# --unlock ${NODE2_PUBLIC__ADDR} --password node2/password.txt \
-# --http --allow-insecure-unlock --http.corsdomain '*' --http.port 8545 --http.addr 0.0.0.0"
-# RUNNER_BN="bootnode -nodekey bnode/boot.key -addr :30305"
+ALL_ACCOUNTS_N2=$(cat accounts.config)
+NODE1_PUBLIC__ADDR=$(cat n1.config)
 
-# ${RUNNER_BN} & ${RUNNER_1} & ${RUNNER_2}
+# Runners
+echo 'Running bootnode and nodes !'
+ENODE=$(bootnode -nodekeyhex $(cat bnode/boot.key) -writeaddress)
+RUNNER_BN="bootnode -nodekey bnode/boot.key -addr :30305"
+RUNNER_1="geth --datadir node1 --port 30306 --bootnodes enode://${ENODE}@127.0.0.1:0?discport=30305 --networkid ${NETWORK_ID} --unlock ${NODE1_PUBLIC__ADDR} --password node1/password.txt --authrpc.port 8546 --mine --miner.etherbase ${NODE1_PUBLIC__ADDR}"
+RUNNER_2="geth --datadir node2 --port 30307 --bootnodes enode://${ENODE}@127.0.0.1:0?discport=30305 --networkid ${NETWORK_ID} \
+--unlock ${ALL_ACCOUNTS_N2} --password password.config \
+--http --allow-insecure-unlock --http.corsdomain '*' --http.port 8545 --http.addr 0.0.0.0"
 
-
-
+${RUNNER_BN} & ${RUNNER_1} & ${RUNNER_2}
