@@ -10,7 +10,7 @@ import { sleep } from './utilsPong.js';
 var view;
 var appli = document.querySelector('#app');
 if (!appli) {
-    console.log("coucou");
+    console.log("querySelector error");
 }
 var data = null;
 const socketTmp = new WebSocket("wss://" + window.location.host + "/api/coordination/")
@@ -69,12 +69,12 @@ async function loadTexture() {
             texture.mapping = THREE.EquirectangularReflectionMapping;
             var textureRev = texture.clone()
             textureRev.flipY = false;
-			gameData.sceneMenu.background = texture
-			gameData.sceneMenu.environment = texture
-            gameData.sceneGameLocal.background = texture
-			gameData.sceneGameLocal.environment = texture
-            gameData.sceneGameInv.background = textureRev
-			gameData.sceneGameInv.environment = textureRev
+			gameData.sceneMenu.background = texture;
+			gameData.sceneMenu.environment = texture;
+            gameData.sceneGameLocal.background = texture;
+			gameData.sceneGameLocal.environment = texture;
+            gameData.sceneGameInv.background = textureRev;
+			gameData.sceneGameInv.environment = textureRev;
 
             var controlsMenu = new OrbitControls(gameData.camera, gameData.rendererMenu.domElement);
 			controlsMenu.enableZoom = false;
@@ -91,25 +91,29 @@ async function loadTexture() {
 
 async function createMenu() {
     return new Promise((resolve, reject) => {
-		view = null;
         view = new Menu(status, resolve, updateStatus, gameData);
+		view = null;
     });
 }
+
 async function createGame() {
     return new Promise((resolve, reject) => {
         if (data.statusHost == true)
             view = new Game(status, resolve, updateStatus, gameData, data);
         else
             view = new GameInv(status, resolve, updateStatus, gameData, data);
+        view = null;
         data = null;
     });
 }
+
 async function createGameLocal() {
     return new Promise((resolve, reject) => {
-		view = null;
         view = new GameLocal(status, resolve, updateStatus, gameData);
+		view = null;
     });
 }
+
 function waitForData() {
     socketTmp.send(JSON.stringify({'event': 'matchmaking', 'data': {'action' : 'join'}}))
     return new Promise((resolve) => {
@@ -118,7 +122,6 @@ function waitForData() {
                 clearInterval(intervalId);
                 resolve();
             }
-            console.log(data)
         }, 500);
     });
 }

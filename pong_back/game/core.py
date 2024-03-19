@@ -27,7 +27,6 @@ class Game:
             self.goalP = False
 
     async def updateBall(self, data: dict):
-        print(self.ready, file=sys.stderr)
         if self.ready[0] == True and self.ready[1] == True:
             if (data['p1Pos']):
                 self.p1Pos = data['p1Pos']

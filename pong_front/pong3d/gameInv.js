@@ -28,7 +28,7 @@ class GameInv {
 		this.messageInterval = 10;
 		this.movement = new THREE.Vector3(0, 0, 0);
 		this.speed = 0.8;
-		this.speedBall = 0.25;
+		this.speedBall = 0.45;
 		this.frame = 0;
 		this.cycleScore = 0.5;
 		this.sign = true
@@ -41,7 +41,7 @@ class GameInv {
 		this.ball = null;
 		this.walls = [];
 		this.laser = null;
-		this.ballMovement = new THREE.Vector3(0, -0.25, 0);
+		this.ballMovement = new THREE.Vector3(0, -0.45, 0);
 		this.isCollision = null;
 		this.cameraRotation = new THREE.Euler();
 		this.controls = null;
@@ -156,7 +156,7 @@ class GameInv {
 	}
 	socketClose(event){
 		console.log('WebSocket connection closed');
-			this.status = {status:2};
+			this.status.status = 2;
 	}
 
 	socketInit(socket){

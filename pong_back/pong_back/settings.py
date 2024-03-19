@@ -158,7 +158,7 @@ MESSAGE_LENGTH_MAX = 1024
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-ALLOWED_HOSTS = [ 'localhost' ]
+ALLOWED_HOSTS = [ 'localhost', '10.13.6.4' ]
 
 
 # Channel Layer Configuration
