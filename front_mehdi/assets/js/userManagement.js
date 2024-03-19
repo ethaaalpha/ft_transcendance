@@ -49,7 +49,6 @@ function signIn() {
 function signUp() {
 	var username = document.getElementById("username").value;
 	var password = document.getElementById("password").value;
-	// var passwordConfirm = document.getElementById("passwordConfirm");
 	var email = document.getElementById("email").value;
 	
     var formData = new FormData();
@@ -107,6 +106,7 @@ function forgotPassword() {
 	(data) => {
 		if (data.status === 200) {
 			console.log("password sent!");
+			appendAlert('Your new password has been sent to you email!', 'warning');
 		} else {
 			console.log("Erreur de connexion");
 		}
