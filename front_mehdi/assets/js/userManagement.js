@@ -24,6 +24,14 @@ function signIn() {
 
 	fetchData("/api/auth/login?mode=intern", 'POST', formData).then(
 		(data) => {
+			if (data.status === 403) { // mauvais mdp
+				// notif mdp mauvais ?
+				// effacer champ mdp
+			}
+			if (data.status === 400) { // compte existe pas, gonna become 404
+				changeScene("signUp");
+				document.getElementById("passwordConfirm").focus();
+			}
 			if (data.status === 200) {
 				console.log("Connexion réussie");
 				changeScene("home");
