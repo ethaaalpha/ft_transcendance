@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/module/controls/OrbitControls.js';
 
 import { TessellateModifier } from 'three/module/modifiers/TessellateModifier.js';
 import { TextGeometry } from 'three/module/geometries/TextGeometry.js';
@@ -24,29 +23,18 @@ class Game {
 		this.directionalLight = gameData.directionalLight;
 		this.directionalLight2 = gameData.directionalLight2;
 		this.statusCallback = statusCallback;
-		this.lastMessageSentTime = 0;
-		this.messageInterval = 10;
 		this.movement = new THREE.Vector3(0, 0, 0);
 		this.speed = 0.8;
-		this.speedBall = 0.25;
-		this.frame = 0;
+		this.speedBall = 0.45;
 		this.cycleScore = 0.5;
 		this.goalP = false;
 		this.sign = true;
 		this.explode = false;
-		this.player1 = null;
-		this.player2 = null;
 		this.p1Score = 0;
 		this.p2Score = 0;
-		this.score = null;
-		this.ball = null;
-		this.walls = [];
-		this.laser = null;
-		this.ballMovement = new THREE.Vector3(0, -0.25, 0);
+		this.ballMovement = new THREE.Vector3(0, -0.45, 0);
 		this.isCollision = false;
 		this.cameraRotation = new THREE.Euler();
-		this.controls = null;
-		this.texture = null;
 		this.uniforms = {
 			amplitude: {value: 0.0},
 		};
@@ -114,10 +102,10 @@ class Game {
 		geometry = tessellateModifier.modify(geometry);
 		const numFaces = geometry.attributes.position.count / 3;
 
-		const colors = new Float32Array( numFaces * 3 * 3 );
-		const displacement = new Float32Array( numFaces * 3 * 3 );
+		const colors = new Float32Array(numFaces * 3 * 3);
+		const displacement = new Float32Array(numFaces * 3 * 3);
 		const color = new THREE.Color();
-		for ( let f = 0; f < numFaces; f ++ ) {
+		for (let f = 0; f < numFaces; f ++) {
 			const index = 9 * f;
 			const choice = Math.random();
 			let r;
@@ -131,18 +119,18 @@ class Game {
 			const dx = Math.random() * 2 - 1;
 			const dy = Math.random() * 2 - 1;
 			const dz = Math.random() * 2 - 1;
-			for ( let i = 0; i < 3; i ++ ) {
-				colors[ index + ( 3 * i ) ] = color.r;
-				colors[ index + ( 3 * i ) + 1 ] = color.g;
-				colors[ index + ( 3 * i ) + 2 ] = color.b;
-				displacement[ index + ( 3 * i ) ] = dx;
-				displacement[ index + ( 3 * i ) + 1 ] = dy;
-				displacement[ index + ( 3 * i ) + 2 ] = dz;
+			for (let i = 0; i < 3; i ++) {
+				colors[index + ( 3 * i )] = color.r;
+				colors[index + ( 3 * i ) + 1] = color.g;
+				colors[index + ( 3 * i ) + 2] = color.b;
+				displacement[index + ( 3 * i )] = dx;
+				displacement[index + ( 3 * i ) + 1] = dy;
+				displacement[index + ( 3 * i ) + 2] = dz;
 			}
 		}
-		geometry.setAttribute( 'customColor', new THREE.BufferAttribute( colors, 3 ) );
-		geometry.setAttribute( 'displacement', new THREE.BufferAttribute( displacement, 3 ) );
-		const shaderMaterial = new THREE.ShaderMaterial( {
+		geometry.setAttribute('customColor', new THREE.BufferAttribute(colors, 3));
+		geometry.setAttribute('displacement', new THREE.BufferAttribute(displacement, 3));
+		const shaderMaterial = new THREE.ShaderMaterial({
 		 	uniforms: this.uniforms,
 		 	vertexShader: await loadShader('/static/pong3d/shader.vert'),
 		 	fragmentShader: await loadShader('/static/pong3d/shader.frag'),
@@ -152,21 +140,18 @@ class Game {
 		this.scene.add(this.score);
 		this.score.position.set(1, 22, 0);
 	}
-	socketClose(event){
+	socketClose(){
 		console.log('WebSocket connection closed');
-			this.status = {status:2};
+			this.status.status = 0;
 	}
 
 	socketInit(socket){
-		socket.onopen = function(event) {
+		socket.onopen = function() {
 			console.log('WebSocket connection established');
 		};
 		
 		this.socket.onmessage = async (event) => {
 			const response = JSON.parse(event.data);
-			if (response.event == 'end'){
-				this.status.status = 0;
-			}
 			this.data = response.data;
 			if (this.data.p2Pos && this.data.p2Pos.length === 3)
 			this.player2.position.set(this.data.p2Pos[0],this.data.p2Pos[1],this.data.p2Pos[2]);
@@ -206,13 +191,10 @@ class Game {
 	createLaser() {
 		const geometry = new THREE.BufferGeometry();
 		const material = new THREE.LineBasicMaterial({ color: 0x00ff00 });
-
 		const points = [];
 		points.push(new THREE.Vector3(0, 0, 0));
 		points.push(new THREE.Vector3(0, -13, 0));
-
 		geometry.setFromPoints(points);
-
 		const laser = new THREE.Line(geometry, material);
 		this.scene.add(laser);
 		return laser;
@@ -255,6 +237,7 @@ class Game {
 			this.ballMovement.z *= -1;
 			this.ballMovement.normalize();
 			this.ballMovement.multiplyScalar(this.speedBall)
+			console.log(this.ballMovement)
 		}
 	}
 	
@@ -268,22 +251,12 @@ class Game {
 		else
 			testAxes = axes > 0
 		const collision = ballBoundingBox.intersectsBox(elementBoundingBox);
+		if(collision)
+			console.log(testAxes)
 		if (collision && testAxes) {
 			axes *= -1;
 		}
 		return axes;
-	}
-	
-	moveBallY(collision) {
-		//this.ballMovement.normalize();
-		//this.ballMovement.multiplyScalar(this.speedBall);
-		while (this.isCollision) {
-			const ballBoundingBox = new THREE.Box3().setFromObject(this.ball);
-			const elementBoundingBox = new THREE.Box3().setFromObject(this.isCollision);
-			collision = ballBoundingBox.intersectsBox(elementBoundingBox);
-			if (!collision)
-			this.isCollision = null;
-		}
 	}
 
 	async animate() {
@@ -306,8 +279,6 @@ class Game {
 		this.renderer.render(this.scene, this.camera);
 		if (this.status['status'] === 1)
 			requestAnimationFrame(() => this.animate());
-		else
-			this.destroy()
 	}
 
 	async checkPoint(){
@@ -322,9 +293,11 @@ class Game {
 			this.explode = true;
 			this.ballMovement.x = 0;
 			this.ballMovement.z = 0;
-			//updateScoreDisplay(this.p1Score, this.p2Score, this.hudScore);
-			await sleep(1500);
-			this.load3d();
+			await sleep(1500)
+			console.log(this.p1Score)
+			console.log(this.p2Score)
+			if (this.p1Score < 5 && this.p2Score < 5)
+				await this.load3d();
 			this.explode = false;
 			this.uniforms.amplitude.value = 0.0;
 			this.cycleScore = 0.1
@@ -345,32 +318,25 @@ class Game {
 			this.ballMovement.x = this.checkCollisionTarget(this.walls[3], this.ballMovement.x, true);
 			this.ballMovement.z = this.checkCollisionTarget(this.walls[2], this.ballMovement.z, true);
 			this.ballMovement.z = this.checkCollisionTarget(this.walls[1], this.ballMovement.z, false);
-			//this.moveBallY(collision);
 			this.checkCollisionWithP1(this.player1, collision);
 			this.checkCollisionWithP2(this.player2, collision);
-
 			const directionZ = new THREE.Vector3(0, 0, 1).applyEuler(this.cameraRotation);
 			directionZ.y = 0;
 			const directionX = new THREE.Vector3(1, 0, 0).applyEuler(this.cameraRotation);
 			directionX.y = 0;
-			if (this.moveUp) {
+			if (this.moveUp)
 				this.movement.sub(directionZ);
-			}
-			if (this.moveDown) {
+			if (this.moveDown)
 				this.movement.add(directionZ);
-			}
-			if (this.moveLeft) {
+			if (this.moveLeft)
 				this.movement.sub(directionX);
-			}
-			if (this.moveRight) {
+			if (this.moveRight)
 				this.movement.add(directionX);
-			}
 			this.movement.normalize();
 			this.movement.multiplyScalar(this.speed);
 			this.player1.position.add(this.movement);
-			if (!this.moveUp && !this.moveDown && !this.moveLeft && !this.moveRight) {
+			if (!this.moveUp && !this.moveDown && !this.moveLeft && !this.moveRight)
 				this.movement.set(0, 0, 0);
-			}
 			this.data = {
 				score: [this.p1Score, this.p2Score],
 				speedBall: this.speedBall,
@@ -428,7 +394,7 @@ class Game {
 	}
 
 	async sendMessageToServer(message) {
-		return new Promise((resolve, reject) => {
+		return new Promise(() => {
 			const jsonMessage = JSON.stringify(message);
 			this.socket.send(jsonMessage);
 			}
@@ -444,13 +410,10 @@ class Game {
 	
 	destroy() {
 		document.removeEventListener('keydown',this.keyD);
+		document.removeEventListener('keyup',this.keyU);
 		window.removeEventListener('resize',this.onResize);
 		this.appli.removeChild(this.renderer.domElement);
 		this.scene.clear();
-		this.socket.close();
-		if (this.texture) {
-			this.texture.dispose();
-		}
 		this.appli = null;
 		this.renderer = null;
 		this.camera = null;
@@ -459,12 +422,7 @@ class Game {
 		this.directionalLight = null;
 		this.directionalLight2 = null;
 		this.clock = null;
-		this.RGBELoad = null;
-		this.app = null;
-		this.texture = null;
-		this.loadergl = null;
-		this.loader = null;
-		this.RGBELoad = null;
+		this.cameraRotation = null;
 		this.statusCallback(this.status)
 		this.resolve(this.status);
 	}
