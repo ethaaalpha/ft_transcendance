@@ -69,8 +69,8 @@ NODE1_PUBLIC__ADDR=$(cat n1.config)
 echo 'Running bootnode and nodes !'
 ENODE=$(bootnode -nodekeyhex $(cat bnode/boot.key) -writeaddress)
 RUNNER_BN="bootnode -nodekey bnode/boot.key -addr :30305"
-RUNNER_1="geth --datadir node1 --port 30306 --bootnodes enode://${ENODE}@127.0.0.1:0?discport=30305 --networkid ${NETWORK_ID} --unlock ${NODE1_PUBLIC__ADDR} --password node1/password.txt --authrpc.port 8546 --mine --miner.etherbase ${NODE1_PUBLIC__ADDR}"
-RUNNER_2="geth --datadir node2 --port 30307 --bootnodes enode://${ENODE}@127.0.0.1:0?discport=30305 --networkid ${NETWORK_ID} \
+RUNNER_1="geth --cache 128 --datadir node1 --port 30306 --bootnodes enode://${ENODE}@127.0.0.1:0?discport=30305 --networkid ${NETWORK_ID} --unlock ${NODE1_PUBLIC__ADDR} --password node1/password.txt --authrpc.port 8546 --mine --miner.etherbase ${NODE1_PUBLIC__ADDR}"
+RUNNER_2="geth --cache 128 --datadir node2 --port 30307 --bootnodes enode://${ENODE}@127.0.0.1:0?discport=30305 --networkid ${NETWORK_ID} \
 --unlock ${ALL_ACCOUNTS_N2} --password password.config \
 --http --allow-insecure-unlock --http.corsdomain '*' --http.port 8545 --http.addr 0.0.0.0"
 

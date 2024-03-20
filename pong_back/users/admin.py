@@ -3,6 +3,7 @@ from django.contrib import admin
 from stats.models import Stats
 from conversations.models import Conversation, Message
 from game.models import Room, Match
+from blockchain.models import SmartContracts
 
 admin.site.register(Profile)
 admin.site.register(Stats)
@@ -14,3 +15,4 @@ class MatchAdmin(admin.ModelAdmin):
     readonly_fields = ('date',)
 
 admin.site.register(Match, MatchAdmin)
+admin.site.register(SmartContracts)
