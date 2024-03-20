@@ -18,10 +18,14 @@
 	<div class="container d-none" id="signForm">
 		<div class="row align-items-center justify-content-center vh-100">	
 			<div class="col-md-6 col-lg-4 login-form">
-				<h1 id="titleSignIn" class="title fw-bold">SignIn</h1>
-				<h1 id="titleSignUp" class="title fw-bold d-none">SignUp</h1>
+				<h1 id="titleSignIn" class="title mb-3 fw-bold">SignIn</h1>
+				<h1 id="titleSignUp" class="title mb-3 fw-bold d-none">SignUp</h1>
 				<form>
 				<!-- SIGN IN -->
+				<div class="mb-3 text-center mx-auto">
+					<button type="button" class="btn btn-success btn-block col-8" id="signWith42Button" onclick="signWith42()">Continue with 42</button>
+				</div>
+				<div class="mb-3 text-center mx-auto">OR</div>
 				<div class="form-floating mb-3 col-8 mx-auto">
 					<input type="text" class="form-control" id="username" placeholder="Username">
 					<label for="username">Username</label>
@@ -31,13 +35,10 @@
 					<label for="username">Password</label>
 				</div>
 				<div class="mb-3 text-center mx-auto">
-					<button type="button" class="btn btn-primary btn-block col-6" id="signInButton" onclick="signIn()">Continue with username</button>
+					<button type="button" class="btn btn-success btn-block col-8" id="signInButton" onclick="signIn()">Continue with username</button>
 				</div>
 				<div class="mb-3 text-center mx-auto">
-					<button type="button" class="btn btn-primary btn-block col-6" id="signWith42Button" onclick="signWith42()">Continue with 42</button>
-				</div>
-				<div class="mb-3 text-center mx-auto">
-					<button type="button" class="btn btn-primary btn-block col-6" id="forgotPasswordButton" onclick="forgotPassword()">Forgot password?</button>
+					<button type="button" class="btn btn-success btn-block col-8" id="forgotPasswordButton" onclick="forgotPassword()">Forgot password?</button>
 				</div>
 				
 				<!-- SIGN UP -->
