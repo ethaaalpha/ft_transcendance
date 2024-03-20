@@ -1,5 +1,6 @@
 from web3 import Web3
 import socket
+from solcx import compile_source
 import sys
 
 def getIp(domain):
@@ -10,8 +11,23 @@ class Web3Interactions:
 
 	def __init__(self) -> None:
 		self.link = Web3(Web3.HTTPProvider(f'http://{getIp('geth')}:8545'))
-		print(f'vici la connection {self.link.eth.get_balance("0xFE40B386cb91Eb2bb18C8cb4c67E24D0BB386A7f")} \n', file=sys.stderr)
 
 	def create_contract(self, solc_file: str):
+		with open(solc_file, 'r') as file:
+			data = file.read()
+
+		compiled_solc = compile_source(data, ['abi', 'bin'])
+		contract_interface = compiled_solc.popitem()
+		bytecode = contract_interface['bin']
+		abi = contract_interface['abi']
+		self.link.eth.default_account = self.link.eth.accounts[0]
+
+		contract = self.link.eth.contract(abi=abi, bytecode=bytecode)
+		tx_hash = contract.constructor().transact()
+		tx_receipt = self.link.eth.wait_for_transaction_receipt(tx_hash)
+		print(tx_receipt, file=sys.stderr)
+		
+
+
 		return ()
 	
