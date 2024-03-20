@@ -1,3 +1,4 @@
+python /script/solc-installer.py
 python manage.py makemigrations conversations game stats users blockchain
 python manage.py makemigrations
 python manage.py migrate

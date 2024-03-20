@@ -12,6 +12,7 @@ class BlockchainConfig(AppConfig):
 
 		storage = ContractStorage.contract()
 		if not storage:
-			w = Web3Interactions()
-			w.create_contract('blockchain/contract.sol')
+			return
+			# w = Web3Interactions()
+			# w.create_contract('blockchain/contract.sol')
 		pass
