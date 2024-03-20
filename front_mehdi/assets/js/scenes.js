@@ -23,11 +23,11 @@ function changeScene(newScene) {
 	}
 	else if (currentScene == "home" && newScene == "signIn") {//sign out
 		hideElement("titleSignUp", "passwordConfirmDiv", "signUpButton", "emailDiv", "home");
-		unhideElement("titleSignIn", "signWith42Button", "signInButton", "forgotPasswordButton", "signForm");
+		unhideElement("titleSignIn", "signWith42Button", "signInButton", "forgotPasswordButton", "signForm", "orDiv");
 		currentScene = "signIn";
 	}
 	else if (currentScene == "signIn" && newScene == "signUp") {//sign up
-		hideElement("titleSignIn", "signWith42Button", "signInButton", "forgotPasswordButton")
+		hideElement("titleSignIn", "signWith42Button", "signInButton", "forgotPasswordButton", "orDiv")
 		unhideElement("titleSignUp", "passwordConfirmDiv", "signUpButton", "emailDiv");
 	}
 
