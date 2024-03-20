@@ -1,17 +1,17 @@
 version: '3.8'
 
 services:
-  geth:
-    container_name: geth
-    build:
-      context: docker/geth
-      dockerfile: geth.dockerfile
-    env_file:
-      - .env
-    ports:
-      - 8545:8545
-    volumes:
-      - geth:/ethereum/
+  # geth:
+  #   container_name: geth
+  #   build:
+  #     context: docker/geth
+  #     dockerfile: geth.dockerfile
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - 8545:8545
+  #   volumes:
+  #     - geth:/ethereum/
       
   postgresql:
     container_name: postgresql

@@ -44,7 +44,8 @@ INSTALLED_APPS = [
 	'activity',
 	'conversations',
 	'game',
-	'coordination'
+	'coordination',
+	'blockchain'
 ]
 
 MIDDLEWARE = [

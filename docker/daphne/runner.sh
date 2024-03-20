@@ -1,4 +1,4 @@
-python manage.py makemigrations conversations game stats users
+python manage.py makemigrations conversations game stats users blockchain
 python manage.py makemigrations
 python manage.py migrate
 python manage.py createsuperuser --noinput
