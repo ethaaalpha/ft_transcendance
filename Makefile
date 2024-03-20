@@ -10,7 +10,7 @@ NEEDED_DIR			= ${DATABASE_DIR} ${LIBS_DIR}
 DEFAULT_PICTURE		= "pokemon.png"
 
 # Containers
-CONTAINERS		 	= daphne nginx postgresql redis
+CONTAINERS		 	= daphne nginx postgresql redis geth
 
 all: 
 	$(MAKE) run

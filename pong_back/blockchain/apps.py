@@ -7,10 +7,10 @@ class BlockchainConfig(AppConfig):
 	name = 'blockchain'
 
 	def ready(self) -> None:
-		from .models import SmartContracts
-		import sys
-		contracts = SmartContracts.getAllContracts()
-		# contracts_name = [c.name for c in contracts]
-		# print(f'Les noms des contrats : {contracts}', file=sys.stderr)
+		from .storage import ContractStorage
+		from .interactions import Web3Interactions
 
+		storage = ContractStorage.contract()
+		if not storage:
+			w = Web3Interactions()
 		pass

@@ -1,4 +1,6 @@
 import sys
+from web3 import Web3
+
 
 def	extract_address(content):
 	"""
@@ -27,16 +29,22 @@ def getText(file):
 	f.close()
 	return (data)
 
+def blocktest():
+	w = Web3(Web3.HTTPProvider('http://localhost:8545'))
+	if w.is_connected():
+		exit(0)
+	exit(1)
+
 def main():
 	args = sys.argv
-	if (len(args) < 3):
-		return ('Must be used with parameters !')
 	
 	match args[1]:
 		case 'address':
 			return extract_address(getText(args[2]))
 		case 'replace':
 			return replace(args[2], args[3], args[4])
+		case 'test':
+			return blocktest()
 		case _:
 			return ("No match")
 
