@@ -1,24 +1,24 @@
 version: '3.8'
 
 services:
-  # geth:
-  #   container_name: geth
-  #   build:
-  #     context: docker/geth
-  #     dockerfile: geth.dockerfile
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - 8545:8545
-  #   volumes:
-  #     - geth:/ethereum/
-  #   networks:
-  #     - pongNetwork
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "python /script/tools.py test"]
-  #     interval: 5s
-  #     timeout: 10s
-  #     retries: 5
+  geth:
+    container_name: geth
+    build:
+      context: docker/geth
+      dockerfile: geth.dockerfile
+    env_file:
+      - .env
+    ports:
+      - 8545:8545
+    volumes:
+      - geth:/ethereum/
+    networks:
+      - pongNetwork
+    healthcheck:
+      test: ["CMD-SHELL", "python /script/tools.py test"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
       
   postgresql:
     container_name: postgresql
