@@ -3,7 +3,7 @@ from eth_account import Account
 from web3.middleware import geth_poa_middleware
 
 
-url = "http://localhost:8545"
+url = "http://geth:8545"
 target = "0xFE40B386cb91Eb2bb18C8cb4c67E24D0BB386A7f"
 
 

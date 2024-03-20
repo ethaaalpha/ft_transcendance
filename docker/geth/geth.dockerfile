@@ -1,6 +1,7 @@
 FROM ethereum/client-go:alltools-stable
 
-RUN apk add --no-cache python3 py3-pip
+RUN apk add python3 py3-pip && rm /usr/lib/python3.11/EXTERNALLY-MANAGED
+RUN pip install web3
 RUN mkdir -p /ethereum
 
 WORKDIR /ethereum
