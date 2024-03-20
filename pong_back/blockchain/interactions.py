@@ -26,8 +26,6 @@ class Web3Interactions:
 		tx_hash = contract.constructor().transact()
 		tx_receipt = self.link.eth.wait_for_transaction_receipt(tx_hash)
 		print(tx_receipt, file=sys.stderr)
-		
-
 
 		return ()
 	
