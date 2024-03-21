@@ -58,12 +58,14 @@ class ContractBuilder():
 
 
 class Contract(models.Model):
-	abi = models.TextField(blank=False)
+	abi = models.JSONField(blank=False)
 	address= models.TextField(blank=False, primary_key=True)
 
 	def getScore(self):
 		w3Int: Web3Interactions = Web3Interactions()
 		w3: Web3 = w3Int.getW3()
 		print(self.abi, file=sys.stderr)
-		contract = w3.eth.contract(abi=self.abi, address=self.address)	
-		return (contract.functions.getScores().call())
+		contract = w3.eth.contract(abi=self.abi, address=self.address)
+		result = contract.functions.getScores().call()
+		print(f'le resultat {result}', file=sys.stderr)	
+		return (result)
