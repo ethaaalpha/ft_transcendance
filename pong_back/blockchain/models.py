@@ -1,14 +1,14 @@
 from django.db import models
 from web3 import Web3
 from .interactions import Web3Interactions
+from threading import Thread
 import solcx
+import sys
 
-class Contract(models.Model):
-	abi = models.TextField(blank=False)
-	bin = models.TextField(blank=False)
-	address= models.TextField(default='null')
+class ContractBuilder():
 
-	def compile(self):
+	@staticmethod
+	def compile():
 		"""
 		Return (abi, bytecode)
 		"""
@@ -21,18 +21,40 @@ class Contract(models.Model):
 		abi = contract_interface['abi']
 	
 		return (abi, bytecode)
-
-	def upload(self, score):
+	
+	@staticmethod
+	def create(score, match_instance):
+		"""
+		Return Contract or None in case of blockchain fail !
+		"""
 		w3Int: Web3Interactions = Web3Interactions()
 		w3Int.loads()
 		w3: Web3 = w3Int.getW3()
-		
-		comp = self.compile()
+
+		comp = ContractBuilder.compile()
 		abi = comp[0]
 		bytecode = comp[1]
-		
+
 		contract = w3.eth.contract(abi=abi, bytecode=bytecode)
 		tx_hash = contract.constructor(score[0] & 0xFF, score[1] & 0xFF).transact()  # Parameters required by the Contract (constructor method)
 		tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
-		print(tx_receipt)
+		if (tx_receipt.status == 0):
+			return match_instance.setScore(None)
+		
+		print('FIN DU THREAD', file=sys.stderr)
+		contract_m = Contract(abi=abi, bin=bin, address=tx_receipt['contractAddress'])
+		contract_m.save()
+		match_instance.setScore(contract_m)
+	
+	@staticmethod
+	def threaded(score, match_instance):
+		print('DEBUT DU THREAD', file=sys.stderr)
+		thread = Thread(target=ContractBuilder.create, args=(score, match_instance))
+		thread.start()
+
+
+class Contract(models.Model):
+	abi = models.TextField(blank=False)
+	bin = models.TextField(blank=False)
+	address= models.TextField(blank=False, primary_key=True)
