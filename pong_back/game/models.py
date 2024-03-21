@@ -1,4 +1,5 @@
 from django.db import models
+from blockchain.models import Contract, ContractBuilder
 from coordination.tools import setInMatch, setOutMatch
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
@@ -30,8 +31,8 @@ class Match(models.Model):
 	invited = models.ForeignKey(User, on_delete=models.CASCADE, related_name='invited', blank=False)
 	id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
 	duration = models.DurationField(default=timedelta(minutes=0))
-	score = ArrayField(models.IntegerField(default=0), size=2, default=default_score)
-	link = models.URLField(default="www.localhost.fr")
+	contract = models.ForeignKey(Contract, null=True, default=None, on_delete=models.CASCADE)
+	winner = models.ForeignKey(User, default=None, null=True, on_delete=models.CASCADE)
 	date = models.DateTimeField(auto_now_add=True)
 	state = models.IntegerField(default=0) # 0 waiting, 1 started, 2 finish
 
@@ -86,13 +87,14 @@ class Match(models.Model):
 		"""
 		return Room.objects.filter(matchs=self).first()
 
-	def finish(self, score = None):
+	def finish(self, score, winner: User):
 		"""
 		Function to ended a match, this will run the generation of a blockchain smart contract\n
 		also run the checkup of next match if it is a tournament
 		"""
-		if score:
-			self.score = score
+		# Blockchain Runner !
+		ContractBuilder.threaded(score, self)
+		self.setWinner(winner)
 
 		#need to define duration
 		self.setState(2)
@@ -102,13 +104,14 @@ class Match(models.Model):
 
 		# here make the room update and check for the next match !
 		print(f'Le gagnant du match entre {self.host} et {self.invited} est {self.getWinner()} !!!!', file=sys.stderr)
-		room = self.room()
-		room.update()
+		# room = self.room()
+		# room.update()
 
 	def start(self):
 		from .core import GameMap
 
 		print(f'Match {self.id}, voici les adversaires host: {self.host} | invited: {self.invited}', file=sys.stderr)
+
 		# ici pour avertir les autres joueurs du prochain match !!!
 		self.send(self.host, 'next', {'match-id': str(self.id), 'host': self.host.username, 'invited': self.invited.username, 'statusHost': True})
 		self.send(self.invited, 'next', {'match-id': str(self.id), 'host': self.host.username, 'invited': self.invited.username, 'statusHost': False})
@@ -116,19 +119,34 @@ class Match(models.Model):
 		self.setState(1)
 
 	def getWinner(self) -> User:
-		if self.score[0] > self.score[1]:
+		if self.winner == self.host:
 			return self.host
 		return self.invited
 
 	def getLoser(self) -> User:
-		if self.score[0] > self.score[1]:
-			return self.invited
-		return self.host
+		if self.winner != self.host:
+			return self.host
+		return self.invited
 	
+	def setWinner(self, winner: User):
+		self.winner = winner
+		self.save()
+
 	def setState(self, state: int):
 		self.state = state
 		self.save()
 
+	def getScore(self):
+		if not self.contract:
+			return (0, 0)
+		else:
+			self.contract.getScore()
+
+	def setScore(self, score):
+		self.contract = score
+		self.save()
+
+	
 	def toJson(self) -> dict | None:
 		if (self.state != 2):
 			return None
@@ -137,8 +155,7 @@ class Match(models.Model):
 				'id': self.id,
 				'host': self.host.username,
 				'invited': self.invited.username,
-				'score': self.score,
-				'link': self.link,
+				'score': self.getScore(),
 				}
 		
 	

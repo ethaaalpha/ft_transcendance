@@ -6,10 +6,12 @@ from users.models import Profile
 from activity.notifier import ActivityNotifier
 
 def entryPoint(request: HttpRequest):
-	from blockchain.models import Contract
+	from game.models import Match
 
-	contract = Contract.objects.create()
-	contract.upload((0, 3))
+	m = Match(host=request.user, invited=request.user)
+	m.save()
+	m.start()
+	m.finish((0,1), request.user)
 
 	return (tResponses.OKAY.request())
 
