@@ -20,8 +20,8 @@
       z-index: -1; /* Pour placer en arrière-plan */
     }
 
-    .background1 {
-      background-image: url('assets/images/arrowBlack.png');
+    .backgroundZ0 {
+      background-image: url('assets/images/backgroundZ1.png');
       background-repeat: repeat-x;
       background-size: auto 100%;
       /* background-position: 0 0; */
@@ -29,9 +29,8 @@
 
     }
 
-    .background2 {
-      background-image: url('assets/images/arrowGreen.png');
-      /* background-image: url('assets/images/moireGreen.svg'); */
+    .backgroundZ1 {
+      background-image: url('assets/images/backgroundZ0.png');
       background-repeat: repeat-x; /* Ou repeat-y selon votre préférence */
       background-size: auto 100%;
       background-position: 0 0;
@@ -39,20 +38,20 @@
   </style>
 </head>
 <body>
-	<div class="background background2"></div> <!-- Ajout de la deuxième image -->
-	<div class="background background1"></div>
+	<div class="background backgroundZ1"></div> <!-- Ajout de la deuxième image -->
+	<div class="background backgroundZ0"></div>
 
   <script>
     window.onload = function() {
       var speed = 5; // Vitesse de défilement en pixels par seconde
-      var background1 = document.querySelector('.background1'); // Sélectionne uniquement l'élément avec la classe .background1
+      var backgroundZ0 = document.querySelector('.backgroundZ0'); // Sélectionne uniquement l'élément avec la classe .backgroundZ0
     
       var currentPosition = 0;
       var currentPosition2 = 0;
 
       function scrollBackground() {
         currentPosition += speed / 60;
-        background1.style.backgroundPositionX = currentPosition + 'px';
+        backgroundZ0.style.backgroundPositionX = currentPosition + 'px';
         requestAnimationFrame(scrollBackground);
       }
 
