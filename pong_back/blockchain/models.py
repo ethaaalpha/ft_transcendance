@@ -43,9 +43,12 @@ class ContractBuilder():
 			return match_instance.setScore(None)
 		
 		print('FIN DU THREAD', file=sys.stderr)
-		contract_m = Contract(abi=abi, bin=bin, address=tx_receipt['contractAddress'])
+		contract_m = Contract(abi=abi, address=tx_receipt['contractAddress'])
 		contract_m.save()
 		match_instance.setScore(contract_m)
+		print(abi, file=sys.stderr)
+		contract = w3.eth.contract(abi=abi, address=tx_receipt['contractAddress'])	
+		print(contract_m.getScore(), file=sys.stderr)
 	
 	@staticmethod
 	def threaded(score, match_instance):
@@ -56,5 +59,11 @@ class ContractBuilder():
 
 class Contract(models.Model):
 	abi = models.TextField(blank=False)
-	bin = models.TextField(blank=False)
 	address= models.TextField(blank=False, primary_key=True)
+
+	def getScore(self):
+		w3Int: Web3Interactions = Web3Interactions()
+		w3: Web3 = w3Int.getW3()
+		print(self.abi, file=sys.stderr)
+		contract = w3.eth.contract(abi=self.abi, address=self.address)	
+		return (contract.functions.getScores().call())
