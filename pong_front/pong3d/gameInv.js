@@ -1,16 +1,8 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/module/controls/OrbitControls.js';
-
 import { TessellateModifier } from 'three/module/modifiers/TessellateModifier.js';
 import { TextGeometry } from 'three/module/geometries/TextGeometry.js';
 import { FontLoader } from 'three/module/loaders/FontLoader.js';
-
-import { sleep } from './utilsPong.js'
-
-async function loadShader(url) {
-    const response = await fetch(url);
-    return response.text();
-}
+import { sleep, loadShader } from './utilsPong.js'
 
 class GameInv {
 	constructor(status, resolve,statusCallback, gameData, invited) {

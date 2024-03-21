@@ -1,16 +1,8 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/module/controls/OrbitControls.js';
-
 import { TessellateModifier } from 'three/module/modifiers/TessellateModifier.js';
 import { TextGeometry } from 'three/module/geometries/TextGeometry.js';
 import { FontLoader } from 'three/module/loaders/FontLoader.js';
-
-import { sleep } from './utilsPong.js'
-
-async function loadShader(url) {
-    const response = await fetch(url);
-    return response.text();
-}
+import { sleep, loadShader } from './utilsPong.js'
 
 class GameLocal {
 	constructor(status, resolve,statusCallback, gameData) {
@@ -124,19 +116,18 @@ class GameLocal {
 			const dx = Math.random() * 2 - 1;
 			const dy = Math.random() * 2 - 1;
 			const dz = Math.random() * 2 - 1;
-			for ( let i = 0; i < 3; i ++ ) {
-				colors[ index + ( 3 * i ) ] = color.r;
-				colors[ index + ( 3 * i ) + 1 ] = color.g;
-				colors[ index + ( 3 * i ) + 2 ] = color.b;
-				displacement[ index + ( 3 * i ) ] = dx;
-				displacement[ index + ( 3 * i ) + 1 ] = dy;
-				displacement[ index + ( 3 * i ) + 2 ] = dz;
+			for (let i = 0; i < 3; i ++) {
+				colors[index + (3 * i)] = color.r;
+				colors[index + (3 * i) + 1] = color.g;
+				colors[index + (3 * i) + 2] = color.b;
+				displacement[index + (3 * i)] = dx;
+				displacement[index + (3 * i) + 1] = dy;
+				displacement[index + (3 * i) + 2] = dz;
 			}
 		}
-		geometry.setAttribute( 'customColor', new THREE.BufferAttribute( colors, 3 ) );
-		geometry.setAttribute( 'displacement', new THREE.BufferAttribute( displacement, 3 ) );
-		//
-		const shaderMaterial = new THREE.ShaderMaterial( {
+		geometry.setAttribute('customColor', new THREE.BufferAttribute(colors, 3));
+		geometry.setAttribute('displacement', new THREE.BufferAttribute(displacement, 3));
+		const shaderMaterial = new THREE.ShaderMaterial({
 		 	uniforms: this.uniforms,
 		 	vertexShader: await loadShader('/static/pong3d/shader.vert'),
 		 	fragmentShader: await loadShader('/static/pong3d/shader.frag'),

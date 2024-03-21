@@ -5,7 +5,6 @@ import Game from './game.js'
 import Menu from './menu.js';
 import GameLocal from './gameLocal.js';
 import GameInv from './gameInv.js';
-import { sleep } from './utilsPong.js';
 
 var view;
 var appli = document.querySelector('#app');
@@ -75,14 +74,12 @@ async function loadTexture() {
 			gameData.sceneGameLocal.environment = texture;
             gameData.sceneGameInv.background = textureRev;
 			gameData.sceneGameInv.environment = textureRev;
-
-            var controlsMenu = new OrbitControls(gameData.camera, gameData.rendererMenu.domElement);
-			controlsMenu.enableZoom = false;
-            gameData.controlsMenu = controlsMenu;
-            var controlsGameLocal = new OrbitControls(gameData.camera, gameData.rendererGameLocal.domElement);
-			controlsGameLocal.enableZoom = false;
-            gameData.controlsGameLocal = controlsGameLocal;
-
+            gameData.controlsMenu = new OrbitControls(gameData.camera, gameData.rendererMenu.domElement);
+            gameData.controlsGameLocal = new OrbitControls(gameData.camera, gameData.rendererGameLocal.domElement);
+			gameData.controlsMenu.enableZoom = false;
+			gameData.controlsGameLocal.enableZoom = false;
+            gameData.controlsGameLocal.mouseButtons.RIGHT='';
+            gameData.controlsMenu.mouseButtons.RIGHT='';
 			status.status = 0;
             resolve();
         });
@@ -114,7 +111,7 @@ async function createGameLocal() {
     });
 }
 
-function waitForData() {
+function waitForData(time) {
     socketTmp.send(JSON.stringify({'event': 'matchmaking', 'data': {'action' : 'join'}}))
     return new Promise((resolve) => {
         const intervalId = setInterval(() => {
@@ -122,9 +119,9 @@ function waitForData() {
                 clearInterval(intervalId);
                 resolve();
             }
-        }, 500);
+        }, time);
     });
 }
 
 initialize();
-
+export { initialize }
