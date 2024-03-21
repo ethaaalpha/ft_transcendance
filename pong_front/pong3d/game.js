@@ -4,12 +4,7 @@ import { TessellateModifier } from 'three/module/modifiers/TessellateModifier.js
 import { TextGeometry } from 'three/module/geometries/TextGeometry.js';
 import { FontLoader } from 'three/module/loaders/FontLoader.js';
 
-import { sleep } from './utilsPong.js'
-
-async function loadShader(url) {
-    const response = await fetch(url);
-    return response.text();
-}
+import { sleep, waitForSocketConnection, loadShader } from './utilsPong.js'
 
 class Game {
 	constructor(status, resolve,statusCallback, gameData, invited) {
@@ -42,6 +37,8 @@ class Game {
 		this.itemTexture = this.textureLoader.load('/static/assets/pokeball-texture.jpg');
 		this.controls = gameData.controlsGameLocal;
 		this.init().then(() => {
+			waitForSocketConnection(this.socket, null);})
+			.then(() => {
 			this.appli.appendChild(this.renderer.domElement);
 			this.animate();
 			this.update();
@@ -51,6 +48,7 @@ class Game {
 	init() {
 		return new Promise((resolve, reject) => {
 			this.socket = new WebSocket('wss://' + window.location.host +'/api/game/');
+			this.socketInit(this.socket);
 			this.camera.position.set(0, 0, 60);
 			this.directionalLight.position.set(0, -18, 0).normalize();
 			this.scene.add(this.directionalLight);
@@ -73,7 +71,6 @@ class Game {
 			document.addEventListener('keyup', this.keyU);
 			window.addEventListener('resize',  this.onResize);
 			this.load3d();
-			this.socketInit(this.socket);
 			resolve();
 			});
 	}
