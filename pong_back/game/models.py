@@ -140,7 +140,7 @@ class Match(models.Model):
 		if not self.contract:
 			return (0, 0)
 		else:
-			self.contract.getScore()
+			return (self.contract.getScore())
 
 	def setScore(self, score):
 		self.contract = score
