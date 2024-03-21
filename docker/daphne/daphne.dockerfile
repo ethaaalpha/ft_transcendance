@@ -1,12 +1,12 @@
 FROM python:3.12.1-alpine
 
-RUN apk add --no-cache build-base libffi-dev bash git gcompat
+RUN apk add --no-cache build-base libffi-dev bash git gcompat cmake boost-dev z3
 
 
 ADD requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 ADD runner.sh /script/
-ADD solc-installer.py /script/
+# ADD solc-installer.py /script/
 
 WORKDIR /workdir/pong_back
 

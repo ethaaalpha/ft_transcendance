@@ -16,9 +16,9 @@ services:
       - pongNetwork
     healthcheck:
       test: ["CMD-SHELL", "python /script/tools.py test"]
-      interval: 5s
+      interval: 3s
       timeout: 10s
-      retries: 5
+      retries: 20
       
   postgresql:
     container_name: postgresql
@@ -58,8 +58,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
-      # geth:
-      #   condition: service_healthy
+      geth:
+        condition: service_healthy
     env_file:
       - .env
     restart: on-failure
