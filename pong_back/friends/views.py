@@ -4,44 +4,36 @@ from tools.responses import tResponses
 from .forms import FriendsFrom
 from users.models import Profile
 from activity.notifier import ActivityNotifier
+from random import randint
 
 def entryPoint(request: HttpRequest):
-	from game.models import Match
+	if (request.method == "POST"):
+		"""
+		/dashboard/friends
 
-	m = Match(host=request.user, invited=request.user)
-	m.save()
-	m.start()
-	m.finish((0,1), request.user)
+		action must be in the content body !
+		username must be in the content body !
+		"""
+		keysList = ['add', 'remove', 'block', 'unblock', 'accept', 'refuse']
+		viewsFunctions = [add, remove, block, unblock, accept, refuse]
 
-	return (tResponses.OKAY.request())
+		form = FriendsFrom(request.POST)
+		if (form.is_valid()):
+			action = form.cleaned_data['action']
+			target = Profile.getUserFromUsername(form.cleaned_data['username'])
 
-	# if (request.method == "POST"):
-	# 	"""
-	# 	/dashboard/friends
-
-	# 	action must be in the content body !
-	# 	username must be in the content body !
-	# 	"""
-	# 	keysList = ['add', 'remove', 'block', 'unblock', 'accept', 'refuse']
-	# 	viewsFunctions = [add, remove, block, unblock, accept, refuse]
-
-	# 	form = FriendsFrom(request.POST)
-	# 	if (form.is_valid()):
-	# 		action = form.cleaned_data['action']
-	# 		target = Profile.getUserFromUsername(form.cleaned_data['username'])
-
-	# 		if target == request.user:
-	# 			return (tResponses.BAD_REQUEST.request("You're stupid !"))
-	# 		if not target:
-	# 			return (tResponses.NOT_FOUND.request("Target user not found !"))
-	# 		for i in keysList:
-	# 			if i == action:
-	# 				return ((viewsFunctions[keysList.index(i)])(request.user, target, target.profile))
-	# 		return (tResponses.BAD_REQUEST.request("Unrecognized action !")) 
-	# 	else:
-	# 		return (tResponses.BAD_REQUEST.request("Form isn't valid !"))
-	# else:
-	# 	return (tResponses.BAD_REQUEST.request("Get request not supported here !"))
+			if target == request.user:
+				return (tResponses.BAD_REQUEST.request("You're stupid !"))
+			if not target:
+				return (tResponses.NOT_FOUND.request("Target user not found !"))
+			for i in keysList:
+				if i == action:
+					return ((viewsFunctions[keysList.index(i)])(request.user, target, target.profile))
+			return (tResponses.BAD_REQUEST.request("Unrecognized action !")) 
+		else:
+			return (tResponses.BAD_REQUEST.request("Form isn't valid !"))
+	else:
+		return (tResponses.BAD_REQUEST.request("Get request not supported here !"))
 	
 def add(user: User, target: User, targetProfile: Profile):
 	if user.profile.is_block(target):

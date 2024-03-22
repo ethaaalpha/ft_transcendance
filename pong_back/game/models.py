@@ -92,20 +92,16 @@ class Match(models.Model):
 		Function to ended a match, this will run the generation of a blockchain smart contract\n
 		also run the checkup of next match if it is a tournament
 		"""
-		# Blockchain Runner !
-		ContractBuilder.threaded(score, self)
+		
+		ContractBuilder.threaded(score, self) # Blockchain Runner !
 		self.setWinner(winner)
-
-		#need to define duration
-		self.setState(2)
-
-		# let free the loser
-		setOutMatch(self.getLoser())
+		self.setState(2) #need to define duration
+		setOutMatch(self.getLoser()) # let free the loser
 
 		# here make the room update and check for the next match !
 		print(f'Le gagnant du match entre {self.host} et {self.invited} est {self.getWinner()} !!!!', file=sys.stderr)
-		# room = self.room()
-		# room.update()
+		room = self.room()
+		room.update()
 
 	def start(self):
 		from .core import GameMap
