@@ -9,4 +9,8 @@ contract MatchStorage {
 		host = host_score;
 		invited = invited_score;
 	}
+
+	function getScores() public view returns (uint8, uint8) {
+        return (host, invited);
+    }
 }

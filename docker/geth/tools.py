@@ -1,7 +1,6 @@
 import sys
 from web3 import Web3
 
-
 def	extract_address(content):
 	"""
 	Should be in this format
