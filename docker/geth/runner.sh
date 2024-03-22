@@ -74,4 +74,4 @@ RUNNER_2="geth --verbosity 3 --cache 128 --datadir node2 --port 30307 --bootnode
 --unlock ${ALL_ACCOUNTS_N2} --password password.config \
 --http --allow-insecure-unlock --http.corsdomain '*' --http.port 8545 --http.addr 0.0.0.0"
 
-${RUNNER_BN} & ${RUNNER_1} & ${RUNNER_2}
+${RUNNER_BN} 2>/dev/null & ${RUNNER_1} 2>/dev/null & ${RUNNER_2} 2>/dev/null
