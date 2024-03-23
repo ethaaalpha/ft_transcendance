@@ -28,7 +28,7 @@ class Menu {
 		this.scene.add(this.directionalLight);
 		this.directionalLight2.position.set(-100, 100, -500).normalize();
 		this.scene.add(this.directionalLight2);
-		this.camera.position.z = 700;
+		this.camera.position.z = 500;
 		this.selected = 0;
 		this.mainButton = this.button[0];
 		this.onResize = () => this.onWindowResize();
@@ -42,8 +42,8 @@ class Menu {
 	createTxt (font) {
 		let i = 0;
 		const color = 0x05FF00;
-		const message = ["Matchmaking", "Local", "Tournament"]
-		const yPos = [0, -140, -280] 
+		const message = ["Matchmaking", "Taining", "Tournament"]
+		const yPos = [0, -100, -200] 
 		while (i < 3){
 			this.matDark = new THREE.LineBasicMaterial({
 				color: color,
@@ -52,10 +52,10 @@ class Menu {
 			this.matLite = new THREE.MeshBasicMaterial({
 				color: color,
 				transparent: true,
-				opacity: 0.6,
+				opacity: 0.9,
 				side: 2
 			});
-			const shapes = font.generateShapes(message[i], 100);
+			const shapes = font.generateShapes(message[i], 50);
 			const geometry = new THREE.ShapeGeometry(shapes);
 			geometry.computeBoundingBox();
 			const center = - 0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
@@ -98,19 +98,19 @@ class Menu {
 
 	load3D () {
 		this.loadergl = new GLTFLoader().setPath( '/static/assets/' );
-		this.loadergl.load( '/witcher/scene.gltf', (gltf) => {this.createobj(gltf)} );
+		this.loadergl.load( '/cube/scene.gltf', (gltf) => {this.createobj(gltf)} );
 		this.loader = new FontLoader();
-		this.loader.load( '/static/fonts/helvetiker_regular.typeface.json', (font) => { this.createTxt(font);});
+		this.loader.load( '/static/fonts/default2.json', (font) => { this.createTxt(font);});
 	}
-	createobj (gltf) {
+	async createobj (gltf) {
 		this.animMixer = new THREE.AnimationMixer(gltf.scene);
 		for (let i = 0; i < gltf.animations.length; i++) {
 			const animation = gltf.animations[i];
 			this.animMixer.clipAction(animation).play();
 		}
-		gltf.scene.scale.set(80, 80, 80);
-		gltf.scene.rotation.set(0, 4.7, 0);
-		gltf.scene.position.set(0, 200, 20);  
+		gltf.scene.scale.set(3, 3, 3);
+		gltf.scene.rotation.set(0.7853982, 0.7853982, 0);
+		gltf.scene.position.set(0, 220, 150);  
 		this.scene.add(gltf.scene);
 		this.renderer.render(this.scene, this.camera);
 	}

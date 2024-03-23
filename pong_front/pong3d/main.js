@@ -5,8 +5,11 @@ import Game from './game.js'
 import Menu from './menu.js';
 import GameLocal from './gameLocal.js';
 import GameInv from './gameInv.js';
+import { sleep } from './utilsPong.js';
 
 var view;
+var i = 0;
+var loaded = false;
 var appli = document.querySelector('#app');
 if (!appli) {
     console.log("querySelector error");
@@ -20,19 +23,20 @@ socketTmp.onmessage = (event) => {
         data = tmp.data;
 }
 var gameData = {
-        sceneGameLocal : new THREE.Scene(),
-        sceneGameInv : new THREE.Scene(),
-        sceneMenu : new THREE.Scene(),
-        rendererMenu : new THREE.WebGLRenderer(),
-        rendererGameLocal : new THREE.WebGLRenderer(),
-        camera : new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000),
-        directionalLight : new THREE.DirectionalLight(0xED7F10, 80),
-        directionalLight2 : new THREE.DirectionalLight(0xED7F10, 80),
-        clock : new THREE.Clock(),
-        raycaster : new THREE.Raycaster(),
-        appli : appli,
-        controlsMenu : null,
-        controlsGameLocal : null,
+    loadingManager : new THREE.LoadingManager(),
+    sceneGameLocal : new THREE.Scene(),
+    sceneGameInv : new THREE.Scene(),
+    sceneMenu : new THREE.Scene(),
+    rendererMenu : new THREE.WebGLRenderer(),
+    rendererGameLocal : new THREE.WebGLRenderer(),
+    camera : new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000),
+    directionalLight : new THREE.DirectionalLight(0xED7F10, 8),
+    directionalLight2 : new THREE.DirectionalLight(0xED7F10, 8),
+    clock : new THREE.Clock(),
+    raycaster : new THREE.Raycaster(),
+    appli : appli,
+    controlsMenu : null,
+    controlsGameLocal : null,
 }
 gameData.rendererMenu.setSize(window.innerWidth , window.innerHeight);
 gameData.rendererGameLocal.setSize(window.innerWidth , window.innerHeight);
@@ -48,6 +52,8 @@ async function initialize() {
 		while(1){
 			if (status.status === -1)
 				await loadTexture();
+            else if (loaded == false)
+                await sleep(100);
 			else if (status.status === 0)
 				await createMenu();
 			else if (status.status === 1){
@@ -61,10 +67,22 @@ async function initialize() {
         console.error("Error during initialization:", error);
     }
 }
+
+async function initLoading(){
+    gameData.loadingManager.onProgress = function(url, item, total){
+        console.log(url);
+    }
+    gameData.loadingManager.onLoad = function(){
+        console.log("finish");
+        loaded = true
+    }
+}
+
 async function loadTexture() {
     return new Promise((resolve, reject) => {
-        var RGBELoad = new RGBELoader().setPath('/static/assets/');
-        RGBELoad.load('witcher.hdr', (texture) => {
+        initLoading();
+        var RGBELoad = new RGBELoader(gameData.loadingManager).setPath('/static/assets/hdr/');
+        RGBELoad.load('d2.hdr', (texture) => {
             texture.mapping = THREE.EquirectangularReflectionMapping;
             var textureRev = texture.clone()
             textureRev.flipY = false;
