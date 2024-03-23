@@ -7,6 +7,7 @@ import { sleep, loadShader } from './utilsPong.js'
 class GameLocal {
 	constructor(status, resolve,statusCallback, gameData) {
 		this.renderer = gameData.rendererGameLocal;
+		this.loadingManager = gameData.loadingManager
 		this.camera = gameData.camera;
 		this.appli = gameData.appli;
 		this.status = status;
@@ -40,7 +41,7 @@ class GameLocal {
 		this.uniforms = {
 			amplitude: {value: 0.0},
 		};
-		this.textureLoader = new THREE.TextureLoader();
+		this.textureLoader = new THREE.TextureLoader(this.loadingManager);
 		this.itemTexture = this.textureLoader.load('/static/assets/pokeball-texture.jpg');
 		this.controls = gameData.controlsGameLocal;
 		this.controls.enableZoom = false;
@@ -80,8 +81,7 @@ class GameLocal {
 	}
 
 	load3d(){
-		console.log("try to load")
-		const loader = new FontLoader();
+		const loader = new FontLoader(this.loadingManager);
 		loader.load( '/static/fonts/helvetiker_regular.typeface.json', (font) => this.scoreInit(font))
 	}
 
@@ -100,7 +100,7 @@ class GameLocal {
 			bevelThickness: 5,
 		} );
 		geometry.center();
-		const tessellateModifier = new TessellateModifier(0.5, 2000);
+		const tessellateModifier = new TessellateModifier(4, 5);
 		geometry = tessellateModifier.modify(geometry);
 		const numFaces = geometry.attributes.position.count / 3;
 
@@ -317,7 +317,6 @@ class GameLocal {
 			this.explode = true;
 			this.ballMovement.x = 0;
 			this.ballMovement.z = 0;
-			//updateScoreDisplay(this.p1Score, this.p2Score, this.hudScore);
 			await sleep(1500)
 			console.log(this.p1Score)
 			console.log(this.p2Score)
@@ -341,8 +340,6 @@ class GameLocal {
 		this.ballMovement.x = this.checkCollisionTarget(this.walls[3], this.ballMovement.x);
 		this.ballMovement.z = this.checkCollisionTarget(this.walls[2], this.ballMovement.z);
 		this.ballMovement.z = this.checkCollisionTarget(this.walls[1], this.ballMovement.z);
-		// this.ballMovement.y = this.checkCollisionTarget(this.targets[0], this.ballMovement.y);
-		// this.ballMovement.y = this.checkCollisionTarget(this.targets[1], this.ballMovement.y);
 		this.moveBallY(collision);
 		this.checkCollisionWithY(this.player1, collision);
 		this.checkCollisionWithY(this.player2, collision);
@@ -420,15 +417,6 @@ class GameLocal {
 		}
 	}
 
-	async sendMessageToServer(message) {
-		return new Promise((resolve, reject) => {
-			const jsonMessage = JSON.stringify(message);
-			this.socket.send(jsonMessage);
-			//add error
-			}
-		);
-	}
-
 	onWindowResize() {
 		this.camera.aspect = window.innerWidth / window.innerHeight;
 		this.camera.updateProjectionMatrix();
@@ -441,12 +429,7 @@ class GameLocal {
 		this.appli.removeChild(this.renderer.domElement);
 		this.directionalLight.dispose();
 		this.directionalLight2.dispose();
-		//this.renderer.dispose();
-		//this.controls.dispose();
 		this.scene.clear();
-		if (this.texture) {
-			this.texture.dispose();
-		}
 		this.appli = null;
 		this.renderer = null;
 		this.camera = null;
@@ -455,12 +438,9 @@ class GameLocal {
 		this.directionalLight = null;
 		this.directionalLight2 = null;
 		this.clock = null;
-		this.RGBELoad = null;
-		this.app = null;
 		this.texture = null;
 		this.loadergl = null;
 		this.loader = null;
-		this.RGBELoad = null;
 		this.statusCallback(this.status)
 		this.resolve(this.status);
 	}
