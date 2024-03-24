@@ -17,23 +17,19 @@ function waitForData(time, socket) {
     });
 }
 
-async function waitForSocketConnection(socket, callback){
-    setTimeout(
-        function () {
-            if (socket.readyState === 1) {
-                if (callback != null){
-                    callback();
-                }
-            } else {
-                waitForSocketConnection(socket, callback);
-            }
-
-        }, 5);
-}
-
 async function loadShader(url) {
     const response = await fetch(url);
     return response.text();
 }
 
-export { sleep, waitForData, waitForSocketConnection, loadShader}
+function showLoadingAnimation() {
+    var loadingAnimation = document.getElementById("loader");
+    loadingAnimation.style.display = "block";
+}
+
+function hideLoadingAnimation() {
+    var loadingAnimation = document.getElementById("loader");
+    loadingAnimation.style.display = "none";
+}
+
+export { sleep, waitForData, loadShader, hideLoadingAnimation, showLoadingAnimation}
