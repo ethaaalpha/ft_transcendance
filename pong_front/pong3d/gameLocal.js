@@ -19,7 +19,7 @@ class GameLocal {
 		this.movementP1 = new THREE.Vector3(0, 0, 0);
 		this.movementP2 = new THREE.Vector3(0, 0, 0);
 		this.speed = 0.8;
-		this.speedBall = 0.25;
+		this.speedBall = 0.20;
 		this.frame = 0;
 		this.cycleScore = 0.5;
 		this.sign = true

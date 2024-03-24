@@ -98,7 +98,7 @@ async function loadTexture() {
     return new Promise((resolve, reject) => {
         
         var RGBELoad = new RGBELoader(loadingManager).setPath('/static/assets/hdr/');
-        RGBELoad.load('d3.hdr', (texture) => {
+        RGBELoad.load('d2.hdr', (texture) => {
             texture.mapping = THREE.EquirectangularReflectionMapping;
             var textureRev = texture.clone()
             textureRev.flipY = false;
@@ -110,8 +110,8 @@ async function loadTexture() {
 			gameData.sceneGameInv.environment = textureRev;
             gameData.controlsMenu = new OrbitControls(gameData.camera, gameData.rendererMenu.domElement);
             gameData.controlsGameLocal = new OrbitControls(gameData.camera, gameData.rendererGameLocal.domElement);
-			gameData.controlsMenu.enableZoom = false;
-			gameData.controlsGameLocal.enableZoom = false;
+			//gameData.controlsMenu.enableZoom = false;
+			//gameData.controlsGameLocal.enableZoom = false;
             gameData.controlsGameLocal.mouseButtons.RIGHT='';
             gameData.controlsMenu.mouseButtons.RIGHT='';
 			status.status = 0;

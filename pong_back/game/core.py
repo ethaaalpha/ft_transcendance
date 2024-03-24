@@ -4,7 +4,7 @@ import sys
 class Game:
     def __init__(self, matchId, p1, p2):
         self.matchId = matchId
-        self.speedBall = 0.40
+        self.speedBall = 0.20
         self.p1 = p1
         self.p2 = p2
         self.score = [0, 0]
@@ -18,8 +18,8 @@ class Game:
     async def addVec(self, vec1, vec2):
         for i in range(len(vec1)):
             vec1[i] += (vec2[i])
-        if self.speedBall < 0.6:
-            self.speedBall += 0.0005
+        if self.speedBall < 0.49:
+            self.speedBall += 0.0004
     async def makeReady(self, name):
         if (name == self.p1):
             self.ready[0] = True
@@ -38,9 +38,9 @@ class Game:
                 self.ballVec = data['ballVec']
             if (data['p1Pos']):
                 await Game.addVec(self, self.ballPos, self.ballVec)
-            if (self.ballPos[1] > 13.1):
+            if (self.ballPos[1] > 13.3):
                 await self.goal(0)
-            if (self.ballPos[1] < -13.1):
+            if (self.ballPos[1] < -13.3):
                 await self.goal(1)
             await C.GameConsumer.sendMessageToConsumer(self.matchId, self.toJson(), 'move')
         if self.score[0] >= 5 or self.score[1] >= 5:
@@ -49,7 +49,7 @@ class Game:
         self.score[i] += 1
         self.ballPos = [0, 0, 0]
         self.ready = [False, False]
-        self.speedBall = 0.4
+        self.speedBall = 0.2
         self.goalP = True
 
     def toJson(self):
