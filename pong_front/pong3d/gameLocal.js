@@ -1,13 +1,12 @@
 import * as THREE from 'three';
 import { TessellateModifier } from 'three/module/modifiers/TessellateModifier.js';
 import { TextGeometry } from 'three/module/geometries/TextGeometry.js';
-import { FontLoader } from 'three/module/loaders/FontLoader.js';
 import { sleep, loadShader } from './utilsPong.js'
 
 class GameLocal {
 	constructor(status, resolve,statusCallback, gameData) {
 		this.renderer = gameData.rendererGameLocal;
-		this.loadingManager = gameData.loadingManager
+		this.loader = gameData.fontLoader;
 		this.camera = gameData.camera;
 		this.appli = gameData.appli;
 		this.status = status;
@@ -41,7 +40,7 @@ class GameLocal {
 		this.uniforms = {
 			amplitude: {value: 0.0},
 		};
-		this.textureLoader = new THREE.TextureLoader(this.loadingManager);
+		this.textureLoader = gameData.textureLoader;
 		this.itemTexture = this.textureLoader.load('/static/assets/pokeball-texture.jpg');
 		this.controls = gameData.controlsGameLocal;
 		this.controls.enableZoom = false;
@@ -81,8 +80,7 @@ class GameLocal {
 	}
 
 	load3d(){
-		const loader = new FontLoader(this.loadingManager);
-		loader.load( '/static/fonts/helvetiker_regular.typeface.json', (font) => this.scoreInit(font))
+		this.loader.load( '/static/fonts/default2.json', (font) => this.scoreInit(font))
 	}
 
 	async scoreInit(font){
@@ -100,7 +98,7 @@ class GameLocal {
 			bevelThickness: 5,
 		} );
 		geometry.center();
-		const tessellateModifier = new TessellateModifier(4, 5);
+		const tessellateModifier = new TessellateModifier(4, 10);
 		geometry = tessellateModifier.modify(geometry);
 		const numFaces = geometry.attributes.position.count / 3;
 
@@ -109,10 +107,10 @@ class GameLocal {
 		const color = new THREE.Color();
 		for ( let f = 0; f < numFaces; f ++ ) {
 			const index = 9 * f;
-			const r = Math.random() * 0.2 + 0.4;
-			const g = Math.random() * 0.2 + 0.4;
-			const b = Math.random() * 0.2 + 0.4;
-			color.setHSL(r, g, b);
+			const h = Math.random() * 0.17 + 0.25;
+			const s = 1
+			const l = 0.45;
+			color.setHSL(h, s, l);
 			const dx = Math.random() * 2 - 1;
 			const dy = Math.random() * 2 - 1;
 			const dz = Math.random() * 2 - 1;

@@ -1,10 +1,12 @@
 import * as THREE from 'three';
-import { FontLoader } from 'three/module/loaders/FontLoader.js';
-import { GLTFLoader } from 'three/module/loaders/GLTFLoader.js';
 
 class Menu {
 	constructor(status, resolve, statusCallback, gameData) {
 		this.status = status
+		this.loader = gameData.fontLoader;
+		this.loaded = gameData.loaded;
+		console.log(this.loaded);
+		this.loadergl = gameData.gltfLoader;
 		this.renderer = gameData.rendererMenu;
 		this.camera = gameData.camera;
 		this.scene = gameData.sceneMenu;
@@ -21,9 +23,26 @@ class Menu {
 		this.controls = gameData.controlsMenu;
 		this.init();
 	}
+
+	waitForSocketNLoad(){
+		setTimeout(
+			function () {
+				if (this.loaded.instance == 0) {
+						this.allLoaded();
+				} else {
+					console.log(this.loaded);
+					this.waitForSocketNLoad();
+				}
 	
-	init() {
+			}.bind(this), 500);
+	}
+	allLoaded(){
 		this.appli.appendChild(this.renderer.domElement);
+		this.update();
+		this.animate();
+	}
+	init() {
+		
 		this.directionalLight.position.set(100, 100, 500).normalize();
 		this.scene.add(this.directionalLight);
 		this.directionalLight2.position.set(-100, 100, -500).normalize();
@@ -35,8 +54,7 @@ class Menu {
 		this.keyD = (event) => this.onKeyDown(event);
 		document.addEventListener('keydown', this.keyD);
 		window.addEventListener('resize', this.onResize);
-		this.update();
-		this.animate();
+		this.waitForSocketNLoad()
 	}
 
 	createTxt (font) {
@@ -97,9 +115,8 @@ class Menu {
 	}
 
 	load3D () {
-		this.loadergl = new GLTFLoader().setPath( '/static/assets/' );
+		
 		this.loadergl.load( '/cube/scene.gltf', (gltf) => {this.createobj(gltf)} );
-		this.loader = new FontLoader();
 		this.loader.load( '/static/fonts/default2.json', (font) => { this.createTxt(font);});
 	}
 	async createobj (gltf) {
@@ -110,7 +127,7 @@ class Menu {
 		}
 		gltf.scene.scale.set(3, 3, 3);
 		gltf.scene.rotation.set(0.7853982, 0.7853982, 0);
-		gltf.scene.position.set(0, 220, 150);  
+		gltf.scene.position.set(0, 200, 110);  
 		this.scene.add(gltf.scene);
 		this.renderer.render(this.scene, this.camera);
 	}

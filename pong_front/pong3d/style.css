@@ -1,0 +1,29 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#loader {
+	width: 35%;
+	aspect-ratio: 1;
+	position:relative;
+  }
+  #loader:before,
+  #loader:after {
+	content: "";
+	position: absolute;
+	border-radius: 50%;
+	inset: 0;
+	background:
+	  radial-gradient(circle 10px,#05FF00 94%,#0000),
+	  repeating-conic-gradient(from -30deg,#0000 0 60deg,#05FF00 61deg 120deg);
+  }
+  #loader:after {
+	animation: l4 1s infinite;
+	transform: perspective(300px) translateZ(0px)
+  }
+  @keyframes l4 {
+	to {transform:perspective(300px) translateZ(150px);opacity:0}
+  }

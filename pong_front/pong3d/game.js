@@ -1,16 +1,15 @@
 import * as THREE from 'three';
-
 import { TessellateModifier } from 'three/module/modifiers/TessellateModifier.js';
 import { TextGeometry } from 'three/module/geometries/TextGeometry.js';
-import { FontLoader } from 'three/module/loaders/FontLoader.js';
-import { GLTFLoader } from 'three/module/loaders/GLTFLoader.js';
-
-
-import { sleep, waitForSocketConnection, loadShader } from './utilsPong.js'
+import { sleep, loadShader } from './utilsPong.js'
 
 class Game {
 	constructor(status, resolve,statusCallback, gameData, invited) {
+		this.gltfLoader = gameData.gltfLoader;
+		this.fontLoader = gameData.fontLoader;
+		this.textureLoader = gameData.textureLoader;
 		this.renderer = gameData.rendererGameLocal;
+		this.loaded = gameData.loaded;
 		this.camera = gameData.camera;
 		this.appli = gameData.appli;
 		this.invited = invited
@@ -20,6 +19,7 @@ class Game {
 		this.directionalLight = gameData.directionalLight;
 		this.directionalLight2 = gameData.directionalLight2;
 		this.directionalLight3 = gameData.directionalLight3;
+		this.directionalLight4 = gameData.directionalLight4;
 		this.statusCallback = statusCallback;
 		this.movement = new THREE.Vector3(0, 0, 0);
 		this.speed = 0.8;
@@ -36,55 +36,67 @@ class Game {
 		this.uniforms = {
 			amplitude: {value: 0.0},
 		};
-		this.textureLoader = new THREE.TextureLoader();
 		this.itemTexture = this.textureLoader.load('/static/assets/cube/textures/Sphere_emissive.png');
 		this.controls = gameData.controlsGameLocal;
-		this.init().then(() => {
-			waitForSocketConnection(this.socket, null);})
-			.then(() => {
-			this.appli.appendChild(this.renderer.domElement);
-			this.animate();
-			this.update();
-		});
+		this.init()
+			
+	}
+
+	waitForSocketNLoad(socket, callback){
+		setTimeout(
+			function () {
+				if (socket.readyState === 1 && this.loaded.instance == 0) {
+					if (callback != null){
+						this.allLoaded();
+					}
+				} else {
+					this.waitForSocketNLoad(socket, callback);
+				}
+	
+			}.bind(this), 500);
+	}
+
+	allLoaded(){
+		this.appli.appendChild(this.renderer.domElement);
+		this.animate();
+		this.update();
 	}
 	
 	init() {
-		return new Promise((resolve, reject) => {
-			this.socket = new WebSocket('wss://' + window.location.host +'/api/game/');
-			this.socketInit(this.socket);
-			this.camera.position.set(0, 0, 60);
-			this.directionalLight.position.set(20, 0, 0).normalize();
-			this.scene.add(this.directionalLight);
-			this.directionalLight2.position.set(-20, 0, 0).normalize();
-			this.scene.add(this.directionalLight2);
-			this.directionalLight3.position.set(0, 1, 0).normalize();
-			this.scene.add(this.directionalLight3);
-			this.ball = this.addBall(0, 0, 1, 1, 1, 0);
-			this.player1 = this.addCube(0, -13, 5, 0.8, 5, 0, {transparent: false, map: this.itemTexture}, 0);
-			this.player2 = this.addCube(0, 13, 5, 0.8, 5, 0, {transparent: false, map: this.itemTexture}, 0);
-			this.walls = [
-				this.addCube(15, 0, 1, 30, 29, 0, { color: 0x05ff00, transparent: true, opacity: 0}),
-				this.addCube(0, 0, 31, 30, 1, 15, { color: 0x05ff00, transparent: true, opacity: 0}),
-				this.addCube(0, 0, 31, 30, 1, -15, { color: 0x05ff00, transparent: true, opacity: 0}),
-				this.addCube(-15, 0, 1, 30, 29, 0, { color: 0x05ff00, transparent: true, opacity: 0})
-			];
-			this.laser = this.createLaser();
-			this.keyU = (event) => this.onKeyUp(event)
-			this.keyD = (event) => this.onKeyDown(event)
-			this.onResize = () => this.onWindowResize()
-			document.addEventListener('keydown', this.keyD);
-			document.addEventListener('keyup', this.keyU);
-			window.addEventListener('resize',  this.onResize);
-			this.load3d();
-			resolve();
-			});
+		this.socket = new WebSocket('wss://' + window.location.host +'/api/game/');
+		this.socketInit(this.socket);
+		this.camera.position.set(0, 0, 60);
+		this.directionalLight.position.set(20, 0, 0).normalize();
+		this.scene.add(this.directionalLight);
+		this.directionalLight2.position.set(-20, 0, 0).normalize();
+		this.scene.add(this.directionalLight2);
+		this.directionalLight3.position.set(0, 13, 0).normalize();
+		this.scene.add(this.directionalLight3);
+		this.directionalLight4.position.set(0, -13, 0).normalize();
+		this.scene.add(this.directionalLight4);
+		this.ball = this.addBall(0, 0, 1, 1, 1, 0);
+		this.player1 = this.addCube(0, -13, 5, 0.8, 5, 0, {transparent: false, map: this.itemTexture}, 0);
+		this.player2 = this.addCube(0, 13, 5, 0.8, 5, 0, {transparent: false, map: this.itemTexture}, 0);
+		this.walls = [
+			this.addCube(15, 0, 1, 30, 29, 0, { color: 0x05ff00, transparent: true, opacity: 0}),
+			this.addCube(0, 0, 31, 30, 1, 15, { color: 0x05ff00, transparent: true, opacity: 0}),
+			this.addCube(0, 0, 31, 30, 1, -15, { color: 0x05ff00, transparent: true, opacity: 0}),
+			this.addCube(-15, 0, 1, 30, 29, 0, { color: 0x05ff00, transparent: true, opacity: 0})
+		];
+		this.laser = this.createLaser();
+		this.keyU = (event) => this.onKeyUp(event)
+		this.keyD = (event) => this.onKeyDown(event)
+		this.onResize = () => this.onWindowResize()
+		document.addEventListener('keydown', this.keyD);
+		document.addEventListener('keyup', this.keyU);
+		window.addEventListener('resize',  this.onResize);
+		this.load3d();
 	}
 
 	load3d(){
-		this.loadergl = new GLTFLoader().setPath( '/static/assets/' );
-		this.loadergl.load( '/cub3/scene.gltf', (gltf) => {this.createobj(gltf)} );
-		this.loader = new FontLoader();
-		this.loader.load( '/static/fonts/helvetiker_regular.typeface.json', (font) => this.scoreInit(font))
+		this.gltfLoader.load( '/cub2/scene.gltf', (gltf) => {this.createobj(gltf)} );
+		this.fontLoader.load( '/static/fonts/default2.json', (font) => this.scoreInit(font))
+		this.waitForSocketNLoad(this.socket, this.allLoaded);
 	}
 
 	async createobj (gltf) {
@@ -107,7 +119,7 @@ class Game {
 			this.score.material.dispose();
 			this.score = null;
 		}
-		let geometry = new TextGeometry( `${this.p1Score}  -  ${this.p2Score}`, {
+		let geometry = new TextGeometry( `${this.p1Score}   ${this.p2Score}`, {
 			font: font,
 			size: 40,
 			height: 5,
@@ -115,7 +127,7 @@ class Game {
 			bevelThickness: 5,
 		} );
 		geometry.center();
-		const tessellateModifier = new TessellateModifier(0.8, 1500);
+		const tessellateModifier = new TessellateModifier(4, 10);
 		geometry = tessellateModifier.modify(geometry);
 		const numFaces = geometry.attributes.position.count / 3;
 
@@ -124,15 +136,10 @@ class Game {
 		const color = new THREE.Color();
 		for (let f = 0; f < numFaces; f ++) {
 			const index = 9 * f;
-			const choice = Math.random();
-			let r;
-			if (choice <= 0.5)
-				r = Math.random() * 0.05 + 0.335;
-			else
-				r = Math.random() * 0.05 + 0.075;
-			const g = Math.random() * 0.1 + 0.9;
-			const b = 0.5;
-			color.setHSL(r, g, b);
+			const h = Math.random() * 0.17 + 0.25;
+			const s = 1
+			const l = 0.45;
+			color.setHSL(h, s, l);
 			const dx = Math.random() * 2 - 1;
 			const dy = Math.random() * 2 - 1;
 			const dz = Math.random() * 2 - 1;
@@ -169,18 +176,23 @@ class Game {
 		
 		this.socket.onmessage = async (event) => {
 			const response = JSON.parse(event.data);
-			this.data = response.data;
-			if (this.data.p2Pos && this.data.p2Pos.length === 3)
-			this.player2.position.set(this.data.p2Pos[0],this.data.p2Pos[1],this.data.p2Pos[2]);
-			if (this.data.ballPos && this.data.ballPos.length === 3)
-				this.ball.position.set(this.data.ballPos[0], this.data.ballPos[1], this.data.ballPos[2]);
-			if (this.data.score && this.data.score.length === 2){
-				this.p1Score = this.data.score[0];
-				this.p2Score = this.data.score[1];
+			if (response.event == 'end'){
+				this.status.status = 0;
 			}
-			this.goalP = this.data.goalP
+			else{
+				this.data = response.data;
+				if (this.data.p2Pos && this.data.p2Pos.length === 3)
+				this.player2.position.set(this.data.p2Pos[0],this.data.p2Pos[1],this.data.p2Pos[2]);
+				if (this.data.ballPos && this.data.ballPos.length === 3)
+					this.ball.position.set(this.data.ballPos[0], this.data.ballPos[1], this.data.ballPos[2]);
+				if (this.data.score && this.data.score.length === 2){
+					this.p1Score = this.data.score[0];
+					this.p2Score = this.data.score[1];
+				}
+				this.speedBall = this.data.speedBall
+				this.goalP = this.data.goalP
+			}
 		};
-		
 		socket.onclose = (event) => this.socketClose(event);
 		socket.onerror = (event) => this.socketClose(event);
 	}
@@ -254,7 +266,6 @@ class Game {
 			this.ballMovement.z *= -1;
 			this.ballMovement.normalize();
 			this.ballMovement.multiplyScalar(this.speedBall)
-			console.log(this.ballMovement)
 		}
 	}
 	
@@ -268,8 +279,6 @@ class Game {
 		else
 			testAxes = axes > 0
 		const collision = ballBoundingBox.intersectsBox(elementBoundingBox);
-		if(collision)
-			console.log(testAxes)
 		if (collision && testAxes) {
 			axes *= -1;
 		}
@@ -279,7 +288,7 @@ class Game {
 	async animate() {
 		if(this.explode == true){
 			this.uniforms.amplitude.value = 1.0 * this.cycleScore
-			this.cycleScore += 0.1;
+			this.cycleScore += 7;
 		}
 		else{
 			if (this.cycleScore >= 0.35)
@@ -296,6 +305,8 @@ class Game {
 		this.renderer.render(this.scene, this.camera);
 		if (this.status['status'] === 1)
 			requestAnimationFrame(() => this.animate());
+		else
+			this.destroy()
 	}
 
 	async checkPoint(){
@@ -311,10 +322,8 @@ class Game {
 			this.ballMovement.x = 0;
 			this.ballMovement.z = 0;
 			await sleep(1500)
-			console.log(this.p1Score)
-			console.log(this.p2Score)
 			if (this.p1Score < 5 && this.p2Score < 5)
-				await this.load3d();
+				this.fontLoader.load( '/static/fonts/default2.json', (font) => this.scoreInit(font))
 			this.explode = false;
 			this.uniforms.amplitude.value = 0.0;
 			this.cycleScore = 0.1
@@ -356,7 +365,6 @@ class Game {
 				this.movement.set(0, 0, 0);
 			this.data = {
 				score: [this.p1Score, this.p2Score],
-				speedBall: this.speedBall,
 				ballVec: [this.ballMovement.x, this.ballMovement.y, this.ballMovement.z],
 				ballPos: [this.ball.position.x, this.ball.position.y, this.ball.position.z],
 				p1Pos: [this.player1.position.x,this.player1.position.y,this.player1.position.z],
@@ -431,6 +439,7 @@ class Game {
 		window.removeEventListener('resize',this.onResize);
 		this.appli.removeChild(this.renderer.domElement);
 		this.scene.clear();
+		this.socket.CLOSING;
 		this.appli = null;
 		this.renderer = null;
 		this.camera = null;
