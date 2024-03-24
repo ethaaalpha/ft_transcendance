@@ -30,8 +30,9 @@ var gameData = {
     rendererMenu : new THREE.WebGLRenderer(),
     rendererGameLocal : new THREE.WebGLRenderer(),
     camera : new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000),
-    directionalLight : new THREE.DirectionalLight(0xED7F10, 8),
-    directionalLight2 : new THREE.DirectionalLight(0xED7F10, 8),
+    directionalLight : new THREE.DirectionalLight(0xC6FF89, 8),
+    directionalLight2 : new THREE.DirectionalLight(0xC6FF89, 8),
+    directionalLight3 : new THREE.DirectionalLight(0xC6FF89, 10),
     clock : new THREE.Clock(),
     raycaster : new THREE.Raycaster(),
     appli : appli,
@@ -82,7 +83,7 @@ async function loadTexture() {
     return new Promise((resolve, reject) => {
         initLoading();
         var RGBELoad = new RGBELoader(gameData.loadingManager).setPath('/static/assets/hdr/');
-        RGBELoad.load('d2.hdr', (texture) => {
+        RGBELoad.load('d3.hdr', (texture) => {
             texture.mapping = THREE.EquirectangularReflectionMapping;
             var textureRev = texture.clone()
             textureRev.flipY = false;
