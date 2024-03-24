@@ -3,6 +3,8 @@ import * as THREE from 'three';
 import { TessellateModifier } from 'three/module/modifiers/TessellateModifier.js';
 import { TextGeometry } from 'three/module/geometries/TextGeometry.js';
 import { FontLoader } from 'three/module/loaders/FontLoader.js';
+import { GLTFLoader } from 'three/module/loaders/GLTFLoader.js';
+
 
 import { sleep, waitForSocketConnection, loadShader } from './utilsPong.js'
 
@@ -17,6 +19,7 @@ class Game {
 		this.scene = gameData.sceneGameLocal;
 		this.directionalLight = gameData.directionalLight;
 		this.directionalLight2 = gameData.directionalLight2;
+		this.directionalLight3 = gameData.directionalLight3;
 		this.statusCallback = statusCallback;
 		this.movement = new THREE.Vector3(0, 0, 0);
 		this.speed = 0.8;
@@ -34,7 +37,7 @@ class Game {
 			amplitude: {value: 0.0},
 		};
 		this.textureLoader = new THREE.TextureLoader();
-		this.itemTexture = this.textureLoader.load('/static/assets/pokeball-texture.jpg');
+		this.itemTexture = this.textureLoader.load('/static/assets/cube/textures/Sphere_emissive.png');
 		this.controls = gameData.controlsGameLocal;
 		this.init().then(() => {
 			waitForSocketConnection(this.socket, null);})
@@ -50,18 +53,20 @@ class Game {
 			this.socket = new WebSocket('wss://' + window.location.host +'/api/game/');
 			this.socketInit(this.socket);
 			this.camera.position.set(0, 0, 60);
-			this.directionalLight.position.set(0, -18, 0).normalize();
+			this.directionalLight.position.set(20, 0, 0).normalize();
 			this.scene.add(this.directionalLight);
-			this.directionalLight2.position.set(0, 18, 0).normalize();
+			this.directionalLight2.position.set(-20, 0, 0).normalize();
 			this.scene.add(this.directionalLight2);
+			this.directionalLight3.position.set(0, 1, 0).normalize();
+			this.scene.add(this.directionalLight3);
 			this.ball = this.addBall(0, 0, 1, 1, 1, 0);
 			this.player1 = this.addCube(0, -13, 5, 0.8, 5, 0, {transparent: false, map: this.itemTexture}, 0);
 			this.player2 = this.addCube(0, 13, 5, 0.8, 5, 0, {transparent: false, map: this.itemTexture}, 0);
 			this.walls = [
-				this.addCube(15, 0, 1, 30, 29, 0, { color: 0x05ff00, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true}),
-				this.addCube(0, 0, 31, 30, 1, 15, { color: 0x05ff00, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true}),
-				this.addCube(0, 0, 31, 30, 1, -15, { color: 0x05ff00, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true}),
-				this.addCube(-15, 0, 1, 30, 29, 0, { color: 0x05ff00, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true})
+				this.addCube(15, 0, 1, 30, 29, 0, { color: 0x05ff00, transparent: true, opacity: 0}),
+				this.addCube(0, 0, 31, 30, 1, 15, { color: 0x05ff00, transparent: true, opacity: 0}),
+				this.addCube(0, 0, 31, 30, 1, -15, { color: 0x05ff00, transparent: true, opacity: 0}),
+				this.addCube(-15, 0, 1, 30, 29, 0, { color: 0x05ff00, transparent: true, opacity: 0})
 			];
 			this.laser = this.createLaser();
 			this.keyU = (event) => this.onKeyUp(event)
@@ -76,8 +81,23 @@ class Game {
 	}
 
 	load3d(){
-		const loader = new FontLoader();
-		loader.load( '/static/fonts/helvetiker_regular.typeface.json', (font) => this.scoreInit(font))
+		this.loadergl = new GLTFLoader().setPath( '/static/assets/' );
+		this.loadergl.load( '/cub3/scene.gltf', (gltf) => {this.createobj(gltf)} );
+		this.loader = new FontLoader();
+		this.loader.load( '/static/fonts/helvetiker_regular.typeface.json', (font) => this.scoreInit(font))
+	}
+
+	async createobj (gltf) {
+		this.animMixer = new THREE.AnimationMixer(gltf.scene);
+		for (let i = 0; i < gltf.animations.length; i++) {
+			const animation = gltf.animations[i];
+			this.animMixer.clipAction(animation).play();
+		}
+		gltf.scene.scale.set(0.95, 0.95, 0.95);
+		gltf.scene.rotation.set(0, 0, 0);
+		gltf.scene.position.set(0, -19, 0);  
+		this.scene.add(gltf.scene);
+		this.renderer.render(this.scene, this.camera);
 	}
 
 	async scoreInit(font){
@@ -135,7 +155,7 @@ class Game {
 		this.score = new THREE.Mesh(geometry, shaderMaterial);
 		this.score.scale.set(0.5, 0.5, 0.5)
 		this.scene.add(this.score);
-		this.score.position.set(1, 22, 0);
+		this.score.position.set(1, 27, 0);
 	}
 	socketClose(){
 		console.log('WebSocket connection closed');
@@ -418,6 +438,7 @@ class Game {
 		this.scene = null;
 		this.directionalLight = null;
 		this.directionalLight2 = null;
+		this.directionalLight3 = null;
 		this.clock = null;
 		this.cameraRotation = null;
 		this.statusCallback(this.status)
