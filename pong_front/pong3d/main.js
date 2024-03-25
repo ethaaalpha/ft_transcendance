@@ -1,39 +1,50 @@
 import * as THREE from 'three';
 import { RGBELoader } from 'three/module/loaders/RGBELoader.js';
+import { GLTFLoader } from 'three/module/loaders/GLTFLoader.js';
+import { FontLoader } from 'three/module/loaders/FontLoader.js';
 import { OrbitControls } from 'three/module/controls/OrbitControls.js';
-import Game from './game.js'
+import Game from './game.js';
 import Menu from './menu.js';
 import GameLocal from './gameLocal.js';
 import GameInv from './gameInv.js';
-import { sleep } from './utilsPong.js';
+import { hideLoadingAnimation, showLoadingAnimation, sleep } from './utilsPong.js';
 
 var view;
+var i = 0;
 var appli = document.querySelector('#app');
 if (!appli) {
-    console.log("coucou");
+    console.log("querySelector error");
 }
 var data = null;
-const socketTmp = new WebSocket("wss://probable-space-tribble-pg5wg6jqq59c7qq7-443.app.github.dev/api/coordination/")
+const socketTmp = new WebSocket("wss://" + window.location.host + "/api/coordination/")
 socketTmp.onmessage = (event) => {
     console.log(event)
     const tmp = JSON.parse(event.data)
     if (tmp.event == "next")
         data = tmp.data;
 }
+var loadingManager = new THREE.LoadingManager();
 var gameData = {
-        sceneGameLocal : new THREE.Scene(),
-        sceneGameInv : new THREE.Scene(),
-        sceneMenu : new THREE.Scene(),
-        rendererMenu : new THREE.WebGLRenderer(),
-        rendererGameLocal : new THREE.WebGLRenderer(),
-        camera : new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000),
-        directionalLight : new THREE.DirectionalLight(0xED7F10, 80),
-        directionalLight2 : new THREE.DirectionalLight(0xED7F10, 80),
-        clock : new THREE.Clock(),
-        raycaster : new THREE.Raycaster(),
-        appli : appli,
-        controlsMenu : null,
-        controlsGameLocal : null,
+    gltfLoader: new GLTFLoader(loadingManager).setPath( '/static/assets/' ),
+    textureLoader : new THREE.TextureLoader(loadingManager),
+    fontLoader : new FontLoader(loadingManager),
+    sceneGameLocal : new THREE.Scene(),
+    sceneGameInv : new THREE.Scene(),
+    sceneMenu : new THREE.Scene(),
+    rendererMenu : new THREE.WebGLRenderer(),
+    rendererGameLocal : new THREE.WebGLRenderer(),
+    camera : new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000),
+    directionalLight : new THREE.DirectionalLight(0xC6FF89, 16),
+    directionalLight2 : new THREE.DirectionalLight(0xC6FF89, 16),
+    directionalLight3 : new THREE.DirectionalLight(0xC6FF89, 20),
+    directionalLight4 : new THREE.DirectionalLight(0xC6FF89, 20),
+    clock : new THREE.Clock(),
+    raycaster : new THREE.Raycaster(),
+    appli : appli,
+    controlsMenu : null,
+    controlsGameLocal : null,
+    loaded : {instance:0}
+
 }
 gameData.rendererMenu.setSize(window.innerWidth , window.innerHeight);
 gameData.rendererGameLocal.setSize(window.innerWidth , window.innerHeight);
@@ -57,33 +68,51 @@ async function initialize() {
             }
             else if (status.status === 2)
                 await createGameLocal();
-            //await sleep(1500)
 		}
     } catch (error) {
         console.error("Error during initialization:", error);
     }
 }
+
+function initLoading(){
+    loadingManager.onStart = function(url, item, total){
+        if (gameData.loaded.instance = 0)
+            showLoadingAnimation();
+        gameData.loaded.instance += 1
+        console.log("coucou");
+
+    }
+    loadingManager.onProgress = function(url, item, total){
+        console.log(url);
+    }
+    loadingManager.onLoad = function(){
+        console.log("coucou2");
+        gameData.loaded.instance -= 1
+        if (gameData.loaded.instance = 0)
+            hideLoadingAnimation();
+    }
+}
+
 async function loadTexture() {
     return new Promise((resolve, reject) => {
-        var RGBELoad = new RGBELoader().setPath('/static/assets/');
-        RGBELoad.load('witcher.hdr', (texture) => {
+        
+        var RGBELoad = new RGBELoader(loadingManager).setPath('/static/assets/hdr/');
+        RGBELoad.load('d2.hdr', (texture) => {
             texture.mapping = THREE.EquirectangularReflectionMapping;
             var textureRev = texture.clone()
             textureRev.flipY = false;
-			gameData.sceneMenu.background = texture
-			gameData.sceneMenu.environment = texture
-            gameData.sceneGameLocal.background = texture
-			gameData.sceneGameLocal.environment = texture
-            gameData.sceneGameInv.background = textureRev
-			gameData.sceneGameInv.environment = textureRev
-
-            var controlsMenu = new OrbitControls(gameData.camera, gameData.rendererMenu.domElement);
-			controlsMenu.enableZoom = false;
-            gameData.controlsMenu = controlsMenu;
-            var controlsGameLocal = new OrbitControls(gameData.camera, gameData.rendererGameLocal.domElement);
-			controlsGameLocal.enableZoom = false;
-            gameData.controlsGameLocal = controlsGameLocal;
-
+			gameData.sceneMenu.background = texture;
+			gameData.sceneMenu.environment = texture;
+            gameData.sceneGameLocal.background = texture;
+			gameData.sceneGameLocal.environment = texture;
+            gameData.sceneGameInv.background = textureRev;
+			gameData.sceneGameInv.environment = textureRev;
+            gameData.controlsMenu = new OrbitControls(gameData.camera, gameData.rendererMenu.domElement);
+            gameData.controlsGameLocal = new OrbitControls(gameData.camera, gameData.rendererGameLocal.domElement);
+			gameData.controlsMenu.enableZoom = false;
+			gameData.controlsGameLocal.enableZoom = false;
+            gameData.controlsGameLocal.mouseButtons.RIGHT='';
+            gameData.controlsMenu.mouseButtons.RIGHT='';
 			status.status = 0;
             resolve();
         });
@@ -92,37 +121,42 @@ async function loadTexture() {
 
 async function createMenu() {
     return new Promise((resolve, reject) => {
-		view = null;
         view = new Menu(status, resolve, updateStatus, gameData);
+		view = null;
     });
 }
+
 async function createGame() {
     return new Promise((resolve, reject) => {
-		view = null;
         if (data.statusHost == true)
             view = new Game(status, resolve, updateStatus, gameData, data);
         else
             view = new GameInv(status, resolve, updateStatus, gameData, data);
+        view = null;
+        data = null;
     });
 }
+
 async function createGameLocal() {
     return new Promise((resolve, reject) => {
-		view = null;
         view = new GameLocal(status, resolve, updateStatus, gameData);
+		view = null;
     });
 }
-function waitForData() {
+
+function waitForData(time) {
     socketTmp.send(JSON.stringify({'event': 'matchmaking', 'data': {'action' : 'join'}}))
+    showLoadingAnimation();
     return new Promise((resolve) => {
         const intervalId = setInterval(() => {
             if (data) {
                 clearInterval(intervalId);
+                hideLoadingAnimation();
                 resolve();
             }
-            console.log(data)
-        }, 500);
+        }, time);
     });
 }
-
+initLoading();
 initialize();
-
+export { initialize }
