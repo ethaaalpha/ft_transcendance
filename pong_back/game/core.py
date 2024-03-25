@@ -1,4 +1,7 @@
 import game.consumers as C
+from .models import Match
+from channels.db import database_sync_to_async
+from asgiref.sync import async_to_sync
 import sys
 
 class Game:
@@ -13,7 +16,8 @@ class Game:
         self.ballPos = [0, 0, 0]
         self.ballVec = [0, -1, 0]
         self.goalP = False
-        self.ready = [True, True]
+        self.ready = [False, False]
+        self.sent = False
 
     async def addVec(self, vec1, vec2):
         for i in range(len(vec1)):
@@ -37,14 +41,24 @@ class Game:
             if data['p1Pos']:
                 self.ballVec = data['ballVec']
             if (data['p1Pos']):
-                await Game.addVec(self, self.ballPos, self.ballVec)
+                await self.addVec(self.ballPos, self.ballVec)
             if (self.ballPos[1] > 13.5):
                 await self.goal(0)
             if (self.ballPos[1] < -13.5):
                 await self.goal(1)
             await C.GameConsumer.sendMessageToConsumer(self.matchId, self.toJson(), 'move')
         if self.score[0] >= 5 or self.score[1] >= 5:
-            await C.GameConsumer.sendMessageToConsumer(self.matchId, {}, "end")
+            await self.sendResult()
+
+    @database_sync_to_async
+    def sendResult(self):
+        if self.sent == False:
+            match = Match.getMatch(id = self.matchId)
+            match.finish((self.score[0], self.score[1]))   
+            async_to_sync(C.GameConsumer.sendMessageToConsumer)(self.matchId, {}, "end")
+            self.sent = True
+            
+        
     async def goal(self, i):
         self.score[i] += 1
         self.ballPos = [0, 0, 0]

@@ -92,17 +92,18 @@ class Match(models.Model):
 		self.send(self.invited, 'next', {'match-id': str(self.id), 'host': self.host.username, 'invited': self.invited.username, 'statusHost': False})
 		GameMap.createGame(str(self.id), self.host.username, self.invited.username)
 		self.setState(1)
-		self.start_time = datetime.now()
+		#self.start_time = datetime.now()
 
-	def finish(self, score, winner: User):
+	def finish(self, score):
 		"""
 		Function to ended a match, this will run the generation of a blockchain smart contract\n
 		also run the checkup of next match if it is a tournament
 		"""
-		self.end_time = datetime.now()
-		duration: timedelta = self.end_time - self.start_time
-		self.duration = duration
-		self.save()
+		winner = self.host if score[0] > score[1] else self.invited
+		#self.end_time = datetime.now()
+		#duration: timedelta = self.end_time - self.start_time
+		#self.duration = duration
+		#self.save()
 		
 		ContractBuilder.threaded(score, self) # Blockchain Runner !
 		self.setWinner(winner)

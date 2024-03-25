@@ -58,6 +58,7 @@ class Game {
 
 	allLoaded(){
 		this.appli.appendChild(this.renderer.domElement);
+		this.sendMessageToServer({event : "ready"})
 		this.animate();
 		this.update();
 	}
