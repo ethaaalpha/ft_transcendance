@@ -187,6 +187,7 @@ class GameInv {
 		this.socket.onmessage = (event) => {
 			const response = JSON.parse(event.data);
 			if (response.event == 'end'){
+				console.log(response.event);
 				this.status.status = 0;
 			}
 			else 

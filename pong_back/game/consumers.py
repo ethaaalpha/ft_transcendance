@@ -28,19 +28,22 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 		await self.channel_layer.group_add(self.matchId, self.channel_name)
 
 	async def disconnect(self, code):
-		await self.channel_layer.group_discard(self.matchId, self.channel_name)
-		if GameMap.getGame(self.matchId):
+		game = GameMap.getGame(self.matchId)
+		if game:
+			await GameMap.getGame(self.matchId).disconnect(await self.getUsername())
 			GameMap.removeGame(self.matchId)
+		await self.channel_layer.group_discard(self.matchId, self.channel_name)
 		return await super().disconnect(code)
 	
 	async def receive_json(self, content: dict, **kwargs):
-		if content['event'] == 'move':
-			data = content['data']
-			#print(data, file=sys.stderr)
-			await GameMap.getGame(self.matchId).updateBall(data)
-		elif content['event'] == 'ready':
-			print("coucou", file=sys.stderr)
-			await GameMap.getGame(self.matchId).makeReady(await self.getUsername())
+		game = GameMap.getGame(self.matchId)
+		if game :
+			if content['event'] == 'move':
+				data = content['data']
+				await game.updateBall(data)
+			elif content['event'] == 'ready':
+				print("coucou", file=sys.stderr)
+				await game.makeReady(await self.getUsername())
 
 			
 	async def send_message(self, event):

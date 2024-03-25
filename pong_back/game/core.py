@@ -32,6 +32,18 @@ class Game:
         if(self.ready[0] == True and self.ready[1] == True):
             self.goalP = False
 
+    async def disconnect(self, username):
+        print(username, file=sys.stderr)
+        print(self.p1, file=sys.stderr)
+        if username == self.p1:
+            self.score[0] = 0
+            self.score[1] = 10
+            await self.sendResult()
+        elif username == self.p2:
+            self.score[0] = 10
+            self.score[1] = 0
+            await self.sendResult()
+
     async def updateBall(self, data: dict):
         if self.ready[0] == True and self.ready[1] == True:
             if (data['p1Pos']):
@@ -90,7 +102,7 @@ class GameMap:
         
     @staticmethod
     def getGame(matchId):
-        return GameMap._gameMap[matchId]
+        return GameMap._gameMap.get(matchId)
     
     @staticmethod
     def getMatchID(username):
