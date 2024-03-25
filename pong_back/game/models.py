@@ -4,8 +4,7 @@ from coordination.tools import setInMatch, setOutMatch
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
 from django.db.models import Q
-from datetime import timedelta
-from django.utils import timezone
+from datetime import timedelta, datetime
 from uuid import uuid4
 import shortuuid
 import sys
@@ -82,26 +81,7 @@ class Match(models.Model):
 			CoordinationConsumer.sendMessageToConsumer(user.username, data, event)
 
 	def room(self):
-		"""
-		This retrieve the parent room !
-		"""
 		return Room.objects.filter(matchs=self).first()
-
-	def finish(self, score, winner: User):
-		"""
-		Function to ended a match, this will run the generation of a blockchain smart contract\n
-		also run the checkup of next match if it is a tournament
-		"""
-		
-		ContractBuilder.threaded(score, self) # Blockchain Runner !
-		self.setWinner(winner)
-		self.setState(2) #need to define duration
-		setOutMatch(self.getLoser()) # let free the loser
-
-		# here make the room update and check for the next match !
-		print(f'Le gagnant du match entre {self.host} et {self.invited} est {self.getWinner()} !!!!', file=sys.stderr)
-		room = self.room()
-		room.update()
 
 	def start(self):
 		from .core import GameMap
@@ -113,6 +93,27 @@ class Match(models.Model):
 		self.send(self.invited, 'next', {'match-id': str(self.id), 'host': self.host.username, 'invited': self.invited.username, 'statusHost': False})
 		GameMap.createGame(str(self.id), self.host.username, self.invited.username)
 		self.setState(1)
+		self.start_time = datetime.now()
+
+	def finish(self, score, winner: User):
+		"""
+		Function to ended a match, this will run the generation of a blockchain smart contract\n
+		also run the checkup of next match if it is a tournament
+		"""
+		self.end_time = datetime.now()
+		duration: timedelta = self.end_time - self.start_time
+		self.duration = duration
+		self.save()
+		
+		ContractBuilder.threaded(score, self) # Blockchain Runner !
+		self.setWinner(winner)
+		self.setState(2) #need to define duration
+		setOutMatch(self.getLoser()) # let free the loser
+
+		# here make the room update and check for the next match !
+		print(f'Le gagnant du match entre {self.host} et {self.invited} est {self.getWinner()} !!!!', file=sys.stderr)
+		room = self.room()
+		room.update()
 
 	def getWinner(self) -> User:
 		if self.winner == self.host:
@@ -142,7 +143,6 @@ class Match(models.Model):
 		self.contract = score
 		self.save()
 
-	
 	def toJson(self) -> dict | None:
 		if (self.state != 2):
 			return None
@@ -152,6 +152,7 @@ class Match(models.Model):
 				'host': self.host.username,
 				'invited': self.invited.username,
 				'score': self.getScore(),
+				'duration': self.duration,
 				}
 		
 	
