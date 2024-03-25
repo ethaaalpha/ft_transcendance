@@ -24,8 +24,7 @@ class GameInv {
 		this.lastMessageSentTime = 0;
 		this.messageInterval = 10;
 		this.movement = new THREE.Vector3(0, 0, 0);
-		this.speed = 0.8;
-		this.speedBall = 0.2;
+		this.speed = 0.4;
 		this.frame = 0;
 		this.cycleScore = 0.5;
 		this.sign = true
@@ -38,7 +37,6 @@ class GameInv {
 		this.ball = null;
 		this.walls = [];
 		this.laser = null;
-		this.isCollision = null;
 		this.cameraRotation = new THREE.Euler();
 		this.controls = null;
 		this.texture = null;
@@ -84,8 +82,8 @@ class GameInv {
 		this.directionalLight4.position.set(0, -13, 0).normalize();
 		this.scene.add(this.directionalLight4);
 		this.ball = this.addBall(0, 0, 1, 1, 1, 0);
-		this.player1 = this.addCube(0, -13, 4, 0.8, 4, 0, {transparent: false, map: this.itemTexture}, 0);
-		this.player2 = this.addCube(0, 13, 4, 0.8, 4, 0, {transparent: false, map: this.itemTexture}, 0);
+		this.player1 = this.addCube(0, -13, 4.5, 1.3, 4.5, 0, {transparent: false, map: this.itemTexture}, 0);
+		this.player2 = this.addCube(0, 13, 4.5, 1.3, 4.5, 0, {transparent: false, map: this.itemTexture}, 0);
 		this.walls = [
 			this.addCube(15, 0, 1, 30, 29, 0, { color: 0x05ff00, transparent: true, opacity: 0}),
 			this.addCube(0, 0, 31, 30, 1, 15, { color: 0x05ff00, transparent: true, opacity: 0}),
@@ -243,18 +241,6 @@ class GameInv {
 		return laser;
 	}
 	
-	checkCollisionTarget(element, axes) {
-		const ballBoundingBox = new THREE.Box3().setFromObject(this.ball);
-		const elementBoundingBox = new THREE.Box3().setFromObject(element);
-		
-		const collision = ballBoundingBox.intersectsBox(elementBoundingBox);
-		if (collision && !this.isCollision) {
-			this.isCollision = element;
-			axes *= -1;
-		}
-		return axes;
-	}
-
 	async animate() {
 		if(this.explode == true){
 			this.uniforms.amplitude.value = 1.0 * this.cycleScore
@@ -326,8 +312,6 @@ class GameInv {
 				this.movement.set(0, 0, 0);
 			this.data = {
 				score: [this.p1Score, this.p2Score],
-				speedBall: this.speedBall,
-				//ballVec: [this.ballMovement.x, this.ballMovement.y, this.ballMovement.z],
 				ballPos: [this.ball.position.x, this.ball.position.y, this.ball.position.z],
 				p1Pos: null,
 				p2Pos: [this.player2.position.x,this.player2.position.y,this.player2.position.z],

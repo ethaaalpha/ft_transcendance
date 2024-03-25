@@ -59,16 +59,16 @@ class Menu {
 
 	createTxt (font) {
 		let i = 0;
-		const color = 0x05FF00;
-		const message = ["Matchmaking", "Taining", "Tournament"]
+		const color = [0x05FF00, 0x05FF00, 0xDADADA];
+		const message = ["☢Matchmaking☢", "☢Tournament☢", "☢Training☢"]
 		const yPos = [0, -100, -200] 
 		while (i < 3){
 			this.matDark = new THREE.LineBasicMaterial({
-				color: color,
+				color: color[i],
 				side: 2
 			});
 			this.matLite = new THREE.MeshBasicMaterial({
-				color: color,
+				color: color[i],
 				transparent: true,
 				opacity: 0.9,
 				side: 2

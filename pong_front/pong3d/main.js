@@ -63,7 +63,6 @@ async function initialize() {
 			else if (status.status === 0)
 				await createMenu();
 			else if (status.status === 1){
-                showLoadingAnimation();
                 await waitForData();
     		    await createGame();
             }
@@ -110,8 +109,8 @@ async function loadTexture() {
 			gameData.sceneGameInv.environment = textureRev;
             gameData.controlsMenu = new OrbitControls(gameData.camera, gameData.rendererMenu.domElement);
             gameData.controlsGameLocal = new OrbitControls(gameData.camera, gameData.rendererGameLocal.domElement);
-			//gameData.controlsMenu.enableZoom = false;
-			//gameData.controlsGameLocal.enableZoom = false;
+			gameData.controlsMenu.enableZoom = false;
+			gameData.controlsGameLocal.enableZoom = false;
             gameData.controlsGameLocal.mouseButtons.RIGHT='';
             gameData.controlsMenu.mouseButtons.RIGHT='';
 			status.status = 0;
@@ -147,10 +146,12 @@ async function createGameLocal() {
 
 function waitForData(time) {
     socketTmp.send(JSON.stringify({'event': 'matchmaking', 'data': {'action' : 'join'}}))
+    showLoadingAnimation();
     return new Promise((resolve) => {
         const intervalId = setInterval(() => {
             if (data) {
                 clearInterval(intervalId);
+                hideLoadingAnimation();
                 resolve();
             }
         }, time);

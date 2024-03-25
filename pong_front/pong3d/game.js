@@ -22,7 +22,7 @@ class Game {
 		this.directionalLight4 = gameData.directionalLight4;
 		this.statusCallback = statusCallback;
 		this.movement = new THREE.Vector3(0, 0, 0);
-		this.speed = 0.8;
+		this.speed = 0.4;
 		this.speedBall = 0.2;
 		this.cycleScore = 0.5;
 		this.goalP = false;
@@ -75,8 +75,8 @@ class Game {
 		this.directionalLight4.position.set(0, -13, 0).normalize();
 		this.scene.add(this.directionalLight4);
 		this.ball = this.addBall(0, 0, 1, 1, 1, 0);
-		this.player1 = this.addCube(0, -13, 4, 0.8, 4, 0, {transparent: false, map: this.itemTexture}, 0);
-		this.player2 = this.addCube(0, 13, 4, 0.8, 4, 0, {transparent: false, map: this.itemTexture}, 0);
+		this.player1 = this.addCube(0, -13, 4.5, 1.3, 4.5, 0, {transparent: false, map: this.itemTexture}, 0);
+		this.player2 = this.addCube(0, 13, 4.5, 1.3, 4.5, 0, {transparent: false, map: this.itemTexture}, 0);
 		this.walls = [
 			this.addCube(15, 0, 1, 30, 29, 0, { color: 0x05ff00, transparent: true, opacity: 0}),
 			this.addCube(0, 0, 31, 30, 1, 15, { color: 0x05ff00, transparent: true, opacity: 0}),
@@ -238,7 +238,11 @@ class Game {
 		const elementBoundingBox = new THREE.Box3().setFromObject(element);
 		collision = ballBoundingBox.intersectsBox(elementBoundingBox);
 		if (collision && this.ballMovement.y > 0) {
-			console.log(this.ball.position.y);
+			if (this.ball.position.y < 12 && this.ball.position.y > -12)
+			{
+				console.log("coucou");
+				this.ball.position.y = 11.5;
+			}
 			this.ballMovement.set(0, this.ballMovement.y, 0);
 			const relativeCollision = new THREE.Vector3();
 			relativeCollision.subVectors(this.ball.position, element.position);
@@ -259,6 +263,8 @@ class Game {
 		const elementBoundingBox = new THREE.Box3().setFromObject(element);
 		collision = ballBoundingBox.intersectsBox(elementBoundingBox);
 		if (collision && this.ballMovement.y < 0) {
+			if (this.ball.position.y < 12 && this.ball.position.y > -12)
+				this.ball.position.y = -12;
 			this.ballMovement.set(0, this.ballMovement.y, 0);
 			const relativeCollision = new THREE.Vector3();
 			relativeCollision.subVectors(this.ball.position, element.position);
