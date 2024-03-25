@@ -344,6 +344,7 @@ class Game {
 	}
 
 	async update() {
+		console.log(this.status.status);
 		if (this.goalP == false){
 			let collision;
 			this.cameraRotation.copy(this.camera.rotation);
