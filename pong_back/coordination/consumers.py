@@ -16,12 +16,14 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 		return (self.user.username)
 
 	@database_sync_to_async
+	def getUser(self, username=None) -> User:
+		tUser = self.user.username if not username else username
+		return (Profile.getUserFromUsername(tUser))
+	
+	@database_sync_to_async
 	def desactivePlaying(self):
 		self.user.profile.setPlaying(False)
 
-	@database_sync_to_async
-	def getUser(self) -> User:
-		return (Profile.getUserFromUsername(self.user.username))
 
 	async def connect(self):
 		self.user = self.scope['user']
@@ -83,18 +85,16 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 					# handle le chat message !
 					await sync_to_async(Match.speakConsumer)(user, data.get('content'))
 				case 'invite':
-					import sys
-					print('je suis sale fils de pute', file=sys.stderr)
 					if target:
-						await sync_to_async(InvitationStack.invite)(await self.getUsername(), target)
+						await self.messageResponse('invite', await sync_to_async(InvitationStack.invite)(await self.getUser(), await self.getUser(username=target)))
 					return
 				case 'accept':
 					if target:
-						await sync_to_async(InvitationStack.accept)(await self.getUsername(), target)
+						await self.messageResponse('accept', await sync_to_async(InvitationStack.accept)(await self.getUser(username=target), await self.getUser()))
 					return
 				case 'refuse':
 					if target:
-						await sync_to_async(InvitationStack.refuse)(await self.getUsername(), target)
+						await self.messageResponse('refuse', await sync_to_async(InvitationStack.refuse)(await self.getUser(username=target), await self.getUser()))
 					return
 
 	async def send_message(self, event):

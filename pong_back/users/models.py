@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.files import File
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.files.temp import NamedTemporaryFile
 from django.utils.crypto import get_random_string
@@ -12,6 +11,8 @@ from django.conf import settings
 from uuid import uuid4
 from datetime import timedelta
 from stats.models import Stats
+from tools.functions import is42
+import users.forms as UForm
 import os
 import requests
 import shortuuid
@@ -42,6 +43,7 @@ class Profile(models.Model):
 	lastPasswordChange = models.DateTimeField(default=now, blank=True)
 	gameTheme = models.CharField(max_length=64, default='default')
 	isPlaying = models.BooleanField(default=False)
+	state = models.IntegerField(default=0)
 	
 	# shortcut to user #
 	def getUsername(self):
@@ -52,6 +54,10 @@ class Profile(models.Model):
 	
 	def setPlaying(self, state: bool):
 		self.isPlaying = state
+		self.save()
+
+	def setState(self, state: int):
+		self.state = state
 		self.save()
 
 	def getManyToTab(self, many):
@@ -94,10 +100,9 @@ class Profile(models.Model):
 		return (tResponses.OKAY.request("You successfully change your password !"))
 
 	def form_changePassword(self, request: HttpRequest) -> HttpResponse:
-		from .forms import PasswordForm
-		form: PasswordForm = PasswordForm(request.POST)
+		form: UForm.PasswordForm = UForm.PasswordForm(request.POST)
 
-		if (self.getUsername()[:3] == '42_'):
+		if (is42(self.getUsername())):
 			return (tResponses.FORBIDDEN.request("User from 42 might always use 42 portal to connect themselves !"))
 
 		if (form.is_valid()):
@@ -106,7 +111,7 @@ class Profile(models.Model):
 
 			# Security check to request the password changes !
 			if not (self.user.check_password(actualPassword)):
-				return (tResponses.FORBIDDEN.request(message="Password do not match !"))
+				return (tResponses.FORBIDDEN.request("Password do not match !"))
 
 			# OK - Now able to change the password !
 			value: HttpResponse = self.changePassword(password)
@@ -114,13 +119,11 @@ class Profile(models.Model):
 				update_session_auth_hash(request, self.user)
 			return (value)
 		else:
-			return (tResponses.BAD_REQUEST.request(message="Form isn't valid !"))
+			return (tResponses.BAD_REQUEST.request("Form isn't valid !"))
 		
 	def form_changeProfilePicture(self, request: HttpRequest) -> HttpResponse:
-		from .forms import PictureForm
-		
 		oldPicture = self.profilePicture.path
-		form: PictureForm = PictureForm(request.POST, request.FILES)
+		form: UForm.PictureForm = UForm.PictureForm(request.POST, request.FILES)
 
 		if (form.is_valid()):
 			if (os.path.exists(oldPicture) and os.path.basename(oldPicture) != settings.DEFAULT_PROFILE_PICTURE_NAME):
@@ -128,10 +131,30 @@ class Profile(models.Model):
 
 			self.profilePicture = form.cleaned_data['profilePicture']
 			self.save()
-			return (tResponses.OKAY.request(message="Profile picture successfully changed !"))
+			return (tResponses.OKAY.request("Profile picture successfully changed !"))
 		else:
-			return (tResponses.BAD_REQUEST.request(message="Image is not valid !"))
+			return (tResponses.BAD_REQUEST.request("Image is not valid !"))
 	
+	def form_changeEmail(self, request: HttpRequest) -> HttpResponse:
+		user: User = request.user
+		form: UForm.EmailForm = UForm.EmailForm(request.POST)
+
+		if (form.is_valid()):
+			activeEmail = form.cleaned_data['actualEmail']
+			newEmail = form.cleaned_data['newEmail']
+
+			if is42(self.getUsername()):
+				return (tResponses.FORBIDDEN.request("User from 42 can't change their email !"))
+			if (activeEmail != user.email):
+				return (tResponses.BAD_REQUEST.request("Email do not match with active one !"))
+			if (activeEmail == newEmail):
+				return (tResponses.BAD_REQUEST.request("Email musn't be the same !"))
+
+			user.email = newEmail
+			user.save()
+			return (tResponses.OKAY.request("You successfully change your mail !"))
+		else:
+			return (tResponses.BAD_REQUEST.request("Email are not valid !"))
 
 	# Will check if the passed user is blocked
 	def is_block(self, target):

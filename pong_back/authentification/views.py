@@ -1,6 +1,5 @@
-from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.http import HttpRequest, JsonResponse
 from django.utils.html import format_html
-from django.contrib.auth.models import User
 from tools.responses import tResponses
 from tools.functions import isOtherKeysInList, areKeysFromList
 from django.core.mail import send_mail
@@ -10,6 +9,7 @@ from django.shortcuts import redirect
 from django.contrib.auth import logout as djangoLogout
 from uuid import uuid4
 from requests.models import PreparedRequest
+from tools.functions import is42
 from .forms import RegisterForm, LoginForm, ResetPassForm
 import requests
 
@@ -120,6 +120,8 @@ def reset_password(request: HttpRequest):
 			user = Profile.getUserFromUsername(username)
 
 			if user:
+				if (is42(user.username)):
+					return tResponses.FORBIDDEN.request("User from 42 must use 42 portal to connect !")
 				newPass = generatePassword()
 				response = user.profile.changePassword(newPass)
 
