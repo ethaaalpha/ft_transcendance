@@ -1,6 +1,25 @@
 version: '3.8'
 
 services:
+  geth:
+    container_name: geth
+    build:
+      context: docker/geth
+      dockerfile: geth.dockerfile
+    env_file:
+      - .env
+    ports:
+      - 8545:8545
+    volumes:
+      - geth:/ethereum/
+    networks:
+      - pongNetwork
+    healthcheck:
+      test: ["CMD-SHELL", "python /script/tools.py test"]
+      interval: 3s
+      timeout: 10s
+      retries: 20
+      
   postgresql:
     container_name: postgresql
     image: postgres:alpine
@@ -15,14 +34,19 @@ services:
       timeout: 1s
       retries: 5
     restart: on-failure
+    networks:
+      - pongNetwork
 
   redis:
     container_name: redis
     image: redis:alpine
     restart: on-failure
+    networks:
+      - pongNetwork
 
   daphne:
     container_name: daphne
+    platform: linux/x86_64 #because of solc compiler
     build:
       context: docker/daphne
       dockerfile: daphne.dockerfile
@@ -33,17 +57,19 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+      geth:
+        condition: service_healthy
     env_file:
       - .env
     restart: on-failure
+    networks:
+      - pongNetwork
 
   nginx:
     container_name: nginx
     build:
       context: docker/nginx
       dockerfile: nginx.dockerfile
-      args:
-        - DOMAIN=$DOMAIN
     env_file:
       - .env
     volumes:
@@ -52,8 +78,18 @@ services:
       - ./libs:/usr/share/libs
       - ./front_mehdi:/usr/share/test
     ports: 
-      - $PORT_HTTP:80
-      - $PORT_HTTPS:443
+      - 8080:80
+      - 8081:443
     depends_on:
       - daphne
     restart: on-failure
+    networks:
+      - pongNetwork
+
+networks:
+  pongNetwork:
+    name: "teamrocket"
+    driver: bridge
+
+volumes:
+  geth:

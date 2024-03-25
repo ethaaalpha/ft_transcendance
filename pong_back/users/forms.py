@@ -11,4 +11,3 @@ class PasswordForm(forms.Form):
 
 class PictureForm(forms.Form):
 	profilePicture =forms.ImageField(required=True)
-

@@ -7,3 +7,4 @@ shortuuid
 psycopg2-binary
 web3
 channels-redis
+py-solc-x
