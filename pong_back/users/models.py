@@ -182,15 +182,16 @@ class Profile(models.Model):
 	@staticmethod
 	def login(request: HttpRequest, username:str, password=None):
 		user = Profile.getUserFromUsername(username)
-	
+
+		if not user:
+			return 1
 		if (password):
 			user = authenticate(username=username, password=password)
-		if user:
-			Profile.createUserOnetoOne(user)
-			login(request, user)
-			return 0
-		return 1
-
+			if not user:
+				return 2
+		Profile.createUserOnetoOne(user)
+		login(request, user)
+		return 0
 	
 	# return 0 if success then 1 
 	@staticmethod

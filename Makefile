@@ -10,7 +10,7 @@ NEEDED_DIR			= ${DATABASE_DIR} ${LIBS_DIR}
 DEFAULT_PICTURE		= "pokemon.png"
 
 # Containers
-CONTAINERS		 	= daphne nginx postgresql redis
+CONTAINERS		 	= daphne nginx postgresql redis geth
 
 all: 
 	$(MAKE) run
@@ -21,6 +21,9 @@ ${CONTAINERS}:
 run:
 	@mkdir -p ${NEEDED_DIR}
 	docker compose up --build
+
+up:
+	docker compose up
 
 down:
 	docker compose down

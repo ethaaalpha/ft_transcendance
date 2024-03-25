@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from tools.responses import tResponses
 
 def logged_required(function):
