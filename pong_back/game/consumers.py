@@ -49,7 +49,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 		await self.send_json(content)
   	
 	@staticmethod
-	async def sendMessageToConsumer(matchId: str, content: str, event: str):
+	async def sendMessageToConsumer(matchId: str, content: dict, event: str):
 		channel_layer = get_channel_layer()
 		await channel_layer.group_send(matchId, {
 				"type" : "send.message",
