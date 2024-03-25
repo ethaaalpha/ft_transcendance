@@ -135,7 +135,7 @@ STATICFILES_DIRS = [
 ]
 
 # API - 42 #
-API_CALLBACK = os.getenv('API_CALLBACK')
+API_CALLBACK = os.getenv('API_CALLBACK').replace("DOMAIN", os.getenv('DOMAIN'))
 API_URL = os.getenv('API_URL')
 API_UUID = os.getenv('API_UUID')
 API_SECRET = os.getenv('API_SECRET')

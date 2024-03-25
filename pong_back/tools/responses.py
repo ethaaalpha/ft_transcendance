@@ -12,4 +12,3 @@ class tResponses(Enum):
 		if message != "":
 			return (JsonResponse({"message": message}, status=self.value))
 		return (HttpResponse(message, status=self.value))
-	

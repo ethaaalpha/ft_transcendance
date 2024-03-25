@@ -24,14 +24,12 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 	def desactivePlaying(self):
 		self.user.profile.setPlaying(False)
 
-
 	async def connect(self):
 		self.user = self.scope['user']
 		await self.accept()
 		await self.channel_layer.group_add(getChannelName(await self.getUsername(), 'coord'), self.channel_name)
 
 	async def disconnect(self, code):
-
 		# need to leave the matchmaking queue
 		await sync_to_async(Matchmaking.removePlayerToQueue)(self.user)
 
@@ -49,6 +47,13 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 		"""
 		await self.send_json({'event': event, 'data': {'message': values[0], 'status': values[1]}})
 
+
+	async def send_message(self, event):
+		await self.send_json(content={
+			'event': event['event'],
+			'data': event['data'] 
+		})
+	
 	async def receive_json(self, content: dict, **kwargs):
 		if 'event' in content and 'data' in content:
 			data = content['data']
@@ -97,12 +102,6 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 						await self.messageResponse('refuse', await sync_to_async(InvitationStack.refuse)(await self.getUser(username=target), await self.getUser()))
 					return
 
-	async def send_message(self, event):
-		await self.send_json(content={
-			'event': event['event'],
-			'data': event['data'] 
-		})
-
 	@staticmethod
 	def sendMessageToConsumer(username: str, content: str, event: str):
 		channel_layer = get_channel_layer()
@@ -113,4 +112,3 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 				"event" : event
 			}
 		)
-
