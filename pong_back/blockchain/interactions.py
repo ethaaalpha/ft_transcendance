@@ -21,4 +21,3 @@ class Web3Interactions:
 
 	def getW3(self) -> Web3:
 		return self.link
-	

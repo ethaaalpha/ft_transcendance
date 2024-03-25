@@ -4,7 +4,6 @@ from asgiref.sync import async_to_sync
 from users.models import Profile
 from .tools import getChannelName
 
-
 class ActivityNotifier():
 	"""
 	Use to notify client using WebSocket

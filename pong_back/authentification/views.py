@@ -82,7 +82,7 @@ def callback(request: HttpRequest):
 		params = ["code", "state"]
 
 		if (areKeysFromList(params, request.GET) or request.GET.get('error')):
-			return tResponses.BAD_REQUEST.request("Authentification error !")
+			return redirect("/authentification-error")
 		
 		code = request.GET['code']
 		state = request.GET['state']
@@ -104,7 +104,7 @@ def callback(request: HttpRequest):
 				return tResponses.FORBIDDEN.request("You can't log with this account !")
 			return redirect("/")
 		else:
-			return tResponses.BAD_REQUEST.request("Authentification error !")
+			return redirect("/authentification-error")
 	else:
 		return tResponses.BAD_REQUEST.request("Post request not supported here !")
 

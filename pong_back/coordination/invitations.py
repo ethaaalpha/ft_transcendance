@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from game.models import Room
 from .tools import isAvailableToPlay
 
-# doit être dôté d'un marqueur temporel !
 class Invitation:
 	def __init__(self, initier: User, target: User):
 		self.timestamp = datetime.now()
@@ -96,4 +95,3 @@ class InvitationStack:
 		for invitation in InvitationStack.stack:
 			if invitation.expired(current):
 				InvitationStack.stack.remove(invitation)
-	

@@ -1,7 +1,6 @@
 from django.db import models
 from blockchain.models import Contract, ContractBuilder
 from coordination.tools import setInMatch, setOutMatch
-from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
 from django.db.models import Q
 from datetime import timedelta, datetime
@@ -388,4 +387,3 @@ class Room(models.Model):
 		"""
 		room = Room.objects.filter(opponents=player, state=0).first()
 		return room.id if room else False
-	

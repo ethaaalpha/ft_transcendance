@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
-from django.utils.timezone import now
 from users.models import Profile
 
 class Conversation(models.Model):
@@ -10,7 +9,7 @@ class Conversation(models.Model):
 	
 	def getMessages(self, n = 10):
 		"""
-			Return the last max N messages sended ordered by sendAt time
+		Return the last max N messages sended ordered by sendAt time
 		"""
 		messagesObj = Message.objects.filter(conversation=self).order_by('-sendAt')[:n]
 		messagesJson = [msg.toJson() for msg in messagesObj]
@@ -18,7 +17,6 @@ class Conversation(models.Model):
 		return messagesJson
 
 	def addMessage(self, sender: User, content: str):
-
 		message = Message(conversation=self, sender=Profile.getUserFromUsername(sender), content=content)
 		message.save()
 
@@ -64,7 +62,6 @@ class Message(models.Model):
 	sender = models.ForeignKey(User, blank=False, on_delete=models.CASCADE)
 	content = models.TextField(max_length=settings.MESSAGE_LENGTH_MAX, blank=False)
 	sendAt = models.DateTimeField(auto_now_add=True)
-
 
 	def toJson(self):
 		return {

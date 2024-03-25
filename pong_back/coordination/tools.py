@@ -20,5 +20,3 @@ def setInMatch(player: User):
 def setOutMatch(player: User):
 	player.profile.setPlaying(False)
 	Status.leaveGame(player)
-	
-	

@@ -3,10 +3,8 @@ from web3 import Web3
 from .interactions import Web3Interactions
 from threading import Thread
 import solcx
-import sys
 
 class ContractBuilder():
-
 	@staticmethod
 	def compile():
 		"""
@@ -30,7 +28,6 @@ class ContractBuilder():
 		w3Int: Web3Interactions = Web3Interactions()
 		w3Int.loads()
 		w3: Web3 = w3Int.getW3()
-
 
 		# Compile using py-solc-x integration !
 		comp = ContractBuilder.compile()
