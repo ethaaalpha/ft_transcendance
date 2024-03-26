@@ -61,46 +61,43 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 			target = data.get('target')
 			match content['event']:
 				# to request some matchmaking !
-				case 'matchmaking': 
-					if 'action' not in data:
-						return
-					match data['action']:
-						case 'join':
-							await self.messageResponse('matchmaking', await sync_to_async(Matchmaking.addPlayerToQueue)(user))
-						case 'quit':
-							await self.messageResponse('matchmaking', await sync_to_async(Matchmaking.removePlayerToQueue)(user))
+				case 'matchmaking':
+					if 'action' in data:
+						match data['action']:
+							case 'join':
+								await self.messageResponse('matchmaking', await sync_to_async(Matchmaking.addPlayerToQueue)(user))
+							case 'quit':
+								await self.messageResponse('matchmaking', await sync_to_async(Matchmaking.removePlayerToQueue)(user))
+				case 'next':
+					if 'room-id' in data:
+						await sync_to_async(Room.next_client)(user, data['room-id'])
 				# to join a private tournament !
 				case 'tournament':
-					if 'action' not in data and 'room-id' not in data:
-						return
-					match data['action']:
-						case 'join':
-							await self.messageResponse('tournament', await sync_to_async(Room.joinRoom)(user, data['room-id']))
-						case 'quit':
-							await self.messageResponse('tournament', await sync_to_async(Room.leaveRoom)(user, data['room-id']))
+					if 'action' in data and 'room-id' in data:
+						match data['action']:
+							case 'join':
+								await self.messageResponse('tournament', await sync_to_async(Room.joinRoom)(user, data['room-id']))
+							case 'quit':
+								await self.messageResponse('tournament', await sync_to_async(Room.leaveRoom)(user, data['room-id']))
 				# case to create a private tournament
 				case 'create':
-					if 'mode' not in data:
-						return
-					await self.messageResponse('create', await sync_to_async(Room.createRoomConsumer)(user, mode=Mode.fromText(data['mode'])))
+					if 'mode' in data:
+						await self.messageResponse('create', await sync_to_async(Room.createRoomConsumer)(user, mode=Mode.fromText(data['mode'])))
 				# in game chat !
 				case 'chat':
-					if 'content' not in data:
-						return
-					# handle le chat message !
-					await sync_to_async(Match.speakConsumer)(user, data.get('content'))
+					if 'content' in data:
+						# handle le chat message !
+						await sync_to_async(Match.speakConsumer)(user, data.get('content'))	
+				# For invitation game (1v1 friends)
 				case 'invite':
 					if target:
 						await self.messageResponse('invite', await sync_to_async(InvitationStack.invite)(await self.getUser(), await self.getUser(username=target)))
-					return
 				case 'accept':
 					if target:
 						await self.messageResponse('accept', await sync_to_async(InvitationStack.accept)(await self.getUser(username=target), await self.getUser()))
-					return
 				case 'refuse':
 					if target:
 						await self.messageResponse('refuse', await sync_to_async(InvitationStack.refuse)(await self.getUser(username=target), await self.getUser()))
-					return
 
 	@staticmethod
 	def sendMessageToConsumer(username: str, content: str, event: str):
