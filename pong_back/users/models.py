@@ -130,7 +130,8 @@ class Profile(models.Model):
 				os.remove(oldPicture)
 
 			self.profilePicture = form.cleaned_data['profilePicture']
-			self.save()
+			import sys
+			self.save(update_fields=["profilePicture"])
 			return (tResponses.OKAY.request("Profile picture successfully changed !"))
 		else:
 			return (tResponses.BAD_REQUEST.request("Image is not valid !"))

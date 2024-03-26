@@ -14,7 +14,7 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 	@database_sync_to_async
 	def getUsername(self):
 		return (self.user.username)
-
+	
 	@database_sync_to_async
 	def getUser(self, username=None) -> User:
 		tUser = self.user.username if not username else username
@@ -26,10 +26,13 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 
 	async def connect(self):
 		self.user = self.scope['user']
-		await self.accept()
-		await self.channel_layer.group_add(getChannelName(await self.getUsername(), 'coord'), self.channel_name)
+		if self.user.is_authenticated:
+			await self.accept()
+			await self.channel_layer.group_add(getChannelName(await self.getUsername(), 'coord'), self.channel_name)
 
 	async def disconnect(self, code):
+		if not self.user.is_authenticated:
+			return
 		# need to leave the matchmaking queue
 		await sync_to_async(Matchmaking.removePlayerToQueue)(self.user)
 

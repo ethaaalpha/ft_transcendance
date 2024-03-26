@@ -15,13 +15,15 @@ class ActivityConsumer(AsyncJsonWebsocketConsumer):
 
 	async def connect(self):
 		self.user = self.scope['user']
-		await self.accept()
-		await self.channel_layer.group_add(getChannelName(await self.getUsername(), 'activity'), self.channel_name)
-		await sync_to_async(Status.connect)(self.user)
+		if self.user.is_authenticated:
+			await self.accept()
+			await self.channel_layer.group_add(getChannelName(await self.getUsername(), 'activity'), self.channel_name)
+			await sync_to_async(Status.connect)(self.user)
 
 	async def disconnect(self, code):
-		await sync_to_async(Status.disconnect)(self.user)
-		await self.channel_layer.group_discard(getChannelName(await self.getUsername(), 'activity'), self.channel_name)
+		if self.user.is_authenticated:
+			await sync_to_async(Status.disconnect)(self.user)
+			await self.channel_layer.group_discard(getChannelName(await self.getUsername(), 'activity'), self.channel_name)
 		return await super().disconnect(code)
 	
 	async def receive_json(self, content: dict, **kwargs):
