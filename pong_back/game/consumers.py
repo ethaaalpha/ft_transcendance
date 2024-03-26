@@ -22,12 +22,15 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 
 	async def connect(self):
 		self.user = self.scope['user']
-		self.matchId = str(GameMap.getMatchID(await self.getUsername()))
-		print(await self.getUsername(), sys.stderr)
-		await self.accept()
-		await self.channel_layer.group_add(self.matchId, self.channel_name)
+		if self.user.is_authenticated:
+			self.matchId = str(GameMap.getMatchID(await self.getUsername()))
+			print(await self.getUsername(), sys.stderr)
+			await self.accept()
+			await self.channel_layer.group_add(self.matchId, self.channel_name)
 
 	async def disconnect(self, code):
+		if not self.user.is_authenticated:
+			return
 		game = GameMap.getGame(self.matchId)
 		if game:
 			await GameMap.getGame(self.matchId).disconnect(await self.getUsername())

@@ -323,7 +323,7 @@ class Room(models.Model):
 			data = {'room-id': self.id, 'count': count}
 			CoordinationConsumer.sendMessageToConsumer(p.username, data, 'count')
 		return
-	
+
 	@staticmethod
 	def createRoom(owner: User, mode = Mode.CLASSIC):
 		"""
