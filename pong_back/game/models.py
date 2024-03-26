@@ -5,6 +5,9 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from datetime import timedelta, datetime
 from uuid import uuid4
+from django.contrib.postgres.fields import ArrayField
+from threading import Thread
+import time
 import shortuuid
 import sys
 
@@ -33,6 +36,8 @@ class Match(models.Model):
 	winner = models.ForeignKey(User, default=None, null=True, on_delete=models.CASCADE)
 	date = models.DateTimeField(auto_now_add=True)
 	state = models.IntegerField(default=0) # 0 waiting, 1 started, 2 finish
+	ready = ArrayField(models.BooleanField(), size=2, default=[False, False])
+	start_time = models.DateTimeField(auto_now_add=True)
 
 	@staticmethod
 	def speakConsumer(speaker: User, content: str):
@@ -82,17 +87,26 @@ class Match(models.Model):
 	def room(self):
 		return Room.objects.filter(matchs=self).first()
 
+	def wait(self):
+		"""
+		Needed before the match start to wait for the player to be ready !
+		Must be runned inside a thread
+		"""
+		time.sleep(10)
+		if (self.ready[0] and self.ready[1]):
+			self.start()
+		else:
+			self.finish(-1, -2)
+			return
+
 	def start(self):
 		from .core import GameMap
 
-		print(f'Match {self.id}, voici les adversaires host: {self.host} | invited: {self.invited}', file=sys.stderr)
-
-		# ici pour avertir les autres joueurs du prochain match !!!
-		self.send(self.host, 'next', {'match-id': str(self.id), 'host': self.host.username, 'invited': self.invited.username, 'statusHost': True})
-		self.send(self.invited, 'next', {'match-id': str(self.id), 'host': self.host.username, 'invited': self.invited.username, 'statusHost': False})
+		# Tell people there next match !
 		GameMap.createGame(str(self.id), self.host.username, self.invited.username)
 		self.setState(1)
-		#self.start_time = datetime.now()
+		self.start_time = datetime.now()
+		self.save()
 
 	def finish(self, score):
 		"""
@@ -100,18 +114,15 @@ class Match(models.Model):
 		also run the checkup of next match if it is a tournament
 		"""
 		winner = self.host if score[0] > score[1] else self.invited
-		#self.end_time = datetime.now()
-		#duration: timedelta = self.end_time - self.start_time
-		#self.duration = duration
-		#self.save()
+		self.duration = datetime.now() - self.start_time
+		self.save()
 		
 		ContractBuilder.threaded(score, self) # Blockchain Runner !
 		self.setWinner(winner)
-		self.setState(2) #need to define duration
+		self.setState(2)
 		setOutMatch(self.getLoser()) # let free the loser
 
 		# here make the room update and check for the next match !
-		print(f'Le gagnant du match entre {self.host} et {self.invited} est {self.getWinner()} !!!!', file=sys.stderr)
 		room = self.room()
 		room.update()
 
@@ -204,7 +215,7 @@ class Room(models.Model):
 		for player in self.opponents.all():
 			setInMatch(player)
 
-		self.next(True)
+		self.next_server(True)
 	
 	def removePlayer(self, player: User):
 		"""
@@ -245,8 +256,8 @@ class Room(models.Model):
 		# function to check if roomReady !
 		self.update()
 		return ("You successfully join the room !", True)
-	
-	def next(self, first=False):
+
+	def next_server(self, first=False):
 		"""
 		Generate the next match seeds !
 		And warn the player !
@@ -277,9 +288,10 @@ class Room(models.Model):
 		self.matchs.add(*matchs)
 		self.save()
 
-		# ici lancer les matchs
+		# Runner the thread to wait the game (to players to be ready !)
 		for m in matchs:
-			m.start()	
+			thread = Thread(target=m.wait)
+			thread.start()
 
 	def update(self):
 		"""
@@ -291,13 +303,13 @@ class Room(models.Model):
 		elif self.state == 1:
 			# mean that this is the first round !
 			if self.matchs.count() == 0:
-				self.next(True)
+				self.next_server(True)
 			# check if all the last match has ended !
 			else:
 				for m in self.matchs.all():
 					if m.state == 0 or m.state == 1:
 						return
-				return self.next()
+				return self.next_server()
 			# faire les nexts matchs etc voir pour les tournois
 
 	def updateCountsAll(self):
@@ -388,3 +400,24 @@ class Room(models.Model):
 		"""
 		room = Room.objects.filter(opponents=player, state=0).first()
 		return room.id if room else False
+	
+	@staticmethod
+	def next_client(player: User, room_id: str):
+		"""
+		Tell the client it's next match
+		"""
+		room = Room.getRoom(room_id)
+		if room:
+			matchsRunning = list(room.matchs.all()[:room.numberMatchsLastRound])
+			for m in matchsRunning:
+				if m.host == player or m.invited == player:
+					who = 0 if m.host == player else 1
+					m.ready[who] = True
+					m.save()
+					if who:
+						m.send(m.invited, 'next', {'match-id': str(m.id), 'host': m.host.username, 'invited': m.invited.username, 'statusHost': False})
+					else:
+						m.send(m.host, 'next', {'match-id': str(m.id), 'host': m.host.username, 'invited': m.invited.username, 'statusHost': True})
+					if (m.ready[0] and m.ready[1]):
+						m.start()
+					return
