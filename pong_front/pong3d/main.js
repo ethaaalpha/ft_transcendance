@@ -12,6 +12,7 @@ import { hideLoadingAnimation, hideTournamentCode, showLoadingAnimation, showTou
 hideTournamentCode()
 var data = null;
 function waitForNextMatch(code){
+    console.log(status);
     return new Promise((resolve) => {
         const intervalId = setInterval(() => {
             socketTmp.send(JSON.stringify({'event': 'next', 'data': {'room-id' : code}}))
@@ -87,10 +88,10 @@ gameData.rendererGameLocal.setSize(window.innerWidth , window.innerHeight);
 function updateStatus(newStatus) {
     status.status= newStatus.status;
 }
-async function initialize(callback) {
+async function initialize() {
 	try {
 		while(1){
-            console.log(status.status)
+            console.log(status)
             data = null
 			if (status.status === -1)
 				await loadTexture();
@@ -101,7 +102,7 @@ async function initialize(callback) {
                 showLoadingAnimation();
                 await waitForData();
     		    await createGame(0);
-                console.log(status.status)
+                console.log(status)
             }
             else if (status.status === 2){
                 showTournamentCode()
@@ -113,7 +114,8 @@ async function initialize(callback) {
                 await createGame();
             else if (status.status === 4){
                 showLoadingAnimation();
-                await waitForNextMatch(code);
+                console.log(status)
+                await waitForNextMatch("");
                 await createGame(4);
             } 
 		}
@@ -144,17 +146,17 @@ function initLoading(){
 async function loadTexture() {
     return new Promise((resolve, reject) => {
         
-        var RGBELoad = new RGBELoader(loadingManager).setPath('/static/assets/hdr/');
-        RGBELoad.load('d2.hdr', (texture) => {
-            texture.mapping = THREE.EquirectangularReflectionMapping;
-            var textureRev = texture.clone()
-            textureRev.flipY = false;
-			gameData.sceneMenu.background = texture;
-			gameData.sceneMenu.environment = texture;
-            gameData.sceneGameLocal.background = texture;
-			gameData.sceneGameLocal.environment = texture;
-            gameData.sceneGameInv.background = textureRev;
-			gameData.sceneGameInv.environment = textureRev;
+        // var RGBELoad = new RGBELoader(loadingManager).setPath('/static/assets/hdr/');
+        // RGBELoad.load('d2.hdr', (texture) => {
+        //     texture.mapping = THREE.EquirectangularReflectionMapping;
+        //     var textureRev = texture.clone()
+        //     textureRev.flipY = false;
+		// 	gameData.sceneMenu.background = texture;
+		// 	gameData.sceneMenu.environment = texture;
+        //     gameData.sceneGameLocal.background = texture;
+		// 	gameData.sceneGameLocal.environment = texture;
+        //     gameData.sceneGameInv.background = textureRev;
+		// 	gameData.sceneGameInv.environment = textureRev;
             gameData.controlsMenu = new OrbitControls(gameData.camera, gameData.rendererMenu.domElement);
             gameData.controlsGameLocal = new OrbitControls(gameData.camera, gameData.rendererGameLocal.domElement);
 			gameData.controlsMenu.enableZoom = false;
@@ -163,7 +165,7 @@ async function loadTexture() {
             gameData.controlsMenu.mouseButtons.RIGHT='';
 			status.status = 0;
             resolve();
-        });
+        // });
     });
 }
 
@@ -211,7 +213,7 @@ function waitForData(time) {
     });
 }
 initLoading();
-initialize(status);
+initialize();
 //waitstatus(500);
 
 
