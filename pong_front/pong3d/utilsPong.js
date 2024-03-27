@@ -1,5 +1,9 @@
 let sleepSetTimeout_ctrl;
 
+var status = {
+	status:-1,
+};
+
 function sleep(ms) {
     clearInterval(sleepSetTimeout_ctrl);
     return new Promise(resolve => sleepSetTimeout_ctrl = setTimeout(resolve, ms));
@@ -32,4 +36,4 @@ function hideLoadingAnimation() {
     loadingAnimation.style.display = "none";
 }
 
-export { sleep, waitForData, loadShader, hideLoadingAnimation, showLoadingAnimation}
+export { sleep, waitForData, loadShader, hideLoadingAnimation, showLoadingAnimation, status}

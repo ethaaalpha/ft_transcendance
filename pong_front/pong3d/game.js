@@ -190,8 +190,10 @@ class Game {
 						this.ball.position.set(this.data.ballPos[0], this.data.ballPos[1], this.data.ballPos[2]);
 				}
 				if (this.data.score && this.data.score.length === 2){
-					this.p1Score = this.data.score[0];
-					this.p2Score = this.data.score[1];
+					if (this.p1Score + 1 == this.data.score[0])
+						this.p1Score = this.data.score[0];
+					if (this.p2Score + 1 == this.data.score[1])
+						this.p2Score = this.data.score[1];
 				}
 				this.speedBall = this.data.speedBall
 				this.goalP = this.data.goalP
@@ -241,7 +243,6 @@ class Game {
 		if (collision && this.ballMovement.y > 0) {
 			if (this.ball.position.y < 12 && this.ball.position.y > -12)
 			{
-				console.log("coucou");
 				this.ball.position.y = 11.5;
 			}
 			this.ballMovement.set(0, this.ballMovement.y, 0);
@@ -333,6 +334,8 @@ class Game {
 			this.ballMovement.x = 0;
 			this.ballMovement.z = 0;
 			await sleep(1500)
+			console.log(this.p1Score)
+			console.log(this.p2Score)
 			if (this.p1Score < 5 && this.p2Score < 5)
 				this.fontLoader.load( '/static/fonts/default2.json', (font) => this.scoreInit(font))
 			this.explode = false;
@@ -344,7 +347,6 @@ class Game {
 	}
 
 	async update() {
-		console.log(this.status.status);
 		if (this.goalP == false){
 			let collision;
 			this.cameraRotation.copy(this.camera.rotation);
@@ -431,11 +433,12 @@ class Game {
 	}
 
 	async sendMessageToServer(message) {
-		return new Promise(() => {
-			const jsonMessage = JSON.stringify(message);
-			this.socket.send(jsonMessage);
-			}
-		);
+		return new Promise((resolve, reject) => {
+			if (this.socket.readyState === WebSocket.OPEN){
+				const jsonMessage = JSON.stringify(message);
+				this.socket.send(jsonMessage);
+				}
+			});
 	}
 
 	onWindowResize() {
@@ -451,8 +454,10 @@ class Game {
 		window.removeEventListener('resize',this.onResize);
 		this.appli.removeChild(this.renderer.domElement);
 		this.scene.clear();
-		this.socket.CLOSING;
+		this.socket.close();
 		this.appli = null;
+		this.p1Score = 0;
+		this.p2Score = 0;
 		this.renderer = null;
 		this.camera = null;
 		this.controls = null;

@@ -33,8 +33,6 @@ class Game:
             self.goalP = False
 
     async def disconnect(self, username):
-        print(username, file=sys.stderr)
-        print(self.p1, file=sys.stderr)
         if username == self.p1:
             self.score[0] = 0
             self.score[1] = 10
@@ -65,6 +63,7 @@ class Game:
     @database_sync_to_async
     def sendResult(self):
         if self.sent == False:
+
             match = Match.getMatch(id = self.matchId)
             match.finish((self.score[0], self.score[1]))   
             async_to_sync(C.GameConsumer.sendMessageToConsumer)(self.matchId, {}, "end")

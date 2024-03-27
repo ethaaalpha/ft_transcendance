@@ -197,8 +197,10 @@ class GameInv {
 				if (this.data.ballPos && this.data.ballPos.length === 3)
 					this.ball.position.set(this.data.ballPos[0], this.data.ballPos[1], this.data.ballPos[2])
 				if (this.data.score && this.data.score.length === 2){
-					this.p1Score = this.data.score[0];
-					this.p2Score = this.data.score[1];
+					if (this.p1Score + 1 == this.data.score[0])
+						this.p1Score = this.data.score[0];
+					if (this.p2Score + 1 == this.data.score[1])
+						this.p2Score = this.data.score[1];
 				}
 				this.goalP = this.data.goalP
 		};
@@ -367,10 +369,11 @@ class GameInv {
 
 	async sendMessageToServer(message) {
 		return new Promise((resolve, reject) => {
-			const jsonMessage = JSON.stringify(message);
-			this.socket.send(jsonMessage);
-			}
-		);
+			if (this.socket.readyState === WebSocket.OPEN){
+				const jsonMessage = JSON.stringify(message);
+				this.socket.send(jsonMessage);
+				}
+			});
 	}
 
 	onWindowResize() {
@@ -386,7 +389,7 @@ class GameInv {
 		window.removeEventListener('resize',this.onResize);
 		this.appli.removeChild(this.renderer.domElement);
 		this.scene.clear();
-		this.socket.CLOSING;
+		this.socket.close();
 		this.appli = null;
 		this.renderer = null;
 		this.camera = null;

@@ -158,6 +158,7 @@ class Menu {
 	}
 
 	onKeyDown(event) {
+		console.log(event.keyCode);
 		switch (event.keyCode) {
 			case 83:
 				if (this.selected == 2){
@@ -174,12 +175,6 @@ class Menu {
 				}
 				else
 					this.mainButton = this.button[--this.selected];
-				break;
-			case 65:
-				this.moveLeft = true;
-				break;
-			case 68:
-				this.moveRight = true;
 				break;
 			case 13:
 				this.stop()

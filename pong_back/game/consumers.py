@@ -42,7 +42,6 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 				data = content['data']
 				await game.updateBall(data)
 			elif content['event'] == 'ready':
-				print("coucou", file=sys.stderr)
 				await game.makeReady(await self.getUsername())
 
 			
