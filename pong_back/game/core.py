@@ -97,7 +97,8 @@ class GameMap:
         
     @staticmethod
     def removeGame(matchId):
-        GameMap._gameMap.pop(matchId)
+        if GameMap._gameMap.get(matchId):
+            GameMap._gameMap.pop(matchId)
         
     @staticmethod
     def getGame(matchId):
