@@ -7,7 +7,16 @@ import Game from './game.js';
 import Menu from './menu.js';
 import GameLocal from './gameLocal.js';
 import GameInv from './gameInv.js';
-import { hideLoadingAnimation, showLoadingAnimation, sleep } from './utilsPong.js';
+import { hideLoadingAnimation, showLoadingAnimation, status } from './utilsPong.js';
+
+
+document.getElementById("codeForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+  
+    var code = document.getElementById("codeInput").value;
+  
+    console.log("The entered code is: " + code);
+});
 
 var view;
 var i = 0;
@@ -49,13 +58,13 @@ var gameData = {
 gameData.rendererMenu.setSize(window.innerWidth , window.innerHeight);
 gameData.rendererGameLocal.setSize(window.innerWidth , window.innerHeight);
 
-var status = {
-	status:-1,
-};
+// var status = {
+// 	status:-1,
+// };
 function updateStatus(newStatus) {
-    status= newStatus;
+    status.status= newStatus.status;
 }
-async function initialize() {
+async function initialize(callback) {
 	try {
 		while(1){
 			if (status.status === -1)
@@ -65,9 +74,12 @@ async function initialize() {
 			else if (status.status === 1){
                 await waitForData();
     		    await createGame();
+                console.log(status.status)
             }
             else if (status.status === 2)
-                await createGameLocal();
+                break ;
+            else if (status.status === 3)
+                await createGame();
 		}
     } catch (error) {
         console.error("Error during initialization:", error);
@@ -121,26 +133,26 @@ async function loadTexture() {
 
 async function createMenu() {
     return new Promise((resolve, reject) => {
-        view = new Menu(status, resolve, updateStatus, gameData);
 		view = null;
+        view = new Menu(status, resolve, updateStatus, gameData);
     });
 }
 
 async function createGame() {
     return new Promise((resolve, reject) => {
+        view = null;
         if (data.statusHost == true)
             view = new Game(status, resolve, updateStatus, gameData, data);
         else
             view = new GameInv(status, resolve, updateStatus, gameData, data);
-        view = null;
         data = null;
     });
 }
 
 async function createGameLocal() {
     return new Promise((resolve, reject) => {
-        view = new GameLocal(status, resolve, updateStatus, gameData);
 		view = null;
+        view = new GameLocal(status, resolve, updateStatus, gameData);
     });
 }
 
@@ -158,5 +170,20 @@ function waitForData(time) {
     });
 }
 initLoading();
-initialize();
+initialize(status);
+//waitstatus(500);
+
+function waitstatus(time) {
+    return new Promise((resolve) => {
+        const intervalId = setInterval(() => {
+            console.log(status)
+            if (status.status == 8) {
+                clearInterval(intervalId);
+                resolve();
+            }
+        }, time);
+    });
+}
+
+
 export { initialize }
