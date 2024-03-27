@@ -4,15 +4,13 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.files.temp import NamedTemporaryFile
 from django.utils.crypto import get_random_string
 from django.contrib.auth import update_session_auth_hash, login, authenticate
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpRequest
 from django.utils.timezone import now
 from tools.responses import tResponses
 from django.conf import settings
 from uuid import uuid4
 from datetime import timedelta
 from stats.models import Stats
-from tools.functions import is42
-import users.forms as UForm
 import os
 import requests
 import shortuuid
@@ -38,7 +36,7 @@ class Profile(models.Model):
 	user: User = models.OneToOneField(User, on_delete=models.CASCADE, blank=False, primary_key=True)
 	friends = models.ManyToManyField(User, blank=True, symmetrical=True, related_name="friends")
 	pendingFriendsFrom = models.ManyToManyField(User, related_name="pendingFriendsFrom", symmetrical=False, blank=True)
-	profilePicture = models.ImageField(upload_to=generateUniqueImageID, default=settings.DEFAULT_PROFILE_PICTURE_NAME, blank=True)
+	profilePicture = models.ImageField(upload_to=generateUniqueImageID, default=settings.DEFAULT_PROFILE_PICTURE_NAME, editable=True)
 	blockedUsers = models.ManyToManyField(User, related_name="blockedUsers", symmetrical=False, blank=True)
 	lastPasswordChange = models.DateTimeField(default=now, blank=True)
 	gameTheme = models.CharField(max_length=64, default='default')
@@ -69,7 +67,7 @@ class Profile(models.Model):
 	def toJson(self, restricted=True):
 		public = {
 			"username" : self.user.username,
-			"profilePicture" : self.profilePicture.url,
+			"profilePicture" : self.profilePicture.name,
 			"userStats" : self.user.stats.toJson()
 		}
 
@@ -98,64 +96,6 @@ class Profile(models.Model):
 		self.lastPasswordChange = now()
 		self.save()
 		return (tResponses.OKAY.request("You successfully change your password !"))
-
-	def form_changePassword(self, request: HttpRequest) -> HttpResponse:
-		form: UForm.PasswordForm = UForm.PasswordForm(request.POST)
-
-		if (is42(self.getUsername())):
-			return (tResponses.FORBIDDEN.request("User from 42 might always use 42 portal to connect themselves !"))
-
-		if (form.is_valid()):
-			actualPassword = form.cleaned_data['actualPassword']
-			password = form.cleaned_data['newPassword']
-
-			# Security check to request the password changes !
-			if not (self.user.check_password(actualPassword)):
-				return (tResponses.FORBIDDEN.request("Password do not match !"))
-
-			# OK - Now able to change the password !
-			value: HttpResponse = self.changePassword(password)
-			if value.status_code == 200:
-				update_session_auth_hash(request, self.user)
-			return (value)
-		else:
-			return (tResponses.BAD_REQUEST.request("Form isn't valid !"))
-		
-	def form_changeProfilePicture(self, request: HttpRequest) -> HttpResponse:
-		oldPicture = self.profilePicture.path
-		form: UForm.PictureForm = UForm.PictureForm(request.POST, request.FILES)
-
-		if (form.is_valid()):
-			if (os.path.exists(oldPicture) and os.path.basename(oldPicture) != settings.DEFAULT_PROFILE_PICTURE_NAME):
-				os.remove(oldPicture)
-
-			self.profilePicture = form.cleaned_data['profilePicture']
-			import sys
-			self.save(update_fields=["profilePicture"])
-			return (tResponses.OKAY.request("Profile picture successfully changed !"))
-		else:
-			return (tResponses.BAD_REQUEST.request("Image is not valid !"))
-	
-	def form_changeEmail(self, request: HttpRequest) -> HttpResponse:
-		user: User = request.user
-		form: UForm.EmailForm = UForm.EmailForm(request.POST)
-
-		if (form.is_valid()):
-			activeEmail = form.cleaned_data['actualEmail']
-			newEmail = form.cleaned_data['newEmail']
-
-			if is42(self.getUsername()):
-				return (tResponses.FORBIDDEN.request("User from 42 can't change their email !"))
-			if (activeEmail != user.email):
-				return (tResponses.BAD_REQUEST.request("Email do not match with active one !"))
-			if (activeEmail == newEmail):
-				return (tResponses.BAD_REQUEST.request("Email musn't be the same !"))
-
-			user.email = newEmail
-			user.save()
-			return (tResponses.OKAY.request("You successfully change your mail !"))
-		else:
-			return (tResponses.BAD_REQUEST.request("Email are not valid !"))
 
 	# Will check if the passed user is blocked
 	def is_block(self, target):
