@@ -72,9 +72,9 @@ function loadLogged() {
 		})();
 	};;
 
-	activity = new activityWebsocket();
-	activity.connect();
-	activity.registerEvents();
+	// activity = new activityWebsocket();
+	// activity.connect();
+	// activity.registerEvents();
 
 	coordination = new coordinationWebsocket();
 	coordination.connect();
