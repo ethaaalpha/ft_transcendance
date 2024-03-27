@@ -24,11 +24,11 @@ class ActivityConsumer(AsyncJsonWebsocketConsumer):
 		if self.user.is_authenticated:
 			await self.accept()
 			await self.channel_layer.group_add(getChannelName(await self.getUsername(), 'activity'), self.channel_name)
-			await sync_to_async(Status.connect)(await self.getUser())
+			await database_sync_to_async(Status.connect)(await self.getUser())
 
 	async def disconnect(self, code):
 		if self.user.is_authenticated:
-			await sync_to_async(Status.disconnect)(await self.getUser())
+			await database_sync_to_async(Status.disconnect)(await self.getUser())
 			await self.channel_layer.group_discard(getChannelName(await self.getUsername(), 'activity'), self.channel_name)
 		return await super().disconnect(code)
 	
