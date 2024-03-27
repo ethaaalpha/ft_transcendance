@@ -176,7 +176,7 @@ class GameInv {
 	}
 	socketClose(event){
 		console.log('WebSocket connection closed');
-			this.status.status = 0;
+			this.status.status = this.returnValue;;
 	}
 
 	socketInit(socket){
@@ -264,7 +264,7 @@ class GameInv {
 		this.controls.update();
 		this.camera.rotation.z += Math.PI;
 		this.renderer.render(this.scene, this.camera);
-		if (this.status['status'] === 1 || this.status['status'] === 2)
+		if (this.status['status'] === 1 || this.status['status'] === 2 || this.status['status'] === 4)
 			requestAnimationFrame(() => this.animate());
 		else
 			this.destroy()
@@ -326,7 +326,7 @@ class GameInv {
 		else
 			await this.checkPoint();
 		await sleep(18);
-		if (this.status['status'] === 1 || this.status['status'] === 2)
+		if (this.status['status'] === 1 || this.status['status'] === 2 || this.status['status'] === 4)
 			requestAnimationFrame(() => this.update())
 	}
 	onKeyDown(event) {
