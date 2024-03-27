@@ -292,11 +292,18 @@ class Room(models.Model):
 		self.numberMatchsLastRound = len(matchs)
 		self.matchs.add(*matchs)
 		self.save()
-
-		# Runner the thread to wait the game (to players to be ready !)
-		for m in matchs:
-			thread = Thread(target=m.wait)
-			thread.start()
+		if self.mode == Mode.CLASSIC:
+			classic = matchs[0]
+			classic.send(classic.invited, 'next', {'match-id': str(classic.id), 'host': classic.host.username, 'invited': classic.invited.username, 'statusHost': False})
+			classic.send(classic.host, 'next', {'match-id': str(classic.id), 'host': classic.host.username, 'invited': classic.invited.username, 'statusHost': True})
+			classic.ready = [True, True]
+			classic.save()
+			classic.start()
+		else:
+			# Runner the thread to wait the game (to players to be ready !)
+			for m in matchs:
+				thread = Thread(target=m.wait)
+				thread.start()
 
 	def update(self):
 		"""
