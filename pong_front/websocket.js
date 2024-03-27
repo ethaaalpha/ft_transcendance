@@ -88,6 +88,11 @@ class coordinationWebsocket {
 			this.socket.send(JSON.stringify({'event' : 'create', 'data': {'mode': value}}));
 			this.input.value = "";
 		}
+		document.querySelector("#button-ready").onclick = (e) => {
+			let value = this.input.value;
+			this.socket.send(JSON.stringify({'event' : 'next', 'data': {'room-id': value}}));
+			this.input.value = "";
+		}
 		document.querySelector('#button-invitation').onclick = (e) => {
 			const actInputDom = document.querySelector('#label-invitation-action');
 			const userInputDom = document.querySelector('#label-invitation-username'); // A VERIFIER PAR PITIE
