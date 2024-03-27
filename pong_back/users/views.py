@@ -3,6 +3,7 @@ from .models import Profile
 from django.contrib.auth.models import User
 from tools.responses import tResponses
 from tools.functions import isOtherKeysInList
+from . import forms
 	
 # Entrypoint to interact with the user part !
 def entryPoint(request: HttpRequest) -> HttpResponse:
@@ -58,10 +59,10 @@ def postData(request: HttpRequest, filter: str) -> HttpResponse:
 
 	match filter:
 		case "password":
-			return (userProfile.form_changePassword(request))
+			return (forms.form_changePassword(userProfile, request))
 		case "profilePicture":
-			return (userProfile.form_changeProfilePicture(request))
+			return (forms.form_changeProfilePicture(userProfile, request))
 		case "email":
-			return (userProfile.form_changeEmail(request))
+			return (forms.form_changeEmail(userProfile, request))
 		case _:
 			return (tResponses.BAD_REQUEST.request())

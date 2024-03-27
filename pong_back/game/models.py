@@ -3,7 +3,7 @@ from blockchain.models import Contract, ContractBuilder
 from coordination.tools import setInMatch, setOutMatch
 from django.contrib.auth.models import User
 from django.db.models import Q
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, timezone
 from uuid import uuid4
 from django.contrib.postgres.fields import ArrayField
 from threading import Thread
@@ -36,7 +36,7 @@ class Match(models.Model):
 	winner = models.ForeignKey(User, default=None, null=True, on_delete=models.CASCADE)
 	date = models.DateTimeField(auto_now_add=True)
 	state = models.IntegerField(default=0) # 0 waiting, 1 started, 2 finish
-	ready = ArrayField(models.BooleanField(), size=2, default=[False, False])
+	ready = ArrayField(models.BooleanField(), size=2, default=list([False, False]))
 	start_time = models.DateTimeField(auto_now_add=True)
 
 	@staticmethod
@@ -92,11 +92,11 @@ class Match(models.Model):
 		Needed before the match start to wait for the player to be ready !
 		Must be runned inside a thread
 		"""
-		time.sleep(10)
+		time.sleep(120)
 		if (self.ready[0] and self.ready[1]):
 			self.start()
 		else:
-			self.finish(-1, -2)
+			self.finish((-1, -2))
 			return
 
 	def start(self):
@@ -108,22 +108,24 @@ class Match(models.Model):
 		self.start_time = datetime.now()
 		self.save()
 
-	def finish(self, score):
+	def finish(self, score: tuple):
 		"""
 		Function to ended a match, this will run the generation of a blockchain smart contract\n
 		also run the checkup of next match if it is a tournament
 		"""
 		winner = self.host if score[0] > score[1] else self.invited
-		self.duration = datetime.now() - self.start_time
-		self.save()
-		
-		ContractBuilder.threaded(score, self) # Blockchain Runner !
+		room = self.room()
 		self.setWinner(winner)
+		loser = self.getLoser()
+
+		ContractBuilder.threaded(score, self) # Blockchain Runner !
+		self.setDuration(datetime.now() - self.start_time)
 		self.setState(2)
-		setOutMatch(self.getLoser()) # let free the loser
+		setOutMatch(loser) # let free the loser
+		room.addEliminated(loser)
+		self.send(loser, 'end', {'rank': room.getRank(loser)})
 
 		# here make the room update and check for the next match !
-		room = self.room()
 		room.update()
 
 	def getWinner(self) -> User:
@@ -142,6 +144,10 @@ class Match(models.Model):
 
 	def setState(self, state: int):
 		self.state = state
+		self.save()
+
+	def setDuration(self, duration):
+		self.duration = duration
 		self.save()
 
 	def getScore(self):
@@ -190,6 +196,7 @@ class Room(models.Model):
 	that means that a room can contain multiples matchs (so it's called a tournament).
 	"""
 	opponents = models.ManyToManyField(User, related_name='opponents')
+	eliminated = models.ManyToManyField(User, related_name='eliminated')
 	numberMatchsLastRound = models.IntegerField(default=0)
 	state = models.IntegerField(default=0) # 0 waiting, 1 started, 2 finish
 	id = models.CharField(primary_key=True, default=roomIdGenerator, blank=False, max_length=8)
@@ -271,12 +278,10 @@ class Room(models.Model):
 
 		else:
 			if self.numberMatchsLastRound == 1:
+				# end of the tournament
 				lastMatch: Match = self.matchs.all()[:1].get()
 				setOutMatch(lastMatch.getWinner())
-
-				for p in self.opponents.all():
-					self.send(p, 'win', {'message': f'Le gagnant du tournois est {lastMatch.getWinner()}'})
-				# CELA SIGNIFIE LA FIN DU TOURNOIS
+				lastMatch.send(lastMatch.getWinner(), 'win', {'room-id': self.id})
 				return
 			# il y a d'autres matchs à faire +_+
 			lastMatchs = list(self.matchs.all()[:self.numberMatchsLastRound])
@@ -323,6 +328,14 @@ class Room(models.Model):
 			data = {'room-id': self.id, 'count': count}
 			CoordinationConsumer.sendMessageToConsumer(p.username, data, 'count')
 		return
+	
+	def addEliminated(self, user):
+		self.eliminated.add(user)
+		self.save()
+
+	def getRank(self, user):
+		eliminated = list(self.eliminated.all())
+		return (self.opponents.count() - eliminated.index(user))
 
 	@staticmethod
 	def createRoom(owner: User, mode = Mode.CLASSIC):
