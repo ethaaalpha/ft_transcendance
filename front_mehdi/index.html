@@ -9,9 +9,9 @@
 	<link href="assets/css/background.css" rel="stylesheet">  
 </head>
   <body>
-
+<!-- 
 	<div class="background backgroundZ0"></div>
-	<div class="background backgroundZ1"></div>
+	<div class="background backgroundZ1"></div> -->
 
 	<div id="liveAlertPlaceholder"></div>
 	<!-- <button type="button" class="btn btn-primary" id="liveAlertBtn">Show live alert</button>		 -->
@@ -62,22 +62,59 @@
 		</div>
 	</div>
 		
-		<!-- HOME -->
+
+
+	<div class="home d-none" id="home">
+		<div class="game-div glass-morphism">
+		</div>
+		<div class="social-div">
+			<div class="social-display-div glass-morphism">
+				<h1>Settings</h1>
+				<button class="modify-btn">
+
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<rect x="4" y="9" width="16" height="12" rx="4" stroke="black" stroke-width="2"/>
+						<path d="M12 16L12 14" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+						<path d="M16 9V7C16 4.79086 14.2091 3 12 3V3C9.79086 3 8 4.79086 8 7L8 9" stroke="black" stroke-width="2"/>
+						</svg>						
+
+					<span class="btn-title">Modify password</span>
+
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<g clip-path="url(#clip0_115_87)">
+						<path d="M19 12L5 12" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+						<path d="M12 19L19 12L12 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+						</g>
+						<defs>
+						<clipPath id="clip0_115_87">
+						<rect width="24" height="24" fill="white" transform="translate(24 24) rotate(180)"/>
+						</clipPath>
+						</defs>
+					</svg>
+					
+
+				</button>				
+			</div>
+			<div class="social-button-div glass-morphism">
+				<button type="button" class="btn btn-primary" onclick="signOut()">Sign-out</button>
+				<button type="button" class="btn btn-primary" onclick="settings()">Settings</button>
+			</div>
+		</div>
+	</div>
+
+<!-- 
 	<div class="container d-none" id="home">
 		<div class="row align-items-center justify-content-center vh-100">
-			<!-- <div class="col-lg-7 login-form custom-height">
-				LE JEU DE NICOLAS
-			</div> -->
-			<div class="col-lg-7 game-style custom-height">
-				<canvas id="myCanvas" width="400" height="200">LE JEU DE NICOLAS</canvas>
+			<div class="col-md-8 game-style custom-height">
+				<canvas id="myCanvas" width="10" height="700"></canvas>
 			</div>
-			<div class="col-lg-4 login-form custom-height">
+			<div class="col-md-4 login-form custom-height">
 				<div class="mb-3 text-center mx-auto">
 					<button type="button" class="btn btn-primary btn-block col-6" onclick="signOut()">Sign-out</button>
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 
 
     <script src="assets/js/eventListeners.js"></script>
@@ -93,3 +130,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </body>
 </html>
+
+
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<rect x="4" y="9" width="16" height="12" rx="4" stroke="black" stroke-width="2"/>
+	<path d="M12 16L12 14" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+	<path d="M16 9V7C16 4.79086 14.2091 3 12 3V3C9.79086 3 8 4.79086 8 7L8 9" stroke="black" stroke-width="2"/>
+	</svg>
+	
+
