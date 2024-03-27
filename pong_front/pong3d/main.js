@@ -7,14 +7,32 @@ import Game from './game.js';
 import Menu from './menu.js';
 import GameLocal from './gameLocal.js';
 import GameInv from './gameInv.js';
-import { hideLoadingAnimation, showLoadingAnimation, status } from './utilsPong.js';
+import { hideLoadingAnimation, hideTournamentCode, showLoadingAnimation, showTournamentCode, status } from './utilsPong.js';
 
-
+hideTournamentCode()
+var data = null;
 document.getElementById("codeForm").addEventListener("submit", function(event) {
     event.preventDefault();
   
     var code = document.getElementById("codeInput").value;
-  
+    if (code == null || code == ""){
+        socketTmp.send(JSON.stringify({'event': 'create', 'data': {'mode' : 'tournament4'}}))
+    }
+    else{
+        socketTmp.send(JSON.stringify({'event': 'tournament', 'data': {'action' : 'join', 'room-id' : code}}))
+    }
+
+    return new Promise((resolve) => {
+        const intervalId = setInterval(() => {
+            socketTmp.send(JSON.stringify({'event': 'next', 'data': {'room-id' : code}}))
+            console.log(status)
+            if (data) {
+                clearInterval(intervalId);
+                hideLoadingAnimation();
+                resolve();
+            }
+        }, 5000);
+    });
     console.log("The entered code is: " + code);
 });
 
@@ -24,10 +42,9 @@ var appli = document.querySelector('#app');
 if (!appli) {
     console.log("querySelector error");
 }
-var data = null;
 const socketTmp = new WebSocket("wss://" + window.location.host + "/api/coordination/")
 socketTmp.onmessage = (event) => {
-    console.log(event)
+    console.log(JSON.parse(event.data))
     const tmp = JSON.parse(event.data)
     if (tmp.event == "next")
         data = tmp.data;
@@ -67,17 +84,24 @@ function updateStatus(newStatus) {
 async function initialize(callback) {
 	try {
 		while(1){
+            data = null
 			if (status.status === -1)
 				await loadTexture();
 			else if (status.status === 0)
 				await createMenu();
 			else if (status.status === 1){
+                socketTmp.send(JSON.stringify({'event': 'matchmaking', 'data': {'action' : 'join'}}))
+                showLoadingAnimation();
                 await waitForData();
     		    await createGame();
                 console.log(status.status)
             }
-            else if (status.status === 2)
-                break ;
+            else if (status.status === 2){
+                showTournamentCode()
+                hideLoadingAnimation();
+                await waitForData();
+                await createGame();
+            }
             else if (status.status === 3)
                 await createGame();
 		}
@@ -157,8 +181,7 @@ async function createGameLocal() {
 }
 
 function waitForData(time) {
-    socketTmp.send(JSON.stringify({'event': 'matchmaking', 'data': {'action' : 'join'}}))
-    showLoadingAnimation();
+    
     return new Promise((resolve) => {
         const intervalId = setInterval(() => {
             if (data) {
@@ -172,18 +195,6 @@ function waitForData(time) {
 initLoading();
 initialize(status);
 //waitstatus(500);
-
-function waitstatus(time) {
-    return new Promise((resolve) => {
-        const intervalId = setInterval(() => {
-            console.log(status)
-            if (status.status == 8) {
-                clearInterval(intervalId);
-                resolve();
-            }
-        }, time);
-    });
-}
 
 
 export { initialize }
