@@ -11,6 +11,20 @@ import { hideLoadingAnimation, hideTournamentCode, showLoadingAnimation, showTou
 
 hideTournamentCode()
 var data = null;
+function waitForNextMatch(code){
+    return new Promise((resolve) => {
+        const intervalId = setInterval(() => {
+            socketTmp.send(JSON.stringify({'event': 'next', 'data': {'room-id' : code}}))
+            console.log(status);
+            if (data) {
+                clearInterval(intervalId);
+                hideLoadingAnimation();
+                resolve();
+            }
+        }, 5000);
+    });
+
+};
 document.getElementById("codeForm").addEventListener("submit", function(event) {
     event.preventDefault();
   
@@ -21,19 +35,7 @@ document.getElementById("codeForm").addEventListener("submit", function(event) {
     else{
         socketTmp.send(JSON.stringify({'event': 'tournament', 'data': {'action' : 'join', 'room-id' : code}}))
     }
-
-    return new Promise((resolve) => {
-        const intervalId = setInterval(() => {
-            socketTmp.send(JSON.stringify({'event': 'next', 'data': {'room-id' : code}}))
-            console.log(status)
-            if (data) {
-                clearInterval(intervalId);
-                hideLoadingAnimation();
-                resolve();
-            }
-        }, 5000);
-    });
-    console.log("The entered code is: " + code);
+    return waitForNextMatch(code)
 });
 
 var view;
@@ -110,7 +112,8 @@ async function initialize(callback) {
             else if (status.status === 3)
                 await createGame();
             else if (status.status === 4){
-                await waitForData();
+                showLoadingAnimation();
+                await waitForNextMatch(code);
                 await createGame(4);
             } 
 		}
