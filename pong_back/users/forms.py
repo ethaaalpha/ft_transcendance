@@ -45,7 +45,7 @@ def form_changePassword(profile: Profile, request: HttpRequest) -> HttpResponse:
 		
 def form_changeProfilePicture(profile: Profile, request: HttpRequest) -> HttpResponse:
 	oldPicture = profile.profilePicture.path
-	form: ProfilePictureForm = ProfilePictureForm(request.POST, request.FILES, profile=profile)
+	form: ProfilePictureForm = ProfilePictureForm(request.POST, request.FILES, instance=profile)
 
 	if (form.is_valid()):
 		if (os.path.exists(oldPicture) and os.path.basename(oldPicture) != settings.DEFAULT_PROFILE_PICTURE_NAME):
