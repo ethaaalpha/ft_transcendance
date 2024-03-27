@@ -58,6 +58,7 @@ class Game {
 
 	allLoaded(){
 		this.appli.appendChild(this.renderer.domElement);
+		console.log("je send ready");
 		this.sendMessageToServer({event : "ready"})
 		this.animate();
 		this.update();
@@ -315,7 +316,7 @@ class Game {
 		}
 		this.controls.update();
 		this.renderer.render(this.scene, this.camera);
-		if (this.status['status'] === 1)
+		if (this.status['status'] === 1 || this.status['status'] === 2)
 			requestAnimationFrame(() => this.animate());
 		else
 			this.destroy()
@@ -391,7 +392,7 @@ class Game {
 		else
 			await this.checkPoint();
 		await sleep(16);
-		if (this.status['status'] === 1)
+		if (this.status['status'] === 1 || this.status['status'] === 2)
 			requestAnimationFrame(() => this.update())
 	}
 	onKeyDown(event) {

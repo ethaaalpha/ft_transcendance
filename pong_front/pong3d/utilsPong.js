@@ -36,4 +36,13 @@ function hideLoadingAnimation() {
     loadingAnimation.style.display = "none";
 }
 
-export { sleep, waitForData, loadShader, hideLoadingAnimation, showLoadingAnimation, status}
+function showTournamentCode() {
+    var loadingAnimation = document.getElementById("codeForm");
+    loadingAnimation.style.display = "block";
+}
+
+function hideTournamentCode() {
+    var loadingAnimation = document.getElementById("codeForm");
+    loadingAnimation.style.display = "none";
+}
+export { sleep, waitForData, loadShader, hideLoadingAnimation, showLoadingAnimation, hideTournamentCode, showTournamentCode, status}

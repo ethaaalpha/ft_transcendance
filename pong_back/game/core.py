@@ -105,7 +105,9 @@ class GameMap:
     
     @staticmethod
     def getMatchID(username):
+        print(f"{GameMap._gameMap} {username}", file=sys.stderr)
         for val in GameMap._gameMap.values():
+            print(val.toJson(), file=sys.stderr)
             if val.p1 == username or val.p2 == username:
                 return (val.matchId)
         return None

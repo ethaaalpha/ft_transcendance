@@ -92,6 +92,8 @@ class Match(models.Model):
 		Needed before the match start to wait for the player to be ready !
 		Must be runned inside a thread
 		"""
+		from .core import GameMap
+		GameMap.createGame(str(self.id), self.host.username, self.invited.username)
 		time.sleep(120)
 		if (self.ready[0] and self.ready[1]):
 			self.start()
@@ -100,10 +102,8 @@ class Match(models.Model):
 			return
 
 	def start(self):
-		from .core import GameMap
-
 		# Tell people there next match !
-		GameMap.createGame(str(self.id), self.host.username, self.invited.username)
+		print(f"je commence le match{self.host} {self.invited}", file=sys.stderr)
 		self.setState(1)
 		self.start_time = datetime.now()
 		self.save()
@@ -119,7 +119,7 @@ class Match(models.Model):
 		loser = self.getLoser()
 
 		ContractBuilder.threaded(score, self) # Blockchain Runner !
-		self.setDuration(datetime.now() - self.start_time)
+		#self.setDuration(datetime.now() - self.start_time)
 		self.setState(2)
 		setOutMatch(loser) # let free the loser
 		room.addEliminated(loser)
@@ -177,8 +177,8 @@ class Mode(models.TextChoices):
 	CLASSIC = '2'
 	TOURNAMENT4 = '4'
 	TOURNAMENT8 = '8'
-	TOURNAMENT16 = '10'
-	TOURNAMENT32 = '12'
+	TOURNAMENT16 = '16'
+	TOURNAMENT32 = '32'
 
 	@staticmethod
 	def fromText(modestr: str):
@@ -420,18 +420,26 @@ class Room(models.Model):
 		"""
 		room = Room.objects.filter(opponents=player, state=0).first()
 		return room.id if room else False
-	
+
+	@staticmethod
+	def getRoomFromPlayer(player: User):
+		return Room.objects.filter((Q(state=1, opponents=player) | Q(state=0, opponents=player)) & ~Q(eliminated=player)).first()
+
 	@staticmethod
 	def next_client(player: User, room_id: str):
 		"""
 		Tell the client it's next match
 		"""
 		room = Room.getRoom(room_id)
+		if not room:
+			room = Room.getRoomFromPlayer(player)
 		if room:
 			matchsRunning = list(room.matchs.all()[:room.numberMatchsLastRound])
 			for m in matchsRunning:
 				if m.host == player or m.invited == player:
 					who = 0 if m.host == player else 1
+					if m.ready[who] == True:
+						return
 					m.ready[who] = True
 					m.save()
 					if who:
