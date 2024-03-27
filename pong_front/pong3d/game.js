@@ -4,7 +4,7 @@ import { TextGeometry } from 'three/module/geometries/TextGeometry.js';
 import { sleep, loadShader } from './utilsPong.js'
 
 class Game {
-	constructor(status, resolve,statusCallback, gameData, invited) {
+	constructor(status, resolve, statusCallback, gameData, returnValue) {
 		this.gltfLoader = gameData.gltfLoader;
 		this.fontLoader = gameData.fontLoader;
 		this.textureLoader = gameData.textureLoader;
@@ -12,7 +12,6 @@ class Game {
 		this.loaded = gameData.loaded;
 		this.camera = gameData.camera;
 		this.appli = gameData.appli;
-		this.invited = invited
 		this.status = status;
 		this.resolve = resolve;
 		this.scene = gameData.sceneGameLocal;
@@ -20,6 +19,7 @@ class Game {
 		this.directionalLight2 = gameData.directionalLight2;
 		this.directionalLight3 = gameData.directionalLight3;
 		this.directionalLight4 = gameData.directionalLight4;
+		this.returnValue = returnValue
 		this.statusCallback = statusCallback;
 		this.movement = new THREE.Vector3(0, 0, 0);
 		this.speed = 0.4;
@@ -179,7 +179,7 @@ class Game {
 		this.socket.onmessage = async (event) => {
 			const response = JSON.parse(event.data);
 			if (response.event == 'end'){
-				this.status.status = 0;
+				this.status.status = this.returnValue;
 			}
 			else{
 				this.data = response.data;

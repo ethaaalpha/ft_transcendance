@@ -94,11 +94,11 @@ class Match(models.Model):
 		"""
 		from .core import GameMap
 		GameMap.createGame(str(self.id), self.host.username, self.invited.username)
-		time.sleep(120)
+		time.sleep(30)
 		if (self.ready[0] and self.ready[1]):
 			self.start()
 		else:
-			self.finish((-1, -2))
+			#self.finish((-1, -2))
 			return
 
 	def start(self):
@@ -122,8 +122,10 @@ class Match(models.Model):
 		#self.setDuration(datetime.now() - self.start_time)
 		self.setState(2)
 		setOutMatch(loser) # let free the loser
-		room.addEliminated(loser)
-		self.send(loser, 'end', {'rank': room.getRank(loser)})
+		#room.addEliminated(loser)
+		#self.send(loser, 'end', {'rank': room.getRank(loser)})
+		self.send(loser, 'end', {'rank': 0})
+
 
 		# here make the room update and check for the next match !
 		room.update()
@@ -282,6 +284,8 @@ class Room(models.Model):
 				lastMatch: Match = self.matchs.all()[:1].get()
 				setOutMatch(lastMatch.getWinner())
 				lastMatch.send(lastMatch.getWinner(), 'win', {'room-id': self.id})
+				self.state = 2
+				self.save()
 				return
 			# il y a d'autres matchs à faire +_+
 			lastMatchs = list(self.matchs.all()[:self.numberMatchsLastRound])
@@ -293,7 +297,9 @@ class Room(models.Model):
 		self.matchs.add(*matchs)
 		self.save()
 		if self.mode == Mode.CLASSIC:
+			from .core import GameMap
 			classic = matchs[0]
+			GameMap.createGame(str(classic.id), classic.host.username, classic.invited.username)
 			classic.send(classic.invited, 'next', {'match-id': str(classic.id), 'host': classic.host.username, 'invited': classic.invited.username, 'statusHost': False})
 			classic.send(classic.host, 'next', {'match-id': str(classic.id), 'host': classic.host.username, 'invited': classic.invited.username, 'statusHost': True})
 			classic.ready = [True, True]

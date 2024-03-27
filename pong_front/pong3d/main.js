@@ -47,7 +47,11 @@ socketTmp.onmessage = (event) => {
     console.log(JSON.parse(event.data))
     const tmp = JSON.parse(event.data)
     if (tmp.event == "next")
-        data = tmp.data;
+        data = tmp;
+    else if (tmp.event == "end")
+        data = tmp
+    else if (tmp.event == "win")
+        data = tmp
 }
 var loadingManager = new THREE.LoadingManager();
 var gameData = {
@@ -84,6 +88,7 @@ function updateStatus(newStatus) {
 async function initialize(callback) {
 	try {
 		while(1){
+            console.log(status.status)
             data = null
 			if (status.status === -1)
 				await loadTexture();
@@ -93,17 +98,21 @@ async function initialize(callback) {
                 socketTmp.send(JSON.stringify({'event': 'matchmaking', 'data': {'action' : 'join'}}))
                 showLoadingAnimation();
                 await waitForData();
-    		    await createGame();
+    		    await createGame(0);
                 console.log(status.status)
             }
             else if (status.status === 2){
                 showTournamentCode()
                 hideLoadingAnimation();
                 await waitForData();
-                await createGame();
+                await createGame(4);
             }
             else if (status.status === 3)
                 await createGame();
+            else if (status.status === 4){
+                await waitForData();
+                await createGame(4);
+            } 
 		}
     } catch (error) {
         console.error("Error during initialization:", error);
@@ -162,13 +171,18 @@ async function createMenu() {
     });
 }
 
-async function createGame() {
+async function createGame(returnValue) {
     return new Promise((resolve, reject) => {
         view = null;
-        if (data.statusHost == true)
-            view = new Game(status, resolve, updateStatus, gameData, data);
+        if (data.event == "end" || data.event == "win"){
+            data = null
+            updateStatus(0);
+            return ;
+        }
+        if (data.data.statusHost == true)
+            view = new Game(status, resolve, updateStatus, gameData, returnValue);
         else
-            view = new GameInv(status, resolve, updateStatus, gameData, data);
+            view = new GameInv(status, resolve, updateStatus, gameData, returnValue);
         data = null;
     });
 }
@@ -185,6 +199,7 @@ function waitForData(time) {
     return new Promise((resolve) => {
         const intervalId = setInterval(() => {
             if (data) {
+                console.log("cou");
                 clearInterval(intervalId);
                 hideLoadingAnimation();
                 resolve();

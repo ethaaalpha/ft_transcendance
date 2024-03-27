@@ -4,15 +4,15 @@ import { TextGeometry } from 'three/module/geometries/TextGeometry.js';
 import { sleep, loadShader } from './utilsPong.js'
 
 class GameInv {
-	constructor(status, resolve,statusCallback, gameData, invited) {
+	constructor(status, resolve,statusCallback, gameData, returnValue) {
 		this.gltfLoader = gameData.gltfLoader;
 		this.fontLoader = gameData.fontLoader;
 		this.textureLoader = gameData.textureLoader;
 		this.renderer = gameData.rendererGameLocal;
 		this.loaded = gameData.loaded;
+		this.returnValue = returnValue
 		this.camera = gameData.camera;
 		this.appli = gameData.appli;
-		this.invited = invited
 		this.status = status;
 		this.resolve = resolve;
 		this.scene = gameData.sceneGameInv;
@@ -188,7 +188,7 @@ class GameInv {
 			const response = JSON.parse(event.data);
 			if (response.event == 'end'){
 				console.log(response.event);
-				this.status.status = 0;
+				this.status.status = this.returnValue;
 			}
 			else 
 				this.data = response.data;
