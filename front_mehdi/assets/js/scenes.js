@@ -25,8 +25,8 @@ function changeScene(newScene) {
 		unhideElement("home");
 		currentScene = "home";
 	}
-	else if (currentScene == "home" && newScene == "signIn") {//sign out
-		hideElement("titleSignUp", "passwordConfirmDiv", "signUpButton", "emailDiv", "home");
+	else if (currentScene == "settings" && newScene == "signIn") {//sign out
+		hideElement("titleSignUp", "passwordConfirmDiv", "signUpButton", "emailDiv", "home", "settings");
 		unhideElement("titleSignIn", "signWith42Button", "signInButton", "forgotPasswordButton", "signForm", "orDiv");
 		currentScene = "signIn";
 	}
