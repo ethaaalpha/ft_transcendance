@@ -22,34 +22,34 @@ function changeScene(newScene) {
 		currentScene = "home";
 	}
 	else if (currentScene == "home" && newScene == "signIn") {//sign out
-		hideElement("home");
-		unhideElement("signForm");
+		hideElement("titleSignUp", "passwordConfirmDiv", "signUpButton", "emailDiv", "home");
+		unhideElement("titleSignIn", "signWith42Button", "signInButton", "forgotPasswordButton", "signForm", "orDiv");
 		currentScene = "signIn";
 	}
 	else if (currentScene == "signIn" && newScene == "signUp") {//sign up
-		unhideElement("passwordConfirm");
-		unhideElement("signUpButton2");
-		unhideElement("email");
-		hideElement("signWith42Button");
-		hideElement("signInButton");
-		hideElement("signUpButton");
-		hideElement("forgotPasswordButton")
+		hideElement("titleSignIn", "signWith42Button", "signInButton", "forgotPasswordButton", "orDiv")
+		unhideElement("titleSignUp", "passwordConfirmDiv", "signUpButton", "emailDiv");
 	}
 
     console.log("La scène actuelle est maintenant:", currentScene);
 }
 
 // HIDE OR NOT
-function hideElement(elementId) {
-	var element = document.getElementById(elementId);
-	if (element) {
-		element.classList.add("d-none");
-	}
+
+function hideElement(...elementIds) {
+    elementIds.forEach(elementId => {
+        var element = document.getElementById(elementId);
+        if (element) {
+            element.classList.add("d-none");
+        }
+    });
 }
 
-function unhideElement(elementId) {
-	var element = document.getElementById(elementId);
-	if (element) {
-		element.classList.remove("d-none");
-	}
+function unhideElement(...elementIds) {
+    elementIds.forEach(elementId => {
+        var element = document.getElementById(elementId);
+        if (element) {
+            element.classList.remove("d-none");
+        }
+    });
 }

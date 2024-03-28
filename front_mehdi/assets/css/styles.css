@@ -1,12 +1,138 @@
-.game-style {
-	/* padding: 40px; */
-	border-radius: 40px;
+.home {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 30px;
+	
+    height: 100vh;
+	border: 1px solid #0800ff;
+}
+
+.glass-morphism {
+	border: 1px solid rgb(0, 255, 42);
+	background-color:rgb(255, 255, 255);
+	
+
+	/* border-radius: 25px;
 	border: 1px solid rgba(5, 255, 0, 0.29);
 	background: linear-gradient(334deg, rgba(255, 255, 255, 0.10) 13.43%, rgba(255, 255, 255, 0.40) 97.55%);
 	box-shadow: 0px 4px 24px -1px rgba(0, 0, 0, 0.20);
-	backdrop-filter: blur(10px);
-	/* margin: 20vh auto; */
+	backdrop-filter: blur(10px); */
 }
+
+.game-div {
+	/* margin-right: 20px;  */
+	
+	width: 950px;
+	height: 700px;
+}
+
+.social-div {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	
+	width: 350px;
+	height: 700px;
+	
+	border: 1px solid #0800ff;
+}
+
+.social-display-div {
+    width: 100%; /* 50% de la largeur du conteneur parent */
+    height: 80%; /* 40% de la hauteur de la fenêtre visible */
+
+	display: flex;
+	flex-direction: column;
+	/* justify-content: space-evenly; */
+	gap: 10px; /* Espace entre les éléments enfants */
+
+	
+}
+
+.social-button-div {
+	width: 100%; /* 50% de la largeur du conteneur parent */
+    height: 15%; /* 40% de la hauteur de la fenêtre visible */
+	
+	display: flex;
+	align-items: center;
+	justify-content: space-evenly;
+	gap: 10px; /* Espace entre les éléments enfants */
+
+}
+
+
+.btn-title-custom {
+	flex-grow: 1;
+	text-align: left;
+	font-family: "Roboto Mono", monospace;
+	font-size: 16px;
+	/* Ajoutez d'autres styles personnalisés selon vos besoins */
+  }
+  
+
+
+
+/* item: nth-child (2){} */
+
+
+
+
+
+
+
+.modify-btn {
+	display: inline-flex;
+	align-items: center;
+	border: 0px solid #ccc;
+	border-radius: 4px;
+	padding: 12px 16px;
+	font-size: 16px;
+	background-color: #EDEDED;
+
+	margin: 0 15px; /* Marge à gauche et à droite de 10px */
+
+  }
+
+  .modify-btn:hover {background-color: #e7e7e7;}
+  
+  .logo-left,
+  .logo-right {
+	width: 24px; /* Largeur des logos SVG */
+	height: 24px; /* Hauteur des logos SVG */
+  }
+  
+  .logo-left {
+	margin-right: 8px; /* Espacement à droite du logo gauche */
+  }
+  
+  .logo-right {
+	margin-left: 8px; /* Espacement à gauche du logo droit */
+  }
+  
+  .btn-title {
+	flex-grow: 1; /* Titre occupe tout l'espace restant */
+	text-align: left;
+	font-family: "Roboto Mono", monospace;
+
+
+  }
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .login-form {
 	padding: 40px;
@@ -15,7 +141,9 @@
 	background: linear-gradient(334deg, rgba(255, 255, 255, 0.10) 13.43%, rgba(255, 255, 255, 0.40) 97.55%);
 	box-shadow: 0px 4px 24px -1px rgba(0, 0, 0, 0.20);
 	backdrop-filter: blur(10px);
-	margin: 20vh auto;
+	/* margin: 20vh auto; */
+	margin-left: 5px; 
+
 }
 
 .login-form h1 {
@@ -29,9 +157,6 @@
 	border-radius: 5px;
 	background-color: rgba(68, 68, 68, 0.5);
 }
-/* .login-form input[type="password"],
-.login-form button {
-} */
 
 .login-form button {
 	background-color: #05FF00;
@@ -40,17 +165,4 @@
 	font-weight: 700;
 	
   }
-
   
-
-  body {
-	background-image: url('../images/background3.jpg');
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-attachment: fixed;
-  }
-
-  .custom-height {
-    height: 600px;
-}

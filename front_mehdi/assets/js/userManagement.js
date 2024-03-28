@@ -24,6 +24,14 @@ function signIn() {
 
 	fetchData("/api/auth/login?mode=intern", 'POST', formData).then(
 		(data) => {
+			if (data.status === 403) { // mauvais mdp
+				// notif mdp mauvais ?
+				// effacer champ mdp
+			}
+			if (data.status === 400) { // compte existe pas, gonna become 404
+				changeScene("signUp");
+				document.getElementById("passwordConfirm").focus();
+			}
 			if (data.status === 200) {
 				console.log("Connexion réussie");
 				changeScene("home");
@@ -41,7 +49,6 @@ function signIn() {
 function signUp() {
 	var username = document.getElementById("username").value;
 	var password = document.getElementById("password").value;
-	// var passwordConfirm = document.getElementById("passwordConfirm");
 	var email = document.getElementById("email").value;
 	
     var formData = new FormData();
@@ -99,6 +106,7 @@ function forgotPassword() {
 	(data) => {
 		if (data.status === 200) {
 			console.log("password sent!");
+			appendAlert('Your new password has been sent to you email!', 'warning');
 		} else {
 			console.log("Erreur de connexion");
 		}

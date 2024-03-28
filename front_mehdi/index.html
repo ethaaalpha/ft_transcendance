@@ -6,9 +6,12 @@
     <title>Cube Tendance</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 	<link href="assets/css/styles.css" rel="stylesheet">  
+	<link href="assets/css/background.css" rel="stylesheet">  
 </head>
   <body>
-
+<!-- 
+	<div class="background backgroundZ0"></div>
+	<div class="background backgroundZ1"></div> -->
 
 	<div id="liveAlertPlaceholder"></div>
 	<!-- <button type="button" class="btn btn-primary" id="liveAlertBtn">Show live alert</button>		 -->
@@ -18,71 +21,168 @@
 	<div class="container d-none" id="signForm">
 		<div class="row align-items-center justify-content-center vh-100">	
 			<div class="col-md-6 col-lg-4 login-form">
-				<h1 class="title fw-bold">Sign-in</h1>
+				<h1 id="titleSignIn" class="title mb-3 fw-bold">SignIn</h1>
+				<h1 id="titleSignUp" class="title mb-3 fw-bold d-none">SignUp</h1>
 				<form>
 				<!-- SIGN IN -->
-				<div class="mb-3 col-8 mx-auto">
+				<div class="mb-3 text-center mx-auto">
+					<button type="button" class="btn btn-success btn-block col-8" id="signWith42Button" onclick="signWith42()">Continue with 42</button>
+				</div>
+				<div class="mb-3 text-center mx-auto" id="orDiv">OR</div>
+				<div class="form-floating mb-3 col-8 mx-auto">
 					<input type="text" class="form-control" id="username" placeholder="Username">
+					<label for="username">Username</label>
 				</div>
-				<div class="mb-3 col-8 mx-auto">
+				<div class="form-floating mb-3 col-8 mx-auto">
 					<input type="password" class="form-control" id="password" placeholder="Password">
+					<label for="username">Password</label>
 				</div>
 				<div class="mb-3 text-center mx-auto">
-					<button type="button" class="btn btn-primary btn-block col-6" id="signInButton" onclick="signIn()">Sign-in</button>
+					<button type="button" class="btn btn-success btn-block col-8" id="signInButton" onclick="signIn()">Continue with username</button>
 				</div>
 				<div class="mb-3 text-center mx-auto">
-					<button type="button" class="btn btn-primary btn-block col-6" id="signUpButton" onclick='changeScene("signUp")'>Sign-Up</button>
-				</div>
-				<div class="mb-3 text-center mx-auto">
-					<button type="button" class="btn btn-primary btn-block col-6" id="signWith42Button" onclick="signWith42()">Sign with 42</button>
-				</div>
-				<div class="mb-3 text-center mx-auto">
-					<button type="button" class="btn btn-primary btn-block col-6" id="forgotPasswordButton" onclick="forgotPassword()">Forgot password</button>
+					<button type="button" class="btn btn-success btn-block col-8" id="forgotPasswordButton" onclick="forgotPassword()">Forgot password?</button>
 				</div>
 				
 				<!-- SIGN UP -->
-				<div id="passwordConfirm" class="mb-3 col-8 mx-auto d-none">
-					<input type="text" class="form-control" placeholder="Confirm password">
+				<div id="passwordConfirmDiv" class="form-floating mb-3 col-8 mx-auto d-none">
+					<input id="passwordConfirm" type="password" class="form-control" placeholder="Confirm password">
+					<label for="username">Confirm password</label>
 				</div>
-				<div class="mb-3 col-8 mx-auto">
-					<input type="email" class="form-control d-none" id="email" placeholder="Email adress">
+				<div id="emailDiv" class="form-floating mb-3 col-8 mx-auto d-none">
+					<input id="email" type="email" class="form-control" placeholder="Email adress">
+					<label for="username">Email adress</label>
 					<!-- <small id="emailHelp" class="form-text text-muted">We'll sell your email on darkweb.</small> -->
 				</div>
-				<div id="signUpButton2" class="mb-3 text-center mx-auto d-none">
-					<button type="button" class="btn btn-primary btn-block col-6" onclick="signUp()">Sign-Up</button>
+				<div id="signUpButton" class="mb-3 text-center mx-auto d-none">
+					<button type="button" class="btn btn-primary btn-block col-8" onclick="signUp()">Create an account</button>
 				</div>
 			</form>
 		</div>
 		</div>
 	</div>
 		
-		<!-- HOME -->
+
+
+	<div class="home d-none" id="home">
+		<div class="game-div glass-morphism">
+		</div>
+		<div class="social-div">
+			<div class="social-display-div glass-morphism">
+				<!-- <span class="btn-title-custom">Settings</span> -->
+
+				<button class="modify-btn">
+					<svg class="logo-left" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<rect x="4" y="9" width="16" height="12" rx="4" stroke="black" stroke-width="2"/>
+						<path d="M12 16L12 14" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+						<path d="M16 9V7C16 4.79086 14.2091 3 12 3V3C9.79086 3 8 4.79086 8 7L8 9" stroke="black" stroke-width="2"/>
+						</svg>						
+
+					<span class="btn-title">Modify password</span>
+
+					<svg class="logo-right" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<g clip-path="url(#clip0_115_87)">
+						<path d="M19 12L5 12" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+						<path d="M12 19L19 12L12 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+						</g>
+						<defs>
+						<clipPath id="clip0_115_87">
+						<rect width="24" height="24" fill="white" transform="translate(24 24) rotate(180)"/>
+						</clipPath>
+						</defs>
+					</svg>
+				</button>
+
+				<button class="modify-btn">
+					<svg class="logo-left" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M4 6L10.1076 10.6123L10.1097 10.614C10.7878 11.1113 11.1271 11.3601 11.4988 11.4562C11.8272 11.5412 12.1725 11.5412 12.501 11.4562C12.8729 11.36 13.2132 11.1105 13.8926 10.6123C13.8926 10.6123 17.8101 7.60594 20 6M3 15.8002V8.2002C3 7.08009 3 6.51962 3.21799 6.0918C3.40973 5.71547 3.71547 5.40973 4.0918 5.21799C4.51962 5 5.08009 5 6.2002 5H17.8002C18.9203 5 19.4796 5 19.9074 5.21799C20.2837 5.40973 20.5905 5.71547 20.7822 6.0918C21 6.5192 21 7.07899 21 8.19691V15.8036C21 16.9215 21 17.4805 20.7822 17.9079C20.5905 18.2842 20.2837 18.5905 19.9074 18.7822C19.48 19 18.921 19 17.8031 19H6.19691C5.07899 19 4.5192 19 4.0918 18.7822C3.71547 18.5905 3.40973 18.2842 3.21799 17.9079C3 17.4801 3 16.9203 3 15.8002Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+											
+
+					<span class="btn-title">Modify email</span>
+
+					<svg class="logo-right" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<g clip-path="url(#clip0_115_87)">
+						<path d="M19 12L5 12" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+						<path d="M12 19L19 12L12 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+						</g>
+						<defs>
+						<clipPath id="clip0_115_87">
+						<rect width="24" height="24" fill="white" transform="translate(24 24) rotate(180)"/>
+						</clipPath>
+						</defs>
+					</svg>
+				</button>
+
+
+
+				<button class="modify-btn">
+					<svg class="logo-left" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M17.2166 19.3323C15.9349 17.9008 14.0727 17 12 17C9.92734 17 8.06492 17.9008 6.7832 19.3323M12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21ZM12 14C10.3431 14 9 12.6569 9 11C9 9.34315 10.3431 8 12 8C13.6569 8 15 9.34315 15 11C15 12.6569 13.6569 14 12 14Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+						
+											
+
+					<span class="btn-title">Modify email</span>
+
+					<svg class="logo-right" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<g clip-path="url(#clip0_115_87)">
+						<path d="M19 12L5 12" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+						<path d="M12 19L19 12L12 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+						</g>
+						<defs>
+						<clipPath id="clip0_115_87">
+						<rect width="24" height="24" fill="white" transform="translate(24 24) rotate(180)"/>
+						</clipPath>
+						</defs>
+					</svg>
+				</button>
+				
+
+
+
+			</div>
+			<div class="social-button-div glass-morphism">
+				<button type="button" class="btn btn-primary" onclick="signOut()">Sign-out</button>
+				<button type="button" class="btn btn-primary" onclick="settings()">Settings</button>
+			</div>
+		</div>
+	</div>
+
+<!-- 
 	<div class="container d-none" id="home">
 		<div class="row align-items-center justify-content-center vh-100">
-			<!-- <div class="col-lg-7 login-form custom-height">
-				LE JEU DE NICOLAS
-			</div> -->
-			<div class="col-lg-7 game-style custom-height">
-				<canvas id="myCanvas" width="400" height="200">LE JEU DE NICOLAS</canvas>
+			<div class="col-md-8 game-style custom-height">
+				<canvas id="myCanvas" width="10" height="700"></canvas>
 			</div>
-			<div class="col-lg-4 login-form custom-height">
+			<div class="col-md-4 login-form custom-height">
 				<div class="mb-3 text-center mx-auto">
 					<button type="button" class="btn btn-primary btn-block col-6" onclick="signOut()">Sign-out</button>
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 
 
+    <script src="assets/js/eventListeners.js"></script>
     <script src="assets/js/alerts.js"></script>
     <script src="assets/js/api.js"></script>
-    <script src="assets/js/eventListeners.js"></script>
+    <script src="assets/js/background.js"></script>
     <script src="assets/js/scenes.js"></script>
     <script src="assets/js/userManagement.js"></script>
-
+	
 	<!-- <script src="assets/js/script.js"></script> -->
 	<!-- to delete -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </body>
 </html>
+
+
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<rect x="4" y="9" width="16" height="12" rx="4" stroke="black" stroke-width="2"/>
+	<path d="M12 16L12 14" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+	<path d="M16 9V7C16 4.79086 14.2091 3 12 3V3C9.79086 3 8 4.79086 8 7L8 9" stroke="black" stroke-width="2"/>
+	</svg>
+	
+
