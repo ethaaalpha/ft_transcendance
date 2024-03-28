@@ -12,12 +12,16 @@ import { hideLoadingAnimation, hideTournamentCode, showLoadingAnimation, showTou
 hideTournamentCode()
 var data = null;
 function waitForNextMatch(code){
-    console.log(status);
+    console.log(data);
     return new Promise((resolve) => {
         const intervalId = setInterval(() => {
             socketTmp.send(JSON.stringify({'event': 'next', 'data': {'room-id' : code}}))
             console.log(status);
             if (data) {
+                if (data.event == "end" || data.event == "win")
+                    status.status = 0
+                if (data.event == "next")
+                    status.status = 5
                 clearInterval(intervalId);
                 hideLoadingAnimation();
                 resolve();
@@ -92,7 +96,6 @@ async function initialize() {
 	try {
 		while(1){
             console.log(status)
-            data = null
 			if (status.status === -1)
 				await loadTexture();
 			else if (status.status === 0)
@@ -101,8 +104,8 @@ async function initialize() {
                 socketTmp.send(JSON.stringify({'event': 'matchmaking', 'data': {'action' : 'join'}}))
                 showLoadingAnimation();
                 await waitForData();
-    		    await createGame(0);
-                console.log(status)
+    		    await createGame(4);
+                console.log(status);
             }
             else if (status.status === 2){
                 showTournamentCode()
@@ -113,9 +116,11 @@ async function initialize() {
             else if (status.status === 3)
                 await createGame();
             else if (status.status === 4){
-                showLoadingAnimation();
-                console.log(status)
-                await waitForNextMatch("");
+                    showLoadingAnimation();
+                    console.log(status)
+                    await waitForNextMatch("");
+                }
+            else if (status.status === 5){
                 await createGame(4);
             } 
 		}
@@ -179,16 +184,10 @@ async function createMenu() {
 async function createGame(returnValue) {
     return new Promise((resolve, reject) => {
         view = null;
-        if (data.event == "end" || data.event == "win"){
-            data = null
-            updateStatus(0);
-            return ;
-        }
         if (data.data.statusHost == true)
             view = new Game(status, resolve, updateStatus, gameData, returnValue);
         else
             view = new GameInv(status, resolve, updateStatus, gameData, returnValue);
-        data = null;
     });
 }
 
