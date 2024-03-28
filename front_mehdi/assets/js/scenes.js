@@ -30,8 +30,24 @@ function changeScene(newScene) {
 		hideElement("titleSignIn", "signWith42Button", "signInButton", "forgotPasswordButton", "orDiv")
 		unhideElement("titleSignUp", "passwordConfirmDiv", "signUpButton", "emailDiv");
 	}
+	else if (currentScene = "home" && newScene == "settings") {
+		// hideElement("chat")
+		unhideElement("settings");
+		currentScene = "settings";
+	}
+	else if (currentScene = "settings" && newScene == "home") {
+		hideElement("settings")
+		// unhideElement("chat")
+		currentScene = "home";
+	}
+	// else if (currentScene = "settings" && newScene == "modifyPassword") {
+	// 	// hideElement("chat")
+	// 	unhideElement("modify-password");
+	// 	hideElement("settings")
+	// 	currentScene = "modifyPassword";
+	// }
 
-    console.log("La scène actuelle est maintenant:", currentScene);
+    console.log("Current scene is:", currentScene);
 }
 
 // HIDE OR NOT
@@ -52,4 +68,16 @@ function unhideElement(...elementIds) {
             element.classList.remove("d-none");
         }
     });
+}
+
+
+
+function settingsAction() {
+    var settingsElement = document.getElementById('settings');
+
+    if (settingsElement.classList.contains('d-none')) {
+        changeScene("settings");
+    } else {
+        changeScene("home");
+    }
 }
