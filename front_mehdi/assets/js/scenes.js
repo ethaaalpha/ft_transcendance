@@ -16,8 +16,12 @@ function changeScene(newScene) {
 		unhideElement("home");
 		currentScene = "home";
 	}
-	else if (currentScene == "signIn" && newScene == "home") {//if signin or signup sucess/ split en deux
+	else if ((currentScene == "signIn" || currentScene == "signUp") && newScene == "home") {//if signin or signup sucess/ split en deux
 		hideElement("signForm");
+		document.getElementById("username").value = "";
+		document.getElementById("password").value = "";
+		document.getElementById("passwordConfirm").value = "";
+		document.getElementById("email").value = "";
 		unhideElement("home");
 		currentScene = "home";
 	}
@@ -29,6 +33,7 @@ function changeScene(newScene) {
 	else if (currentScene == "signIn" && newScene == "signUp") {//sign up
 		hideElement("titleSignIn", "signWith42Button", "signInButton", "forgotPasswordButton", "orDiv")
 		unhideElement("titleSignUp", "passwordConfirmDiv", "signUpButton", "emailDiv");
+		currentScene = "signUp";
 	}
 	else if (currentScene == "home" && newScene == "settings") {
 		// hideElement("chat")
@@ -47,6 +52,10 @@ function changeScene(newScene) {
 		currentScene = "modifyPassword";
 	}
 	else if (currentScene == "modifyPassword" && newScene == "settings") {
+		document.getElementById("setting-old-password").value = "";
+		document.getElementById("setting-new-password").value = "";
+		document.getElementById("setting-confirm-password").value = "";
+		
 		hideElement("modify-password");
 		unhideElement("settings");
 		currentScene = "settings";
