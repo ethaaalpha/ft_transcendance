@@ -40,24 +40,30 @@ function changeScene(newScene) {
 		unhideElement("settings");
 		currentScene = "settings";
 	}
-	else if ((currentScene == "settings" || currentScene == "modifyPassword" || currentScene == "modifyEmail") && newScene == "home") {
+	else if ((currentScene == "settings" || currentScene == "modifyPassword" || currentScene == "modifyEmail" || currentScene == "modifyProfilPicture") && newScene == "home") {
 		hideElement("settings");
 		hideElement("modify-password");
 		hideElement("modify-email");
+		hideElement("modify-profil-picture");
 		// unhideElement("chat")
 		currentScene = "home";
 	}
-	else if (newScene == "modifyPassword") {
+	else if (newScene == "modifyPassword") { //modifyPassword button
 		hideElement("settings")
 		unhideElement("modify-password");
 		currentScene = "modifyPassword";
 	}
-	else if (newScene == "modifyEmail") {
+	else if (newScene == "modifyEmail") { //modifyEmail button
 		hideElement("settings")
 		unhideElement("modify-email");
 		currentScene = "modifyEmail";
 	}
-	else if ((currentScene == "modifyPassword" || currentScene == "modifyEmail") && newScene == "settings") {
+	else if (newScene == "modifyProfilPicture") { //modifyProfilPicture button
+		hideElement("settings")
+		unhideElement("modify-profil-picture");
+		currentScene = "modifyProfilPicture";
+	}
+	else if ((currentScene == "modifyPassword" || currentScene == "modifyEmail" || currentScene == "modifyProfilPicture") && newScene == "settings") {
 		if (currentScene == "modifyPassword") {
 			document.getElementById("settings-actual-password").value = "";
 			document.getElementById("settings-new-password").value = "";
@@ -69,6 +75,9 @@ function changeScene(newScene) {
 			document.getElementById("settings-new-email").value = "";
 			document.getElementById("settings-confirm-email").value = "";
 			hideElement("modify-email");
+		}
+		else if (currentScene == "modifyProfilPicture") {
+			hideElement("modify-profil-picture");
 		}
 		unhideElement("settings");
 		currentScene = "settings";
@@ -97,13 +106,17 @@ function unhideElement(...elementIds) {
     });
 }
 
-
-
 function settingsAction() {
-    var settingsElement = document.getElementById('settings');
-
     if (currentScene == "home") {
         changeScene("settings");
+    } else {
+        changeScene("home");
+    }
+}
+
+function profilAction() {
+    if (currentScene == "home") {
+        changeScene("profil");
     } else {
         changeScene("home");
     }
