@@ -117,3 +117,26 @@ function forgotPassword() {
 		console.error('Error:', error);
     });
 }
+
+function modifyPassword() {
+	var actualPassword = document.getElementById("setting-old-password").value;
+	var newPassword = document.getElementById("setting-new-password").value;
+	
+    var formData = new FormData();
+    
+    formData.append("actualPassword", actualPassword);
+    formData.append("newPassword", newPassword);
+	
+	fetchData("/api/dashboard?filter=password", 'POST', formData).then(
+	(data) => {
+		if (data.status === 200) {
+			console.log("Password changed");
+			changeScene("settings");
+		} else {
+			console.log("Password do not match !");
+		}
+    })
+    .catch(error => {
+		console.error('Error:', error);
+    });	
+}

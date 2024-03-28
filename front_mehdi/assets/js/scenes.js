@@ -30,22 +30,27 @@ function changeScene(newScene) {
 		hideElement("titleSignIn", "signWith42Button", "signInButton", "forgotPasswordButton", "orDiv")
 		unhideElement("titleSignUp", "passwordConfirmDiv", "signUpButton", "emailDiv");
 	}
-	else if (currentScene = "home" && newScene == "settings") {
+	else if (currentScene == "home" && newScene == "settings") {
 		// hideElement("chat")
 		unhideElement("settings");
 		currentScene = "settings";
 	}
-	else if (currentScene = "settings" && newScene == "home") {
-		hideElement("settings")
+	else if ((currentScene == "settings" || currentScene == "modifyPassword") && newScene == "home") {
+		hideElement("settings");
+		hideElement("modify-password");
 		// unhideElement("chat")
 		currentScene = "home";
 	}
-	// else if (currentScene = "settings" && newScene == "modifyPassword") {
-	// 	// hideElement("chat")
-	// 	unhideElement("modify-password");
-	// 	hideElement("settings")
-	// 	currentScene = "modifyPassword";
-	// }
+	else if (newScene == "modifyPassword") {
+		hideElement("settings")
+		unhideElement("modify-password");
+		currentScene = "modifyPassword";
+	}
+	else if (currentScene == "modifyPassword" && newScene == "settings") {
+		hideElement("modify-password");
+		unhideElement("settings");
+		currentScene = "settings";
+	}
 
     console.log("Current scene is:", currentScene);
 }
@@ -75,7 +80,7 @@ function unhideElement(...elementIds) {
 function settingsAction() {
     var settingsElement = document.getElementById('settings');
 
-    if (settingsElement.classList.contains('d-none')) {
+    if (currentScene == "home") {
         changeScene("settings");
     } else {
         changeScene("home");
