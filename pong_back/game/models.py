@@ -3,7 +3,8 @@ from blockchain.models import Contract, ContractBuilder
 from coordination.tools import setInMatch, setOutMatch
 from django.contrib.auth.models import User
 from django.db.models import Q
-from datetime import timedelta, datetime, timezone
+from django.utils import timezone
+from datetime import timedelta
 from uuid import uuid4
 from django.contrib.postgres.fields import ArrayField
 from threading import Thread
@@ -25,8 +26,8 @@ class Match(models.Model):
 	score[0] = host
 	score[1] = invited
 	"""
-	def default_score():
-		return ([0, 0])
+	def default_ready():
+		return ([False, False])
 
 	host = models.ForeignKey(User, on_delete=models.CASCADE, related_name='host', blank=False)
 	invited = models.ForeignKey(User, on_delete=models.CASCADE, related_name='invited', blank=False)
@@ -36,8 +37,9 @@ class Match(models.Model):
 	winner = models.ForeignKey(User, default=None, null=True, on_delete=models.CASCADE)
 	date = models.DateTimeField(auto_now_add=True)
 	state = models.IntegerField(default=0) # 0 waiting, 1 started, 2 finish
-	ready = ArrayField(models.BooleanField(), size=2, default=list([False, False]))
+	ready = ArrayField(models.BooleanField(), size=2, default=default_ready)
 	start_time = models.DateTimeField(auto_now_add=True)
+	creation_date = models.DateTimeField(auto_now_add=True)
 
 	@staticmethod
 	def speakConsumer(speaker: User, content: str):
@@ -96,6 +98,7 @@ class Match(models.Model):
 		GameMap.createGame(str(self.id), self.host.username, self.invited.username)
 		time.sleep(30)
 		if (self.ready[0] and self.ready[1]):
+			self.setStartTime(timezone.now())
 			self.start()
 		else:
 			#self.finish((-1, -2))
@@ -105,8 +108,7 @@ class Match(models.Model):
 		# Tell people there next match !
 		print(f"je commence le match{self.host} {self.invited}", file=sys.stderr)
 		self.setState(1)
-		self.start_time = datetime.now()
-		self.save()
+		self.setStartTime(timezone.now())
 
 	def finish(self, score: tuple):
 		"""
@@ -119,16 +121,15 @@ class Match(models.Model):
 		loser = self.getLoser()
 
 		ContractBuilder.threaded(score, self) # Blockchain Runner !
-		#self.setDuration(datetime.now() - self.start_time)
+		self.setDuration(timezone.now() - self.start_time)
 		self.setState(2)
 		setOutMatch(loser) # let free the loser
-		#room.addEliminated(loser)
-		#self.send(loser, 'end', {'rank': room.getRank(loser)})
-		self.send(loser, 'end', {'rank': 0})
 
-
-		# here make the room update and check for the next match !
-		room.update()
+		if room:
+			room.addEliminated(loser)
+			self.send(loser, 'end', {'rank': room.getRank(loser)})
+			# here make the room update and check for the next match !
+			room.update()
 
 	def getWinner(self) -> User:
 		if self.winner == self.host:
@@ -150,6 +151,10 @@ class Match(models.Model):
 
 	def setDuration(self, duration):
 		self.duration = duration
+		self.save()
+
+	def setStartTime(self, time):
+		self.start_time = time
 		self.save()
 
 	def getScore(self):
@@ -281,22 +286,24 @@ class Room(models.Model):
 		else:
 			if self.numberMatchsLastRound == 1:
 				# end of the tournament
-				lastMatch: Match = self.matchs.all()[:1].get()
+				lastMatch: Match = self.matchs.all().order_by('-creation_date')[:1].get()
 				setOutMatch(lastMatch.getWinner())
 				lastMatch.send(lastMatch.getWinner(), 'win', {'room-id': self.id})
 				self.state = 2
 				self.save()
 				return
 			# il y a d'autres matchs à faire +_+
-			lastMatchs = list(self.matchs.all()[:self.numberMatchsLastRound])
+			lastMatchs = list(self.matchs.all().order_by('-creation_date')[:self.numberMatchsLastRound])
 			winners = [m.getWinner() for m in lastMatchs]
 			matchOpponents = [[winners[i], winners[i + 1]] for i in range(0, len(winners), 2)]
 
+		print('je genere des matchs', file=sys.stderr)
 		matchs = [Match.getMatch(id=Match.create(opponents[0], opponents[1])) for opponents in matchOpponents]
 		self.numberMatchsLastRound = len(matchs)
 		self.matchs.add(*matchs)
 		self.save()
 		if self.mode == Mode.CLASSIC:
+			# This is the matchmaking to skip wait
 			from .core import GameMap
 			classic = matchs[0]
 			GameMap.createGame(str(classic.id), classic.host.username, classic.invited.username)
@@ -440,17 +447,21 @@ class Room(models.Model):
 		if not room:
 			room = Room.getRoomFromPlayer(player)
 		if room:
-			matchsRunning = list(room.matchs.all()[:room.numberMatchsLastRound])
+			matchsRunning = list(room.matchs.all().order_by('-creation_date')[:room.numberMatchsLastRound])
+			print(f'on me demande un next bebe {player.username} {room.matchs.all()} | {matchsRunning}', file=sys.stderr)
 			for m in matchsRunning:
 				if m.host == player or m.invited == player:
 					who = 0 if m.host == player else 1
-					if m.ready[who] == True:
+					print(f'Voici le supposé match {m.id}, {m.state}, demandé par {player.username}', file=sys.stderr)
+					if m.ready[who] == True or m.state != 0:
 						return
 					m.ready[who] = True
 					m.save()
 					if who:
+						print(f'ton next {m.id} -> {player.username} | {m.state}', file=sys.stderr)
 						m.send(m.invited, 'next', {'match-id': str(m.id), 'host': m.host.username, 'invited': m.invited.username, 'statusHost': False})
 					else:
+						print(f'ton next {m.id} -> {player.username} | {m.state}', file=sys.stderr)
 						m.send(m.host, 'next', {'match-id': str(m.id), 'host': m.host.username, 'invited': m.invited.username, 'statusHost': True})
 					if (m.ready[0] and m.ready[1]):
 						m.start()
