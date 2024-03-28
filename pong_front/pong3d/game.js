@@ -168,7 +168,7 @@ class Game {
 	}
 	socketClose(){
 		console.log('WebSocket connection closed');
-			this.status.status = 0;
+			this.status.status = this.returnValue;
 	}
 
 	socketInit(socket){
@@ -179,6 +179,7 @@ class Game {
 		this.socket.onmessage = async (event) => {
 			const response = JSON.parse(event.data);
 			if (response.event == 'end'){
+				console.log("end");
 				this.status.status = this.returnValue;
 			}
 			else{
@@ -243,9 +244,7 @@ class Game {
 		collision = ballBoundingBox.intersectsBox(elementBoundingBox);
 		if (collision && this.ballMovement.y > 0) {
 			if (this.ball.position.y < 12 && this.ball.position.y > -12)
-			{
 				this.ball.position.y = 11.5;
-			}
 			this.ballMovement.set(0, this.ballMovement.y, 0);
 			const relativeCollision = new THREE.Vector3();
 			relativeCollision.subVectors(this.ball.position, element.position);
@@ -278,7 +277,7 @@ class Game {
 			this.ballMovement.x *= -1;
 			this.ballMovement.z *= -1;
 			this.ballMovement.normalize();
-			this.ballMovement.multiplyScalar(this.speedBall)
+			this.ballMovement.multiplyScalar(this.speedBall);
 		}
 	}
 	
@@ -288,9 +287,9 @@ class Game {
 		
 		let testAxes;
 		if (type == true)
-			testAxes = axes < 0
+			testAxes = axes < 0;
 		else
-			testAxes = axes > 0
+			testAxes = axes > 0;
 		const collision = ballBoundingBox.intersectsBox(elementBoundingBox);
 		if (collision && testAxes) {
 			axes *= -1;
@@ -300,7 +299,7 @@ class Game {
 
 	async animate() {
 		if(this.explode == true){
-			this.uniforms.amplitude.value = 1.0 * this.cycleScore
+			this.uniforms.amplitude.value = 1.0 * this.cycleScore;
 			this.cycleScore += 7;
 		}
 		else{
@@ -316,34 +315,34 @@ class Game {
 		}
 		this.controls.update();
 		this.renderer.render(this.scene, this.camera);
-		if (this.status['status'] === 1 || this.status['status'] === 2)
+		if (this.status['status'] === 1 || this.status['status'] === 2 || this.status['status'] === 5)
 			requestAnimationFrame(() => this.animate());
 		else
-			this.destroy()
+			this.destroy();
 	}
 
 	async checkPoint(){
-		let changed = false
+		let changed = false;
 		if (this.goalP){
-			this.player1.position.set(0, -13, 0)
-			this.player2.position.set(0, 13, 0)
+			this.player1.position.set(0, -13, 0);
+			this.player2.position.set(0, 13, 0);
 			this.laser.position.copy(this.ball.position);
-			changed = true
+			changed = true;
 		}
 		if (changed){
 			this.explode = true;
 			this.ballMovement.x = 0;
 			this.ballMovement.z = 0;
-			await sleep(1500)
-			console.log(this.p1Score)
-			console.log(this.p2Score)
-			if (this.p1Score < 5 && this.p2Score < 5)
-				this.fontLoader.load( '/static/fonts/default2.json', (font) => this.scoreInit(font))
+			await sleep(1500);
+			console.log(this.p1Score);
+			console.log(this.p2Score);
+			if (this.p1Score < 5 && this.p2Score < 5);
+				this.fontLoader.load( '/static/fonts/default2.json', (font) => this.scoreInit(font));
 			this.explode = false;
 			this.uniforms.amplitude.value = 0.0;
-			this.cycleScore = 0.1
-			this.sendMessageToServer({event : "ready"})
-			this.goalP = false
+			this.cycleScore = 0.1;
+			this.sendMessageToServer({event : "ready"});
+			this.goalP = false;
 		}
 	}
 
@@ -392,7 +391,7 @@ class Game {
 		else
 			await this.checkPoint();
 		await sleep(16);
-		if (this.status['status'] === 1 || this.status['status'] === 2)
+		if (this.status['status'] === 1 || this.status['status'] === 2 || this.status['status'] ==5)
 			requestAnimationFrame(() => this.update())
 	}
 	onKeyDown(event) {
