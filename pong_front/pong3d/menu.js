@@ -116,7 +116,7 @@ class Menu {
 
 	load3D () {
 		
-		this.loadergl.load( '/cube/scene.gltf', (gltf) => {this.createobj(gltf)} );
+		//this.loadergl.load( '/cube/scene.gltf', (gltf) => {this.createobj(gltf)} );
 		this.loader.load( '/static/fonts/default2.json', (font) => { this.createTxt(font);});
 	}
 	async createobj (gltf) {

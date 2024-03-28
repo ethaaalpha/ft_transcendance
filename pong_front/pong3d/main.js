@@ -11,6 +11,25 @@ import { hideLoadingAnimation, hideTournamentCode, showLoadingAnimation, showTou
 
 hideTournamentCode()
 var data = null;
+function waitForNextMatch(code){
+    console.log(data);
+    return new Promise((resolve) => {
+        const intervalId = setInterval(() => {
+            socketTmp.send(JSON.stringify({'event': 'next', 'data': {'room-id' : code}}))
+            console.log(status);
+            if (data) {
+                if (data.event == "end" || data.event == "win")
+                    status.status = 0
+                if (data.event == "next")
+                    status.status = 5
+                clearInterval(intervalId);
+                hideLoadingAnimation();
+                resolve();
+            }
+        }, 5000);
+    });
+
+};
 document.getElementById("codeForm").addEventListener("submit", function(event) {
     event.preventDefault();
   
@@ -21,19 +40,7 @@ document.getElementById("codeForm").addEventListener("submit", function(event) {
     else{
         socketTmp.send(JSON.stringify({'event': 'tournament', 'data': {'action' : 'join', 'room-id' : code}}))
     }
-
-    return new Promise((resolve) => {
-        const intervalId = setInterval(() => {
-            socketTmp.send(JSON.stringify({'event': 'next', 'data': {'room-id' : code}}))
-            console.log(status)
-            if (data) {
-                clearInterval(intervalId);
-                hideLoadingAnimation();
-                resolve();
-            }
-        }, 5000);
-    });
-    console.log("The entered code is: " + code);
+    return waitForNextMatch(code)
 });
 
 var view;
@@ -85,11 +92,10 @@ gameData.rendererGameLocal.setSize(window.innerWidth , window.innerHeight);
 function updateStatus(newStatus) {
     status.status= newStatus.status;
 }
-async function initialize(callback) {
+async function initialize() {
 	try {
 		while(1){
-            console.log(status.status)
-            data = null
+            console.log(status)
 			if (status.status === -1)
 				await loadTexture();
 			else if (status.status === 0)
@@ -98,8 +104,8 @@ async function initialize(callback) {
                 socketTmp.send(JSON.stringify({'event': 'matchmaking', 'data': {'action' : 'join'}}))
                 showLoadingAnimation();
                 await waitForData();
-    		    await createGame(0);
-                console.log(status.status)
+    		    await createGame(4);
+                console.log(status);
             }
             else if (status.status === 2){
                 showTournamentCode()
@@ -110,7 +116,11 @@ async function initialize(callback) {
             else if (status.status === 3)
                 await createGame();
             else if (status.status === 4){
-                await waitForData();
+                    showLoadingAnimation();
+                    console.log(status)
+                    await waitForNextMatch("");
+                }
+            else if (status.status === 5){
                 await createGame(4);
             } 
 		}
@@ -141,17 +151,17 @@ function initLoading(){
 async function loadTexture() {
     return new Promise((resolve, reject) => {
         
-        var RGBELoad = new RGBELoader(loadingManager).setPath('/static/assets/hdr/');
-        RGBELoad.load('d2.hdr', (texture) => {
-            texture.mapping = THREE.EquirectangularReflectionMapping;
-            var textureRev = texture.clone()
-            textureRev.flipY = false;
-			gameData.sceneMenu.background = texture;
-			gameData.sceneMenu.environment = texture;
-            gameData.sceneGameLocal.background = texture;
-			gameData.sceneGameLocal.environment = texture;
-            gameData.sceneGameInv.background = textureRev;
-			gameData.sceneGameInv.environment = textureRev;
+        // var RGBELoad = new RGBELoader(loadingManager).setPath('/static/assets/hdr/');
+        // RGBELoad.load('d2.hdr', (texture) => {
+        //     texture.mapping = THREE.EquirectangularReflectionMapping;
+        //     var textureRev = texture.clone()
+        //     textureRev.flipY = false;
+		// 	gameData.sceneMenu.background = texture;
+		// 	gameData.sceneMenu.environment = texture;
+        //     gameData.sceneGameLocal.background = texture;
+		// 	gameData.sceneGameLocal.environment = texture;
+        //     gameData.sceneGameInv.background = textureRev;
+		// 	gameData.sceneGameInv.environment = textureRev;
             gameData.controlsMenu = new OrbitControls(gameData.camera, gameData.rendererMenu.domElement);
             gameData.controlsGameLocal = new OrbitControls(gameData.camera, gameData.rendererGameLocal.domElement);
 			gameData.controlsMenu.enableZoom = false;
@@ -160,7 +170,7 @@ async function loadTexture() {
             gameData.controlsMenu.mouseButtons.RIGHT='';
 			status.status = 0;
             resolve();
-        });
+        // });
     });
 }
 
@@ -174,16 +184,10 @@ async function createMenu() {
 async function createGame(returnValue) {
     return new Promise((resolve, reject) => {
         view = null;
-        if (data.event == "end" || data.event == "win"){
-            data = null
-            updateStatus(0);
-            return ;
-        }
         if (data.data.statusHost == true)
             view = new Game(status, resolve, updateStatus, gameData, returnValue);
         else
             view = new GameInv(status, resolve, updateStatus, gameData, returnValue);
-        data = null;
     });
 }
 
@@ -208,7 +212,7 @@ function waitForData(time) {
     });
 }
 initLoading();
-initialize(status);
+initialize();
 //waitstatus(500);
 
 
