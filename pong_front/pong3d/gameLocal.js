@@ -1,20 +1,12 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/module/controls/OrbitControls.js';
-
 import { TessellateModifier } from 'three/module/modifiers/TessellateModifier.js';
 import { TextGeometry } from 'three/module/geometries/TextGeometry.js';
-import { FontLoader } from 'three/module/loaders/FontLoader.js';
-
-import { sleep } from './utilsPong.js'
-
-async function loadShader(url) {
-    const response = await fetch(url);
-    return response.text();
-}
+import { sleep, loadShader } from './utilsPong.js'
 
 class GameLocal {
 	constructor(status, resolve,statusCallback, gameData) {
 		this.renderer = gameData.rendererGameLocal;
+		this.loader = gameData.fontLoader;
 		this.camera = gameData.camera;
 		this.appli = gameData.appli;
 		this.status = status;
@@ -27,7 +19,7 @@ class GameLocal {
 		this.movementP1 = new THREE.Vector3(0, 0, 0);
 		this.movementP2 = new THREE.Vector3(0, 0, 0);
 		this.speed = 0.8;
-		this.speedBall = 0.25;
+		this.speedBall = 0.20;
 		this.frame = 0;
 		this.cycleScore = 0.5;
 		this.sign = true
@@ -48,7 +40,7 @@ class GameLocal {
 		this.uniforms = {
 			amplitude: {value: 0.0},
 		};
-		this.textureLoader = new THREE.TextureLoader();
+		this.textureLoader = gameData.textureLoader;
 		this.itemTexture = this.textureLoader.load('/static/assets/pokeball-texture.jpg');
 		this.controls = gameData.controlsGameLocal;
 		this.controls.enableZoom = false;
@@ -88,9 +80,7 @@ class GameLocal {
 	}
 
 	load3d(){
-		console.log("try to load")
-		const loader = new FontLoader();
-		loader.load( '/static/fonts/helvetiker_regular.typeface.json', (font) => this.scoreInit(font))
+		this.loader.load( '/static/fonts/default2.json', (font) => this.scoreInit(font))
 	}
 
 	async scoreInit(font){
@@ -108,7 +98,7 @@ class GameLocal {
 			bevelThickness: 5,
 		} );
 		geometry.center();
-		const tessellateModifier = new TessellateModifier(0.5, 2000);
+		const tessellateModifier = new TessellateModifier(4, 10);
 		geometry = tessellateModifier.modify(geometry);
 		const numFaces = geometry.attributes.position.count / 3;
 
@@ -117,26 +107,25 @@ class GameLocal {
 		const color = new THREE.Color();
 		for ( let f = 0; f < numFaces; f ++ ) {
 			const index = 9 * f;
-			const r = Math.random() * 0.2 + 0.4;
-			const g = Math.random() * 0.2 + 0.4;
-			const b = Math.random() * 0.2 + 0.4;
-			color.setHSL(r, g, b);
+			const h = Math.random() * 0.17 + 0.25;
+			const s = 1
+			const l = 0.45;
+			color.setHSL(h, s, l);
 			const dx = Math.random() * 2 - 1;
 			const dy = Math.random() * 2 - 1;
 			const dz = Math.random() * 2 - 1;
-			for ( let i = 0; i < 3; i ++ ) {
-				colors[ index + ( 3 * i ) ] = color.r;
-				colors[ index + ( 3 * i ) + 1 ] = color.g;
-				colors[ index + ( 3 * i ) + 2 ] = color.b;
-				displacement[ index + ( 3 * i ) ] = dx;
-				displacement[ index + ( 3 * i ) + 1 ] = dy;
-				displacement[ index + ( 3 * i ) + 2 ] = dz;
+			for (let i = 0; i < 3; i ++) {
+				colors[index + (3 * i)] = color.r;
+				colors[index + (3 * i) + 1] = color.g;
+				colors[index + (3 * i) + 2] = color.b;
+				displacement[index + (3 * i)] = dx;
+				displacement[index + (3 * i) + 1] = dy;
+				displacement[index + (3 * i) + 2] = dz;
 			}
 		}
-		geometry.setAttribute( 'customColor', new THREE.BufferAttribute( colors, 3 ) );
-		geometry.setAttribute( 'displacement', new THREE.BufferAttribute( displacement, 3 ) );
-		//
-		const shaderMaterial = new THREE.ShaderMaterial( {
+		geometry.setAttribute('customColor', new THREE.BufferAttribute(colors, 3));
+		geometry.setAttribute('displacement', new THREE.BufferAttribute(displacement, 3));
+		const shaderMaterial = new THREE.ShaderMaterial({
 		 	uniforms: this.uniforms,
 		 	vertexShader: await loadShader('/static/pong3d/shader.vert'),
 		 	fragmentShader: await loadShader('/static/pong3d/shader.frag'),
@@ -326,7 +315,6 @@ class GameLocal {
 			this.explode = true;
 			this.ballMovement.x = 0;
 			this.ballMovement.z = 0;
-			//updateScoreDisplay(this.p1Score, this.p2Score, this.hudScore);
 			await sleep(1500)
 			console.log(this.p1Score)
 			console.log(this.p2Score)
@@ -350,8 +338,6 @@ class GameLocal {
 		this.ballMovement.x = this.checkCollisionTarget(this.walls[3], this.ballMovement.x);
 		this.ballMovement.z = this.checkCollisionTarget(this.walls[2], this.ballMovement.z);
 		this.ballMovement.z = this.checkCollisionTarget(this.walls[1], this.ballMovement.z);
-		// this.ballMovement.y = this.checkCollisionTarget(this.targets[0], this.ballMovement.y);
-		// this.ballMovement.y = this.checkCollisionTarget(this.targets[1], this.ballMovement.y);
 		this.moveBallY(collision);
 		this.checkCollisionWithY(this.player1, collision);
 		this.checkCollisionWithY(this.player2, collision);
@@ -429,15 +415,6 @@ class GameLocal {
 		}
 	}
 
-	async sendMessageToServer(message) {
-		return new Promise((resolve, reject) => {
-			const jsonMessage = JSON.stringify(message);
-			this.socket.send(jsonMessage);
-			//add error
-			}
-		);
-	}
-
 	onWindowResize() {
 		this.camera.aspect = window.innerWidth / window.innerHeight;
 		this.camera.updateProjectionMatrix();
@@ -450,12 +427,7 @@ class GameLocal {
 		this.appli.removeChild(this.renderer.domElement);
 		this.directionalLight.dispose();
 		this.directionalLight2.dispose();
-		//this.renderer.dispose();
-		//this.controls.dispose();
 		this.scene.clear();
-		if (this.texture) {
-			this.texture.dispose();
-		}
 		this.appli = null;
 		this.renderer = null;
 		this.camera = null;
@@ -464,12 +436,9 @@ class GameLocal {
 		this.directionalLight = null;
 		this.directionalLight2 = null;
 		this.clock = null;
-		this.RGBELoad = null;
-		this.app = null;
 		this.texture = null;
 		this.loadergl = null;
 		this.loader = null;
-		this.RGBELoad = null;
 		this.statusCallback(this.status)
 		this.resolve(this.status);
 	}

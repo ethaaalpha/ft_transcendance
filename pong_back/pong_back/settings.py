@@ -44,7 +44,8 @@ INSTALLED_APPS = [
 	'activity',
 	'conversations',
 	'game',
-	'coordination'
+	'coordination',
+	'blockchain'
 ]
 
 MIDDLEWARE = [
@@ -134,7 +135,7 @@ STATICFILES_DIRS = [
 ]
 
 # API - 42 #
-API_CALLBACK = os.getenv('API_CALLBACK')
+API_CALLBACK = os.getenv('API_CALLBACK').replace("DOMAIN", os.getenv('DOMAIN'))
 API_URL = os.getenv('API_URL')
 API_UUID = os.getenv('API_UUID')
 API_SECRET = os.getenv('API_SECRET')
@@ -163,8 +164,7 @@ MESSAGE_LENGTH_MAX = 1024
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-
-ALLOWED_HOSTS = ['localhost', socket.gethostbyname(socket.gethostname())]
+ALLOWED_HOSTS = ['localhost', os.getenv('DOMAIN')]
 
 # Channel Layer Configuration
 CHANNEL_LAYERS = {

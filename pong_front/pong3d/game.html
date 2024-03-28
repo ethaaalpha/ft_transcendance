@@ -7,7 +7,7 @@
 		<title></title>
 		<meta name="description" content="">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="">
+		<link rel="stylesheet" href="style.css">
 		<script type="importmap">
 			{
 			  "imports": {
@@ -19,7 +19,15 @@
 		  </script>
 	</head>
 	<body>
-		<div id="app"></div>
+		<div class="container">
+			<div id="app"></div>
+			<div id="loader"></div>
+		</div>
+		<form id="codeForm">
+			<label for="codeInput">Code:</label><br>
+			<input type="text" id="codeInput" name="code"><br><br>
+			<input type="submit" value="Submit">
+		  </form>
 		<script type="module" src="main.js"></script>
 	</body>
 </html>
