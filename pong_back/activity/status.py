@@ -2,7 +2,6 @@ from django.contrib.auth.models import User
 from users.models import Profile
 
 class Status:
-
 	@staticmethod
 	def getStatus(user: User):
 		uProfile: Profile = user.profile

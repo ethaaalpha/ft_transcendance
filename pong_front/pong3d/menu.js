@@ -1,11 +1,12 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/module/controls/OrbitControls.js';
-import { FontLoader } from 'three/module/loaders/FontLoader.js';
-import { GLTFLoader } from 'three/module/loaders/GLTFLoader.js';
 
 class Menu {
 	constructor(status, resolve, statusCallback, gameData) {
 		this.status = status
+		this.loader = gameData.fontLoader;
+		this.loaded = gameData.loaded;
+		console.log(this.loaded);
+		this.loadergl = gameData.gltfLoader;
 		this.renderer = gameData.rendererMenu;
 		this.camera = gameData.camera;
 		this.scene = gameData.sceneMenu;
@@ -22,41 +23,57 @@ class Menu {
 		this.controls = gameData.controlsMenu;
 		this.init();
 	}
+
+	waitForSocketNLoad(){
+		setTimeout(
+			function () {
+				if (this.loaded.instance == 0) {
+						this.allLoaded();
+				} else {
+					console.log(this.loaded);
+					this.waitForSocketNLoad();
+				}
 	
-	init() {
+			}.bind(this), 500);
+	}
+	allLoaded(){
 		this.appli.appendChild(this.renderer.domElement);
+		this.update();
+		this.animate();
+	}
+	init() {
+		
 		this.directionalLight.position.set(100, 100, 500).normalize();
 		this.scene.add(this.directionalLight);
 		this.directionalLight2.position.set(-100, 100, -500).normalize();
 		this.scene.add(this.directionalLight2);
-		this.camera.position.z = 700;
+		this.camera.position.z = 500;
 		this.selected = 0;
 		this.mainButton = this.button[0];
 		this.onResize = () => this.onWindowResize();
 		this.keyD = (event) => this.onKeyDown(event);
 		document.addEventListener('keydown', this.keyD);
 		window.addEventListener('resize', this.onResize);
-		this.update();
-		this.animate();
+		this.waitForSocketNLoad()
 	}
 
 	createTxt (font) {
 		let i = 0;
-		const color = 0x05FF00;
-		const message = ["Matchmaking", "Local", "Tournament"]
-		const yPos = [0, -140, -280] 
+		const color = [0x05FF00, 0x05FF00, 0xDADADA];
+		const message = ["☢Matchmaking☢", "☢Tournament☢", "☢Training☢"]
+		const yPos = [0, -100, -200] 
 		while (i < 3){
 			this.matDark = new THREE.LineBasicMaterial({
-				color: color,
+				color: color[i],
 				side: 2
 			});
 			this.matLite = new THREE.MeshBasicMaterial({
-				color: color,
+				color: color[i],
 				transparent: true,
-				opacity: 0.6,
+				opacity: 0.9,
 				side: 2
 			});
-			const shapes = font.generateShapes(message[i], 100);
+			const shapes = font.generateShapes(message[i], 50);
 			const geometry = new THREE.ShapeGeometry(shapes);
 			geometry.computeBoundingBox();
 			const center = - 0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
@@ -98,20 +115,19 @@ class Menu {
 	}
 
 	load3D () {
-		this.loadergl = new GLTFLoader().setPath( '/static/assets/' );
-		this.loadergl.load( '/witcher/scene.gltf', (gltf) => {this.createobj(gltf)} );
-		this.loader = new FontLoader();
-		this.loader.load( '/static/fonts/helvetiker_regular.typeface.json', (font) => { this.createTxt(font);});
+		
+		//this.loadergl.load( '/cube/scene.gltf', (gltf) => {this.createobj(gltf)} );
+		this.loader.load( '/static/fonts/default2.json', (font) => { this.createTxt(font);});
 	}
-	createobj (gltf) {
+	async createobj (gltf) {
 		this.animMixer = new THREE.AnimationMixer(gltf.scene);
 		for (let i = 0; i < gltf.animations.length; i++) {
 			const animation = gltf.animations[i];
 			this.animMixer.clipAction(animation).play();
 		}
-		gltf.scene.scale.set(80, 80, 80);
-		gltf.scene.rotation.set(0, 4.7, 0);
-		gltf.scene.position.set(0, 200, 20);  
+		gltf.scene.scale.set(3, 3, 3);
+		gltf.scene.rotation.set(0.7853982, 0.7853982, 0);
+		gltf.scene.position.set(0, 200, 110);  
 		this.scene.add(gltf.scene);
 		this.renderer.render(this.scene, this.camera);
 	}
@@ -142,6 +158,7 @@ class Menu {
 	}
 
 	onKeyDown(event) {
+		console.log(event.keyCode);
 		switch (event.keyCode) {
 			case 83:
 				if (this.selected == 2){
@@ -158,12 +175,6 @@ class Menu {
 				}
 				else
 					this.mainButton = this.button[--this.selected];
-				break;
-			case 65:
-				this.moveLeft = true;
-				break;
-			case 68:
-				this.moveRight = true;
 				break;
 			case 13:
 				this.stop()

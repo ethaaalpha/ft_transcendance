@@ -22,24 +22,32 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 
 	async def connect(self):
 		self.user = self.scope['user']
-		self.matchId = str(GameMap.getMatchID(await self.getUsername()))
-		print(await self.getUsername(), sys.stderr)
-		await self.accept()
-		await self.channel_layer.group_add(self.matchId, self.channel_name)
+		if self.user.is_authenticated:
+			print(str(GameMap.getMatchID(await self.getUsername())), file=sys.stderr)
+			self.matchId = str(GameMap.getMatchID(await self.getUsername()))
+			print(await self.getUsername(), sys.stderr)
+			await self.accept()
+			await self.channel_layer.group_add(self.matchId, self.channel_name)
 
 	async def disconnect(self, code):
-		await self.channel_layer.group_discard(self.matchId, self.channel_name)
-		if GameMap.getGame(self.matchId):
+		if not self.user.is_authenticated:
+			return
+		game = GameMap.getGame(self.matchId)
+		if game:
+			await GameMap.getGame(self.matchId).disconnect(await self.getUsername())
 			GameMap.removeGame(self.matchId)
+		await self.channel_layer.group_discard(self.matchId, self.channel_name)
 		return await super().disconnect(code)
 	
 	async def receive_json(self, content: dict, **kwargs):
-		if content['event'] == 'move':
-			data = content['data']
-			#print(data, file=sys.stderr)
-			await GameMap.getGame(self.matchId).updateBall(data)
-		elif content['event'] == 'ready':
-			await GameMap.getGame(self.matchId).makeReady(await self.getUsername())
+		game = GameMap.getGame(self.matchId)
+		if game :
+			if content['event'] == 'move':
+				data = content['data']
+				await game.updateBall(data)
+			elif content['event'] == 'ready':
+				print(f"{content} {await self.getUsername()}", file=sys.stderr)
+				await game.makeReady(await self.getUsername())
 
 			
 	async def send_message(self, event):
@@ -49,7 +57,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 		await self.send_json(content)
   	
 	@staticmethod
-	async def sendMessageToConsumer(matchId: str, content: str, event: str):
+	async def sendMessageToConsumer(matchId: str, content: dict, event: str):
 		channel_layer = get_channel_layer()
 		await channel_layer.group_send(matchId, {
 				"type" : "send.message",

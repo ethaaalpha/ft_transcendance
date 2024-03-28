@@ -1,11 +1,13 @@
 from django.db import models
+from blockchain.models import Contract, ContractBuilder
 from coordination.tools import setInMatch, setOutMatch
-from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
 from django.db.models import Q
-from datetime import timedelta
-from django.utils import timezone
+from datetime import timedelta, datetime, timezone
 from uuid import uuid4
+from django.contrib.postgres.fields import ArrayField
+from threading import Thread
+import time
 import shortuuid
 import sys
 
@@ -30,10 +32,12 @@ class Match(models.Model):
 	invited = models.ForeignKey(User, on_delete=models.CASCADE, related_name='invited', blank=False)
 	id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
 	duration = models.DurationField(default=timedelta(minutes=0))
-	score = ArrayField(models.IntegerField(default=0), size=2, default=default_score)
-	link = models.URLField(default="www.localhost.fr")
+	contract = models.ForeignKey(Contract, null=True, default=None, on_delete=models.CASCADE)
+	winner = models.ForeignKey(User, default=None, null=True, on_delete=models.CASCADE)
 	date = models.DateTimeField(auto_now_add=True)
 	state = models.IntegerField(default=0) # 0 waiting, 1 started, 2 finish
+	ready = ArrayField(models.BooleanField(), size=2, default=list([False, False]))
+	start_time = models.DateTimeField(auto_now_add=True)
 
 	@staticmethod
 	def speakConsumer(speaker: User, content: str):
@@ -81,52 +85,81 @@ class Match(models.Model):
 			CoordinationConsumer.sendMessageToConsumer(user.username, data, event)
 
 	def room(self):
-		"""
-		This retrieve the parent room !
-		"""
 		return Room.objects.filter(matchs=self).first()
 
-	def finish(self, score = None):
+	def wait(self):
+		"""
+		Needed before the match start to wait for the player to be ready !
+		Must be runned inside a thread
+		"""
+		from .core import GameMap
+		GameMap.createGame(str(self.id), self.host.username, self.invited.username)
+		time.sleep(30)
+		if (self.ready[0] and self.ready[1]):
+			self.start()
+		else:
+			#self.finish((-1, -2))
+			return
+
+	def start(self):
+		# Tell people there next match !
+		print(f"je commence le match{self.host} {self.invited}", file=sys.stderr)
+		self.setState(1)
+		self.start_time = datetime.now()
+		self.save()
+
+	def finish(self, score: tuple):
 		"""
 		Function to ended a match, this will run the generation of a blockchain smart contract\n
 		also run the checkup of next match if it is a tournament
 		"""
-		if score:
-			self.score = score
+		winner = self.host if score[0] > score[1] else self.invited
+		room = self.room()
+		self.setWinner(winner)
+		loser = self.getLoser()
 
-		#need to define duration
+		ContractBuilder.threaded(score, self) # Blockchain Runner !
+		#self.setDuration(datetime.now() - self.start_time)
 		self.setState(2)
+		setOutMatch(loser) # let free the loser
+		#room.addEliminated(loser)
+		#self.send(loser, 'end', {'rank': room.getRank(loser)})
+		self.send(loser, 'end', {'rank': 0})
 
-		# let free the loser
-		setOutMatch(self.getLoser())
 
 		# here make the room update and check for the next match !
-		print(f'Le gagnant du match entre {self.host} et {self.invited} est {self.getWinner()} !!!!', file=sys.stderr)
-		room = self.room()
 		room.update()
 
-	def start(self):
-		from .core import GameMap
-
-		print(f'Match {self.id}, voici les adversaires host: {self.host} | invited: {self.invited}', file=sys.stderr)
-		# ici pour avertir les autres joueurs du prochain match !!!
-		self.send(self.host, 'next', {'match-id': str(self.id), 'host': self.host.username, 'invited': self.invited.username, 'statusHost': True})
-		self.send(self.invited, 'next', {'match-id': str(self.id), 'host': self.host.username, 'invited': self.invited.username, 'statusHost': False})
-		GameMap.createGame(str(self.id), self.host.username, self.invited.username)
-		self.setState(1)
-
 	def getWinner(self) -> User:
-		if self.score[0] > self.score[1]:
+		if self.winner == self.host:
 			return self.host
 		return self.invited
 
 	def getLoser(self) -> User:
-		if self.score[0] > self.score[1]:
-			return self.invited
-		return self.host
+		if self.winner != self.host:
+			return self.host
+		return self.invited
 	
+	def setWinner(self, winner: User):
+		self.winner = winner
+		self.save()
+
 	def setState(self, state: int):
 		self.state = state
+		self.save()
+
+	def setDuration(self, duration):
+		self.duration = duration
+		self.save()
+
+	def getScore(self):
+		if not self.contract:
+			return (0, 0)
+		else:
+			return (self.contract.getScore())
+
+	def setScore(self, score):
+		self.contract = score
 		self.save()
 
 	def toJson(self) -> dict | None:
@@ -137,8 +170,8 @@ class Match(models.Model):
 				'id': self.id,
 				'host': self.host.username,
 				'invited': self.invited.username,
-				'score': self.score,
-				'link': self.link,
+				'score': self.getScore(),
+				'duration': self.duration,
 				}
 		
 	
@@ -146,8 +179,8 @@ class Mode(models.TextChoices):
 	CLASSIC = '2'
 	TOURNAMENT4 = '4'
 	TOURNAMENT8 = '8'
-	TOURNAMENT16 = '10'
-	TOURNAMENT32 = '12'
+	TOURNAMENT16 = '16'
+	TOURNAMENT32 = '32'
 
 	@staticmethod
 	def fromText(modestr: str):
@@ -165,6 +198,7 @@ class Room(models.Model):
 	that means that a room can contain multiples matchs (so it's called a tournament).
 	"""
 	opponents = models.ManyToManyField(User, related_name='opponents')
+	eliminated = models.ManyToManyField(User, related_name='eliminated')
 	numberMatchsLastRound = models.IntegerField(default=0)
 	state = models.IntegerField(default=0) # 0 waiting, 1 started, 2 finish
 	id = models.CharField(primary_key=True, default=roomIdGenerator, blank=False, max_length=8)
@@ -190,7 +224,7 @@ class Room(models.Model):
 		for player in self.opponents.all():
 			setInMatch(player)
 
-		self.next(True)
+		self.next_server(True)
 	
 	def removePlayer(self, player: User):
 		"""
@@ -231,8 +265,8 @@ class Room(models.Model):
 		# function to check if roomReady !
 		self.update()
 		return ("You successfully join the room !", True)
-	
-	def next(self, first=False):
+
+	def next_server(self, first=False):
 		"""
 		Generate the next match seeds !
 		And warn the player !
@@ -246,12 +280,12 @@ class Room(models.Model):
 
 		else:
 			if self.numberMatchsLastRound == 1:
+				# end of the tournament
 				lastMatch: Match = self.matchs.all()[:1].get()
 				setOutMatch(lastMatch.getWinner())
-
-				for p in self.opponents.all():
-					self.send(p, 'win', {'message': f'Le gagnant du tournois est {lastMatch.getWinner()}'})
-				# CELA SIGNIFIE LA FIN DU TOURNOIS
+				lastMatch.send(lastMatch.getWinner(), 'win', {'room-id': self.id})
+				self.state = 2
+				self.save()
 				return
 			# il y a d'autres matchs à faire +_+
 			lastMatchs = list(self.matchs.all()[:self.numberMatchsLastRound])
@@ -262,10 +296,20 @@ class Room(models.Model):
 		self.numberMatchsLastRound = len(matchs)
 		self.matchs.add(*matchs)
 		self.save()
-
-		# ici lancer les matchs
-		for m in matchs:
-			m.start()	
+		if self.mode == Mode.CLASSIC:
+			from .core import GameMap
+			classic = matchs[0]
+			GameMap.createGame(str(classic.id), classic.host.username, classic.invited.username)
+			classic.send(classic.invited, 'next', {'match-id': str(classic.id), 'host': classic.host.username, 'invited': classic.invited.username, 'statusHost': False})
+			classic.send(classic.host, 'next', {'match-id': str(classic.id), 'host': classic.host.username, 'invited': classic.invited.username, 'statusHost': True})
+			classic.ready = [True, True]
+			classic.save()
+			classic.start()
+		else:
+			# Runner the thread to wait the game (to players to be ready !)
+			for m in matchs:
+				thread = Thread(target=m.wait)
+				thread.start()
 
 	def update(self):
 		"""
@@ -277,13 +321,13 @@ class Room(models.Model):
 		elif self.state == 1:
 			# mean that this is the first round !
 			if self.matchs.count() == 0:
-				self.next(True)
+				self.next_server(True)
 			# check if all the last match has ended !
 			else:
 				for m in self.matchs.all():
 					if m.state == 0 or m.state == 1:
 						return
-				return self.next()
+				return self.next_server()
 			# faire les nexts matchs etc voir pour les tournois
 
 	def updateCountsAll(self):
@@ -298,6 +342,14 @@ class Room(models.Model):
 			CoordinationConsumer.sendMessageToConsumer(p.username, data, 'count')
 		return
 	
+	def addEliminated(self, user):
+		self.eliminated.add(user)
+		self.save()
+
+	def getRank(self, user):
+		eliminated = list(self.eliminated.all())
+		return (self.opponents.count() - eliminated.index(user))
+
 	@staticmethod
 	def createRoom(owner: User, mode = Mode.CLASSIC):
 		"""
@@ -374,4 +426,32 @@ class Room(models.Model):
 		"""
 		room = Room.objects.filter(opponents=player, state=0).first()
 		return room.id if room else False
-	
+
+	@staticmethod
+	def getRoomFromPlayer(player: User):
+		return Room.objects.filter((Q(state=1, opponents=player) | Q(state=0, opponents=player)) & ~Q(eliminated=player)).first()
+
+	@staticmethod
+	def next_client(player: User, room_id: str):
+		"""
+		Tell the client it's next match
+		"""
+		room = Room.getRoom(room_id)
+		if not room:
+			room = Room.getRoomFromPlayer(player)
+		if room:
+			matchsRunning = list(room.matchs.all()[:room.numberMatchsLastRound])
+			for m in matchsRunning:
+				if m.host == player or m.invited == player:
+					who = 0 if m.host == player else 1
+					if m.ready[who] == True:
+						return
+					m.ready[who] = True
+					m.save()
+					if who:
+						m.send(m.invited, 'next', {'match-id': str(m.id), 'host': m.host.username, 'invited': m.invited.username, 'statusHost': False})
+					else:
+						m.send(m.host, 'next', {'match-id': str(m.id), 'host': m.host.username, 'invited': m.invited.username, 'statusHost': True})
+					if (m.ready[0] and m.ready[1]):
+						m.start()
+					return

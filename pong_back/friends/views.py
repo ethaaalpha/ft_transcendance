@@ -1,4 +1,4 @@
-from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.http import HttpRequest
 from django.contrib.auth.models import User
 from tools.responses import tResponses
 from .forms import FriendsFrom

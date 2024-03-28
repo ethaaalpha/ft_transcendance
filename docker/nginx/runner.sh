@@ -13,4 +13,4 @@ else
 fi
 
 echo "Running nginx"
-nginx -g "daemon off;"
+nginx -g "daemon off;" >/dev/null

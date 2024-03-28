@@ -59,7 +59,7 @@ function loadLogged() {
 	fetchData('/api/dashboard')
 		.then(data => {
 			console.log(data)
-			updatePP(data['profilePicture']);
+			updatePP('media/' + data['profilePicture']);
 			updateUsername(data['username']);
 	});
 
@@ -72,9 +72,9 @@ function loadLogged() {
 		})();
 	};;
 
-	activity = new activityWebsocket();
-	activity.connect();
-	activity.registerEvents();
+	// activity = new activityWebsocket();
+	// activity.connect();
+	// activity.registerEvents();
 
 	coordination = new coordinationWebsocket();
 	coordination.connect();

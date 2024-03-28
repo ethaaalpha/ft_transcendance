@@ -67,9 +67,13 @@ def login_internal(request: HttpRequest):
 		username = form.cleaned_data['username']
 		password = form.cleaned_data['password']
 
-		if Profile.login(request, username, password):
-			return tResponses.BAD_REQUEST.request("Credentials invalid !")
-		return tResponses.OKAY.request(f"You successfully log as {username} !")
+		value = Profile.login(request, username, password)
+		if value == 2:
+			return tResponses.FORBIDDEN.request("Credentials invalid !")
+		elif value == 1:
+			return tResponses.NOT_FOUND.request("User not found !")
+		else:
+			return tResponses.OKAY.request(f"You successfully log as {username} !")
 	return tResponses.BAD_REQUEST.request("Form isn't valid !")
 
 # Callback handle redirected request form 42 API
@@ -78,7 +82,7 @@ def callback(request: HttpRequest):
 		params = ["code", "state"]
 
 		if (areKeysFromList(params, request.GET) or request.GET.get('error')):
-			return tResponses.BAD_REQUEST.request("Authentification error !")
+			return redirect("/authentification-error")
 		
 		code = request.GET['code']
 		state = request.GET['state']
@@ -100,7 +104,7 @@ def callback(request: HttpRequest):
 				return tResponses.FORBIDDEN.request("You can't log with this account !")
 			return redirect("/")
 		else:
-			return tResponses.BAD_REQUEST.request("Authentification error !")
+			return redirect("/authentification-error")
 	else:
 		return tResponses.BAD_REQUEST.request("Post request not supported here !")
 
