@@ -164,3 +164,23 @@ function modifyEmail() {
     });	
 }
 
+function modifyProfilPicture() {
+	var profilePicture = document.getElementById("settings-actual-email").files;
+	
+    var formData = new FormData();
+    
+    formData.append("profilePicture", profilePicture);
+	
+	fetchData("/api/dashboard?filter=profilePicture", 'POST', formData).then(
+	(data) => {
+		if (data.status === 200) {
+			console.log("Profile picture changed");
+			changeScene("settings");
+		} else {
+			console.log("Size problem !");
+		}
+    })
+    .catch(error => {
+		console.error('Error:', error);
+    });	
+}
