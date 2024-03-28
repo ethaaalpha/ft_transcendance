@@ -24,23 +24,25 @@ function signIn() {
 
 	fetchData("/api/auth/login?mode=intern", 'POST', formData).then(
 		(data) => {
-			if (data.status === 403) { // mauvais mdp
+			if (data.status === 403) {
+				console.log("Bad password");
 				// notif mdp mauvais ?
 				// effacer champ mdp
 			}
-			if (data.status === 400) { // compte existe pas, gonna become 404
+			if (data.status === 404) {
+				console.log("You need to create an account");
 				changeScene("signUp");
 				document.getElementById("passwordConfirm").focus();
 			}
 			if (data.status === 200) {
-				console.log("Connexion réussie");
+				console.log("Successful connection");
 				changeScene("home");
-                appendAlert('Connexion réussie!', 'success'); // Afficher l'alerte de succès
+                appendAlert('Successful connection', 'success'); // Afficher l'alerte de succès
 			} else {
-				console.log("Erreur de connexion");
+				console.log("Connexion error");
 			}
 		}
-	).catch(error => {//ca marche pas ca encore, VOIR ETHAN
+	).catch(error => {
 		console.error('Error:', error);
 	});
 }
