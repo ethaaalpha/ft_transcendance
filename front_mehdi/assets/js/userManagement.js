@@ -117,3 +117,70 @@ function forgotPassword() {
 		console.error('Error:', error);
     });
 }
+
+function modifyPassword() {
+	var actualPassword = document.getElementById("settings-actual-password").value;
+	var newPassword = document.getElementById("settings-new-password").value;
+	
+    var formData = new FormData();
+    
+    formData.append("actualPassword", actualPassword);
+    formData.append("newPassword", newPassword);
+	
+	fetchData("/api/dashboard?filter=password", 'POST', formData).then(
+	(data) => {
+		if (data.status === 200) {
+			console.log("Password changed");
+			changeScene("settings");
+		} else {
+			console.log("Password do not match !");
+		}
+    })
+    .catch(error => {
+		console.error('Error:', error);
+    });	
+}
+
+function modifyEmail() {
+	var actualEmail = document.getElementById("settings-actual-email").value;
+	var newEmail = document.getElementById("settings-new-email").value;
+	
+    var formData = new FormData();
+    
+    formData.append("actualEmail", actualEmail);
+    formData.append("newEmail", newEmail);
+	
+	fetchData("/api/dashboard?filter=email", 'POST', formData).then(
+	(data) => {
+		if (data.status === 200) {
+			console.log("Email changed");
+			changeScene("settings");
+		} else {
+			console.log("Email do not match !");
+		}
+    })
+    .catch(error => {
+		console.error('Error:', error);
+    });	
+}
+
+function modifyProfilPicture() {
+	var profilePicture = document.getElementById("settings-actual-email").files;
+	
+    var formData = new FormData();
+    
+    formData.append("profilePicture", profilePicture);
+	
+	fetchData("/api/dashboard?filter=profilePicture", 'POST', formData).then(
+	(data) => {
+		if (data.status === 200) {
+			console.log("Profile picture changed");
+			changeScene("settings");
+		} else {
+			console.log("Size problem !");
+		}
+    })
+    .catch(error => {
+		console.error('Error:', error);
+    });	
+}
