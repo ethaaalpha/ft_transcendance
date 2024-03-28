@@ -40,9 +40,10 @@ function changeScene(newScene) {
 		unhideElement("settings");
 		currentScene = "settings";
 	}
-	else if ((currentScene == "settings" || currentScene == "modifyPassword") && newScene == "home") {
+	else if ((currentScene == "settings" || currentScene == "modifyPassword" || currentScene == "modifyEmail") && newScene == "home") {
 		hideElement("settings");
 		hideElement("modify-password");
+		hideElement("modify-email");
 		// unhideElement("chat")
 		currentScene = "home";
 	}
@@ -51,12 +52,24 @@ function changeScene(newScene) {
 		unhideElement("modify-password");
 		currentScene = "modifyPassword";
 	}
-	else if (currentScene == "modifyPassword" && newScene == "settings") {
-		document.getElementById("setting-old-password").value = "";
-		document.getElementById("setting-new-password").value = "";
-		document.getElementById("setting-confirm-password").value = "";
-		
-		hideElement("modify-password");
+	else if (newScene == "modifyEmail") {
+		hideElement("settings")
+		unhideElement("modify-email");
+		currentScene = "modifyEmail";
+	}
+	else if ((currentScene == "modifyPassword" || currentScene == "modifyEmail") && newScene == "settings") {
+		if (currentScene == "modifyPassword") {
+			document.getElementById("settings-actual-password").value = "";
+			document.getElementById("settings-new-password").value = "";
+			document.getElementById("settings-confirm-password").value = "";
+			hideElement("modify-password");
+		}
+		else if (currentScene == "modifyEmail") {
+			document.getElementById("settings-actual-email").value = "";
+			document.getElementById("settings-new-email").value = "";
+			document.getElementById("settings-confirm-email").value = "";
+			hideElement("modify-email");
+		}
 		unhideElement("settings");
 		currentScene = "settings";
 	}
