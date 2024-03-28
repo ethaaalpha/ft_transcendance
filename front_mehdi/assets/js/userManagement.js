@@ -119,8 +119,8 @@ function forgotPassword() {
 }
 
 function modifyPassword() {
-	var actualPassword = document.getElementById("setting-old-password").value;
-	var newPassword = document.getElementById("setting-new-password").value;
+	var actualPassword = document.getElementById("settings-actual-password").value;
+	var newPassword = document.getElementById("settings-new-password").value;
 	
     var formData = new FormData();
     
@@ -140,3 +140,27 @@ function modifyPassword() {
 		console.error('Error:', error);
     });	
 }
+
+function modifyEmail() {
+	var actualEmail = document.getElementById("settings-actual-email").value;
+	var newEmail = document.getElementById("settings-new-email").value;
+	
+    var formData = new FormData();
+    
+    formData.append("actualEmail", actualEmail);
+    formData.append("newEmail", newEmail);
+	
+	fetchData("/api/dashboard?filter=email", 'POST', formData).then(
+	(data) => {
+		if (data.status === 200) {
+			console.log("Email changed");
+			changeScene("settings");
+		} else {
+			console.log("Email do not match !");
+		}
+    })
+    .catch(error => {
+		console.error('Error:', error);
+    });	
+}
+
