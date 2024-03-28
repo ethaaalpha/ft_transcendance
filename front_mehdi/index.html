@@ -22,43 +22,47 @@
 	<div class="container d-none" id="signForm">
 		<div class="row align-items-center justify-content-center vh-100">	
 			<div class="col-md-6 col-lg-4 login-form">
-				<h1 id="titleSignIn" class="title mb-3 fw-bold">SignIn</h1>
-				<h1 id="titleSignUp" class="title mb-3 fw-bold d-none">SignUp</h1>
+				<form>
+					<h1 id="titleSignIn" class="title mb-3 fw-bold">SignIn</h1>
+					<h1 id="titleSignUp" class="title mb-3 fw-bold d-none">SignUp</h1>
 				
-			<!-- SIGN IN -->
-			<form>
-				<div class="mb-3 text-center mx-auto">
-					<button type="button" class="btn btn-success btn-block col-8" id="signWith42Button" onclick="signWith42()">Continue with 42</button>
-				</div>
-				<div class="mb-3 text-center mx-auto" id="orDiv">OR</div>
-				<div class="form-floating mb-3 col-8 mx-auto">
-					<input type="text" class="form-control" id="username" placeholder="Username">
-					<label for="username">Username</label>
-				</div>
-				<div class="form-floating mb-3 col-8 mx-auto">
-					<input type="password" class="form-control" id="password" placeholder="Password">
-					<label for="username">Password</label>
-				</div>
-				<div class="mb-3 text-center mx-auto">
-					<button type="button" class="btn btn-success btn-block col-8" id="signInButton" onclick="signIn()">Continue with username</button>
-				</div>
-				<div class="mb-3 text-center mx-auto">
-					<button type="button" class="btn btn-success btn-block col-8" id="forgotPasswordButton" onclick="forgotPassword()">Forgot password?</button>
-				</div>
-				
-				<!-- SIGN UP -->
-				<div id="passwordConfirmDiv" class="form-floating mb-3 col-8 mx-auto d-none">
-					<input id="passwordConfirm" type="password" class="form-control" placeholder="Confirm password">
-					<label for="username">Confirm password</label>
-				</div>
-				<div id="emailDiv" class="form-floating mb-3 col-8 mx-auto d-none">
-					<input id="email" type="email" class="form-control" placeholder="Email adress">
-					<label for="username">Email adress</label>
-					<!-- <small id="emailHelp" class="form-text text-muted">We'll sell your email on darkweb.</small> -->
-				</div>
-				<div id="signUpButton" class="mb-3 text-center mx-auto d-none">
-					<button type="button" class="btn btn-primary btn-block col-8" onclick="signUp()">Create an account</button>
-				</div>
+				<!-- SIGN IN -->
+					<!-- <div id="signIn"> -->
+						<div class="mb-3 text-center mx-auto">
+							<button type="button" class="btn btn-success btn-block col-8" id="signWith42Button" onclick="signWith42()">Continue with 42</button>
+						</div>
+						<div class="mb-3 text-center mx-auto" id="orDiv">OR</div>
+						<div class="form-floating mb-3 col-8 mx-auto">
+							<input type="text" class="form-control" id="username" placeholder="Username">
+							<label for="username">Username</label>
+						</div>
+						<div class="form-floating mb-3 col-8 mx-auto">
+							<input type="password" class="form-control" id="password" placeholder="Password">
+							<label for="username">Password</label>
+						</div>
+						<div class="mb-3 text-center mx-auto">
+							<button type="button" class="btn btn-success btn-block col-8" id="signInButton" onclick="signIn()">Continue with username</button>
+						</div>
+						<div class="mb-3 text-center mx-auto">
+							<button type="button" class="btn btn-success btn-block col-8" id="forgotPasswordButton" onclick="forgotPassword()">Forgot password?</button>
+						</div>
+					<!-- </div> -->
+					
+					<!-- SIGN UP -->
+					<!-- <div id="SignUp"> -->
+						<div id="passwordConfirmDiv" class="form-floating mb-3 col-8 mx-auto d-none">
+							<input id="passwordConfirm" type="password" class="form-control" placeholder="Confirm password">
+							<label for="username">Confirm password</label>
+						</div>
+						<div id="emailDiv" class="form-floating mb-3 col-8 mx-auto d-none">
+							<input id="email" type="email" class="form-control" placeholder="Email adress">
+							<label for="username">Email adress</label>
+							<!-- <small id="emailHelp" class="form-text text-muted">We'll sell your email on darkweb.</small> -->
+						</div>
+						<div id="signUpButton" class="mb-3 text-center mx-auto d-none">
+							<button type="button" class="btn btn-primary btn-block col-8" onclick="signUp()">Create an account</button>
+						</div>
+					<!-- </div> -->
 			</form>
 		</div>
 		</div>
@@ -75,7 +79,10 @@
 		<!-- SOCIAL -->
 		<div class="social-div">
 			<div class="social-display-div box-style">
-
+				
+				<!-- CHAT -->
+				<span id="chat" class="title-1">Chat</span>
+				
 				<!-- PROFIL -->
 				<div id="profil" class="settings-div d-none">
 					<button class="arrow-back" onclick="changeScene('home')">
@@ -91,7 +98,8 @@
 							</defs>
 						</svg>						
 					</button>
-					<span class="title-2">Modify profil picture</span>
+					<img id="profilePicture" class="image">
+					<span id="username" class="title-1">Profil</span>
 				</div>
 
 				<!-- SETTINGS -->
@@ -279,8 +287,8 @@
 			</div>
 			<div class="social-button-div box-style">
 				<!-- <button type="button" class="btn btn-primary" onclick="signOut()">Sign-out</button> -->
-				<button type="button" class="btn col-4 btn-primary" onclick="settingsAction()">Profil</button>
-				<button type="button" class="btn col-4 btn-primary" onclick="profilAction()">Settings</button>
+				<button type="button" class="btn col-4 btn-primary" onclick="profilAction()">Profil</button>
+				<button type="button" class="btn col-4 btn-primary" onclick="settingsAction()">Settings</button>
 			</div>
 		</div>
 	</div>
@@ -304,8 +312,9 @@
     <script src="assets/js/alerts.js"></script>
     <script src="assets/js/api.js"></script>
     <script src="assets/js/background.js"></script>
-    <script src="assets/js/scenes.js"></script>
+    <script src="assets/js/sceneManagement.js"></script>
     <script src="assets/js/userManagement.js"></script>
+    <script src="assets/js/profil.js"></script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
