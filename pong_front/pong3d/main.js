@@ -188,6 +188,7 @@ async function createGame(returnValue) {
             view = new Game(status, resolve, updateStatus, gameData, returnValue);
         else
             view = new GameInv(status, resolve, updateStatus, gameData, returnValue);
+		data = null;
     });
 }
 
