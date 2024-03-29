@@ -40,6 +40,7 @@ class Match(models.Model):
 	ready = ArrayField(models.BooleanField(), size=2, default=default_ready)
 	start_time = models.DateTimeField(auto_now_add=True)
 	creation_date = models.DateTimeField(auto_now_add=True)
+	data = models.JSONField(null=True, default=None)
 
 	@staticmethod
 	def speakConsumer(speaker: User, content: str):
@@ -68,10 +69,11 @@ class Match(models.Model):
 		return match.id
 
 	@staticmethod
-	def historic(user: User, since, n=50) -> list:
+	def historic(user: User, since, n=50, object=False) -> list:
 		matchs = Match.objects.filter(Q(host=user, date__gte=since) | Q(invited=user, date__gte=since)).filter(state=2)[:n]
-		data = [m.toJson() for m in matchs]
-		return (data)
+		if object:
+			return matchs
+		return [m.toJson() for m in matchs]
 
 	def speak(self, sender: User, content: str):
 		if sender != self.host and sender != self.invited:
@@ -101,16 +103,18 @@ class Match(models.Model):
 			self.setStartTime(timezone.now())
 			self.start()
 		else:
-			#self.finish((-1, -2))
 			return
+			# mettre les stats a des valeurs par defaut !
+			# self.finish((-1, -2))
+		return
 
 	def start(self):
 		# Tell people there next match !
-		print(f"je commence le match{self.host} {self.invited}", file=sys.stderr)
+		# print(f"je commence le match{self.host} {self.invited}", file=sys.stderr)
 		self.setState(1)
 		self.setStartTime(timezone.now())
 
-	def finish(self, score: tuple):
+	def finish(self, score: tuple, **kwargs):
 		"""
 		Function to ended a match, this will run the generation of a blockchain smart contract\n
 		also run the checkup of next match if it is a tournament
@@ -123,11 +127,15 @@ class Match(models.Model):
 		ContractBuilder.threaded(score, self) # Blockchain Runner !
 		self.setDuration(timezone.now() - self.start_time)
 		self.setState(2)
+		self.setData({'distance': 1, 'duration': self.duration.total_seconds(), 'pong': 20})  #change to real values
 		setOutMatch(loser) # let free the loser
+
+		# Statistics
+		loser.stats.addResult(False)
+		winner.stats.addResult(True)
 
 		if room:
 			room.addEliminated(loser)
-			self.send(loser, 'end', {'rank': room.getRank(loser)})
 			# here make the room update and check for the next match !
 			room.update()
 
@@ -155,6 +163,10 @@ class Match(models.Model):
 
 	def setStartTime(self, time):
 		self.start_time = time
+		self.save()
+
+	def setData(self, tab):
+		self.data = tab
 		self.save()
 
 	def getScore(self):
@@ -204,10 +216,12 @@ class Room(models.Model):
 	"""
 	opponents = models.ManyToManyField(User, related_name='opponents')
 	eliminated = models.ManyToManyField(User, related_name='eliminated')
+	closed = models.ManyToManyField(User, related_name='closed')
 	numberMatchsLastRound = models.IntegerField(default=0)
 	state = models.IntegerField(default=0) # 0 waiting, 1 started, 2 finish
 	id = models.CharField(primary_key=True, default=roomIdGenerator, blank=False, max_length=8)
 	matchs = models.ManyToManyField(Match, related_name='matchs')
+	winner = models.ForeignKey(User, null=True, default=None, on_delete=models.CASCADE)
 	mode = models.CharField(max_length=30, choices=Mode.choices, blank=False)
 
 	"""
@@ -222,12 +236,14 @@ class Room(models.Model):
 	def _runRoom(self):
 		if (self.opponents.count() != int(self.mode)): #mean that there isn't enought of players
 			return
-		print(f"la room doit commencer \nVoici les adversaires : {self.opponents.all()}", file=sys.stderr)
+		# print(f"la room doit commencer \nVoici les adversaires : {self.opponents.all()}", file=sys.stderr)
 		self.state = 1
 		self.save()
 
 		for player in self.opponents.all():
 			setInMatch(player)
+			if self.mode != Mode.CLASSIC:
+				player.stats.addTournament()
 
 		self.next_server(True)
 	
@@ -270,7 +286,7 @@ class Room(models.Model):
 		# function to check if roomReady !
 		self.update()
 		return ("You successfully join the room !", True)
-
+	
 	def next_server(self, first=False):
 		"""
 		Generate the next match seeds !
@@ -288,7 +304,7 @@ class Room(models.Model):
 				# end of the tournament
 				lastMatch: Match = self.matchs.all().order_by('-creation_date')[:1].get()
 				setOutMatch(lastMatch.getWinner())
-				lastMatch.send(lastMatch.getWinner(), 'win', {'room-id': self.id})
+				self.winner = lastMatch.getWinner()
 				self.state = 2
 				self.save()
 				return
@@ -297,7 +313,7 @@ class Room(models.Model):
 			winners = [m.getWinner() for m in lastMatchs]
 			matchOpponents = [[winners[i], winners[i + 1]] for i in range(0, len(winners), 2)]
 
-		print('je genere des matchs', file=sys.stderr)
+		# print('je genere des matchs', file=sys.stderr)
 		matchs = [Match.getMatch(id=Match.create(opponents[0], opponents[1])) for opponents in matchOpponents]
 		self.numberMatchsLastRound = len(matchs)
 		self.matchs.add(*matchs)
@@ -351,6 +367,10 @@ class Room(models.Model):
 	
 	def addEliminated(self, user):
 		self.eliminated.add(user)
+		self.save()
+
+	def addClosed(self, user):
+		self.closed.add(user)
 		self.save()
 
 	def getRank(self, user):
@@ -436,7 +456,7 @@ class Room(models.Model):
 
 	@staticmethod
 	def getRoomFromPlayer(player: User):
-		return Room.objects.filter((Q(state=1, opponents=player) | Q(state=0, opponents=player)) & ~Q(eliminated=player)).first()
+		return Room.objects.filter((Q(state=1, opponents=player) | Q(state=0, opponents=player)) & ~Q(closed=player)).first()
 
 	@staticmethod
 	def next_client(player: User, room_id: str):
@@ -446,22 +466,34 @@ class Room(models.Model):
 		room = Room.getRoom(room_id)
 		if not room:
 			room = Room.getRoomFromPlayer(player)
+		# print(f'il me demande {player.username}', file=sys.stderr)
 		if room:
+			if player in room.eliminated.all():
+				# print(f"j'envoie le message end à {player.username}", file=sys.stderr)
+				room.send(player, 'end', {'room-id': room.id,'rank': room.getRank(player)})
+				room.closed.add(player)
+			if player == room.winner:
+				# print(f"j'envoie le message win à {player.username}", file=sys.stderr)
+				room.send(player, 'win', {'room-id': room.id})
+				room.closed.add(player)
+				return
 			matchsRunning = list(room.matchs.all().order_by('-creation_date')[:room.numberMatchsLastRound])
-			print(f'on me demande un next bebe {player.username} {room.matchs.all()} | {matchsRunning}', file=sys.stderr)
+			# print(f'on me demande un next bebe {player.username} {room.matchs.all()} | {matchsRunning}', file=sys.stderr)
 			for m in matchsRunning:
 				if m.host == player or m.invited == player:
 					who = 0 if m.host == player else 1
-					print(f'Voici le supposé match {m.id}, {m.state}, demandé par {player.username}', file=sys.stderr)
+					# print(f'Voici le supposé match {m.id}, {m.state}, demandé par {player.username}', file=sys.stderr)
 					if m.ready[who] == True or m.state != 0:
 						return
 					m.ready[who] = True
 					m.save()
 					if who:
-						print(f'ton next {m.id} -> {player.username} | {m.state}', file=sys.stderr)
+						# print(f'ton next {m.id} -> {player.username} | {m.state}', file=sys.stderr)
+						# print(f"j'envoie le message next à {player.username} {m.id}", file=sys.stderr)
 						m.send(m.invited, 'next', {'match-id': str(m.id), 'host': m.host.username, 'invited': m.invited.username, 'statusHost': False})
 					else:
-						print(f'ton next {m.id} -> {player.username} | {m.state}', file=sys.stderr)
+						# print(f"j'envoie le message next à {player.username} {m.id}", file=sys.stderr)
+						# print(f'ton next {m.id} -> {player.username} | {m.state}', file=sys.stderr)
 						m.send(m.host, 'next', {'match-id': str(m.id), 'host': m.host.username, 'invited': m.invited.username, 'statusHost': True})
 					if (m.ready[0] and m.ready[1]):
 						m.start()
