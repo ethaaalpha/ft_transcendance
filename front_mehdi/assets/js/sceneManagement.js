@@ -17,14 +17,17 @@ function changeScene(newScene) {
         case "profil":
             handleProfil();
             break;
+		case "modifyGameTheme":
+			handleModifyGameTheme();
+			break;
+		case "modifyProfilPicture":
+			handleModifyProfilPicture();
+			break;
         case "modifyPassword":
             handleModifyPassword();
             break;
         case "modifyEmail":
             handleModifyEmail();
-            break;
-        case "modifyProfilPicture":
-            handleModifyProfilPicture();
             break;
         default:
             console.log("Invalid scene: ", newScene);
@@ -41,54 +44,59 @@ function handleSignIn() {
 	}
 	else if (currentScene == "settings") {
 		hideElements("titleSignUp", "passwordConfirmDiv", "signUpButton", "emailDiv", "home", "settings");
-		resetFormFields("username", "password", "passwordConfirm", "email");
 		unhideElements("titleSignIn", "signWith42Button", "signInButton", "forgotPasswordButton", "signForm", "orDiv");
 	}
 	currentScene = "signIn";
 }
 
 function handleSignUp() {
-    hideElements("titleSignIn", "signWith42Button", "signInButton", "forgotPasswordButton", "orDiv");
+	hideElements("titleSignIn", "signWith42Button", "signInButton", "forgotPasswordButton", "orDiv");
     unhideElements("titleSignUp", "passwordConfirmDiv", "signUpButton", "emailDiv");
     currentScene = "signUp";
 }
 
 function handleHome() {
-    hideElements("signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture");
-	//reset form?
+	hideElements("signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
+	resetFormFields("username", "password", "passwordConfirm", "email");
     unhideElements("home", "chat");
     currentScene = "home";
 }
 
 function handleSettings() {
-    hideElements("chat", "profil", "modify-password", "modify-email", "modify-profil-picture");
+    hideElements("chat", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
 	resetFormFields("settings-actual-password", "settings-new-password", "settings-confirm-password", "settings-actual-email", "settings-new-email", "settings-confirm-email");
     unhideElements("settings");
     currentScene = "settings";
 }
 
 function handleProfil() {
-    hideElements("chat", "settings", "modify-password", "modify-email", "modify-profil-picture");
+    hideElements("chat", "settings", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
     unhideElements("profil");
     currentScene = "profil";
 }
 
+function handleModifyGameTheme() {
+	hideElements("chat", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture");
+	unhideElements("modify-game-theme");
+	currentScene = "modifyGameTheme";
+}
+
+function handleModifyProfilPicture() {
+	hideElements("chat", "settings", "profil", "modify-password", "modify-email", "modify-game-theme");
+	unhideElements("modify-profil-picture");
+	currentScene = "modifyProfilPicture";
+}
+
 function handleModifyPassword() {
-    hideElements("chat", "settings", "profil", "modify-email", "modify-profil-picture");
+    hideElements("chat", "settings", "profil", "modify-email", "modify-profil-picture", "modify-game-theme");
     unhideElements("modify-password");
     currentScene = "modifyPassword";
 }
 
 function handleModifyEmail() {
-    hideElements("chat", "settings", "profil", "modify-password", "modify-profil-picture");
+    hideElements("chat", "settings", "profil", "modify-password", "modify-profil-picture", "modify-game-theme");
     unhideElements("modify-email");
     currentScene = "modifyEmail";
-}
-
-function handleModifyProfilPicture() {
-    hideElements("chat", "settings", "profil", "modify-password", "modify-email");
-    unhideElements("modify-profil-picture");
-    currentScene = "modifyProfilPicture";
 }
 
 //utils
