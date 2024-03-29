@@ -213,6 +213,8 @@
     flex-wrap: wrap;
     justify-content: space-between;
 	margin: 0 10px;
+	overflow-y: auto;
+	max-height: 350px; /* bottom limit where the overflow stop */
 }
 
 .modify-game-theme-container > * {
