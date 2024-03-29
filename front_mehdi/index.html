@@ -211,6 +211,27 @@
 
 
 				<!-- MODIFY GAME THEME -->
+				<div id="modify-game-theme" class="settings-div d-none">
+					<button class="arrow-back" onclick="changeScene('settings')">
+						<svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<g clip-path="url(#clip0_116_82)">
+							<path d="M7.70801 18.5H29.2913" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+							<path d="M18.4997 7.70825L7.70801 18.4999L18.4997 29.2916" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+							</g>
+							<defs>
+							<clipPath id="clip0_116_82">
+							<rect width="37" height="37" fill="white"/>
+							</clipPath>
+							</defs>
+						</svg>						
+					</button>
+					<span class="title-2">Modify game theme</span>
+					<span class="body-text">Go through parallel universes.</span>
+					<div id="modify-game-theme-menu" class="modify-game-theme-container"></div>
+					<button class="change-btn">			
+						<span class="btn-title" onclick="modifyGameTheme()">Change game theme</span>
+					</button>
+				</div>
 
 				<!-- MODIFY PROFIL PICTURE -->
 				<div id="modify-profil-picture" class="settings-div d-none">
@@ -327,6 +348,7 @@
     <script src="assets/js/sceneManagement.js"></script>
     <script src="assets/js/userManagement.js"></script>
 	<script src="assets/js/profil.js"></script>
+	<script src="assets/js/divCreator.js"></script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
