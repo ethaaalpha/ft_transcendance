@@ -103,8 +103,9 @@ async function initialize() {
 			else if (status.status === 1){
                 socketTmp.send(JSON.stringify({'event': 'matchmaking', 'data': {'action' : 'join'}}))
                 showLoadingAnimation();
+				data = null;
                 await waitForData();
-    		    await createGame(4);
+    		    await createGame(0);
                 console.log(status);
             }
             else if (status.status === 2){
@@ -191,6 +192,7 @@ async function createGame(returnValue) {
 		data = null;
     });
 }
+
 
 async function createGameLocal() {
     return new Promise((resolve, reject) => {
