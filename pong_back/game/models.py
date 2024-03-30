@@ -218,7 +218,7 @@ class Room(models.Model):
 	eliminated = models.ManyToManyField(User, related_name='eliminated')
 	closed = models.ManyToManyField(User, related_name='closed')
 	numberMatchsLastRound = models.IntegerField(default=0)
-	state = models.IntegerField(default=0) # 0 waiting, 1 started, 2 finish
+	state = models.IntegerField(default=0) # 0 waiting, 1 started, auto delete when finish
 	id = models.CharField(primary_key=True, default=roomIdGenerator, blank=False, max_length=8)
 	matchs = models.ManyToManyField(Match, related_name='matchs')
 	winner = models.ForeignKey(User, null=True, default=None, on_delete=models.CASCADE)
@@ -305,7 +305,6 @@ class Room(models.Model):
 				lastMatch: Match = self.matchs.all().order_by('-creation_date')[:1].get()
 				setOutMatch(lastMatch.getWinner())
 				self.winner = lastMatch.getWinner()
-				self.state = 2
 				self.save()
 				return
 			# il y a d'autres matchs à faire +_+
@@ -376,6 +375,10 @@ class Room(models.Model):
 	def getRank(self, user):
 		eliminated = list(self.eliminated.all())
 		return (self.opponents.count() - eliminated.index(user))
+
+	def autodestruction(self):
+		if self.closed.count() == self.opponents.count():
+			return self.delete()
 
 	@staticmethod
 	def createRoom(owner: User, mode = Mode.CLASSIC):
@@ -466,17 +469,19 @@ class Room(models.Model):
 		room = Room.getRoom(room_id)
 		if not room:
 			room = Room.getRoomFromPlayer(player)
-		# print(f'il me demande {player.username}', file=sys.stderr)
 		if room:
+			if player in room.closed.all():
+				return
 			if player in room.eliminated.all():
 				# print(f"j'envoie le message end à {player.username}", file=sys.stderr)
 				room.send(player, 'end', {'room-id': room.id,'rank': room.getRank(player)})
-				room.closed.add(player)
+				room.addClosed(player)
+				return room.autodestruction()
 			if player == room.winner:
 				# print(f"j'envoie le message win à {player.username}", file=sys.stderr)
 				room.send(player, 'win', {'room-id': room.id})
-				room.closed.add(player)
-				return
+				room.addClosed(player)
+				return room.autodestruction()
 			matchsRunning = list(room.matchs.all().order_by('-creation_date')[:room.numberMatchsLastRound])
 			# print(f'on me demande un next bebe {player.username} {room.matchs.all()} | {matchsRunning}', file=sys.stderr)
 			for m in matchsRunning:
