@@ -95,6 +95,8 @@ function updateStatus(newStatus) {
 async function initialize() {
 	try {
 		while(1){
+            if (status.status != 5)
+                data = null;
             console.log(status)
 			if (status.status === -1)
 				await loadTexture();
@@ -103,10 +105,8 @@ async function initialize() {
 			else if (status.status === 1){
                 socketTmp.send(JSON.stringify({'event': 'matchmaking', 'data': {'action' : 'join'}}))
                 showLoadingAnimation();
-				data = null;
                 await waitForData();
     		    await createGame(0);
-                console.log(status);
             }
             else if (status.status === 2){
                 showTournamentCode()
@@ -176,14 +176,14 @@ async function loadTexture() {
 }
 
 async function createMenu() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
 		view = null;
         view = new Menu(status, resolve, updateStatus, gameData);
     });
 }
 
 async function createGame(returnValue) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         view = null;
         if (data.data.statusHost == true)
             view = new Game(status, resolve, updateStatus, gameData, returnValue);
@@ -195,7 +195,7 @@ async function createGame(returnValue) {
 
 
 async function createGameLocal() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
 		view = null;
         view = new GameLocal(status, resolve, updateStatus, gameData);
     });
