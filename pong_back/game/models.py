@@ -98,14 +98,13 @@ class Match(models.Model):
 		"""
 		from .core import GameMap
 		GameMap.createGame(str(self.id), self.host.username, self.invited.username)
-		time.sleep(30)
+		time.sleep(20)
 		if (self.ready[0] and self.ready[1]):
 			self.setStartTime(timezone.now())
 			self.start()
 		else:
-			return
 			# mettre les stats a des valeurs par defaut !
-			# self.finish((-1, -2))
+			self.finish((-1, -2))
 		return
 
 	def start(self):
@@ -447,6 +446,10 @@ class Room(models.Model):
 		playerRooms = Room.objects.filter(opponents=player, state=0).all()
 		for room in playerRooms:
 			room.removePlayer(player)
+
+		activeRoom = Room.getRoomFromPlayer(player)
+		if activeRoom:
+			activeRoom.addClosed(player)
 	
 	@staticmethod
 	def isInWaitingRoom(player: User) -> bool:
