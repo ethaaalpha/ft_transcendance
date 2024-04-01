@@ -8,6 +8,7 @@ from .matchmaking import Matchmaking
 from .invitations import InvitationStack
 from channels.layers import get_channel_layer
 from game.models import Room, Mode, Match
+import time, sys, threading
 
 class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 		
@@ -103,7 +104,8 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 						await self.messageResponse('refuse', await sync_to_async(InvitationStack.refuse)(await self.getUser(username=target), await self.getUser()))
 
 	@staticmethod
-	def sendMessageToConsumer(username: str, content: str, event: str):
+	def sendMessageToConsumerDelayed(username: str, content: str, event: str, delay):
+		time.sleep(delay)
 		channel_layer = get_channel_layer()
 		async_to_sync(channel_layer.group_send)(getChannelName(username, 'coord'),
 			{
@@ -112,3 +114,18 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 				"event" : event
 			}
 		)
+
+	@staticmethod
+	def sendMessageToConsumer(username: str, content: str, event: str, delay = 0):
+		if delay > 0:
+			thread = threading.Thread(target=CoordinationConsumer.sendMessageToConsumerDelayed, args=(username, content, event, delay))
+			thread.start()
+		else:
+			channel_layer = get_channel_layer()
+			async_to_sync(channel_layer.group_send)(getChannelName(username, 'coord'),
+				{
+					"type" : "send.message",
+					"data" : content,
+					"event" : event
+				}
+			)
