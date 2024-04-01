@@ -81,30 +81,31 @@ class Match(models.Model):
 		target = self.host if sender == self.invited else self.invited
 		self.room().send(target, 'chat', {"from": sender.username, "content": content})
 	
-	def send(self, user: User, event: str, data: str):
+	def send(self, user: User, event: str, data: str, delay = 0):
 		from coordination.consumers import CoordinationConsumer
 		if user != self.host and user != self.invited:
 			return
 		else:
-			CoordinationConsumer.sendMessageToConsumer(user.username, data, event)
+			CoordinationConsumer.sendMessageToConsumer(user.username, data, event, delay)
 
 	def room(self):
 		return Room.objects.filter(matchs=self).first()
 
-	def wait(self):
+	@staticmethod
+	def wait(match_id, host_username, invited_username):
 		"""
 		Needed before the match start to wait for the player to be ready !
 		Must be runned inside a thread
 		"""
 		from .core import GameMap
-		GameMap.createGame(str(self.id), self.host.username, self.invited.username)
+
+		GameMap.createGame(str(match_id), host_username, invited_username)
 		time.sleep(20)
-		if (self.ready[0] and self.ready[1]):
-			self.setStartTime(timezone.now())
-			self.start()
-		else:
+		match = Match.getMatch(id=match_id) #actualisation !
+		if (not match.ready[0] or not match.ready[1]):
 			# mettre les stats a des valeurs par defaut !
-			self.finish((-1, -2))
+			match.setStartTime(timezone.now())
+			match.finish((-1, -2))
 		return
 
 	def start(self):
@@ -321,15 +322,15 @@ class Room(models.Model):
 			from .core import GameMap
 			classic = matchs[0]
 			GameMap.createGame(str(classic.id), classic.host.username, classic.invited.username)
-			classic.send(classic.invited, 'next', {'match-id': str(classic.id), 'host': classic.host.username, 'invited': classic.invited.username, 'statusHost': False})
-			classic.send(classic.host, 'next', {'match-id': str(classic.id), 'host': classic.host.username, 'invited': classic.invited.username, 'statusHost': True})
+			classic.send(classic.invited, 'next', {'match-id': str(classic.id), 'host': classic.host.username, 'invited': classic.invited.username, 'statusHost': False}, delay=2.5)
+			classic.send(classic.host, 'next', {'match-id': str(classic.id), 'host': classic.host.username, 'invited': classic.invited.username, 'statusHost': True}, delay=2.5)
 			classic.ready = [True, True]
 			classic.save()
 			classic.start()
 		else:
 			# Runner the thread to wait the game (to players to be ready !)
 			for m in matchs:
-				thread = Thread(target=m.wait)
+				thread = Thread(target=m.wait, args=(m.id, m.host.username, m.invited.username))
 				thread.start()
 
 	def update(self):
@@ -443,6 +444,8 @@ class Room(models.Model):
 		"""
 		This will the player from all the waiting room !
 		"""
+		from game.core import GameMap
+
 		playerRooms = Room.objects.filter(opponents=player, state=0).all()
 		for room in playerRooms:
 			room.removePlayer(player)
@@ -450,6 +453,10 @@ class Room(models.Model):
 		activeRoom = Room.getRoomFromPlayer(player)
 		if activeRoom:
 			activeRoom.addClosed(player)
+
+		activeGame = Match.getMatch(user=player)
+		if activeGame:
+			GameMap.removeGame(activeGame.id)
 	
 	@staticmethod
 	def isInWaitingRoom(player: User) -> bool:
@@ -475,7 +482,7 @@ class Room(models.Model):
 			if player in room.closed.all():
 				return
 			if player in room.eliminated.all():
-				# print(f"j'envoie le message end à {player.username}", file=sys.stderr)
+				print(f"j'envoie le message end à {player.username}", file=sys.stderr)
 				room.send(player, 'end', {'room-id': room.id,'rank': room.getRank(player)})
 				room.addClosed(player)
 				return
@@ -497,11 +504,11 @@ class Room(models.Model):
 					if who:
 						# print(f'ton next {m.id} -> {player.username} | {m.state}', file=sys.stderr)
 						# print(f"j'envoie le message next à {player.username} {m.id}", file=sys.stderr)
-						m.send(m.invited, 'next', {'match-id': str(m.id), 'host': m.host.username, 'invited': m.invited.username, 'statusHost': False})
+						m.send(m.invited, 'next', {'match-id': str(m.id), 'host': m.host.username, 'invited': m.invited.username, 'statusHost': False}, delay=2.5)
 					else:
 						# print(f"j'envoie le message next à {player.username} {m.id}", file=sys.stderr)
 						# print(f'ton next {m.id} -> {player.username} | {m.state}', file=sys.stderr)
-						m.send(m.host, 'next', {'match-id': str(m.id), 'host': m.host.username, 'invited': m.invited.username, 'statusHost': True})
+						m.send(m.host, 'next', {'match-id': str(m.id), 'host': m.host.username, 'invited': m.invited.username, 'statusHost': True}, delay=2.5)
 					if (m.ready[0] and m.ready[1]):
 						m.start()
 					return
