@@ -49,7 +49,7 @@ class ActivityNotifier():
 		if await database_sync_to_async(target.is_block)(fromUser):
 			return
 		if friendMandatory and not await database_sync_to_async(target.is_friend)(fromUser):
-			return 
+			return
 		channel_layer = get_channel_layer()
 		await channel_layer.group_send(channel, {
 			"type" : type,

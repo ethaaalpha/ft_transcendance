@@ -14,8 +14,13 @@ def entryPoint(request: HttpRequest) -> HttpResponse:
 		"""
 		actualUser: User = request.user
 		keysList: list = ['with']
-		if (areKeysFromList(keysList, request.GET) or isOtherKeysInList(keysList, request.GET)):
+
+		if (isOtherKeysInList(keysList, request.GET)):
 			return tResponses.BAD_REQUEST.request("Invalid or missing parameter found !")
+
+		if len(request.GET) == 0:
+			conversations = Conversation.getRecentConversation(actualUser)
+			return JsonResponse({'conversations' : conversations})
 
 		target = Profile.getUserFromUsername(request.GET['with'])
 		if not target:

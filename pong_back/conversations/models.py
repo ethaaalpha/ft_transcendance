@@ -1,11 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.utils import timezone
 from users.models import Profile
 
 class Conversation(models.Model):
 	participants = models.ManyToManyField(User, related_name='participants')
 	createdAt = models.DateTimeField(auto_now_add=True)
+	lastUpdated = models.DateTimeField(auto_now_add=True)
 	
 	def getMessages(self, n = 10):
 		"""
@@ -17,6 +19,8 @@ class Conversation(models.Model):
 		return messagesJson
 
 	def addMessage(self, sender: User, content: str):
+		self.lastUpdated = timezone.now()
+		self.save()
 		message = Message(conversation=self, sender=Profile.getUserFromUsername(sender), content=content)
 		message.save()
 
@@ -38,6 +42,23 @@ class Conversation(models.Model):
 			existingConversation.save()
 		return (existingConversation)
 	
+	@staticmethod
+	def getRecentConversation(_from: User):
+		"""
+		Return the 15 (max) recents conversations and their content		
+		"""
+		conversations = Conversation.objects.filter(participants=_from).order_by('-lastUpdated')[:15]
+		responses = {}
+
+		for c in conversations:
+			participants = list(c.participants.all())
+			participants.remove(_from)
+			responses[participants[0].username] = c.getMessages(n=50)
+
+		import sys
+		print(f'{responses}', file=sys.stderr)
+		return responses
+
 	@staticmethod
 	def consumer_appendToConversation(_from: str, _to: str, _content: str):
 		required = ['from', 'to', 'content']
