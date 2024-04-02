@@ -61,8 +61,12 @@ class Contract(models.Model):
 	address= models.TextField(blank=False, primary_key=True)
 
 	def getScore(self):
-		w3Int: Web3Interactions = Web3Interactions()
-		w3: Web3 = w3Int.getW3()
-		contract = w3.eth.contract(abi=self.abi, address=self.address)
-		result = contract.functions.getScores().call()
-		return (result)
+		try:
+			w3Int: Web3Interactions = Web3Interactions()
+			w3: Web3 = w3Int.getW3()
+			contract = w3.eth.contract(abi=self.abi, address=self.address)
+			result = contract.functions.getScores().call()
+			return (result)
+		except:
+			return (0,0)
+		
