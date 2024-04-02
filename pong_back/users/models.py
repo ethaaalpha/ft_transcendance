@@ -34,7 +34,7 @@ def generatePassword():
 
 class Profile(models.Model):
 	user: User = models.OneToOneField(User, on_delete=models.CASCADE, blank=False, primary_key=True)
-	friends = models.ManyToManyField('self')
+	friends = models.ManyToManyField(User, related_name="friends", symmetrical=True, blank=True)
 	pendingFriendsFrom = models.ManyToManyField(User, related_name="pendingFriendsFrom", symmetrical=False, blank=True)
 	profilePicture = models.ImageField(upload_to=generateUniqueImageID, default=settings.DEFAULT_PROFILE_PICTURE_NAME, editable=True)
 	blockedUsers = models.ManyToManyField(User, related_name="blockedUsers", symmetrical=False, blank=True)
