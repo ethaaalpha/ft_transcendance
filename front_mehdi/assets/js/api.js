@@ -35,6 +35,15 @@ function fetchData(apiUrl, method, data = null) {
 	}
 	
 	return fetch(apiUrl, requestOptions)
-	.then(response => response)
-	.catch(error => console.error('Error:', error));
+        .then(response => {
+            const statusCode = response.status;
+            return response.json()
+                .then(data => {
+                    return { status: statusCode, data: data };
+                });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            return { status: 500, data: null }; // Default status code for error
+        });
 }
