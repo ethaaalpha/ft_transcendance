@@ -259,7 +259,7 @@ class Room(models.Model):
 			if (self.opponents.count() == 0):
 				self.delete()
 			else:
-				self.updateCountsAll()
+				self.updateCountsAll(player)
 				self.save()
 			return 0
 
@@ -281,7 +281,7 @@ class Room(models.Model):
 			return ("You already joined this room !", False)
 		self.opponents.add(player)
 		self.save()
-		self.updateCountsAll()
+		self.updateCountsAll(player)
 
 		# function to check if roomReady !
 		self.update()
@@ -352,7 +352,7 @@ class Room(models.Model):
 				return self.next_server()
 			# faire les nexts matchs etc voir pour les tournois
 
-	def updateCountsAll(self):
+	def updateCountsAll(self, updater: User):
 		from coordination.consumers import CoordinationConsumer
 		"""
 		Send a message to all the player to tell them how much player there is actually in the room
@@ -360,7 +360,7 @@ class Room(models.Model):
 		count = self.opponents.count()
 
 		for p in self.opponents.all():
-			data = {'room-id': self.id, 'count': count}
+			data = {'room-id': self.id, 'count': count, 'updater': updater.username}
 			CoordinationConsumer.sendMessageToConsumer(p.username, data, 'count')
 		return
 	
@@ -389,7 +389,7 @@ class Room(models.Model):
 		room = Room.objects.create(mode=mode.value)
 		room.opponents.add(owner)
 		room.save()
-		room.updateCountsAll()
+		room.updateCountsAll(owner)
 		return room
 	
 	@staticmethod
