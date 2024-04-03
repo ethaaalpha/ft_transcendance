@@ -58,6 +58,7 @@ function handleSignUp() {
 function handleHome() {
 	hideElements("signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
 	resetFormFields("username", "password", "passwordConfirm", "email");
+	createChat();
     unhideElements("home", "chat");
     currentScene = "home";
 }
