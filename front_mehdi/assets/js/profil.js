@@ -1,7 +1,7 @@
 function updateProfil() {
     fetchData('/api/dashboard')
         .then(data => {
-            console.log(data.data);
+            // console.log(data.data);
             // console.log('media/' + data['data']['profilePicture']);
             updateProfilPicture('media/' + data.data['profilePicture']);
             updateUsername(data.data['username']);
