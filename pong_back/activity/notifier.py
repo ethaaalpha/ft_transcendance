@@ -2,6 +2,7 @@ from channels.layers import get_channel_layer
 from channels.db import database_sync_to_async
 from asgiref.sync import async_to_sync
 from users.models import Profile
+from django.utils import timezone
 from .tools import getChannelName
 
 class ActivityNotifier():
@@ -34,7 +35,7 @@ class ActivityNotifier():
 		"""
 		if all(item is None for item in [_from, _to, _content]):
 			return
-		await ActivityNotifier._notify(getChannelName(_to, 'activity'), {'from': _from, 'to': _to, 'content': _content}, 'chat', _from, _to, friendMandatory=True)
+		await ActivityNotifier._notify(getChannelName(_to, 'activity'), {'from': _from, 'to': _to, 'content': _content, 'sendAt': str(timezone.now())}, 'chat', _from, _to, friendMandatory=True)
 
 	@staticmethod
 	async def _notify(channel: str, content: str, event: str, _from: str, _to: str, type='send.message', friendMandatory=False):

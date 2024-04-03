@@ -2,4 +2,41 @@
 	width: 80%;
 	height: 80%;
 	background-color: #404E7C;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#block-medium {
+	width: 80%;
+	height: 30%;
+	background-color: red;
+	border-radius: 10px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-around;
+
+}
+
+#block-medium-middle {
+	height: 80%;
+	width: 2%;
+	border-radius: 4px;
+	background-color: black;
+}
+
+.block-medium-child {
+	height: 60%;
+	width: 35%;
+	background-color: var(--color);
+	display: flex;
+	flex-direction: column;
+}
+
+.block-medium-child-child {
+	font-family: 'Roboto Mono';
+	width: 90%;
+	height: auto;
+	background-color: aquamarine;
 }
