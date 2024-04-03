@@ -238,3 +238,15 @@
     height: 100%;
     object-fit: cover;
 }
+
+
+
+/* style pour les div selected dans le menu gameTheme */
+
+.selectable {
+	border: 3px solid transparent;
+	cursor: pointer;
+  }
+  .selected {
+	border-color: #05FF00;
+  }
