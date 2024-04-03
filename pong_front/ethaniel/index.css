@@ -1,5 +1,60 @@
+body {
+	font-family: 'Roboto Mono';
+	font-size: 22px;
+}
+
 #game {
 	width: 80%;
 	height: 80%;
 	background-color: #404E7C;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#block-medium {
+	width: 80%;
+	height: 30%;
+	background-color: red;
+	border-radius: 10px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-around;
+
+}
+
+#block-medium-middle {
+	height: 80%;
+	width: 2%;
+	border-radius: 4px;
+	background-color: black;
+}
+
+.block-medium-child {
+	height: 60%;
+	width: 35%;
+	background-color: var(--color);
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+
+.block-medium-child-child {
+	text-align: center;
+	font-family: 'Roboto Mono';
+	width: 90%;
+	height: auto;
+	background-color: aquamarine;
+}
+
+.form-tournament-button {
+	display: flex;
+	flex-direction: row;
+	align-items: start;
+	justify-content: center;
+}
+
+#image-plus {
+	transform: scale(0.5);
 }

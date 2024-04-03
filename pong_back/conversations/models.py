@@ -29,12 +29,13 @@ class Conversation(models.Model):
 		"""
 		This will check if there is a conversation between the person passed,
 		if there isn't then it created it and return it.
+		Max 2
 		"""
 		peopleUser = [Profile.getUserFromUsername(name) for name in peopleName]
 		if None in peopleName:
 			return None
 
-		existingConversation = Conversation.objects.filter(participants__in=peopleUser).first()
+		existingConversation = Conversation.objects.filter(participants=peopleUser[0]).filter(participants=peopleUser[1]).first()
 		
 		if not existingConversation:
 			existingConversation = Conversation.objects.create()
@@ -49,14 +50,11 @@ class Conversation(models.Model):
 		"""
 		conversations = Conversation.objects.filter(participants=_from).order_by('-lastUpdated')[:15]
 		responses = {}
-
+		
 		for c in conversations:
 			participants = list(c.participants.all())
 			participants.remove(_from)
 			responses[participants[0].username] = c.getMessages(n=50)
-
-		import sys
-		print(f'{responses}', file=sys.stderr)
 		return responses
 
 	@staticmethod
