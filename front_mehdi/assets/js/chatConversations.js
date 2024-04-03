@@ -69,7 +69,7 @@ function createConversations() {
 	fetchData('/api/dashboard/conversations')
 	.then(data => {
 		// console.log('Données de l\'API :', data.data);
-		chatConversations = new Conversations("ethan", data.data.conversations);;
+		chatConversations = new Conversations("mehdi", data.data.conversations);;
 		// chatConversations.displayConversations();//to delete
 		buildConversation();
 	})
