@@ -3,7 +3,7 @@
     color: white;
     padding: 8px 16px;
     border-radius: 8px;
-    margin: 10px 10px 10px 40px; /* marge haut, droite, bas, gauche */
+    margin: 10px 10px 10px 50px; /* marge haut, droite, bas, gauche */
 }
 
 .message-received {
@@ -11,5 +11,5 @@
     color: #495057;
     padding: 8px 16px;
     border-radius: 8px;
-    margin: 10px 40px 10px 10px; /* marge haut, droite, bas, gauche */
+    margin: 10px 50px 10px 10px; /* marge haut, droite, bas, gauche */
 }

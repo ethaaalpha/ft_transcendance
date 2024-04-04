@@ -37,7 +37,7 @@ async function handleConversationList() {
 	const conversationList = document.getElementById("conversation-list");
 	
     if (!gChatConversations) {
-        console.error("gChatConversations n'est pas encore défini.");
+        // console.error("gChatConversations n'est pas encore défini.");
         try {
             await fetchConversations();
         } catch (error) {
@@ -105,7 +105,6 @@ async function handleConversationList() {
 //     });
 // }
 
-
 function handleConversationDisplay(user) {
     const conversation = gChatConversations.getConversation(user);
     const conversationDisplay = document.getElementById("conversation-display");
@@ -145,9 +144,30 @@ function handleConversationDisplay(user) {
     // Ajoutez le titre à la conversationDisplay
     conversationDisplay.appendChild(titleElement);
 
+    // Créez un formulaire pour le message
+    const messageForm = document.createElement("form");
 
-    // Parcourez chaque message dans la conversation et affichez-le
-    conversation.forEach(message => {
+    // Créez un input pour entrer le message
+    const messageInput = document.createElement("input");
+    messageInput.setAttribute("type", "text");
+    messageInput.setAttribute("placeholder", "Your message...");
+    messageInput.classList.add("message-input");
+    messageForm.appendChild(messageInput);
+
+    // Créez un bouton "send" pour envoyer le message
+    const sendButton = document.createElement("button");
+    sendButton.textContent = "Send";
+    sendButton.classList.add("send-button");
+    sendButton.onclick = sendMessage(user, messageInput.value);
+	messageInput.value = "";
+    messageForm.appendChild(sendButton);
+
+    // Ajoutez le formulaire à la conversationDisplay
+    conversationDisplay.appendChild(messageForm);
+
+    // Parcourez chaque message dans la conversation en commençant par le plus récent
+    for (let i = conversation.length - 1; i >= 0; i--) {
+        const message = conversation[i];
         const messageElement = document.createElement("div");
         messageElement.textContent = message.content;
         
@@ -158,10 +178,14 @@ function handleConversationDisplay(user) {
             messageElement.classList.add("message-received");
         }
 
+        // Ajout de la classe pour la marge entre les messages
+        messageElement.classList.add("message-margin");
+
         // Ajoutez le message à la conversationDisplay
         conversationDisplay.appendChild(messageElement);
-    });
+    }
 }
+
 
 
 
