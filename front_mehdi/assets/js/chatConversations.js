@@ -1,13 +1,5 @@
 
-let chatConversations;
-
-function createChat() {
-	createConversations();
-	// buildConversation();
-	
-}
-
-// create conv
+let gChatConversations;
 
   class Conversations {
 	constructor(myUsername, conversations = {}) {
@@ -65,58 +57,17 @@ function createChat() {
 	  }
   	}  
 
-function createConversations() {
-	fetchData('/api/dashboard/conversations')
-	.then(data => {
-		// console.log('Données de l\'API :', data.data);
-		chatConversations = new Conversations("mehdi", data.data.conversations);;
-		// chatConversations.displayConversations();//to delete
-		buildConversation();
-	})
-	.catch(error => {
-		console.error('Error fetching user data:', error);
+
+function fetchConversations() {
+	return new Promise((resolve, reject) => {
+		fetchData('/api/dashboard/conversations')
+		.then(data => {
+			gChatConversations = new Conversations("mehdi", data.data.conversations);
+			resolve();
+		})
+		.catch(error => {
+			console.error('Error fetching user data:', error);
+			reject(error);
+		});
 	});
-}
-
-//build conv (with div)
-
-function buildConversation() {
-	const conversationList = document.getElementById("conversationList");
-
-	// Assurez-vous que chatConversations est défini
-	if (!chatConversations) {
-		console.error("chatConversations n'est pas défini.");
-		return;
-	}
-
-	// Parcourez chaque conversation dans chatConversations
-	for (let user in chatConversations.conversations) {
-		if (chatConversations.conversations.hasOwnProperty(user)) {
-			// Créez un élément de bouton pour cette conversation
-			const conversationButton = document.createElement("button");
-			conversationButton.textContent = user; // Nom de l'utilisateur avec qui la conversation a lieu
-			conversationButton.classList.add("conversation-button");
-
-			// Ajoutez un écouteur d'événements pour ouvrir la conversation au clic
-			conversationButton.addEventListener("click", function() {
-				displayConversation(user);
-			});
-
-			// Ajoutez le bouton à la liste des conversations
-			conversationList.appendChild(conversationButton);
-		}
-	}
-}
-
-function displayConversation(user) {
-    const conversation = chatConversations.getConversation(user);
-    const conversationDisplay = document.getElementById("conversationDisplay");
-    conversationDisplay.innerHTML = ""; // Efface le contenu précédent
-
-    // Parcourez chaque message dans la conversation et affichez-le
-    conversation.forEach(message => {
-        const messageElement = document.createElement("div");
-        messageElement.textContent = `${message.sender} (${message.sendAt}): ${message.content}`;
-        conversationDisplay.appendChild(messageElement);
-    });
 }
