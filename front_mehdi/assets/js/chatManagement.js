@@ -1,7 +1,7 @@
 
 let gChatConversations;
 
-  class Conversations {
+class Conversations {
 	constructor(myUsername, conversations = {}) {
 	  this.conversations = conversations;
 	  this.myUsername = myUsername;
@@ -70,4 +70,37 @@ function fetchConversations() {
 			reject(error);
 		});
 	});
+}
+
+function sendMessage(to, content) {
+	const data = {'to': to, 'content': content}
+	this.socket.send(JSON.stringify({
+		'event': 'chat',
+		'data': data,
+	}));
+}
+
+connect();
+
+function connect() {
+	this.socket = new WebSocket('wss://' + window.location.host + '/api/activity/');
+	
+	this.socket.onopen = (e) => {
+		console.log("Le websocket 'activity' est bien connecté !")
+	}
+	
+	// Juste pour debug
+	this.socket.onmessage = (e) => {//pour recevoir messages et faire action
+		// const data = JSON.parse(e.data);
+		// const stringifiedData = JSON.stringify(data)
+		console.log("j'ai reçu message ici !")
+		// document.querySelector('#activity-log').value += stringifiedData +'\n';
+	}
+
+	this.socket.onclose = (e) => {
+		console.error('Chat socket closed unexpectedly ! Retrying to connect !');
+		setTimeout(() => {
+			this.connect();
+		}, 1000);
+	};
 }
