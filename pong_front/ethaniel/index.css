@@ -6,7 +6,8 @@ body {
 #game {
 	width: 80%;
 	height: 80%;
-	background-color: #404E7C;
+	background: rgb(2,0,36);
+	background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(146,61,166,1) 11%, rgba(29,219,155,1) 42%, rgba(0,212,255,1) 100%);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -14,14 +15,14 @@ body {
 
 #block-medium {
 	width: 80%;
-	height: 30%;
-	background-color: red;
+	height: var(--height);
 	border-radius: 10px;
 	display: flex;
-	flex-direction: row;
+	flex-direction: var(--direction);
 	align-items: center;
 	justify-content: space-around;
-
+	background-color: rgba(0, 0, 0, 0.21);
+	backdrop-filter: blur(20px);
 }
 
 #block-medium-middle {
@@ -32,29 +33,71 @@ body {
 }
 
 .block-medium-child {
-	height: 60%;
+	height: 80%;
 	width: 35%;
-	background-color: var(--color);
 	display: flex;
 	align-items: center;
+	justify-content: center;
 	flex-direction: column;
 }
 
 .block-medium-child-child {
-	text-align: center;
+	width: 80%;
+	height: 70%;
 	font-family: 'Roboto Mono';
-	width: 90%;
-	height: auto;
-	background-color: aquamarine;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
 }
 
-.form-tournament-button {
+/* OTHER */
+
+#block-medium-top {
+	font-size: x-large;
+	width: 90%;
+	font-family: Roboto Mono;
 	display: flex;
 	flex-direction: row;
-	align-items: start;
-	justify-content: center;
+	justify-content: space-between;
+	align-items: center;
 }
 
-#image-plus {
-	transform: scale(0.5);
+#block-medium-top-left {
+	display: flex;
+	justify-content: space-between;
+	flex-grow: 1;
+}
+
+#block-medium-top-right {
+	display: flex;
+	flex-grow: 10;
+	justify-content: end;
+}
+
+#block-medium-content{
+	overflow: scroll;
+	display: flex;
+	flex-direction: column;
+	width: 90%;
+	height: 70%;
+	font-family: 'Roboto Mono';
+}
+
+.block-medium-content-children {
+	margin-bottom: 4%;
+	padding: 1%;
+	padding-left: 2%;
+	background-color: rgba(255, 255, 255, var(--opacity));
+	backdrop-filter: blur(20px);
+	border-radius: 7px;
+}
+
+.tournament-name {
+	font-weight: bolder;
+}
+
+.tournament-text-italic {
+	font-weight: 100;
+	font-style: italic;
 }
