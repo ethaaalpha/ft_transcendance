@@ -21,7 +21,6 @@ class FormTournament {
 	}
 }
 
-
 window.addEventListener('DOMContentLoaded', () => {
 	var fm = new FormTournament()
 	fm.init('game')
