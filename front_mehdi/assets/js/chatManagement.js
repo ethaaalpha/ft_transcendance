@@ -5,6 +5,9 @@ class Conversations {
 	constructor(myUsername, conversations = {}) {
 	  this.conversations = conversations;
 	  this.myUsername = myUsername;
+	
+	  console.log(myUsername);
+
 	}
   
 	addMessage(from, to, content, sendAt) {
@@ -72,18 +75,27 @@ class Conversations {
 }  
 
 
-function fetchConversations() {
+function fetchUsername() {
 	return new Promise((resolve, reject) => {
-		fetchData('/api/dashboard/conversations')
+	  fetchData('/api/dashboard')
 		.then(data => {
-			gChatConversations = new Conversations("mehdi", data.data.conversations);
-			resolve();
+		  resolve(data.data['username']);
 		})
 		.catch(error => {
-			console.error('Error fetching user data:', error);
-			reject(error);
+		  console.error('Error fetching user data:', error);
+		  reject(error);
 		});
 	});
+  }
+
+async function fetchConversations() {
+	try {
+	  const username = await fetchUsername();
+	  const data = await fetchData('/api/dashboard/conversations');
+	  gChatConversations = new Conversations(username, data.data.conversations);
+	} catch (error) {
+	  console.error('Error fetching user data:', error);
+	}
 }
 
 function sendMessage(to, content) {
@@ -97,8 +109,6 @@ function sendMessage(to, content) {
         console.error("Erreur lors de l'envoi du message : Websocket non connecté.");
     }
 }
-
-
 
 class connect {
 	constructor() {
