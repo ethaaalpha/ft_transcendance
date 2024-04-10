@@ -5,9 +5,6 @@ class Conversations {
 	constructor(myUsername, conversations = {}) {
 	  this.conversations = conversations;
 	  this.myUsername = myUsername;
-	
-	  console.log(myUsername);
-
 	}
   
 	addMessage(from, to, content, sendAt) {
@@ -23,7 +20,13 @@ class Conversations {
   
 	addMessageFromSocket(messageData) {
 		console.log('messageData :', messageData);
-		if (messageData.hasOwnProperty('from') && messageData.hasOwnProperty('to')) {
+	
+		if (!messageData.hasOwnProperty('from') && !messageData.hasOwnProperty('sendAt')) {
+			messageData.from = this.myUsername;
+			messageData.sendAt = new Date();
+		}
+
+		// if (messageData.hasOwnProperty('from') && messageData.hasOwnProperty('to')) {
 		const { from, to, content, sendAt } = messageData;
 		let target = from === this.myUsername ? to : from;
 	
@@ -48,9 +51,9 @@ class Conversations {
 		messageElement.classList.add("message-margin");
 		conversationDisplay.appendChild(messageElement);
 
-		} else {
-		console.log('Le message reçu du socket ne contient pas les propriétés from et/ou to.');
-		}
+		// } else {
+		// console.log('Le message reçu du socket ne contient pas les propriétés from et/ou to.');
+		// }
 	}
 
 	getConversation(withUser) {
@@ -98,16 +101,22 @@ async function fetchConversations() {
 	}
 }
 
-function sendMessage(to, content) {
+function sendMessage() {
+	const to = document.getElementById("send-message-contact-id").textContent;
+	const content = document.getElementById("send-message-input-id").value;
+
+	console.log(to);
     const data = {'to': to, 'content': content};
     if (activity && activity.socket.readyState === WebSocket.OPEN) {
         activity.socket.send(JSON.stringify({
             'event': 'chat',
             'data': data,
         }));
+		gChatConversations.addMessageFromSocket(data);
     } else {
         console.error("Erreur lors de l'envoi du message : Websocket non connecté.");
     }
+	// console.log("Jessaie de send");
 }
 
 class connect {

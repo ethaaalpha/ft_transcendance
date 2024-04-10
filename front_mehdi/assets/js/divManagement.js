@@ -66,58 +66,18 @@ async function handleConversationList() {
 	}
 }
 
-// function handleConversationDisplay(user) {
-//     const conversation = gChatConversations.getConversation(user);
-//     const conversationDisplay = document.getElementById("conversation-display");
-//     conversationDisplay.innerHTML = ""; // Efface le contenu précédent
-
-//     // Créez le bouton "arrow-back"
-//     const backButton = document.createElement("button");
-//     backButton.classList.add("arrow-back");
-//     backButton.onclick = function() {
-//         changeScene('conversation-list');
-//     };
-
-//     // Ajoutez le contenu SVG au bouton
-//     const svgContent = `
-//         <svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
-//             <g clip-path="url(#clip0_116_82)">
-//                 <path d="M7.70801 18.5H29.2913" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-//                 <path d="M18.4997 7.70825L7.70801 18.4999L18.4997 29.2916" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-//             </g>
-//             <defs>
-//                 <clipPath id="clip0_116_82">
-//                     <rect width="37" height="37" fill="white"/>
-//                 </clipPath>
-//             </defs>
-//         </svg>
-//     `;
-//     backButton.innerHTML = svgContent;
-
-//     // Ajoutez le bouton "arrow-back" à la conversationDisplay
-//     conversationDisplay.appendChild(backButton);
-
-//     // Parcourez chaque message dans la conversation et affichez-le
-//     conversation.forEach(message => {
-//         const messageElement = document.createElement("div");
-//         messageElement.textContent = `${message.sender} (${message.sendAt}): ${message.content}`;
-//         conversationDisplay.appendChild(messageElement);
-//     });
-// }
-
 function handleConversationDisplay(user) {
     const conversation = gChatConversations.getConversation(user);
     const conversationDisplay = document.getElementById("conversation-display");
-    conversationDisplay.innerHTML = ""; // Efface le contenu précédent
+    conversationDisplay.innerHTML = "";
 
-    // Créez le bouton "arrow-back"
+	// back button
     const backButton = document.createElement("button");
     backButton.classList.add("arrow-back");
     backButton.onclick = function() {
         changeScene('conversation-list');
     };
 
-    // Ajoutez le contenu SVG au bouton
     const svgContent = `
         <svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clip-path="url(#clip0_116_82)">
@@ -133,39 +93,34 @@ function handleConversationDisplay(user) {
     `;
     backButton.innerHTML = svgContent;
 
-    // Ajoutez le bouton "arrow-back" à la conversationDisplay
     conversationDisplay.appendChild(backButton);
 
-    // Créez un élément span pour le nom de la personne avec qui vous parlez
+	// user with who you talk
     const titleElement = document.createElement("span");
-    titleElement.textContent = user; // Nom de la personne avec qui vous parlez
+    titleElement.textContent = user;
     titleElement.classList.add("title-2");
-
-    // Ajoutez le titre à la conversationDisplay
+	titleElement.setAttribute("id", "send-message-contact-id");
     conversationDisplay.appendChild(titleElement);
 
-    // Créez un formulaire pour le message
-    const messageForm = document.createElement("form");
-
-    // Créez un input pour entrer le message
+    // imput message
     const messageInput = document.createElement("input");
     messageInput.setAttribute("type", "text");
     messageInput.setAttribute("placeholder", "Your message...");
     messageInput.classList.add("message-input");
 	messageInput.setAttribute("id", "send-message-input-id");
-    messageForm.appendChild(messageInput);
+    conversationDisplay.appendChild(messageInput);
 
-    // Créez un bouton "send" pour envoyer le message
+    // send button
     const sendButton = document.createElement("button");
     sendButton.textContent = "Send";
     sendButton.classList.add("send-button");
 	sendButton.setAttribute("id", "send-message-button-id");
-    // sendButton.onclick = sendMessage(user, messageInput.value);
-	messageInput.value = "";
-    messageForm.appendChild(sendButton);
+    sendButton.onclick = sendMessage;
+	// messageInput.value = "";
+    conversationDisplay.appendChild(sendButton);
 
     // Ajoutez le formulaire à la conversationDisplay
-    conversationDisplay.appendChild(messageForm);
+    // conversationDisplay.appendChild(messageForm);
 
     // Parcourez chaque message dans la conversation en commençant par le plus récent
     for (let i = conversation.length - 1; i >= 0; i--) {
