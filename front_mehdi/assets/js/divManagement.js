@@ -152,13 +152,15 @@ function handleConversationDisplay(user) {
     messageInput.setAttribute("type", "text");
     messageInput.setAttribute("placeholder", "Your message...");
     messageInput.classList.add("message-input");
+	messageInput.setAttribute("id", "send-message-input-id");
     messageForm.appendChild(messageInput);
 
     // Créez un bouton "send" pour envoyer le message
     const sendButton = document.createElement("button");
     sendButton.textContent = "Send";
     sendButton.classList.add("send-button");
-    sendButton.onclick = sendMessage(user, messageInput.value);
+	sendButton.setAttribute("id", "send-message-button-id");
+    // sendButton.onclick = sendMessage(user, messageInput.value);
 	messageInput.value = "";
     messageForm.appendChild(sendButton);
 

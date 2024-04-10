@@ -30,7 +30,7 @@ class Conversations {
 			this.conversations[target] = [];
 		}
 	
-		this.conversations[target].push(message);
+		this.conversations[target].unshift(message);
 		} else {
 		console.log('Le message reçu du socket ne contient pas les propriétés from et/ou to.');
 		}
@@ -54,8 +54,8 @@ class Conversations {
 			});
 		  }
 		}
-	  }
-  	}  
+	}
+}  
 
 
 function fetchConversations() {
@@ -73,34 +73,44 @@ function fetchConversations() {
 }
 
 function sendMessage(to, content) {
-	const data = {'to': to, 'content': content}
-	this.socket.send(JSON.stringify({
-		'event': 'chat',
-		'data': data,
-	}));
+    const data = {'to': to, 'content': content};
+    if (activity && activity.socket.readyState === WebSocket.OPEN) {
+        activity.socket.send(JSON.stringify({
+            'event': 'chat',
+            'data': data,
+        }));
+    } else {
+        console.error("Erreur lors de l'envoi du message : Websocket non connecté.");
+    }
 }
 
-connect();
 
-function connect() {
-	this.socket = new WebSocket('wss://' + window.location.host + '/api/activity/');
-	
-	this.socket.onopen = (e) => {
-		console.log("Le websocket 'activity' est bien connecté !")
-	}
-	
-	// Juste pour debug
-	this.socket.onmessage = (e) => {//pour recevoir messages et faire action
-		// const data = JSON.parse(e.data);
-		// const stringifiedData = JSON.stringify(data)
-		console.log("j'ai reçu message ici !")
-		// document.querySelector('#activity-log').value += stringifiedData +'\n';
-	}
 
-	this.socket.onclose = (e) => {
-		console.error('Chat socket closed unexpectedly ! Retrying to connect !');
-		setTimeout(() => {
-			this.connect();
-		}, 1000);
-	};
+class connect {
+	constructor() {
+		this.socket = new WebSocket('wss://' + window.location.host + '/api/activity/');
+
+		this.socket.onopen = (e) => {
+			console.log("Le websocket 'activity' est bien connecté !");
+		};
+
+		this.socket.onmessage = (e) => {
+			const data = JSON.parse(e.data);
+			if (gChatConversations) {
+				gChatConversations.addMessageFromSocket(data.data);
+			  } else {
+				console.log("gChatConversations est undefined");
+			  }
+			console.log("j'ai reçu message ici !");
+		};
+
+		this.socket.onclose = (e) => {
+			console.error('Chat socket closed unexpectedly ! Retrying to connect !');
+			setTimeout(() => {
+				this.connect();
+			}, 1000);
+		};
+	}
 }
+
+activity = new connect();
