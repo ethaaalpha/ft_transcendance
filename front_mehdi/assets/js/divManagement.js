@@ -197,8 +197,6 @@ function handleConversationDisplay(user) {
 
 
 
-
-
 // legacy from settings game theme, to handle
 function genererDivsAvecImages(nbDivs) {
 	const conteneur = document.getElementById("modify-game-theme-menu");

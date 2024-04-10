@@ -31,6 +31,20 @@ class Conversations {
 		}
 	
 		this.conversations[target].unshift(message);
+
+		// create div in conversation dynamically
+		const conversationDisplay = document.getElementById("conversation-display");
+		const messageElement = document.createElement("div");
+		messageElement.textContent = message.content;
+
+		if (message.sender === gChatConversations.myUsername) {
+			messageElement.classList.add("message-sent");
+		} else {
+			messageElement.classList.add("message-received");
+		}
+		messageElement.classList.add("message-margin");
+		conversationDisplay.appendChild(messageElement);
+
 		} else {
 		console.log('Le message reçu du socket ne contient pas les propriétés from et/ou to.');
 		}
