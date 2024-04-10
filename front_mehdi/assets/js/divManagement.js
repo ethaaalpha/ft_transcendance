@@ -67,6 +67,7 @@ async function handleConversationList() {
 }
 
 function handleConversationDisplay(user) {
+
     const conversation = gChatConversations.getConversation(user);
     const conversationDisplay = document.getElementById("conversation-display");
     conversationDisplay.innerHTML = "";
@@ -92,56 +93,131 @@ function handleConversationDisplay(user) {
         </svg>
     `;
     backButton.innerHTML = svgContent;
-
     conversationDisplay.appendChild(backButton);
 
-	// user with who you talk
+    // create parent div
+	const titleDiv = document.createElement("div");
+    titleDiv.id = "conversation-display-title-id";
+    titleDiv.classList.add("conversation-display-title");
+
+    const messagesDiv = document.createElement("div");
+    messagesDiv.id = "conversation-display-messages-id";
+    messagesDiv.classList.add("conversation-display-messages");
+
+    const inputDiv = document.createElement("div");
+    inputDiv.id = "conversation-display-input-id";
+    inputDiv.classList.add("conversation-display-input");
+
+	conversationDisplay.appendChild(titleDiv);
+    conversationDisplay.appendChild(messagesDiv);
+    conversationDisplay.appendChild(inputDiv);
+
+	// Title
     const titleElement = document.createElement("span");
     titleElement.textContent = user;
     titleElement.classList.add("title-2");
 	titleElement.setAttribute("id", "send-message-contact-id");
-    conversationDisplay.appendChild(titleElement);
-
-    // imput message
-    const messageInput = document.createElement("input");
-    messageInput.setAttribute("type", "text");
-    messageInput.setAttribute("placeholder", "Your message...");
-    messageInput.classList.add("message-input");
-	messageInput.setAttribute("id", "send-message-input-id");
-    conversationDisplay.appendChild(messageInput);
-
-    // send button
-    const sendButton = document.createElement("button");
-    sendButton.textContent = "Send";
-    sendButton.classList.add("send-button");
-	sendButton.setAttribute("id", "send-message-button-id");
-    sendButton.onclick = sendMessage;
-	// messageInput.value = "";
-    conversationDisplay.appendChild(sendButton);
-
-    // Ajoutez le formulaire à la conversationDisplay
-    // conversationDisplay.appendChild(messageForm);
-
-    // Parcourez chaque message dans la conversation en commençant par le plus récent
+    titleDiv.innerHTML = "";
+    titleDiv.appendChild(titleElement);
+	
+    // Messages
     for (let i = conversation.length - 1; i >= 0; i--) {
-        const message = conversation[i];
+		const message = conversation[i];
         const messageElement = document.createElement("div");
         messageElement.textContent = message.content;
         
-        // Ajout de la classe en fonction de l'expéditeur
         if (message.sender === gChatConversations.myUsername) {
-            messageElement.classList.add("message-sent");
+			messageElement.classList.add("message-sent");
         } else {
-            messageElement.classList.add("message-received");
+			messageElement.classList.add("message-received");
         }
-
-        // Ajout de la classe pour la marge entre les messages
+		
         messageElement.classList.add("message-margin");
-
-        // Ajoutez le message à la conversationDisplay
-        conversationDisplay.appendChild(messageElement);
+		
+        messagesDiv.appendChild(messageElement);
     }
+
+	setTimeout(function() {
+		messagesDiv.scrollTop = messagesDiv.scrollHeight;
+	}, 1);
+
+	// imput message
+	const messageInput = document.createElement("input");
+	messageInput.setAttribute("type", "text");
+	messageInput.setAttribute("placeholder", "Your message...");
+	messageInput.classList.add("message-input");
+	messageInput.setAttribute("id", "send-message-input-id");
+	inputDiv.appendChild(messageInput);
+
+	// send button
+	const sendButton = document.createElement("button");
+	sendButton.textContent = "Send";
+	sendButton.classList.add("send-button");
+	sendButton.setAttribute("id", "send-message-button-id");
+	sendButton.onclick = sendMessage;
+	inputDiv.appendChild(sendButton);
+
 }
+
+
+
+
+
+// function handleConversationDisplay(user) {
+//     const conversation = gChatConversations.getConversation(user);
+
+//     // title
+//     const titleElement = document.createElement("span");
+//     titleElement.textContent = user;
+//     titleElement.classList.add("title-2");
+//     titleElement.setAttribute("id", "send-message-contact-id");
+
+//     const conversationDisplayTitle = document.getElementById("conversation-display-title-id");
+//     // conversationDisplayTitle.innerHTML = "";
+//     conversationDisplayTitle.appendChild(titleElement);
+
+//     // messages
+//     const conversationDisplayMessages = document.getElementById("conversation-display-messages-id");
+//     // conversationDisplayMessages.innerHTML = "";
+
+//     // Parcourez chaque message dans la conversation en commençant par le plus récent
+//     for (let i = conversation.length - 1; i >= 0; i--) {
+//         const message = conversation[i];
+//         const messageElement = document.createElement("div");
+//         messageElement.textContent = message.content;
+
+//         // Ajout de la classe en fonction de l'expéditeur
+//         if (message.sender === gChatConversations.myUsername) {
+//             messageElement.classList.add("message-sent");
+//         } else {
+//             messageElement.classList.add("message-received");
+//         }
+
+//         // Ajout de la classe pour la marge entre les messages
+//         messageElement.classList.add("message-margin");
+
+//         // Ajoutez le message à la conversationDisplay
+//         conversationDisplayMessages.appendChild(messageElement);
+//     }
+
+//     // input and send button
+//     const messageInput = document.createElement("input");
+//     messageInput.setAttribute("type", "text");
+//     messageInput.setAttribute("placeholder", "Your message...");
+//     messageInput.classList.add("message-input");
+//     messageInput.setAttribute("id", "send-message-input-id");
+
+//     const sendButton = document.createElement("button");
+//     sendButton.textContent = "Send";
+//     sendButton.classList.add("send-button");
+//     sendButton.setAttribute("id", "send-message-button-id");
+//     sendButton.onclick = sendMessage;
+
+//     const conversationDisplayInput = document.getElementById("conversation-display-input-id");
+//     conversationDisplayInput.innerHTML = "";
+//     conversationDisplayInput.appendChild(messageInput);
+//     conversationDisplayInput.appendChild(sendButton);
+// }
 
 
 
@@ -194,7 +270,7 @@ let selectedDiv = 1; // le theme du jeu selectionné, changer par la valeur que 
 
   window.onload = function() {
 	selectDiv(selectedDiv);
-  };
+};
 
 
 function selectDiv(id) {

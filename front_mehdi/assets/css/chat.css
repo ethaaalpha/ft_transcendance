@@ -1,0 +1,47 @@
+/* chatList */
+
+
+
+
+/* chatDisplay */
+
+.message-sent {
+    background-color: #007bff; /* bleu */
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    margin: 10px 10px 10px 50px; /* marge haut, droite, bas, gauche */
+}
+
+.message-received {
+    background-color: #f8f9fa; /* gris */
+    color: #495057;
+    padding: 8px 16px;
+    border-radius: 8px;
+    margin: 10px 50px 10px 10px; /* marge haut, droite, bas, gauche */
+}
+
+
+.conversation-display-title {
+	font-size: 24px;
+	font-weight: bold;
+	margin-bottom: 10px;
+	text-align: left;
+  }
+  
+  .conversation-display-messages {
+	height: 400px; /* vous pouvez ajuster la hauteur selon vos besoins */
+	overflow-y: auto; /* permet de rendre la div scrollable si les messages sont trop nombreux */
+	margin-bottom: 10px;
+  }
+  
+  .conversation-display-input {
+	display: flex; /* permet d'aligner l'input et le bouton côte à côte */
+	justify-content: space-between; /* permet d'aligner l'input à gauche et le bouton à droite */
+  }
+  
+  .message-input {
+	flex-grow: 1; /* permet à l'input de prendre toute la largeur disponible */
+	margin-right: 10px; /* ajoute une marge à droite de l'input pour séparer l'input et le bouton */
+  }
+  

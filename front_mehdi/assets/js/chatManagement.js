@@ -26,7 +26,6 @@ class Conversations {
 			messageData.sendAt = new Date();
 		}
 
-		// if (messageData.hasOwnProperty('from') && messageData.hasOwnProperty('to')) {
 		const { from, to, content, sendAt } = messageData;
 		let target = from === this.myUsername ? to : from;
 	
@@ -38,8 +37,8 @@ class Conversations {
 	
 		this.conversations[target].unshift(message);
 
-		// create div in conversation dynamically
-		const conversationDisplay = document.getElementById("conversation-display");
+		// create div in conversation dynamically, to move?
+		const conversationDisplay = document.getElementById("conversation-display-messages-id");
 		const messageElement = document.createElement("div");
 		messageElement.textContent = message.content;
 
@@ -50,10 +49,11 @@ class Conversations {
 		}
 		messageElement.classList.add("message-margin");
 		conversationDisplay.appendChild(messageElement);
+		scrollMessagesToBottom();
+		
+		let inputElement = document.getElementById("send-message-input-id");
+		inputElement.value = "";
 
-		// } else {
-		// console.log('Le message reçu du socket ne contient pas les propriétés from et/ou to.');
-		// }
 	}
 
 	getConversation(withUser) {
@@ -64,21 +64,9 @@ class Conversations {
 		return [];
 	  }
 	}
+}
 
-	displayConversations() { // to delete
-		for (let target in this.conversations) {
-		  if (this.conversations.hasOwnProperty(target)) {
-			console.log(`Conversation avec ${target}:`);
-			this.conversations[target].forEach(message => {
-			console.log(`De ${message.sender} (${message.sendAt}): ${message.content}`);
-			});
-		  }
-		}
-	}
-}  
-
-
-function fetchUsername() {
+function fetchUsername() { // to move
 	return new Promise((resolve, reject) => {
 	  fetchData('/api/dashboard')
 		.then(data => {
@@ -116,34 +104,9 @@ function sendMessage() {
     } else {
         console.error("Erreur lors de l'envoi du message : Websocket non connecté.");
     }
-	// console.log("Jessaie de send");
 }
 
-class connect {
-	constructor() {
-		this.socket = new WebSocket('wss://' + window.location.host + '/api/activity/');
-
-		this.socket.onopen = (e) => {
-			console.log("Le websocket 'activity' est bien connecté !");
-		};
-
-		this.socket.onmessage = (e) => {
-			const data = JSON.parse(e.data);
-			if (gChatConversations) {
-				gChatConversations.addMessageFromSocket(data.data);
-			  } else {
-				console.log("gChatConversations est undefined");
-			  }
-			console.log("j'ai reçu message ici !");
-		};
-
-		this.socket.onclose = (e) => {
-			console.error('Chat socket closed unexpectedly ! Retrying to connect !');
-			setTimeout(() => {
-				this.connect();
-			}, 1000);
-		};
-	}
+function scrollMessagesToBottom() {
+    const messagesElement = document.getElementById("conversation-display-messages-id");
+    messagesElement.scrollTop = messagesElement.scrollHeight;
 }
-
-activity = new connect();
