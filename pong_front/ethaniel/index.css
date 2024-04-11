@@ -83,11 +83,17 @@
 }
 
 #tournament-form-content{
-	overflow: scroll;
+	overflow: hidden;
+	overflow-y: scroll;
 	display: flex;
 	flex-direction: column;
 	width: 90%;
 	height: 80%;
+	padding-top: 2%;
+	-webkit-mask: 
+    	linear-gradient(to top, black 95%, transparent 100%),
+    	linear-gradient(to bottom, black 95%, transparent 100%);
+	-webkit-mask-composite: destination-in;
 	font-family: 'Roboto Mono';
 }
 
