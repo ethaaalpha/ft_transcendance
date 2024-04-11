@@ -139,6 +139,10 @@ class FormTournament {
 			console.log(data)
 			// finir ici en send ws
 		});
+
+		document.getElementById('tournament-escape-button').addEventListener('click', (event) => {
+			this.changeToInactive();
+		})
 	}
 
 	changeToRoom(roomCode, max) {
@@ -158,11 +162,17 @@ class FormTournament {
 		this.defaultValues();
 		this.registerEventsWait();
 	}
+
+	changeToInactive() {
+		this.defaultValues;
+		hideElement('tournament-b');
+		hideElement('tournament-a');
+	}
 }
 
 var ft = new FormTournament();
 ft.changeToWait();
-ft.changeToRoom('JUDaowDW#', 3)
+// ft.changeToRoom('JUDaowDW#', 3)
 
 ft.joinPlayer('alfred')
 ft.leavePlayer('alfredito')
