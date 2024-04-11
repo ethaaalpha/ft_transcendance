@@ -8,32 +8,37 @@
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 	</head>
 	<div id="game">
-		<div id='tournament-a' class="tournament-form" style="--height: 25%; --direction: row">
-			<div class="tournament-form-child">
-				<div id="tournament-form-child--mode" class="tournament-form-child-child">
-					<select id='tournament-js-select'class="form-select" aria-label="Default select example">
-						<option value="4" selected>4 Players</option>
-						<option value="8">8 Players</option>
-						<option value="16">16 Players</option>
-						<option value="32">32 Players</option>
-					</select>
-					<div id="tournament-form-child-child-create">
-						<button id="tournament-js-create" type="button" class="btn btn-success">
-							<i class="bi bi-plus"></i> Create
-						</button>
+		<div id='tournament-a' class="tournament-form" style="--height: 25%; --direction: column">
+			<div class='tournament-row'>
+				<div class="tournament-form-child">
+					<div id="tournament-form-child--mode" class="tournament-form-child-child">
+						<select id='tournament-js-select'class="form-select" aria-label="Default select example">
+							<option value="4" selected>4 Players</option>
+							<option value="8">8 Players</option>
+							<option value="16">16 Players</option>
+							<option value="32">32 Players</option>
+						</select>
+						<div id="tournament-form-child-child-create">
+							<button id="tournament-js-create" type="button" class="btn btn-success">
+								<i class="bi bi-plus"></i> Create
+							</button>
+						</div>
+					</div>
+				</div>
+				<div id="tournament-form-middle"></div>
+				<div class="tournament-form-child">
+					<div id="tournament-form-child--code" class="tournament-form-child-child">
+						<input type="text" class="form-control" id="tournament-js-code" placeholder="Room code">
+						<div id="tournament-form-child-child-code">
+							<button id='tournament-js-join' type="button" class="btn btn-success">
+								<i class="bi bi-controller"></i> Join
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
-			<div id="tournament-form-middle"></div>
-			<div class="tournament-form-child">
-				<div id="tournament-form-child--code" class="tournament-form-child-child">
-					<input type="text" class="form-control" id="tournament-js-code" placeholder="Room code">
-					<div id="tournament-form-child-child-code">
-						<button id='tournament-js-join' type="button" class="btn btn-success">
-							<i class="bi bi-controller"></i> Join
-						</button>
-					</div>
-				</div>
+			<div id="tournament-escape">
+				<button type="button" id='tournament-escape-button' class="btn btn-warning">Back to game</button>
 			</div>
 		</div>
 
