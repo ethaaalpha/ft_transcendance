@@ -57,7 +57,6 @@ class FormTournamentEvent {
 	}
 
 	getChild() {
-		console.log('ici')
 		return this.childElement;
 	}
 }
