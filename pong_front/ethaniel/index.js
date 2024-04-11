@@ -1,3 +1,7 @@
+opacity_low = 0.4;
+opacity_medium = 0.6;
+opacity_high = 0.8;
+
 function unhideElement(id) {
 	let element = document.getElementById(id);
 	element.classList.remove('d-none');
@@ -26,7 +30,7 @@ class FormTournamentEvent {
 		let children = [];
 
 		childElement.classList.add('tournament-form-content-children');
-		childElement.style.setProperty('--opacity', '0.6')
+		childElement.style.setProperty('--opacity', opacity_low)
 		let spanA = document.createElement('span');
 		spanA.classList.add('tournament-name');
 		spanA.innerHTML = ' ' + this.player;
@@ -76,14 +80,18 @@ class FormTournament {
 	}
 
 	updateCount() {
+		if (this.count < 0)
+			this.count = 0;
+		if (this.count > this.max)
+			this.count = this.max;
 		let newvalue = this.count.toString() + '/' + this.max.toString();
 		changeValue('tournament-js-count', newvalue);
 	}
 
 	updateOpacity() {
-		this.historic[0].getChild().style.setProperty('--opacity', '0.8');
+		this.historic[0].getChild().style.setProperty('--opacity', opacity_high);
 		if (this.historic.length >= 2) {
-			this.historic[1].getChild().style.setProperty('--opacity', '0.6');
+			this.historic[1].getChild().style.setProperty('--opacity', opacity_medium);
 		}
 
 	}
@@ -172,15 +180,25 @@ class FormTournament {
 
 var ft = new FormTournament();
 ft.changeToWait();
-// ft.changeToRoom('JUDaowDW#', 3)
+ft.changeToRoom('JUDaowD=W#', 42)
 
 ft.joinPlayer('alfred')
 ft.leavePlayer('alfredito')
-ft.joinPlayer('migouelito')
-ft.joinPlayer('migouelito')
-ft.joinPlayer('migouelito')
-ft.joinPlayer('migouelito')
-ft.joinPlayer('migouelito')
-ft.joinPlayer('migouelito')
+ft.joinPlayer('alfredito')
+ft.joinPlayer('alfredito')
+ft.joinPlayer('alfredito')
+ft.joinPlayer('alfredito')
+ft.joinPlayer('alfredito')
+ft.joinPlayer('alfredito')
+ft.joinPlayer('alfredito')
+ft.joinPlayer('alfredito')
+ft.joinPlayer('alfredito')
+ft.joinPlayer('alfredito')
+ft.joinPlayer('alfredito')
+ft.joinPlayer('alfredito')
+ft.joinPlayer('alfredito')
+ft.joinPlayer('alfredito')
+ft.joinPlayer('alfredito')
+
 
 
