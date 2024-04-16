@@ -44,7 +44,7 @@ class InvitationStack:
 			if (invitation.initier == initier):
 				return ("You already invited somebody please wait at least 30 seconds between each invite !", False)
 		# check if they are friend
-		if not (initier.profile.is_friend(target)):
+		if not (initier.Profile.is_friend(target)):
 			return ("You must be friend with this person to do that !", False)
 		
 		newInvitation = Invitation(initier, target)

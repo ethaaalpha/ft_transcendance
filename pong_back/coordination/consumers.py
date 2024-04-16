@@ -23,7 +23,7 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 	
 	@database_sync_to_async
 	def desactivePlaying(self):
-		self.user.profile.setPlaying(False)
+		self.user.Profile.setPlaying(False)
 
 	async def connect(self):
 		self.user = self.scope['user']

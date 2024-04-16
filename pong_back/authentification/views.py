@@ -127,7 +127,7 @@ def reset_password(request: HttpRequest):
 				if (is42(user.username)):
 					return tResponses.FORBIDDEN.request("User from 42 must use 42 portal to connect !")
 				newPass = generatePassword()
-				response = user.profile.changePassword(newPass)
+				response = user.Profile.changePassword(newPass)
 
 				# send the mail if it's okay !
 				if response.status_code == 200:

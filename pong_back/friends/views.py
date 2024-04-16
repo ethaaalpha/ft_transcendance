@@ -27,7 +27,7 @@ def entryPoint(request: HttpRequest):
 				return (tResponses.NOT_FOUND.request("Target user not found !"))
 			for i in keysList:
 				if i == action:
-					return ((viewsFunctions[keysList.index(i)])(request.user, target, target.profile))
+					return ((viewsFunctions[keysList.index(i)])(request.user, target, target.Profile))
 			return (tResponses.BAD_REQUEST.request("Unrecognized action !")) 
 		else:
 			return (tResponses.BAD_REQUEST.request("Form isn't valid !"))
@@ -35,7 +35,7 @@ def entryPoint(request: HttpRequest):
 		return (tResponses.BAD_REQUEST.request("Get request not supported here !"))
 	
 def add(user: User, target: User, targetProfile: Profile):
-	if user.profile.is_block(target):
+	if user.Profile.is_block(target):
 		return (tResponses.BAD_REQUEST.request("You blocked this user !"))
 	if targetProfile.is_block(user):
 		return (tResponses.FORBIDDEN.request("You can't add this user !"))
@@ -43,7 +43,7 @@ def add(user: User, target: User, targetProfile: Profile):
 		return (tResponses.FORBIDDEN.request("This is already your friend !"))
 	if targetProfile.is_pendingFriend(user):
 		return (tResponses.FORBIDDEN.request("You already send an friend request to this user !"))
-	if user.profile.is_pendingFriend(target):
+	if user.Profile.is_pendingFriend(target):
 		return (accept(user, target, targetProfile))
 
 	targetProfile.pendingFriendsFrom.add(user)
@@ -60,36 +60,36 @@ def remove(user: User, target: User, targetProfile: Profile):
 	return tResponses.OKAY.request(f'You are not longger friend with {target.username} !')
 
 def block(user: User, target: User, targetProfile: Profile):
-	if user.profile.is_block(target):
+	if user.Profile.is_block(target):
 		return (tResponses.FORBIDDEN.request("You already block this user !"))
 	
-	user.profile.blockedUsers.add(target)
+	user.Profile.blockedUsers.add(target)
 	user.save()
 	return tResponses.OKAY.request(f'You successfully block {target.username}')
 
 def unblock(user: User, target: User, targetProfile: Profile):
-	if not user.profile.is_block(target):
+	if not user.Profile.is_block(target):
 		return tResponses.FORBIDDEN.request("You didn't block this user !")
 	
-	user.profile.blockedUsers.remove(target)
+	user.Profile.blockedUsers.remove(target)
 	user.save()
 	return tResponses.OKAY.request(f'You successfuly unblock {target.username}')
 
 def accept(user: User, target: User, targetProfile: Profile):
-	if not user.profile.is_pendingFriend(target):
+	if not user.Profile.is_pendingFriend(target):
 		return tResponses.FORBIDDEN.request("This person didn't send you a friend request !")
 	if targetProfile.is_block(user):
 		return tResponses.FORBIDDEN.request("You can't become friend with this person !")
 	
-	user.profile.friends.add(target)
-	user.profile.pendingFriendsFrom.remove(target)
+	user.Profile.friends.add(target)
+	user.Profile.pendingFriendsFrom.remove(target)
 	user.save()
 	return tResponses.OKAY.request(f'You are now friend with {target.username}')
 
 def refuse(user: User, target: User, targetProfile: Profile):
-	if not user.profile.is_pendingFriend(target):
+	if not user.Profile.is_pendingFriend(target):
 		return tResponses.FORBIDDEN.request("This person didn't send you a friend request !")
 	
-	user.profile.pendingFriendsFrom.remove(target)
+	user.Profile.pendingFriendsFrom.remove(target)
 	user.save()
 	return tResponses.OKAY.request(f'You refused a friend request from {target.username} !')
