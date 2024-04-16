@@ -32,9 +32,29 @@ function createChildDiv(divId, user) {
 
 // handler
 async function handleConversationList() {
-
 	
 	const conversationList = document.getElementById("conversation-list");
+
+    // create parent div
+	const searchbarDiv = document.createElement("div");
+    searchbarDiv.id = "conversation-list-searchbar-container-id";
+    searchbarDiv.classList.add("conversation-list-searchbar-container");
+
+    const conversationDiv = document.createElement("div");
+    conversationDiv.id = "conversation-list-contact-container-id";
+    conversationDiv.classList.add("conversation-list-contact-container");
+
+	conversationList.appendChild(searchbarDiv);
+    conversationList.appendChild(conversationDiv);
+
+	// imput search
+	const messageInput = document.createElement("input");
+	messageInput.setAttribute("type", "text");
+	messageInput.setAttribute("placeholder", "Search a contact...");
+	messageInput.classList.add("conversation-list-searchbar-input");
+	messageInput.setAttribute("id", "conversation-list-searchbar-input-id");
+	searchbarDiv.appendChild(messageInput);
+
 	
     if (!gChatConversations) {
         // console.error("gChatConversations n'est pas encore défini.");
@@ -46,23 +66,63 @@ async function handleConversationList() {
         }
     }
 
-	// Parcourez chaque conversation dans gChatConversations
 	for (let user in gChatConversations.conversations) {
 		if (gChatConversations.conversations.hasOwnProperty(user)) {
-			// Créez un élément de bouton pour cette conversation
 			const conversationButton = document.createElement("button");
-			conversationButton.textContent = user; // Nom de l'utilisateur avec qui la conversation a lieu
-			// conversationButton.classList.add("conversation-button");
-			conversationButton.classList.add("modify-btn");
+			conversationButton.classList.add("conversation-list-contact-button");
+	
 
-			// Ajoutez un écouteur d'événements pour ouvrir la conversation au clic
+			// Create an img element for user profile picture
+			const img = document.createElement("img");
+
+			try {
+				const imgUrl = await fetchProfilPicture(user);
+				img.src = imgUrl;
+				console.log(img.src);
+			  } catch (error) {
+				console.error("Erreur lors de la récupération de la photo de profil :", error);
+			  }
+
+
+
+			// img.src = fetchProfilPicture(user);
+			// console.log(img.src);
+			img.alt = "Profile Picture";
+			conversationButton.appendChild(img);
+	
+			// Create elements for user and last message
+			const userInfo = document.createElement("div");
+			userInfo.classList.add("conversation-list-user");
+			userInfo.textContent = user;
+	
+			// const lastMessage = document.createElement("div");
+			// lastMessage.classList.add("conversation-list-last-message");
+			// lastMessage.textContent = getLastMessage(user); // Replace this with your logic to get the last message
+	
+			// Append user info and last message to the button
+			conversationButton.appendChild(userInfo);
+			// conversationButton.appendChild(lastMessage);
+	
 			conversationButton.addEventListener("click", function() {
 				changeScene("conversation-display", user);
 			});
 
-			// Ajoutez le bouton à la liste des conversations
-			conversationList.appendChild(conversationButton);
+			conversationDiv.appendChild(conversationButton);
 		}
+
+
+	// for (let user in gChatConversations.conversations) {
+	// 	if (gChatConversations.conversations.hasOwnProperty(user)) {
+	// 		const conversationButton = document.createElement("button");
+	// 		conversationButton.textContent = user;
+	// 		conversationButton.classList.add("conversation-list-contact-button");
+
+	// 		conversationButton.addEventListener("click", function() {
+	// 			changeScene("conversation-display", user);
+	// 		});
+
+	// 		conversationDiv.appendChild(conversationButton);
+	// 	}
 	}
 }
 
@@ -144,7 +204,7 @@ function handleConversationDisplay(user) {
 	// imput message
 	const messageInput = document.createElement("input");
 	messageInput.setAttribute("type", "text");
-	messageInput.setAttribute("placeholder", "Your message...");
+	messageInput.setAttribute("placeholder", "Enter your message...");
 	messageInput.classList.add("message-input");
 	messageInput.setAttribute("id", "send-message-input-id");
 	inputDiv.appendChild(messageInput);
@@ -159,65 +219,6 @@ function handleConversationDisplay(user) {
 
 }
 
-
-
-
-
-// function handleConversationDisplay(user) {
-//     const conversation = gChatConversations.getConversation(user);
-
-//     // title
-//     const titleElement = document.createElement("span");
-//     titleElement.textContent = user;
-//     titleElement.classList.add("title-2");
-//     titleElement.setAttribute("id", "send-message-contact-id");
-
-//     const conversationDisplayTitle = document.getElementById("conversation-display-title-id");
-//     // conversationDisplayTitle.innerHTML = "";
-//     conversationDisplayTitle.appendChild(titleElement);
-
-//     // messages
-//     const conversationDisplayMessages = document.getElementById("conversation-display-messages-id");
-//     // conversationDisplayMessages.innerHTML = "";
-
-//     // Parcourez chaque message dans la conversation en commençant par le plus récent
-//     for (let i = conversation.length - 1; i >= 0; i--) {
-//         const message = conversation[i];
-//         const messageElement = document.createElement("div");
-//         messageElement.textContent = message.content;
-
-//         // Ajout de la classe en fonction de l'expéditeur
-//         if (message.sender === gChatConversations.myUsername) {
-//             messageElement.classList.add("message-sent");
-//         } else {
-//             messageElement.classList.add("message-received");
-//         }
-
-//         // Ajout de la classe pour la marge entre les messages
-//         messageElement.classList.add("message-margin");
-
-//         // Ajoutez le message à la conversationDisplay
-//         conversationDisplayMessages.appendChild(messageElement);
-//     }
-
-//     // input and send button
-//     const messageInput = document.createElement("input");
-//     messageInput.setAttribute("type", "text");
-//     messageInput.setAttribute("placeholder", "Your message...");
-//     messageInput.classList.add("message-input");
-//     messageInput.setAttribute("id", "send-message-input-id");
-
-//     const sendButton = document.createElement("button");
-//     sendButton.textContent = "Send";
-//     sendButton.classList.add("send-button");
-//     sendButton.setAttribute("id", "send-message-button-id");
-//     sendButton.onclick = sendMessage;
-
-//     const conversationDisplayInput = document.getElementById("conversation-display-input-id");
-//     conversationDisplayInput.innerHTML = "";
-//     conversationDisplayInput.appendChild(messageInput);
-//     conversationDisplayInput.appendChild(sendButton);
-// }
 
 
 
