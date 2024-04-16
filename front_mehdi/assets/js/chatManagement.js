@@ -66,22 +66,9 @@ class Conversations {
 	}
 }
 
-function fetchUsername() { // to move
-	return new Promise((resolve, reject) => {
-	  fetchData('/api/dashboard')
-		.then(data => {
-		  resolve(data.data['username']);
-		})
-		.catch(error => {
-		  console.error('Error fetching user data:', error);
-		  reject(error);
-		});
-	});
-  }
-
 async function fetchConversations() {
 	try {
-	  const username = await fetchUsername();
+	  const username = await fetchCurrentUsername();
 	  const data = await fetchData('/api/dashboard/conversations');
 	  gChatConversations = new Conversations(username, data.data.conversations);
 	} catch (error) {
@@ -93,7 +80,7 @@ function sendMessage() {
 	const to = document.getElementById("send-message-contact-id").textContent;
 	const content = document.getElementById("send-message-input-id").value;
 
-	console.log(to);
+	// console.log(to);
     const data = {'to': to, 'content': content};
     if (activity && activity.socket.readyState === WebSocket.OPEN) {
         activity.socket.send(JSON.stringify({

@@ -7,14 +7,23 @@ class connect {
 		};
 
 		this.socket.onmessage = (e) => {
-			const data = JSON.parse(e.data);
-			if (gChatConversations) {
-				gChatConversations.addMessageFromSocket(data.data);
-			  } else {
-				console.log("gChatConversations est undefined");
-			  }
-			console.log("j'ai reçu message ici !");
+			const eventData = JSON.parse(e.data);
+			const event = eventData.event;
+			const data = eventData.data;
+		
+			if (event === 'state') {
+				console.log("state message");
+			} else if (event === 'chat') {
+				if (gChatConversations) {
+					gChatConversations.addMessageFromSocket(data);
+				} else {
+					console.log("gChatConversations est undefined");
+				}
+			} else if (event === 'friends') {
+				console.log("friends message");
+			}
 		};
+		
 
 		this.socket.onclose = (e) => {
 			console.error('Chat socket closed unexpectedly ! Retrying to connect !');

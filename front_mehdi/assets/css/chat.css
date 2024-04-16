@@ -1,6 +1,74 @@
 /* chatList */
 
 
+/* Pour la barre de recherche */
+.conversation-list-searchbar-container {
+    margin: 5px;
+}
+
+.conversation-list-searchbar-input {
+    width: 100%;
+    padding: 5px;
+	border-radius: 20px;
+}
+
+/* Pour les boutons de contact */
+.conversation-list-contact-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espacement de 10px entre chaque bouton */
+    margin: 5px;
+}
+
+.conversation-list-contact-button {
+    width: 100%;
+    padding: 10px; /* Ajustez selon vos besoins */
+    background-color: #f0f0f0; /* Couleur de fond */
+    border: 1px solid #ccc; /* Bordure */
+    border-radius: 15px; /* Coins arrondis */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.conversation-list-contact-button img {
+    width: 40px; /* Largeur de l'image */
+    height: 40px; /* Hauteur de l'image */
+    border-radius: 50%; /* Rendre l'image ronde */
+    margin-right: 10px; /* Espacement entre l'image et le texte */
+}
+
+.conversation-list-contact-button .conversation-list-user {
+    font-weight: bold; /* Texte en gras */
+}
+
+.conversation-list-contact-button .conversation-list-last-message {
+    color: #666; /* Couleur du texte */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* chatDisplay */
