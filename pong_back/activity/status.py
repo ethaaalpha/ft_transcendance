@@ -4,7 +4,7 @@ from users.models import Profile
 class Status:
 	@staticmethod
 	def getStatus(user: User):
-		uProfile: Profile = user.profile
+		uProfile: Profile = user.Profile
 		state = uProfile.state
 
 		if uProfile.isPlaying:
@@ -18,7 +18,7 @@ class Status:
 	@staticmethod
 	def warnFriends(friendsOf: User, content: str):
 		from .consumers import ActivityConsumer
-		uProfile: Profile = friendsOf.profile
+		uProfile: Profile = friendsOf.Profile
 		
 		for f in uProfile.friends.all():
 			ActivityConsumer.sendMessageToConsumer(f.username, {
@@ -28,14 +28,14 @@ class Status:
 
 	@staticmethod
 	def connect(user: User):
-		uProfile: Profile = user.profile
+		uProfile: Profile = user.Profile
 		uProfile.setState(1)
 		Status.warnFriends(user, 'Online')
 		Status.getFriendsStatus(user)
 
 	@staticmethod
 	def disconnect(user: User):
-		uProfile: Profile = user.profile
+		uProfile: Profile = user.Profile
 		uProfile.setState(0)
 		Status.warnFriends(user, 'Offline')
 
@@ -50,7 +50,7 @@ class Status:
 	@staticmethod
 	def getFriendsStatus(user: User):
 		from .consumers import ActivityConsumer
-		uProfile: Profile = user.profile
+		uProfile: Profile = user.Profile
 		statuses = {}
 		
 		for f in uProfile.friends.all():

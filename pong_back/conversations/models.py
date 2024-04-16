@@ -68,7 +68,7 @@ class Conversation(models.Model):
 		# Prevent from empty values
 		if not sender or not target or not content :
 			return
-		if not target.profile.is_friend(sender):
+		if not target.Profile.is_friend(sender):
 			return
 		
 		conversation = Conversation.getConversation([sender, target])

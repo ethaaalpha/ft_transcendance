@@ -25,7 +25,7 @@ def entryPoint(request: HttpRequest) -> HttpResponse:
 		target = Profile.getUserFromUsername(request.GET['with'])
 		if not target:
 			return tResponses.NOT_FOUND.request("This user do not exist !")
-		if not target.profile.is_friend(actualUser):
+		if not target.Profile.is_friend(actualUser):
 			return tResponses.FORBIDDEN.request("This user isn't your friend !")
 		
 		messages = Conversation.getConversation([actualUser, target]).getMessages(n = 50)

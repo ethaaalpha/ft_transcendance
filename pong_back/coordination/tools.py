@@ -4,7 +4,7 @@ from activity.status import Status
 
 def isAvailableToPlay(player: User):
 	from game.models import Room
-	if (player.profile.isPlaying):
+	if (player.Profile.isPlaying):
 		return ('Already in game !', False)
 	if (Matchmaking.isIn(player) == True):
 		return ('Already in matchmaking queue !', False)
@@ -14,9 +14,9 @@ def isAvailableToPlay(player: User):
 	return ('Available', True)
 
 def setInMatch(player: User):
-	player.profile.setPlaying(True)
+	player.Profile.setPlaying(True)
 	Status.inGame(player)
 
 def setOutMatch(player: User):
-	player.profile.setPlaying(False)
+	player.Profile.setPlaying(False)
 	Status.leaveGame(player)
