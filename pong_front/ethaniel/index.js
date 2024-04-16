@@ -181,4 +181,3 @@ class FormTournament {
 var ft = new FormTournament();
 ft.changeToWait();
 ft.changeToRoom('JUD2JIDE', 42)
-ft.joinPlayer('alfred')
