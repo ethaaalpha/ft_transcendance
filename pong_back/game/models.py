@@ -44,7 +44,7 @@ class Match(models.Model):
 
 	@staticmethod
 	def speakConsumer(speaker: User, content: str):
-		if not speaker.profile.isPlaying:
+		if not speaker.Profile.isPlaying:
 			return
 		currentMatch = Match.getMatch(user=speaker)
 		if not currentMatch:
@@ -273,7 +273,7 @@ class Room(models.Model):
 	def addPlayer(self, player: User) -> int:
 		actual = self.opponents.count()
 
-		if (player.profile.isPlaying == True):
+		if (player.Profile.isPlaying == True):
 			return ("You are already playing !", False)
 		if (actual >= int(self.mode)):
 			return ("There is too much player in the room !", False)

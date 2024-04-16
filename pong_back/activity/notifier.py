@@ -18,7 +18,7 @@ class ActivityNotifier():
 	def _getProfileFromUsername(username: str) -> Profile:
 		user = Profile.getUserFromUsername(username)
 		if user:
-			return (user.profile)
+			return (user.Profile)
 		return user
 	
 	@staticmethod

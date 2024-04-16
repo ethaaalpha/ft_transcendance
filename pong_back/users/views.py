@@ -40,7 +40,7 @@ def profile(request: HttpRequest, username: str, filter=None) -> HttpResponse:
 
 	if (user):
 		Profile.createUserOnetoOne(user)
-		userProfile: dict = user.profile.toJson(restricted=restricted)
+		userProfile: dict = user.Profile.toJson(restricted=restricted)
 
 		# Build the filter dictionnary
 		if filter:
@@ -55,7 +55,7 @@ def profile(request: HttpRequest, username: str, filter=None) -> HttpResponse:
 
 # Handle post methods
 def postData(request: HttpRequest, filter: str) -> HttpResponse:
-	userProfile: Profile = request.user.profile
+	userProfile: Profile = request.user.Profile
 
 	match filter:
 		case "password":
