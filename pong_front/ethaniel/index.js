@@ -160,8 +160,8 @@ class FormTournament {
 		hideElement('tournament-a');
 		unhideElement('tournament-b');
 		this.updateCount();
-		changeValue('tournament-js-code', roomCode)
 		this.registerEventsRoom();
+		changeValue('tournament-js-code-display', roomCode);
 	}
 
 	changeToWait() {
@@ -180,25 +180,5 @@ class FormTournament {
 
 var ft = new FormTournament();
 ft.changeToWait();
-ft.changeToRoom('JUDaowD=W#', 42)
-
+ft.changeToRoom('JUD2JIDE', 42)
 ft.joinPlayer('alfred')
-ft.leavePlayer('alfredito')
-ft.joinPlayer('alfredito')
-ft.joinPlayer('alfredito')
-ft.joinPlayer('alfredito')
-ft.joinPlayer('alfredito')
-ft.joinPlayer('alfredito')
-ft.joinPlayer('alfredito')
-ft.joinPlayer('alfredito')
-ft.joinPlayer('alfredito')
-ft.joinPlayer('alfredito')
-ft.joinPlayer('alfredito')
-ft.joinPlayer('alfredito')
-ft.joinPlayer('alfredito')
-ft.joinPlayer('alfredito')
-ft.joinPlayer('alfredito')
-ft.joinPlayer('alfredito')
-
-
-

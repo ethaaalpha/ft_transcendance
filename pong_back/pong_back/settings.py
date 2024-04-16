@@ -168,9 +168,6 @@ ALLOWED_HOSTS = ['localhost', os.getenv('DOMAIN')]
 
 # Channel Layer Configuration
 CHANNEL_LAYERS = {
-    # "default": {
-    #     "BACKEND": "channels.layers.InMemoryChannelLayer"
-    # },
 	"default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
