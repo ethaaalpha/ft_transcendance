@@ -15,7 +15,7 @@ function changeScene(newScene, user) {
             sceneConversationList();
             break;
 		case "search":
-			sceneProfil();
+			sceneSearch();
 			break;
         case "conversation-display":
             sceneConversationDisplay(user);
@@ -80,7 +80,7 @@ function sceneConversationList() {
     currentScene = "conversation-list";
 }
 
-function sceneProfil() {
+function sceneSearch() {
 	hideElements("conversation-display", "signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
     removeChildDiv("conversation-display", "conversation-list-contact-container-id", "profil");
 	// createChildDiv("conversation-list");

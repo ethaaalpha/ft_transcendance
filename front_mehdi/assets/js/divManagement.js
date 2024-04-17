@@ -277,7 +277,7 @@ function handleProfilDisplay(username) {
             fetchCurrentUsername()
                 .then(currentUsername => {
                     const usernameElement = document.createElement("div");
-                    usernameElement.textContent = currentUsername;
+                    usernameElement.textContent = username;
                     usernameElement.classList.add("username");
                     nameActionsDiv.appendChild(usernameElement);
 

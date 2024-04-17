@@ -30,3 +30,72 @@ async function searchProfil() {
 			console.log("merde");
 
 }
+
+// function setSearchbarListeners() {
+// 	document.getElementById("conversation-list-searchbar-input-id").addEventListener("input", function() {
+// 		const searchInput = document.getElementById("conversation-list-searchbar-input-id");
+// 		let isInputEmpty = true;
+
+// 		const inputValue = searchInput.value.trim();
+		
+// 		if (inputValue && isInputEmpty) {
+// 			changeScene("search");
+// 			isInputEmpty = false;
+// 		} else if (!inputValue && !isInputEmpty) {
+// 			changeScene("conversation-list");
+// 			isInputEmpty = true;
+// 		}
+// 	});
+
+// 	document.addEventListener("DOMContentLoaded", function() {
+// 		const searchInput = document.getElementById("conversation-list-searchbar-container-id");
+			
+// 		searchInput.addEventListener("keypress", function(event) {
+// 			if (event.key === "Enter") {
+// 				searchProfil();
+// 			}
+// 		});
+// 	});
+// }
+
+
+function setSearchbarListeners() {
+    const searchInput = document.getElementById("conversation-list-searchbar-input-id");
+    let isInputEmpty = true;
+
+    function onInputFilled() {
+        changeScene("search");
+        isInputEmpty = false;
+    }
+
+    function onInputCleared() {
+        changeScene("conversation-list");
+        isInputEmpty = true;
+    }
+
+    searchInput.addEventListener("input", function() {
+        const inputValue = searchInput.value.trim();
+        
+        if (inputValue && isInputEmpty) {
+            onInputFilled();
+        } else if (!inputValue && !isInputEmpty) {
+            onInputCleared();
+        }
+    });
+
+    searchInput.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            searchProfil();
+        }
+    });
+}
+
+
+
+// function unsetEventListenerChat() {
+//     const searchInput = document.getElementById("conversation-list-searchbar-input-id");
+    
+//     searchInput.removeEventListener("input", onInputFilled);
+//     searchInput.removeEventListener("input", onInputCleared);
+//     searchInput.removeEventListener("keypress", searchProfil);
+// }
