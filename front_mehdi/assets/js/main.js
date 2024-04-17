@@ -5,14 +5,15 @@ let gUser;
 (async function() {
     const logged = await isLogged();
     if (logged) {
-		await fetchUserData();
-		// await fetchConversations();
-		changeScene("home");
-		// updateProfil();
+        await fetchUserData();
+        // await fetchConversations();
+        await changeScene("home");
+        setSearchbarListeners();
     } else {
-		changeScene("signIn");
+        changeScene("signIn");
     }
 })();
+
 
 async function isLogged() {
     const response = await fetch('/api/dashboard');
