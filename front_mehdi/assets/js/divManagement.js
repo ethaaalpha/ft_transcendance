@@ -22,10 +22,12 @@ function createChildDiv(divId, user) {
         case "conversation-display":
             handleConversationDisplay(user);
             break;
+        case "profil":
+            handleProfilDisplay(user);
+            break;
         default:
             console.log("Invalid divId: ", divId);
     }
-
     console.log("Current divId is:", currentScene);
 }
 
@@ -219,6 +221,124 @@ function handleConversationDisplay(user) {
 
 }
 
+// function handleProfilDisplay(user) {
+
+// 	const profilDisplay = document.getElementById("profil");
+
+// 	// back button
+// 	const backButton = document.createElement("button");
+// 	backButton.classList.add("arrow-back");
+// 	backButton.onclick = function() {
+// 		changeScene('conversation-list');
+// 	};
+
+// 	const svgContent = `
+// 		<svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+// 			<g clip-path="url(#clip0_116_82)">
+// 				<path d="M7.70801 18.5H29.2913" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+// 				<path d="M18.4997 7.70825L7.70801 18.4999L18.4997 29.2916" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+// 			</g>
+// 			<defs>
+// 				<clipPath id="clip0_116_82">
+// 					<rect width="37" height="37" fill="white"/>
+// 				</clipPath>
+// 			</defs>
+// 		</svg>
+// 	`;
+// 	backButton.innerHTML = svgContent;
+// 	profilDisplay.appendChild(backButton);
+
+// 	// create parent div
+// 	const persoInfoDiv = document.createElement("div");
+// 	persoInfoDiv.id = "perso-info-id";
+// 	persoInfoDiv.classList.add("perso-info-container");
+// 	profilDisplay.appendChild(persoInfoDiv);
+	
+// 	const nameActionsDiv = document.createElement("div");
+// 	nameActionsDiv.id = "name-actions-id";
+// 	nameActionsDiv.classList.add("name-actionsDiv");
+// 	profilDisplay.appendChild(nameActionsDiv);
+
+// 	const persoScoresDiv = document.createElement("div");
+// 	persoScoresDiv.id = "perso-scores-id";
+// 	persoScoresDiv.classList.add("perso-scores--container");
+// 	profilDisplay.appendChild(persoScoresDiv);
+
+	
+// }
+
+
+function handleProfilDisplay(username) {
+
+    const profilDisplay = document.getElementById("profil");
+
+    // back button
+    const backButton = document.createElement("button");
+    backButton.classList.add("arrow-back");
+    backButton.onclick = function() {
+        changeScene('conversation-list');
+    };
+
+    const svgContent = `
+        <svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_116_82)">
+                <path d="M7.70801 18.5H29.2913" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18.4997 7.70825L7.70801 18.4999L18.4997 29.2916" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <defs>
+                <clipPath id="clip0_116_82">
+                    <rect width="37" height="37" fill="white"/>
+                </clipPath>
+            </defs>
+        </svg>
+    `;
+    backButton.innerHTML = svgContent;
+    profilDisplay.appendChild(backButton);
+
+    // create parent div
+    const persoInfoDiv = document.createElement("div");
+    persoInfoDiv.id = "perso-info-id";
+    persoInfoDiv.classList.add("perso-info-container");
+    profilDisplay.appendChild(persoInfoDiv);
+
+    // Fetch and add profile picture
+    fetchProfilPicture(username)
+        .then(pictureUrl => {
+            const profileImage = document.createElement("img");
+            profileImage.src = pictureUrl;
+            profileImage.alt = "Profile Picture";
+            profileImage.classList.add("profile-image");
+            persoInfoDiv.appendChild(profileImage);
+
+            // create nameActionsDiv
+            const nameActionsDiv = document.createElement("div");
+            nameActionsDiv.id = "name-actions-id";
+            nameActionsDiv.classList.add("name-actionsDiv");
+            persoInfoDiv.appendChild(nameActionsDiv);
+
+
+			const usernameElement = document.createElement("div");
+			usernameElement.textContent = username;
+			usernameElement.classList.add("username");
+			nameActionsDiv.appendChild(usernameElement);
+
+			// Create action buttons
+			const actionButtonsDiv = document.createElement("div");
+			actionButtonsDiv.classList.add("action-buttons");
+
+			const button1 = document.createElement("button");
+			button1.classList.add("action-button");
+			button1.textContent = "1";
+			actionButtonsDiv.appendChild(button1);
+
+			const button2 = document.createElement("button");
+			button2.classList.add("action-button");
+			button2.textContent = "2";
+			actionButtonsDiv.appendChild(button2);
+
+			nameActionsDiv.appendChild(actionButtonsDiv);
+        });
+}
 
 
 
