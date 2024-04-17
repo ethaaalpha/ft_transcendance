@@ -41,6 +41,22 @@ document.getElementById("email").addEventListener("input", function() {
     }
 });
 
+document.getElementById("conversation-list-searchbar-input-id").addEventListener("input", function() {
+    const searchInput = document.getElementById("conversation-list-searchbar-input-id");
+    let isInputEmpty = true;
+
+    const inputValue = searchInput.value.trim();
+    
+    if (inputValue && isInputEmpty) {
+        changeScene("search");
+        isInputEmpty = false;
+    } else if (!inputValue && !isInputEmpty) {
+        changeScene("conversation-list");
+        isInputEmpty = true;
+    }
+});
+
+
 // keyboad touch
 document.addEventListener("DOMContentLoaded", function() {
     const usernameInput = document.getElementById("username");
@@ -81,4 +97,15 @@ document.addEventListener("DOMContentLoaded", function() {
 			signUp();
         }
     });
+
+	const searchInput = document.getElementById("conversation-list-searchbar-container-id");
+	
+	searchInput.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+			searchProfil();
+        }
+    });
+
+
 });
+

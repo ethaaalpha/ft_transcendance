@@ -22,6 +22,9 @@ function createChildDiv(divId, user) {
         case "conversation-display":
             handleConversationDisplay(user);
             break;
+		// case "searchProfil":
+		// 	handleSearchProfil();
+		// 	break;
         case "profil":
             handleProfilDisplay(user);
             break;
@@ -57,8 +60,7 @@ async function handleConversationList() {
 	messageInput.setAttribute("id", "conversation-list-searchbar-input-id");
 	searchbarDiv.appendChild(messageInput);
 	
-    if (!gChatConversations) {
-        // console.error("gChatConversations n'est pas encore défini.");
+    if (!gChatConversations) {// to delete and put in main
         try {
             await fetchConversations();
         } catch (error) {
@@ -71,7 +73,6 @@ async function handleConversationList() {
 		if (gChatConversations.conversations.hasOwnProperty(user)) {
 			const conversationButton = document.createElement("button");
 			conversationButton.classList.add("conversation-list-contact-button");
-	
 
 			// Create an img element for user profile picture
 			const img = document.createElement("img");
@@ -80,13 +81,8 @@ async function handleConversationList() {
 				const imgUrl = await fetchProfilPicture(user);
 				img.src = imgUrl;
 			  } catch (error) {
-				console.error("Erreur lors de la récupération de la photo de profil :", error);
+				console.error("Error in getting profil picture of:", error);
 			  }
-
-
-
-			// img.src = fetchProfilPicture(user);
-			// console.log(img.src);
 			img.alt = "Profile Picture";
 			conversationButton.appendChild(img);
 	
@@ -95,9 +91,10 @@ async function handleConversationList() {
 			userInfo.classList.add("conversation-list-user");
 			userInfo.textContent = user;
 	
+			// Get the last message
 			// const lastMessage = document.createElement("div");
 			// lastMessage.classList.add("conversation-list-last-message");
-			// lastMessage.textContent = getLastMessage(user); // Replace this with your logic to get the last message
+			// lastMessage.textContent = getLastMessage(user);
 	
 			// Append user info and last message to the button
 			conversationButton.appendChild(userInfo);
@@ -219,51 +216,13 @@ function handleConversationDisplay(user) {
 
 }
 
-// function handleProfilDisplay(user) {
 
-// 	const profilDisplay = document.getElementById("profil");
 
-// 	// back button
-// 	const backButton = document.createElement("button");
-// 	backButton.classList.add("arrow-back");
-// 	backButton.onclick = function() {
-// 		changeScene('conversation-list');
-// 	};
+// function handleSearchProfil() {
 
-// 	const svgContent = `
-// 		<svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
-// 			<g clip-path="url(#clip0_116_82)">
-// 				<path d="M7.70801 18.5H29.2913" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-// 				<path d="M18.4997 7.70825L7.70801 18.4999L18.4997 29.2916" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-// 			</g>
-// 			<defs>
-// 				<clipPath id="clip0_116_82">
-// 					<rect width="37" height="37" fill="white"/>
-// 				</clipPath>
-// 			</defs>
-// 		</svg>
-// 	`;
-// 	backButton.innerHTML = svgContent;
-// 	profilDisplay.appendChild(backButton);
-
-// 	// create parent div
-// 	const persoInfoDiv = document.createElement("div");
-// 	persoInfoDiv.id = "perso-info-id";
-// 	persoInfoDiv.classList.add("perso-info-container");
-// 	profilDisplay.appendChild(persoInfoDiv);
-	
-// 	const nameActionsDiv = document.createElement("div");
-// 	nameActionsDiv.id = "name-actions-id";
-// 	nameActionsDiv.classList.add("name-actionsDiv");
-// 	profilDisplay.appendChild(nameActionsDiv);
-
-// 	const persoScoresDiv = document.createElement("div");
-// 	persoScoresDiv.id = "perso-scores-id";
-// 	persoScoresDiv.classList.add("perso-scores--container");
-// 	profilDisplay.appendChild(persoScoresDiv);
-
-	
 // }
+
+
 
 
 function handleProfilDisplay(username) {
@@ -393,6 +352,10 @@ function handleProfilDisplay(username) {
                 });
         });
 }
+
+
+
+
 
 
 
