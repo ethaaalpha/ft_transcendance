@@ -72,10 +72,11 @@ function sceneHome() {
 	changeScene("conversation-list");
 }
 
-function sceneConversationList() {
+async function sceneConversationList() {
 	hideElements("conversation-display", "signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
     removeChildDiv("conversation-display", "conversation-list", "profil");
-	createChildDiv("conversation-list");
+	await createChildDiv("conversation-list");
+	setEventListener("conversation-list");
 	unhideElements("conversation-list");
     currentScene = "conversation-list";
 }
@@ -89,6 +90,7 @@ function sceneSearch() {
 }
 
 function sceneConversationDisplay(user) {
+	unsetEventListener("conversation-list");
 	hideElements("conversation-list", "signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
 	removeChildDiv("conversation-display", "conversation-list", "profil");
 	createChildDiv("conversation-display", user);
@@ -97,13 +99,15 @@ function sceneConversationDisplay(user) {
 }
 
 function sceneSettings() {
+	unsetEventListener("conversation-list");
     hideElements("conversation-display", "conversation-list", "chat", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
 	resetFormFields("settings-actual-password", "settings-new-password", "settings-confirm-password", "settings-actual-email", "settings-new-email", "settings-confirm-email");
-    unhideElements("settings");
+	unhideElements("settings");
     currentScene = "settings";
 }
 
 function sceneProfil(user) {
+	unsetEventListener("conversation-list");
     hideElements("conversation-display", "conversation-list", "chat", "settings", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
 	removeChildDiv("conversation-display", "conversation-list", "profil");
 	createChildDiv("profil", user);

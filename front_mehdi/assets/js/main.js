@@ -7,8 +7,7 @@ let gUser;
     if (logged) {
         await fetchUserData();
         // await fetchConversations();
-        await changeScene("home");
-        setSearchbarListeners();
+        changeScene("home");
     } else {
         changeScene("signIn");
     }
