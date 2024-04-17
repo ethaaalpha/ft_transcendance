@@ -174,7 +174,18 @@ body {
 	/* mix-blend-mode: overlay; */
 }
 
+.form-label {
+	color: #B4B4B4;
+	background: transparent;
+}
+
+
 .login-form input {
+	border-radius: 5px;
+	background-color: rgba(68, 68, 68, 0.5);
+}
+
+.login-form input:focus {
 	border-radius: 5px;
 	background-color: rgba(68, 68, 68, 0.5);
 }
