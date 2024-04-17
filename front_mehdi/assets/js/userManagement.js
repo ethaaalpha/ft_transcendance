@@ -169,3 +169,21 @@ function modifyProfilPicture() {
 		console.error('Error:', error);
     });	
 }
+
+function manageFriend(username, action) {	
+    var formData = new FormData();
+    formData.append("action", action);
+    formData.append("username", username);
+	
+	fetchData("/api/dashboard/friends", 'POST', formData).then(
+	(data) => {
+		if (data.status === 200) {
+			console.log("manage friend action done!");
+		} else {
+			console.log("Login error");
+		}
+    })
+    .catch(error => {
+		console.error('Error:', error);
+    });
+}

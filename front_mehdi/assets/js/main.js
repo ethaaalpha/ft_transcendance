@@ -19,12 +19,25 @@ async function isLogged() {
     return response.status === 200;
 }
 
-
 async function fetchUserData() {
-	try {
-	  const data = await fetchData('/api/dashboard');
-	  gUser = new User(data.data);
-	} catch (error) {
-	  console.error('Error fetching user data:', error);
-	}
-}
+	return new Promise((resolve, reject) => {
+		fetchData('/api/dashboard')
+		.then(data => {
+			if (data.status === 200) {
+				if (!gUser) {
+					// console.log(data.data);
+					gUser = new User(data.data);
+				} else {
+					gUser.update(data.data);
+				}
+				resolve(true);
+			} else {
+				resolve(false);
+			}
+		})
+		.catch(error => {
+			console.error('Error fetching user data:', error);
+			reject(error);
+		});
+	});
+};
