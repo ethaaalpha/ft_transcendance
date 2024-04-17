@@ -41,6 +41,7 @@ document.getElementById("email").addEventListener("input", function() {
     }
 });
 
+
 // keyboad touch
 document.addEventListener("DOMContentLoaded", function() {
     const usernameInput = document.getElementById("username");
@@ -81,4 +82,6 @@ document.addEventListener("DOMContentLoaded", function() {
 			signUp();
         }
     });
+
 });
+
