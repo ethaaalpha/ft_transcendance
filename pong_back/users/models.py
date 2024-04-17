@@ -64,6 +64,11 @@ class Profile(models.Model):
 			tab.append(value.username)
 		return tab
 	
+	def getPendingFriendTo(self):
+		request = Profile.objects.filter(pendingFriendsFrom=self.user).all()
+		items = [i.getUsername() for i in request]
+		return (items)
+	
 	def toJson(self, restricted=True):
 		public = {
 			"username" : self.user.username,
@@ -78,6 +83,7 @@ class Profile(models.Model):
 				"email": self.user.email,
 				"friends": self.getManyToTab(self.friends),
 				"pendingFriendsFrom": self.getManyToTab(self.pendingFriendsFrom),
+				"pendingFriendsTo": self.getPendingFriendTo(),
 				"blockedUsers": self.getManyToTab(self.blockedUsers)
 				}
 			

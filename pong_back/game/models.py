@@ -312,7 +312,6 @@ class Room(models.Model):
 			winners = [m.getWinner() for m in lastMatchs]
 			matchOpponents = [[winners[i], winners[i + 1]] for i in range(0, len(winners), 2)]
 
-		# print('je genere des matchs', file=sys.stderr)
 		matchs = [Match.getMatch(id=Match.create(opponents[0], opponents[1])) for opponents in matchOpponents]
 		self.numberMatchsLastRound = len(matchs)
 		self.matchs.add(*matchs)
@@ -487,27 +486,20 @@ class Room(models.Model):
 				room.addClosed(player)
 				return
 			if player == room.winner:
-				# print(f"j'envoie le message win à {player.username}", file=sys.stderr)
 				room.send(player, 'win', {'room-id': room.id})
 				room.addClosed(player)
 				return
 			matchsRunning = list(room.matchs.all().order_by('-creation_date')[:room.numberMatchsLastRound])
-			# print(f'on me demande un next bebe {player.username} {room.matchs.all()} | {matchsRunning}', file=sys.stderr)
 			for m in matchsRunning:
 				if m.host == player or m.invited == player:
 					who = 0 if m.host == player else 1
-					# print(f'Voici le supposé match {m.id}, {m.state}, demandé par {player.username}', file=sys.stderr)
 					if m.ready[who] == True or m.state != 0:
 						return
 					m.ready[who] = True
 					m.save()
 					if who:
-						# print(f'ton next {m.id} -> {player.username} | {m.state}', file=sys.stderr)
-						# print(f"j'envoie le message next à {player.username} {m.id}", file=sys.stderr)
 						m.send(m.invited, 'next', {'match-id': str(m.id), 'host': m.host.username, 'invited': m.invited.username, 'statusHost': False}, delay=2.5)
 					else:
-						# print(f"j'envoie le message next à {player.username} {m.id}", file=sys.stderr)
-						# print(f'ton next {m.id} -> {player.username} | {m.state}', file=sys.stderr)
 						m.send(m.host, 'next', {'match-id': str(m.id), 'host': m.host.username, 'invited': m.invited.username, 'statusHost': True}, delay=2.5)
 					if (m.ready[0] and m.ready[1]):
 						m.start()
