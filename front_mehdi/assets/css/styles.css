@@ -174,11 +174,16 @@ body {
 	/* mix-blend-mode: overlay; */
 }
 
-.form-label {
-	color: #B4B4B4;
-	background: transparent;
+.form-floating.fixed > .form-control-plaintext ~ label::after,
+.form-floating.fixed > .form-control:focus ~ label::after,
+.form-floating.fixed > .form-control:not(:placeholder-shown) ~ label::after,
+.form-floating.fixed > .form-select ~ label::after {
+    background-color: transparent;
 }
 
+.form-label {
+	color: #B4B4B4;
+}
 
 .login-form input {
 	border-radius: 5px;
@@ -187,6 +192,7 @@ body {
 
 .login-form input:focus {
 	border-radius: 5px;
+	border-color: #028a00;
 	background-color: rgba(68, 68, 68, 0.5);
 }
 
