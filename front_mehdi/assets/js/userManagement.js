@@ -3,7 +3,7 @@
     const logged = await isLogged();
     if (logged) {
 		changeScene("home");
-		updateProfil();
+		// updateProfil();
     } else {
 		changeScene("signIn");
     }

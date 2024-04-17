@@ -18,7 +18,7 @@ function changeScene(newScene, user) {
             sceneConversationDisplay(user);
             break;
 		case "profil":
-			sceneProfil();
+			sceneProfil(user);
 			break;
 		case "settings":
 			sceneSettings();
@@ -64,8 +64,6 @@ function sceneSignUp() {
 function sceneHome() {
 	hideElements("signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
 	resetFormFields("username", "password", "passwordConfirm", "email");
-	// createChat();
-    // unhideElements("home", "chat");
     unhideElements("home");
     currentScene = "home";
 	changeScene("conversation-list");
@@ -73,16 +71,16 @@ function sceneHome() {
 
 function sceneConversationList() {
 	hideElements("conversation-display", "signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
-    removeChildDiv("conversation-display", "conversation-list");
-	createChildDiv("conversation-list");//void ?
+    removeChildDiv("conversation-display", "conversation-list", "profil");
+	createChildDiv("conversation-list");
 	unhideElements("conversation-list");
     currentScene = "conversation-list";
 }
 
 function sceneConversationDisplay(user) {
 	hideElements("conversation-list", "signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
-	removeChildDiv("conversation-display", "conversation-list");
-	createChildDiv("conversation-display", user);//void ?
+	removeChildDiv("conversation-display", "conversation-list", "profil");
+	createChildDiv("conversation-display", user);
 	unhideElements("conversation-display");
     currentScene = "conversation-display";
 }
@@ -94,9 +92,11 @@ function sceneSettings() {
     currentScene = "settings";
 }
 
-function sceneProfil() {
+function sceneProfil(user) {
     hideElements("conversation-display", "conversation-list", "chat", "settings", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
-    unhideElements("profil");
+	removeChildDiv("conversation-display", "conversation-list", "profil");
+	createChildDiv("profil", user);
+	unhideElements("profil");
     currentScene = "profil";
 }
 
@@ -161,10 +161,11 @@ function settingsAction() {
     }
 }
 
-function profilAction() {
+async function profilAction() {
     if (currentScene == "profil") {
         changeScene("home");
     } else {
-        changeScene("profil");
+		const username = await fetchCurrentUsername();
+        changeScene("profil", username);
     }
 }
