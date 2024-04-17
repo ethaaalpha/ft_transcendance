@@ -14,6 +14,9 @@ function changeScene(newScene, user) {
         case "conversation-list":
             sceneConversationList();
             break;
+		case "search":
+			sceneProfil();
+			break;
         case "conversation-display":
             sceneConversationDisplay(user);
             break;
@@ -75,6 +78,14 @@ function sceneConversationList() {
 	createChildDiv("conversation-list");
 	unhideElements("conversation-list");
     currentScene = "conversation-list";
+}
+
+function sceneProfil() {
+	hideElements("conversation-display", "signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
+    removeChildDiv("conversation-display", "conversation-list-contact-container-id", "profil");
+	// createChildDiv("conversation-list");
+	// unhideElements("conversation-list");
+    currentScene = "search";
 }
 
 function sceneConversationDisplay(user) {
