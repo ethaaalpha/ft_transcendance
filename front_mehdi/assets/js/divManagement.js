@@ -56,7 +56,6 @@ async function handleConversationList() {
 	messageInput.classList.add("conversation-list-searchbar-input");
 	messageInput.setAttribute("id", "conversation-list-searchbar-input-id");
 	searchbarDiv.appendChild(messageInput);
-
 	
     if (!gChatConversations) {
         // console.error("gChatConversations n'est pas encore défini.");
@@ -80,7 +79,6 @@ async function handleConversationList() {
 			try {
 				const imgUrl = await fetchProfilPicture(user);
 				img.src = imgUrl;
-				console.log(img.src);
 			  } catch (error) {
 				console.error("Erreur lors de la récupération de la photo de profil :", error);
 			  }
@@ -316,31 +314,85 @@ function handleProfilDisplay(username) {
             nameActionsDiv.classList.add("name-actionsDiv");
             persoInfoDiv.appendChild(nameActionsDiv);
 
+            // Fetch and add current username
+            fetchCurrentUsername()
+                .then(currentUsername => {
+                    const usernameElement = document.createElement("div");
+                    usernameElement.textContent = currentUsername;
+                    usernameElement.classList.add("username");
+                    nameActionsDiv.appendChild(usernameElement);
 
-			const usernameElement = document.createElement("div");
-			usernameElement.textContent = username;
-			usernameElement.classList.add("username");
-			nameActionsDiv.appendChild(usernameElement);
+                    // Check if username is different from current user
+                    if (username !== currentUsername) {
+                        // Check if user is not a friend
+                        gUser.isFriend(username)
+                            .then(status => {
+                                if (status === "notFriend") {
+                                    const button1 = document.createElement("button");
+                                    button1.classList.add("action-button");
+                                    button1.innerHTML = `
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M15 19C15 16.7909 12.3137 15 9 15C5.68629 15 3 16.7909 3 19M21 10L17 14L15 12M9 12C6.79086 12 5 10.2091 5 8C5 5.79086 6.79086 4 9 4C11.2091 4 13 5.79086 13 8C13 10.2091 11.2091 12 9 12Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    `;
+                                    button1.onclick = function() {
+                                        manageFriend(username, "add");
+                                    };
+                                    nameActionsDiv.appendChild(button1);
+                                } else if (status === "pending") {
+                                    const button1 = document.createElement("button");
+                                    button1.classList.add("action-button");
+                                    button1.innerHTML = `
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M15 19C15 16.7909 12.3137 15 9 15C5.68629 15 3 16.7909 3 19M21 10L17 14L15 12M9 12C6.79086 12 5 10.2091 5 8C5 5.79086 6.79086 4 9 4C11.2091 4 13 5.79086 13 8C13 10.2091 11.2091 12 9 12Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    `;
+                                    button1.onclick = function() {
+                                        // Do nothing for pending status
+                                    };
+                                    nameActionsDiv.appendChild(button1);
+                                } else if (status === "friend") {
+                                    const button1 = document.createElement("button");
+                                    button1.classList.add("action-button");
+                                    button1.innerHTML = `
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M15 19C15 16.7909 12.3137 15 9 15C5.68629 15 3 16.7909 3 19M15 13H21M9 12C6.79086 12 5 10.2091 5 8C5 5.79086 6.79086 4 9 4C11.2091 4 13 5.79086 13 8C13 10.2091 11.2091 12 9 12Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    `;
+                                    button1.onclick = function() {
+                                        manageFriend(username, "remove");
+                                    };
+                                    nameActionsDiv.appendChild(button1);
+                                }
+                            });
 
-			// Create action buttons
-			const actionButtonsDiv = document.createElement("div");
-			actionButtonsDiv.classList.add("action-buttons");
-
-			const button1 = document.createElement("button");
-			button1.classList.add("action-button");
-			button1.textContent = "1";
-			actionButtonsDiv.appendChild(button1);
-
-			const button2 = document.createElement("button");
-			button2.classList.add("action-button");
-			button2.textContent = "2";
-			actionButtonsDiv.appendChild(button2);
-
-			nameActionsDiv.appendChild(actionButtonsDiv);
+                        // Check if user is blocked
+                        gUser.isBlocked(username)
+                            .then(isBlocked => {
+                                const button2 = document.createElement("button");
+                                button2.classList.add("action-button");
+                                button2.innerHTML = `
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18 19C18 16.7909 15.3137 15 12 15C8.68629 15 6 16.7909 6 19M12 12C9.79086 12 8 10.2091 8 8C8 5.79086 9.79086 4 12 4C14.2091 4 16 5.79086 16 8C16 10.2091 14.2091 12 12 12Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                `;
+                                if (isBlocked) {
+                                    button2.onclick = function() {
+                                        manageFriend(username, "unblock");
+                                    };
+                                    button2.style.backgroundColor = "green";
+                                } else {
+                                    button2.onclick = function() {
+                                        manageFriend(username, "block");
+                                    };
+                                    button2.style.backgroundColor = "#ccc";
+                                }
+                                nameActionsDiv.appendChild(button2);
+                            });
+                    }
+                });
         });
 }
-
-
 
 
 

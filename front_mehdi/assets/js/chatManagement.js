@@ -1,6 +1,4 @@
 
-let gChatConversations;
-
 class Conversations {
 	constructor(myUsername, conversations = {}) {
 	  this.conversations = conversations;

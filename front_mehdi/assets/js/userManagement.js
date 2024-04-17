@@ -1,19 +1,3 @@
-//check at launch if logged
-(async function() {
-    const logged = await isLogged();
-    if (logged) {
-		changeScene("home");
-		// updateProfil();
-    } else {
-		changeScene("signIn");
-    }
-})();
-
-async function isLogged() {
-    const response = await fetch('/api/dashboard');
-    return response.status === 200;
-}
-
 function signIn() {
 	var username = document.getElementById("username").value;
 	var password = document.getElementById("password").value;
