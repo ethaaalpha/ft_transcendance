@@ -79,6 +79,7 @@ async function sceneConversationList() {
 	setEventListener("conversation-list");
 	unhideElements("conversation-list");
     currentScene = "conversation-list";
+	fetchUserData();
 }
 
 function sceneSearch() {
@@ -110,6 +111,7 @@ function sceneProfil(user) {
 	unsetEventListener("conversation-list");
     hideElements("conversation-display", "conversation-list", "chat", "settings", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
 	removeChildDiv("conversation-display", "conversation-list", "profil");
+	fetchUserData();
 	createChildDiv("profil", user);
 	unhideElements("profil");
     currentScene = "profil";

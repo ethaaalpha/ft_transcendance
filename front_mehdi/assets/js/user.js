@@ -1,52 +1,59 @@
 class User {
 
 	constructor(data) {
+		this.friends = {};
 		this.update(data);
+		// console.log("Liste des amis dans le constructeur :");
+		// console.log(this.friends);
 	}
-
+	
 	update(data) {
-		this.friends = {}; // Initialize this.friends as an empty object
-		for (const i in data['friends']) {
-			if (this.friends.hasOwnProperty(i)) {
-				continue;
-			} else {
-				this.friends[i] = 'offline';
-			}
-		}		
+		this.friends = data.friends;
 		this.username = data['username'];
 		this.profilePicture = data['profilePicture'];
 		this.userStats = data['userStats'];
 		this.email = data['email'];
 		this.pendingFriendsFrom = data['pendingFriendsFrom'];
+		// this.pendingFriendsTo = data['pendingFriendsTo'];
 		this.blocked = data['blockedUsers'];
 	}
 
-	setFriendState(user, state) {
-		this.friends[user] = state;
+	setFriendState(username, state) {
+		this.friends[username] = state;
 	}
 
-	getFriendState(user) {
-		if (this.friends.hasOwnProperty(user)) {
-			return this.friends[user];
+	getFriendState(username) {
+		if (this.friends.includes(username)) {
+			return this.friends[username];
 		} else {
 			return undefined;
 		}
 	}
 
-	isFriend(user) {
-		if (this.friends.hasOwnProperty(user)) {
+	isFriend(username) {
+		if (this.friends.includes(username)) {
 			return 'friend';
-		}
-		if (this.pendingFriendsFrom.includes(user)) {
+		} else if (this.pendingFriendsFrom.includes(username)) {
 			return 'pending';
+		// } else if (this.pendingFriendsTo.includes(username)) {
+		// 	return 'pending';
+		} else {
+			return 'notFriend';
 		}
-		return 'notFriend';
 	}
 
-	isBlocked(user) {
-		if (this.blocked.includes(user)) {
+	isBlocked(username) {
+		if (this.blocked.includes(username)) {
 			return true;
 		}
 		return false;
 	}
+
+	removeFriend(username) {
+		const index = this.friends.indexOf(username);
+		if (index > -1) {
+			this.friends.splice(index, 1);
+		}
+	}
+	
 }
