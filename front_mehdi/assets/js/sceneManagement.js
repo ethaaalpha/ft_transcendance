@@ -14,11 +14,14 @@ function changeScene(newScene, user) {
         case "conversation-list":
             sceneConversationList();
             break;
+		case "search":
+			sceneSearch();
+			break;
         case "conversation-display":
             sceneConversationDisplay(user);
             break;
 		case "profil":
-			sceneProfil();
+			sceneProfil(user);
 			break;
 		case "settings":
 			sceneSettings();
@@ -64,39 +67,53 @@ function sceneSignUp() {
 function sceneHome() {
 	hideElements("signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
 	resetFormFields("username", "password", "passwordConfirm", "email");
-	// createChat();
-    // unhideElements("home", "chat");
     unhideElements("home");
     currentScene = "home";
 	changeScene("conversation-list");
 }
 
-function sceneConversationList() {
+async function sceneConversationList() {
 	hideElements("conversation-display", "signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
-    removeChildDiv("conversation-display", "conversation-list");
-	createChildDiv("conversation-list");//void ?
+    removeChildDiv("conversation-display", "conversation-list", "profil");
+	await createChildDiv("conversation-list");
+	setEventListener("conversation-list");
 	unhideElements("conversation-list");
     currentScene = "conversation-list";
+	fetchUserData();
+}
+
+function sceneSearch() {
+	hideElements("conversation-display", "signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
+    removeChildDiv("conversation-display", "conversation-list-contact-container-id", "profil");
+	// createChildDiv("conversation-list");
+	// unhideElements("conversation-list");
+    currentScene = "search";
 }
 
 function sceneConversationDisplay(user) {
+	unsetEventListener("conversation-list");
 	hideElements("conversation-list", "signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
-	removeChildDiv("conversation-display", "conversation-list");
-	createChildDiv("conversation-display", user);//void ?
+	removeChildDiv("conversation-display", "conversation-list", "profil");
+	createChildDiv("conversation-display", user);
 	unhideElements("conversation-display");
     currentScene = "conversation-display";
 }
 
 function sceneSettings() {
+	unsetEventListener("conversation-list");
     hideElements("conversation-display", "conversation-list", "chat", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
 	resetFormFields("settings-actual-password", "settings-new-password", "settings-confirm-password", "settings-actual-email", "settings-new-email", "settings-confirm-email");
-    unhideElements("settings");
+	unhideElements("settings");
     currentScene = "settings";
 }
 
-function sceneProfil() {
+function sceneProfil(user) {
+	unsetEventListener("conversation-list");
     hideElements("conversation-display", "conversation-list", "chat", "settings", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
-    unhideElements("profil");
+	removeChildDiv("conversation-display", "conversation-list", "profil");
+	fetchUserData();
+	createChildDiv("profil", user);
+	unhideElements("profil");
     currentScene = "profil";
 }
 
@@ -161,10 +178,11 @@ function settingsAction() {
     }
 }
 
-function profilAction() {
+async function profilAction() {
     if (currentScene == "profil") {
         changeScene("home");
     } else {
-        changeScene("profil");
+		const username = await fetchCurrentUsername();
+        changeScene("profil", username);
     }
 }

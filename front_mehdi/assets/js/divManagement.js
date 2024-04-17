@@ -22,10 +22,15 @@ function createChildDiv(divId, user) {
         case "conversation-display":
             handleConversationDisplay(user);
             break;
+		// case "searchProfil":
+		// 	handleSearchProfil();
+		// 	break;
+        case "profil":
+            handleProfilDisplay(user);
+            break;
         default:
             console.log("Invalid divId: ", divId);
     }
-
     console.log("Current divId is:", currentScene);
 }
 
@@ -54,10 +59,8 @@ async function handleConversationList() {
 	messageInput.classList.add("conversation-list-searchbar-input");
 	messageInput.setAttribute("id", "conversation-list-searchbar-input-id");
 	searchbarDiv.appendChild(messageInput);
-
 	
-    if (!gChatConversations) {
-        // console.error("gChatConversations n'est pas encore défini.");
+    if (!gChatConversations) {// to delete and put in main
         try {
             await fetchConversations();
         } catch (error) {
@@ -70,7 +73,6 @@ async function handleConversationList() {
 		if (gChatConversations.conversations.hasOwnProperty(user)) {
 			const conversationButton = document.createElement("button");
 			conversationButton.classList.add("conversation-list-contact-button");
-	
 
 			// Create an img element for user profile picture
 			const img = document.createElement("img");
@@ -78,15 +80,9 @@ async function handleConversationList() {
 			try {
 				const imgUrl = await fetchProfilPicture(user);
 				img.src = imgUrl;
-				console.log(img.src);
 			  } catch (error) {
-				console.error("Erreur lors de la récupération de la photo de profil :", error);
+				console.error("Error in getting profil picture of:", error);
 			  }
-
-
-
-			// img.src = fetchProfilPicture(user);
-			// console.log(img.src);
 			img.alt = "Profile Picture";
 			conversationButton.appendChild(img);
 	
@@ -95,9 +91,10 @@ async function handleConversationList() {
 			userInfo.classList.add("conversation-list-user");
 			userInfo.textContent = user;
 	
+			// Get the last message
 			// const lastMessage = document.createElement("div");
 			// lastMessage.classList.add("conversation-list-last-message");
-			// lastMessage.textContent = getLastMessage(user); // Replace this with your logic to get the last message
+			// lastMessage.textContent = getLastMessage(user);
 	
 			// Append user info and last message to the button
 			conversationButton.appendChild(userInfo);
@@ -218,6 +215,138 @@ function handleConversationDisplay(user) {
 	inputDiv.appendChild(sendButton);
 
 }
+
+
+
+// function handleSearchProfil() {
+
+// }
+
+
+
+
+async function handleProfilDisplay(username) {
+    const profilDisplay = document.getElementById("profil");
+
+    // back button
+    const backButton = document.createElement("button");
+    backButton.classList.add("arrow-back");
+    backButton.onclick = function() {
+        changeScene('conversation-list');
+    };
+
+    const svgContent = `
+        <svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_116_82)">
+                <path d="M7.70801 18.5H29.2913" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18.4997 7.70825L7.70801 18.4999L18.4997 29.2916" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <defs>
+                <clipPath id="clip0_116_82">
+                    <rect width="37" height="37" fill="white"/>
+                </clipPath>
+            </defs>
+        </svg>
+    `;
+    backButton.innerHTML = svgContent;
+    profilDisplay.appendChild(backButton);
+
+    // create parent div
+    const persoInfoDiv = document.createElement("div");
+    persoInfoDiv.id = "perso-info-id";
+    persoInfoDiv.classList.add("perso-info-container");
+    profilDisplay.appendChild(persoInfoDiv);
+
+    // Fetch and add profile picture
+    const pictureUrl = await fetchProfilPicture(username);
+    const profileImage = document.createElement("img");
+    profileImage.src = pictureUrl;
+    profileImage.alt = "Profile Picture";
+    profileImage.classList.add("profile-image");
+    persoInfoDiv.appendChild(profileImage);
+
+    // create nameActionsDiv
+    const nameActionsDiv = document.createElement("div");
+    nameActionsDiv.id = "name-actions-id";
+    nameActionsDiv.classList.add("name-actionsDiv");
+    persoInfoDiv.appendChild(nameActionsDiv);
+
+    // Fetch and add current username
+    const currentUsername = await fetchCurrentUsername();
+    const usernameElement = document.createElement("div");
+    usernameElement.textContent = username;
+    usernameElement.classList.add("username");
+    nameActionsDiv.appendChild(usernameElement);
+
+    // Check if username is different from current user
+    if (username !== currentUsername) {
+        // Check if user is not a friend
+        const status = await gUser.isFriend(username);
+		console.log("username here: " + username);
+		console.log(status);
+        if (status === "notFriend") {
+            const button1 = document.createElement("button");
+            button1.classList.add("action-button");
+            button1.innerHTML = `
+			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M15 19C15 16.7909 12.3137 15 9 15C5.68629 15 3 16.7909 3 19M19 16V13M19 13V10M19 13H16M19 13H22M9 12C6.79086 12 5 10.2091 5 8C5 5.79086 6.79086 4 9 4C11.2091 4 13 5.79086 13 8C13 10.2091 11.2091 12 9 12Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+			</svg>			
+            `;
+            button1.onclick = function() {
+                manageFriend(username, "add");
+            };
+            nameActionsDiv.appendChild(button1);
+        } else if (status === "pending") {
+            const button1 = document.createElement("button");
+            button1.classList.add("action-button");
+            button1.innerHTML = `
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15 19C15 16.7909 12.3137 15 9 15C5.68629 15 3 16.7909 3 19M21 10L17 14L15 12M9 12C6.79086 12 5 10.2091 5 8C5 5.79086 6.79086 4 9 4C11.2091 4 13 5.79086 13 8C13 10.2091 11.2091 12 9 12Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            `;
+            button1.onclick = function() {
+                // Do nothing for pending status
+            };
+            nameActionsDiv.appendChild(button1);
+        } else if (status === "friend") {
+            const button1 = document.createElement("button");
+            button1.classList.add("action-button");
+            button1.innerHTML = `
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15 19C15 16.7909 12.3137 15 9 15C5.68629 15 3 16.7909 3 19M15 13H21M9 12C6.79086 12 5 10.2091 5 8C5 5.79086 6.79086 4 9 4C11.2091 4 13 5.79086 13 8C13 10.2091 11.2091 12 9 12Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            `;
+            button1.onclick = function() {
+                manageFriend(username, "remove");
+            };
+            nameActionsDiv.appendChild(button1);
+        }
+
+        // Check if user is blocked
+        const isBlocked = await gUser.isBlocked(username);
+        const button2 = document.createElement("button");
+        button2.classList.add("action-button");
+        button2.innerHTML = `
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 19C18 16.7909 15.3137 15 12 15C8.68629 15 6 16.7909 6 19M12 12C9.79086 12 8 10.2091 8 8C8 5.79086 9.79086 4 12 4C14.2091 4 16 5.79086 16 8C16 10.2091 14.2091 12 12 12Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        `;
+        if (isBlocked) {
+            button2.onclick = function() {
+                manageFriend(username, "unblock");
+            };
+            button2.style.backgroundColor = "green";
+        } else {
+            button2.onclick = function() {
+                manageFriend(username, "block");
+            };
+            button2.style.backgroundColor = "#ccc";
+        }
+        nameActionsDiv.appendChild(button2);
+    }
+}
+
+
 
 
 
