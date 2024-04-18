@@ -1,4 +1,3 @@
-
 function removeChildDiv(...parentIds) {
     parentIds.forEach(parentId => {
         const parent = document.getElementById(parentId);
@@ -12,7 +11,6 @@ function removeChildDiv(...parentIds) {
         }
     });
 }
-
 
 function createChildDiv(divId, user) {
     switch (divId) {
@@ -33,7 +31,6 @@ function createChildDiv(divId, user) {
     }
     console.log("Current divId is:", currentScene);
 }
-
 
 // handler
 async function handleConversationList() {
@@ -216,15 +213,6 @@ function handleConversationDisplay(user) {
 
 }
 
-
-
-// function handleSearchProfil() {
-
-// }
-
-
-
-
 async function handleProfilDisplay(username) {
     const profilDisplay = document.getElementById("profil");
 
@@ -268,7 +256,7 @@ async function handleProfilDisplay(username) {
     // create nameActionsDiv
     const nameActionsDiv = document.createElement("div");
     nameActionsDiv.id = "name-actions-id";
-    nameActionsDiv.classList.add("name-actionsDiv");
+    nameActionsDiv.classList.add("name-actions-div");
     persoInfoDiv.appendChild(nameActionsDiv);
 
     // Fetch and add current username
@@ -344,6 +332,43 @@ async function handleProfilDisplay(username) {
         }
         nameActionsDiv.appendChild(button2);
     }
+
+	const persoScoresDiv = document.createElement("div");
+	persoScoresDiv.id = "perso-scores-id";
+	persoScoresDiv.classList.add("perso-scores-div");
+	profilDisplay.appendChild(persoScoresDiv);
+
+	persoScoresDiv.appendChild(createStatElement("Matches Won", "2", "The bigger the better.", "square"));
+	persoScoresDiv.appendChild(createStatElement("Matches Lost", "4", "The smaller the better.", "square"));
+	persoScoresDiv.appendChild(createStatElement("Soccer Field Ball Distance", "7", "The distance the ball traveled on the soccer field while you played.", "rectangle"));
+	persoScoresDiv.appendChild(createStatElement("Average Duration", "2\"45", "The shorter you are in game the better.", "square"));
+	persoScoresDiv.appendChild(createStatElement("Hits Per Match", "3,14", "The less you touch the ball the better.", "square"));
+}
+
+function createStatElement(title, data, description, shape) {
+    // Create the statistics element
+    const statElement = document.createElement("div");
+    statElement.classList.add("perso-scores-stat-" + shape + "-div");
+
+    // Create the title element
+    const titleElement = document.createElement("div");
+    titleElement.textContent = title;
+    titleElement.classList.add("perso-scores-stat-title");
+    statElement.appendChild(titleElement);
+
+    // Create the data element
+    const dataElement = document.createElement("div");
+    dataElement.textContent = data;
+    dataElement.classList.add("perso-scores-stat-data");
+    statElement.appendChild(dataElement);
+
+    // Create the description element
+    const descriptionElement = document.createElement("div");
+    descriptionElement.textContent = description;
+    descriptionElement.classList.add("perso-scores-stat-description");
+    statElement.appendChild(descriptionElement);
+
+    return statElement;
 }
 
 
@@ -392,16 +417,13 @@ function genererDivsAvecImages(nbDivs) {
   }
   
   // Appel de la fonction pour générer 3 divs avec des images
-  genererDivsAvecImages(6);
-
-
+genererDivsAvecImages(6);
 
 let selectedDiv = 1; // le theme du jeu selectionné, changer par la valeur que nico veut modifier
 
   window.onload = function() {
 	selectDiv(selectedDiv);
 };
-
 
 function selectDiv(id) {
   // Réinitialiser les bordures de toutes les div
