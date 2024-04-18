@@ -71,6 +71,7 @@ async function handleConversationList() {
 			const conversationButton = document.createElement("button");
 			conversationButton.classList.add("conversation-list-contact-button");
 
+
 			// Create an img element for user profile picture
 			const img = document.createElement("img");
 
@@ -128,31 +129,20 @@ function handleConversationDisplay(user) {
 
 	// back button
     const backButton = document.createElement("button");
-    backButton.classList.add("arrow-back");
+    backButton.classList.add("arrow-back", "d-flex", "justify-content-start", "align-items-center");
     backButton.onclick = function() {
         changeScene('conversation-list');
     };
 
-    const svgContent = `
-        <svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#clip0_116_82)">
-                <path d="M7.70801 18.5H29.2913" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M18.4997 7.70825L7.70801 18.4999L18.4997 29.2916" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </g>
-            <defs>
-                <clipPath id="clip0_116_82">
-                    <rect width="37" height="37" fill="white"/>
-                </clipPath>
-            </defs>
-        </svg>
-    `;
-    backButton.innerHTML = svgContent;
+	const imgButton = document.createElement('img');
+	imgButton.src = 'assets/images/arrow.svg';
+	backButton.appendChild(imgButton)
     conversationDisplay.appendChild(backButton);
 
     // create parent div
 	const titleDiv = document.createElement("div");
     titleDiv.id = "conversation-display-title-id";
-    titleDiv.classList.add("conversation-display-title");
+    titleDiv.classList.add("title-3");
 
     const messagesDiv = document.createElement("div");
     messagesDiv.id = "conversation-display-messages-id";

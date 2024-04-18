@@ -1,0 +1,79 @@
+.form-floating.fixed > .form-control-plaintext ~ label::after,
+.form-floating.fixed > .form-control:focus ~ label::after,
+.form-floating.fixed > .form-control:not(:placeholder-shown) ~ label::after,
+.form-floating.fixed > .form-select ~ label::after {
+    background-color: transparent;
+}
+
+.dark-form {
+	padding: 40px;
+	border-radius: 40px;
+	border: 1px solid rgba(255, 255, 255, 0.29);
+	background: linear-gradient(334deg, rgba(255, 255, 255, 0.10) 13.43%, rgba(255, 255, 255, 0.40) 97.55%);
+	box-shadow: 0px 4px 24px -1px rgba(0, 0, 0, 0.20);
+	backdrop-filter: blur(10px);
+	/* margin: 20vh auto; */
+	margin-left: 5px; 
+}
+
+.dark-form h1 {
+	color: var(--default-green);
+	/* font-style: normal; */
+	/* mix-blend-mode: overlay; */
+}
+
+.form-label {
+	color: var(--default-gray);
+}
+
+.dark-form input {
+	border-radius: var(--default-radius);
+	border-color: transparent;
+	background-color: rgba(68, 68, 68, 0.5);
+	color: var(--default-baba) !important;
+}
+
+.dark-form input:focus {
+	border-radius: var(--default-radius);
+	border-color: #028a00;
+	background-color: rgba(68, 68, 68, 0.5);
+}
+
+.dark-form-input {
+	border-radius: var(--default-radius);
+	border-color: transparent;
+	background-color: rgba(68, 68, 68, 0.5);
+	color: var(--default-gray) !important;
+}
+
+.dark-form-input:focus {
+	border-radius: var(--default-radius);
+	border-color: #028a00;
+	background-color: rgba(68, 68, 68, 0.5);
+}
+
+.custom-file-input {
+	display: flex;
+	flex-direction: column;
+	padding-top: 3em;
+	padding-bottom: 3em;
+	margin-bottom: 1em;
+	justify-content: center;
+	align-items: center;
+	background: rgba(0, 0, 0, 0.25);;
+	border-radius: var(--default-radius);
+}
+
+.custom-file-input label:hover {
+	cursor: pointer;
+}
+
+.custom-file-input input[type="file"] {
+	display: none;
+}
+
+.form-tab {
+	width: 100%;
+	height: 0.1em;
+	background-color: white;
+}
