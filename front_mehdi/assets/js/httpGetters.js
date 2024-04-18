@@ -23,3 +23,16 @@ function fetchProfilPicture(username) {
 		});
 	});
 }
+
+function fetchUserStats(username) {
+	return new Promise((resolve, reject) => {
+		fetchData('/api/dashboard?id=' + username + '&filter=userStats')
+		.then(data => {
+			resolve("/media/" + data.data['userStats']);
+		})
+		.catch(error => {
+			console.error('Error fetching user data:', error);
+			reject(error);
+		});
+	});
+}
