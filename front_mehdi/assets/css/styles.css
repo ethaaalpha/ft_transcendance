@@ -41,6 +41,7 @@ body {
 .social-display-div {
     width: 100%; /* 50% de la largeur du conteneur parent */
     height: 80%; /* 40% de la hauteur de la fenêtre visible */
+	padding: 1em;
 }
 
 .social-button-div {
@@ -66,7 +67,7 @@ body {
 	justify-content: start;
 	flex-direction: column;
 	color: var(--default-gray);
-	padding: 1em;
+	/* padding: 1em; */
 }
 
 /* text */
