@@ -18,10 +18,12 @@ class User {
 		this.blocked = data['blockedUsers'];
 	}
 
+	// setters
 	setFriendState(username, state) {
 		this.friends[username] = state;
 	}
 
+	// getters
 	getFriendState(username) {
 		if (this.friends.includes(username)) {
 			return this.friends[username];
@@ -30,6 +32,18 @@ class User {
 		}
 	}
 
+	getUserStats() {
+        return this.userStats;
+    }
+
+	getUsername() {
+        return this.username;
+    }
+
+	getProfilePicture() {
+        return this.profilePicture;
+    }
+	
 	isFriend(username) {
 		if (this.friends.includes(username)) {
 			return 'friend';

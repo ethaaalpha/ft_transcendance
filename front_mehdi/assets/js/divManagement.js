@@ -260,7 +260,7 @@ async function handleProfilDisplay(username) {
     persoInfoDiv.appendChild(nameActionsDiv);
 
     // Fetch and add current username
-    const currentUsername = await fetchCurrentUsername();
+    const currentUsername = await gUser.getUsername();
     const usernameElement = document.createElement("div");
     usernameElement.textContent = username;
     usernameElement.classList.add("username");
@@ -333,17 +333,35 @@ async function handleProfilDisplay(username) {
         nameActionsDiv.appendChild(button2);
     }
 
-	const persoScoresDiv = document.createElement("div");
-	persoScoresDiv.id = "perso-scores-id";
-	persoScoresDiv.classList.add("perso-scores-div");
-	profilDisplay.appendChild(persoScoresDiv);
+	const userStats = await fetchUserStats(username);
+	
+    // Create parent div for statistics
+    const persoScoresDiv = document.createElement("div");
+    persoScoresDiv.id = "perso-scores-id";
+    persoScoresDiv.classList.add("perso-scores-div");
+    profilDisplay.appendChild(persoScoresDiv);
+	
+	console.log(userStats);
 
-	persoScoresDiv.appendChild(createStatElement("Matches Won", "2", "The bigger the better.", "square"));
-	persoScoresDiv.appendChild(createStatElement("Matches Lost", "4", "The smaller the better.", "square"));
-	persoScoresDiv.appendChild(createStatElement("Soccer Field Ball Distance", "7", "The distance the ball traveled on the soccer field while you played.", "rectangle"));
-	persoScoresDiv.appendChild(createStatElement("Average Duration", "2\"45", "The shorter you are in game the better.", "square"));
-	persoScoresDiv.appendChild(createStatElement("Hits Per Match", "3,14", "The less you touch the ball the better.", "square"));
+    // Display user statistics
+    persoScoresDiv.appendChild(createStatElement("Matches Won", userStats.matchesWon, "The more the better.", "square"));
+    persoScoresDiv.appendChild(createStatElement("Matches Lost", userStats.matchesLost, "The less the better.", "square"));
+    persoScoresDiv.appendChild(createStatElement("Soccer Field Ball Distance", userStats.ballDistance, "The distance the ball traveled on the soccer field while you played.", "rectangle"));
+    persoScoresDiv.appendChild(createStatElement("Average Duration", userStats.averageDuration, "The shorter you are in game the better.", "square"));
+    persoScoresDiv.appendChild(createStatElement("Hits Per Match", userStats.hitsPerMatch, "The less you touch the ball the better.", "square"));
 }
+
+// 	const persoScoresDiv = document.createElement("div");
+// 	persoScoresDiv.id = "perso-scores-id";
+// 	persoScoresDiv.classList.add("perso-scores-div");
+// 	profilDisplay.appendChild(persoScoresDiv);
+
+// 	persoScoresDiv.appendChild(createStatElement("Matches Won", numberOfVictory, "The bigger the better.", "square"));
+// 	persoScoresDiv.appendChild(createStatElement("Matches Lost", numberOfLoses, "The smaller the better.", "square"));
+// 	persoScoresDiv.appendChild(createStatElement("Soccer Field Ball Distance", traveledDistance, "The distance the ball traveled on the soccer field while you played.", "rectangle"));
+// 	persoScoresDiv.appendChild(createStatElement("Average Duration", averageDuration, "The shorter you are in game the better.", "square"));
+// 	persoScoresDiv.appendChild(createStatElement("Hits Per Match", averagePong, "The less you touch the ball the better.", "square"));
+// }
 
 function createStatElement(title, data, description, shape) {
     // Create the statistics element
