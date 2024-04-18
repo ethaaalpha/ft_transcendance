@@ -79,7 +79,7 @@ body {
 
 .title-2 {
 	text-align: left;
-	font-size: 2em;
+	font-size: 1.7em;
 	font-weight: 700;
 }
 
@@ -110,6 +110,23 @@ body {
 	font-size: 1em;
 	padding: 1em !important;
 	margin-bottom: 1em;
+}
+
+.overlay-zone {
+	display: flex;
+	margin-left: -1em;
+	padding-top: 1em;
+	margin-right: -1em;
+	justify-content: center;
+	margin-top: -4em;
+	border-bottom-right-radius: var(--default-radius);
+	border-bottom-left-radius: var(--default-radius);
+	background: rgba(0, 0, 0, 0.01);
+	backdrop-filter: blur(9px);
+}
+
+.overlay-btn {
+	width: calc(100% - 2em);
 }
 
   .modify-btn:hover {background-color: #e7e7e7;}
@@ -189,6 +206,26 @@ body {
 	border-color: #028a00;
 	background-color: rgba(68, 68, 68, 0.5);
 }
+
+.custom-file-input {
+	display: flex;
+	flex-direction: column;
+	padding-top: 3em;
+	padding-bottom: 3em;
+	margin-bottom: 0.5em;
+	justify-content: center;
+	align-items: center;
+	background: rgba(0, 0, 0, 0.25);;
+	border-radius: var(--default-radius);
+}
+
+.custom-file-input label:hover {
+	cursor: pointer;
+}
+
+.custom-file-input input[type="file"] {
+	display: none;
+  }
 
 .item-spacer {
 	padding-bottom: 1em;
@@ -279,14 +316,13 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-	margin: 0 10px;
 	overflow-y: auto;
-	max-height: 350px; /* bottom limit where the overflow stop */
+	max-height: 24em; /* bottom limit where the overflow stop */
 }
 
 .modify-game-theme-container > * {
     flex: 0 1 calc(50% - 10px);
-    margin: 5px;
+	margin-bottom: 0.5em;
 }
 
 .modify-game-theme-image-container {

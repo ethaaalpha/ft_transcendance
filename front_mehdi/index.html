@@ -130,11 +130,14 @@
 						<img src="assets/images/arrow.svg"></img>				
 					</button>
 					<span class="title-2 greened">Modify game theme</span>
-					<span class="body-text">Go through parallel universes.</span>
+					<span class="body-text settings-text">Go through parallel universes.</span>
 					<div id="modify-game-theme-menu" class="modify-game-theme-container"></div>
-					<button class="change-btn">
-						<span class="btn-title" onclick="getSelected()">Change game theme</span>
-					</button>
+					<div class="overlay-zone">
+						<button class="modify-btn overlay-btn btn btn-block btn-light d-flex align-items-center justify-content-start bordered-button-expanded" style="--main_color: #B4B4B4;" onclick="getSelected()">
+							<span>Change game theme</span>
+						</button>
+					</div>
+					
 				</div>
 
 				<!-- MODIFY PROFIL PICTURE -->
@@ -144,8 +147,10 @@
 					</button>
 					<span class="title-2 greened">Modify profil picture</span>
 					<span class="body-text settings-text">So we can see your lovely smile.</span>
-					<div>
-						<input type="file" id="settings-profil-picture" class="form-control" accept="image/*">
+					<div class="custom-file-input">
+						<img src="assets/images/upload.svg">
+						<label for="settings-profil-picture">Choose a file</label>
+						<input type="file" id="settings-profil-picture" accept="image/*">
 					</div>
 					<button class="btn btn-light bordered-button-expanded" style="--main_color: #DADADA;">			
 						<span class="btn-title" onclick="modifyProfilPicture()">Change my profil picture</span>
