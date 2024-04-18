@@ -1,6 +1,10 @@
 :root {
 	--default-radius: 1em;
-}
+	--default-gray: #B4B4B4;
+	--default-baba: #DADADA;
+	--default-green: #05FF00;
+
+}	
 
 body {
 	font-family: "Roboto Mono", monospace;
@@ -59,23 +63,23 @@ body {
 
 .settings-div {
 	display: flex;
+	justify-content: start;
 	flex-direction: column;
-	gap: 10px;
+	color: var(--default-gray);
+	padding: 1em;
 }
 
 /* text */
 
 .title-1 {
 	text-align: left;
-	margin: 0 15px;
 	font-size: 3em;
 	font-weight: 700;
 }
 
 .title-2 {
 	text-align: left;
-	margin: 0 15px;
-	font-size: 24px;
+	font-size: 2em;
 	font-weight: 700;
 }
 
@@ -83,44 +87,30 @@ body {
 	font-size: 1.3em;
 }
 
+.greened {
+	color: var(--default-green);
+}
+
 .body-text {
 	color: #000000;
-	font-size: 12px;
+	font-size: 0.9em;
 	font-style: normal;
 	font-weight: 400;
 	text-align: left;
-	margin: 0 15px;
+}
+
+.settings-text {
+	color: white;
+	padding-bottom: 1em;
 }
 
 /* icon */
 
-.arrow-back {
-	margin: 10px 15px 0;
-	background-color: transparent;
-	border: none;
-	padding: 0;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 36px; /* Largeur du bouton */
-	height: 36px; /* Hauteur du bouton */
-  }
-  
-.arrow-back svg {
-	width: 100%; /* Prend la largeur complète du bouton */
-	height: 100%; /* Prend la hauteur complète du bouton */
-  }
-
 .modify-btn {
-	display: inline-flex;
-	align-items: center;
-	border: 0px solid #ccc;
-	border-radius: 4px;
-	padding: 12px 16px;
-	font-size: 16px;
-	background-color: #EDEDED;
-	margin: 0 15px;
-  }
+	font-size: 1em;
+	padding: 1em !important;
+	margin-bottom: 1em;
+}
 
   .modify-btn:hover {background-color: #e7e7e7;}
   
@@ -144,22 +134,16 @@ body {
 	font-family: "Roboto Mono", monospace;
   }
 
-  .change-btn {
-	border: 0px solid #ccc;
-	border-radius: 4px;
-	padding: 12px 16px;
-	font-size: 16px;
-	background-color: #EDEDED;
-	margin: 0 15px;
+/* login style */
+
+.form-floating.fixed > .form-control-plaintext ~ label::after,
+.form-floating.fixed > .form-control:focus ~ label::after,
+.form-floating.fixed > .form-control:not(:placeholder-shown) ~ label::after,
+.form-floating.fixed > .form-select ~ label::after {
+    background-color: transparent;
 }
 
-.change-btn:hover {background-color: #e7e7e7;}
-
-
-
-
-/* login style */
-.login-form {
+.dark-form {
 	padding: 40px;
 	border-radius: 40px;
 	border: 1px solid rgba(255, 255, 255, 0.29);
@@ -170,59 +154,87 @@ body {
 	margin-left: 5px; 
 }
 
-.login-form h1 {
-	color: #05FF00;
+.dark-form h1 {
+	color: var(--default-green);
 	/* font-style: normal; */
 	/* mix-blend-mode: overlay; */
 }
 
-.form-floating.fixed > .form-control-plaintext ~ label::after,
-.form-floating.fixed > .form-control:focus ~ label::after,
-.form-floating.fixed > .form-control:not(:placeholder-shown) ~ label::after,
-.form-floating.fixed > .form-select ~ label::after {
-    background-color: transparent;
-}
-
 .form-label {
-	color: #B4B4B4;
+	color: var(--default-gray);
 }
 
-.login-form input {
+.dark-form input {
 	border-radius: var(--default-radius);
 	border-color: transparent;
 	background-color: rgba(68, 68, 68, 0.5);
-	color: #B4B4B4 !important;
+	color: var(--default-baba) !important;
 }
 
-.login-form input:focus {
+.dark-form input:focus {
 	border-radius: var(--default-radius);
 	border-color: #028a00;
 	background-color: rgba(68, 68, 68, 0.5);
 }
 
-.login-form button {
+.dark-form-input {
+	border-radius: var(--default-radius);
+	border-color: transparent;
+	background-color: rgba(68, 68, 68, 0.5);
+	color: var(--default-gray) !important;
+}
+
+.dark-form-input:focus {
+	border-radius: var(--default-radius);
+	border-color: #028a00;
+	background-color: rgba(68, 68, 68, 0.5);
+}
+
+.item-spacer {
+	padding-bottom: 1em;
+}
+
+.dark-form button {
 	font-weight: 600;
 }
 
-.login-form-green-button {
+.dark-form-green-button {
 	background-color: #04ff00f2;
 	border-color: transparent;
 	padding: 0.5em;
 	color: black;
 }
 
-.login-form-green-button:hover{
+.dark-form-green-button:hover{
 	background-color: #1e9b1c;
 	border-color: transparent;
 }
 
 .bordered-button {
-	background-color: rgba(207, 207, 207, 0.205);
+	background-color: rgba(218, 218, 218, 0.25);
 	padding: 0.4em;
 	color: var(--main_color);
 	border-color: var(--main_color);
 	border-radius: var(--default-radius);
 	border-width: 0.2em;
+}
+
+.bordered-button-expanded {
+	background-color: rgba(218, 218, 218, 0.25);
+	padding: 0.7em;
+	color: var(--main_color);
+	border-color: var(--main_color);
+	border-radius: var(--default-radius);
+	border-width: 0.2em;
+}
+
+.bordered-button-expanded:hover {
+	background-color: rgba(235, 234, 234, 0.506);
+	color: white;
+}
+
+.bordered-button-logout {
+	background-color: rgba(70, 70, 70, 0.205);
 }
 
 .text-button {
@@ -303,5 +315,5 @@ body {
 	cursor: pointer;
   }
   .selected {
-	border-color: #05FF00;
+	border-color: var(--default-green);
   }
