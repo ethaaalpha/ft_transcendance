@@ -31,7 +31,7 @@
 				<!-- SIGN IN -->
 					<!-- <div id="signIn"> -->
 						<div class="mb-3 text-center mx-auto">
-							<button type="button" class="btn btn-light btn-block col-8 opacity-75 login-form-white-button" id="signWith42Button" onclick="signWith42()"><img src="assets/images/42.svg" id="picture-42"></img> Continue with 42</button>
+							<button type="button" class="btn btn-success btn-block col-8 opacity-50 login-form-green-button" id="signWith42Button" onclick="signWith42()"><img src="assets/images/42.svg" id="picture-42"></img> Continue with 42</button>
 						</div>
 						<div class="mb-3 text-center mx-auto col-8 opacity-75 d-flex align-items-center" id="orDiv">
 							<div class="form-tab"></div>
@@ -47,10 +47,10 @@
 							<label for="username" class="form-label">Password</label>
 						</div>
 						<div class="mb-3 text-center mx-auto">
-							<button type="button" class="btn btn-success btn-block col-8 opacity-75 login-form-green-button" id="signInButton" onclick="signIn()">Continue with username</button>
+							<button type="button" class="btn btn-light btn-block col-8 opacity-75 bordered-button" style="--main_color: white;" id="signInButton" onclick="signIn()">Continue with username</button>
 						</div>
 						<div class="mb-3 text-center mx-auto">
-							<button type="button" class="btn btn-success btn-block col-8 opacity-75 login-form-green-button" id="forgotPasswordButton" onclick="forgotPassword()">Forgot password?</button>
+							<button type="button" class="col-8 text-button" id="forgotPasswordButton" onclick="forgotPassword()">Forgot password?</button>
 						</div>
 					<!-- </div> -->
 					
@@ -62,11 +62,11 @@
 						</div>
 						<div id="emailDiv" class="form-floating fixed mb-3 col-8 mx-auto d-none">
 							<input id="email" type="email" class="form-control" placeholder="Email adress">
-							<label for="username" class="form-label">Email adress</label>
+							<label for="username" class="form-label">Email address</label>
 							<!-- <small id="emailHelp" class="form-text text-muted">We'll sell your email on darkweb.</small> -->
 						</div>
 						<div id="signUpButton" class="mb-3 text-center mx-auto d-none">
-							<button type="button" class="btn btn-success btn-block col-8 opacity-75 login-form-green-button" onclick="signUp()">Create an account</button>
+							<button type="button" class="btn btn-light btn-block col-8 opacity-75 bordered-button" style="--main_color: white;" onclick="signUp()">Create an account</button>
 						</div>
 					<!-- </div> -->
 			</form>
@@ -326,8 +326,8 @@
 			<!-- NAVBAR -->
 			<div class="social-button-div box-style">
 				<!-- <button type="button" class="btn btn-primary" onclick="signOut()">Sign-out</button> -->
-				<button type="button" class="btn col-4 btn-primary" onclick="profilAction()">Profil</button>
-				<button type="button" class="btn col-4 btn-primary" onclick="settingsAction()">Settings</button>
+				<button type="button" class="btn col-6 btn-light bordered-button title-3 d-flex align-items-center justify-content-center" style="--main_color: #B4B4B4;" onclick="profilAction()"><img src="assets/images/user.svg" class="icon-button"></img> Profil</button>
+				<button type="button" class="btn col-6 btn-light bordered-button title-3 d-flex align-items-center justify-content-center" style="--main_color: #B4B4B4;" onclick="settingsAction()"><img src="assets/images/settings.svg" class="icon-button"></img> Settings</button>
 			</div>
 		</div>
 	</div>

@@ -1,3 +1,7 @@
+:root {
+	--default-radius: 1em;
+}
+
 body {
 	font-family: "Roboto Mono", monospace;
 }
@@ -11,7 +15,6 @@ body {
     height: 100vh;
 	/* border: 1px solid #0800ff; */
 }
-
 
 .game-div {
 	/* margin-right: 20px;  */
@@ -38,19 +41,18 @@ body {
 
 .social-button-div {
 	width: 100%; /* 50% de la largeur du conteneur parent */
-	height: 15%; /* 40% de la hauteur de la fenêtre visible */
+	height: 13%; /* 40% de la hauteur de la fenêtre visible */
 	
 	display: flex;
 	align-items: center;
-	justify-content: space-evenly;
-	gap: 10px; /* Espace entre les éléments enfants */
-
+	justify-content: center;
+	padding: 1em;
+	gap: 0.8em;
 }
 
-
-
-
-
+.icon-button {
+	padding-right: 0.4em;
+}
 
 
 /* inside social-display-div */
@@ -67,7 +69,6 @@ body {
 	text-align: left;
 	margin: 0 15px;
 	font-size: 3em;
-	font-style: normal;
 	font-weight: 700;
 }
 
@@ -75,8 +76,11 @@ body {
 	text-align: left;
 	margin: 0 15px;
 	font-size: 24px;
-	font-style: normal;
 	font-weight: 700;
+}
+
+.title-3 {
+	font-size: 1.3em;
 }
 
 .body-text {
@@ -139,8 +143,6 @@ body {
 	text-align: left;
 	font-family: "Roboto Mono", monospace;
   }
-  
-
 
   .change-btn {
 	border: 0px solid #ccc;
@@ -186,12 +188,14 @@ body {
 }
 
 .login-form input {
-	border-radius: 5px;
+	border-radius: var(--default-radius);
+	border-color: transparent;
 	background-color: rgba(68, 68, 68, 0.5);
+	color: #B4B4B4 !important;
 }
 
 .login-form input:focus {
-	border-radius: 5px;
+	border-radius: var(--default-radius);
 	border-color: #028a00;
 	background-color: rgba(68, 68, 68, 0.5);
 }
@@ -201,20 +205,33 @@ body {
 }
 
 .login-form-green-button {
-	background-color: #04ff00ba;
+	background-color: #04ff00f2;
+	border-color: transparent;
 	padding: 0.5em;
 	color: black;
 }
 
 .login-form-green-button:hover{
 	background-color: #1e9b1c;
-	color: black;
+	border-color: transparent;
 }
 
-.login-form-white-button {
-	background-color: white;
-	padding: 0.5em;
-	color: black;
+.bordered-button {
+	background-color: rgba(207, 207, 207, 0.205);
+	padding: 0.4em;
+	color: var(--main_color);
+	border-color: var(--main_color);
+	border-radius: var(--default-radius);
+	border-width: 0.2em;
+}
+
+.text-button {
+	font-size: 0.8em;
+	text-decoration: underline;
+	font-weight: 300 !important;
+	background: none;
+	color: rgba(245, 245, 245, 0.604);
+	border: none;
 }
 
 .form-tab {
@@ -230,8 +247,6 @@ body {
 #orDiv {
 	color: white;
 }
-
-
 
 
 .box-style {
