@@ -190,7 +190,7 @@ body {
 
 .modify-game-theme-image-container {
     width: calc(50% - 10px);
-    padding-bottom: calc(50% - 10px); 
+    padding-bottom: calc(50% - 10px);
     position: relative;
     overflow: hidden;
 	border-radius: 10px;
