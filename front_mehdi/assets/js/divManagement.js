@@ -158,7 +158,7 @@ function handleConversationDisplay(user) {
 	// Title
     const titleElement = document.createElement("span");
     titleElement.textContent = user;
-    titleElement.classList.add("title-2");
+    titleElement.classList.add("title-3");
 	titleElement.setAttribute("id", "send-message-contact-id");
 
 	const profilePicture = document.createElement('img');
