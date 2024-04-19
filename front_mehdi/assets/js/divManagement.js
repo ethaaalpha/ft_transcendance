@@ -323,6 +323,8 @@ async function handleProfilDisplay(username) {
         nameActionsDiv.appendChild(button2);
     }
 
+	// PERSONNAL SCORES
+
 	const userStats = await fetchUserStats(username);
 	
     // Create parent div for statistics
@@ -407,7 +409,7 @@ function genererDivsAvecImages(nbDivs) {
 	  const image = document.createElement("img");
   
 	  // Attribution de la source de l'image en utilisant l'index de la boucle pour incrémenter le chiffre dans le nom de l'image
-	  image.src = `assets/images/theme-${i}.png`;
+	  image.src = `assets/images/theme/${i}.jpg`;
   
 	  // Ajout des classes CSS pour les bords arrondis
 	  image.classList.add("modify-game-theme-image");
