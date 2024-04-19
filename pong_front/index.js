@@ -72,13 +72,13 @@ function loadLogged() {
 		})();
 	};;
 
-	activity = new activityWebsocket();
-	activity.connect();
-	activity.registerEvents();
+	// activity = new activityWebsocket();
+	// activity.connect();
+	// activity.registerEvents();
 
-	coordination = new coordinationWebsocket();
-	coordination.connect();
-	coordination.registerEvents();
+	// coordination = new coordinationWebsocket();
+	// coordination.connect();
+	// coordination.registerEvents();
 
 	changeClass('logged', 'flex');
 }
