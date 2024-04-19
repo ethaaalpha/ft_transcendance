@@ -130,27 +130,28 @@
 	border-top-left-radius: 25px;
 	align-items: center;
 	justify-content: start;
-	background-color: red;
 }
 
 .conversation-display-top-person {
-	z-index: 1;
 	display: flex;
-	padding: 0.4em;
+	height: 70%;
+	padding: 0.2em;
+	margin-left: 1em;
 	flex-direction: row;
 	align-items: center;
 	justify-content: start;
-	margin-left: 2em;
+	margin-left: 2.5em;
 	border-radius: 10px;
 	width: 70%;
 	color: #B4B4B4;
 	font-style: italic;
-	background-color: blue;
+	background: rgba(180, 180, 180, 0.25);
 }
 
 .conversation-display-top-person img {
 	width: 3em;
 	padding: 0.2em;
+	border-radius: 10px;
 	margin-right: 0.4em;
 }
   
