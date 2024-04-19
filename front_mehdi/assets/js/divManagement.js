@@ -137,13 +137,13 @@ function handleConversationDisplay(user) {
 	const imgButton = document.createElement('img');
 	imgButton.src = 'assets/images/arrow.svg';
 	backButton.appendChild(imgButton)
-    conversationDisplay.appendChild(backButton);
-
+	
     // create parent div
 	const titleDiv = document.createElement("div");
     titleDiv.id = "conversation-display-title-id";
-    titleDiv.classList.add("title-3");
-
+	titleDiv.classList.add("conversation-display-top");
+    titleDiv.appendChild(backButton);
+	
     const messagesDiv = document.createElement("div");
     messagesDiv.id = "conversation-display-messages-id";
     messagesDiv.classList.add("conversation-display-messages");
@@ -152,31 +152,41 @@ function handleConversationDisplay(user) {
     inputDiv.id = "conversation-display-input-id";
     inputDiv.classList.add("conversation-display-input");
 
-	conversationDisplay.appendChild(titleDiv);
-    conversationDisplay.appendChild(messagesDiv);
-    conversationDisplay.appendChild(inputDiv);
-
+	const titleRight = document.createElement('div');
+	titleRight.classList.add("conversation-display-top-person");
+	
 	// Title
     const titleElement = document.createElement("span");
     titleElement.textContent = user;
     titleElement.classList.add("title-2");
 	titleElement.setAttribute("id", "send-message-contact-id");
-    titleDiv.innerHTML = "";
-    titleDiv.appendChild(titleElement);
+
+	const profilePicture = document.createElement('img');
+	profilePicture.src = '/media/pokemon.png'; // changer ici mettre la bonne photo de profil !!
 	
+	titleRight.appendChild(profilePicture)
+	titleRight.appendChild(titleElement)
+
+    titleDiv.appendChild(titleRight);
+
+	// Adding to global div
+	conversationDisplay.appendChild(titleDiv);
+    conversationDisplay.appendChild(messagesDiv);
+    conversationDisplay.appendChild(inputDiv);
+
     // Messages
     for (let i = conversation.length - 1; i >= 0; i--) {
 		const message = conversation[i];
         const messageElement = document.createElement("div");
-        messageElement.textContent = message.content;
+		const messageText = document.createElement('span');
+		messageText.textContent = message.content;
+        messageElement.appendChild(messageText)
         
         if (message.sender === gChatConversations.myUsername) {
-			messageElement.classList.add("message-sent");
+			messageElement.classList.add("message-sent", "message");
         } else {
-			messageElement.classList.add("message-received");
+			messageElement.classList.add("message-received", "message");
         }
-		
-        messageElement.classList.add("message-margin");
 		
         messagesDiv.appendChild(messageElement);
     }
@@ -189,16 +199,20 @@ function handleConversationDisplay(user) {
 	const messageInput = document.createElement("input");
 	messageInput.setAttribute("type", "text");
 	messageInput.setAttribute("placeholder", "Enter your message...");
-	messageInput.classList.add("message-input");
 	messageInput.setAttribute("id", "send-message-input-id");
 	inputDiv.appendChild(messageInput);
 
+
+	const imageInput = document.createElement('img');
+	imageInput.src = 'assets/images/send.svg';
+	
+
 	// send button
 	const sendButton = document.createElement("button");
-	sendButton.textContent = "Send";
 	sendButton.classList.add("send-button");
 	sendButton.setAttribute("id", "send-message-button-id");
 	sendButton.onclick = sendMessage;
+	sendButton.appendChild(imageInput)
 	inputDiv.appendChild(sendButton);
 
 }
