@@ -38,14 +38,15 @@ class Conversations {
 		// create div in conversation dynamically, to move?
 		const conversationDisplay = document.getElementById("conversation-display-messages-id");
 		const messageElement = document.createElement("div");
-		messageElement.textContent = message.content;
+		const messageText = document.createElement('span');
+		messageText.textContent = message.content;
+        messageElement.appendChild(messageText)
 
 		if (message.sender === gChatConversations.myUsername) {
-			messageElement.classList.add("message-sent");
+			messageElement.classList.add("message-sent", "message");
 		} else {
-			messageElement.classList.add("message-received");
+			messageElement.classList.add("message-received", "message");
 		}
-		messageElement.classList.add("message-margin");
 		conversationDisplay.appendChild(messageElement);
 		scrollMessagesToBottom();
 		

@@ -160,9 +160,8 @@ class Profile(models.Model):
 
 				existing_account.Profile.profilePicture = img
 				existing_account.Profile.save()
-
 				img_temp.close()
-		
+
 		Profile.createUserOnetoOne(existing_account)
 		login(request, existing_account)
 		return (0)
@@ -170,7 +169,7 @@ class Profile(models.Model):
 	# This will create all the related content of the user like Profile, Stats and others
 	@staticmethod
 	def createUserOnetoOne(user: User):
-		if not hasattr(user, 'profile'):
+		if not hasattr(user, 'Profile'):
 			profile = Profile(user=user)
 			profile.save()
 		if not hasattr(user, 'stats'):
