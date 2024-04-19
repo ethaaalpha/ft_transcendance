@@ -14,7 +14,7 @@ class User {
 		this.userStats = data['userStats'];
 		this.email = data['email'];
 		this.pendingFriendsFrom = data['pendingFriendsFrom'];
-		// this.pendingFriendsTo = data['pendingFriendsTo'];
+		this.pendingFriendsTo = data['pendingFriendsTo'];
 		this.blocked = data['blockedUsers'];
 	}
 
@@ -49,8 +49,8 @@ class User {
 			return 'friend';
 		} else if (this.pendingFriendsFrom.includes(username)) {
 			return 'pending';
-		// } else if (this.pendingFriendsTo.includes(username)) {
-		// 	return 'pending';
+		} else if (this.pendingFriendsTo.includes(username)) {
+			return 'pending';
 		} else {
 			return 'notFriend';
 		}
