@@ -3,7 +3,7 @@
 .perso-info-container {
     display: flex;
     align-items: end;
-	margin-bottom: 1em;
+	margin-bottom: 1vw;
 }
 
 .perso-info-container-left {
@@ -18,9 +18,9 @@
 }
 
 .perso-info-container-left-status {
-	width: 2em;
-	height: 2em;
-	border-radius: 1em;
+	width: 10%;
+	aspect-ratio: 1;
+	border-radius: 5vw;
 	margin-left: -10%;
 	background: var(--item-color);
 }
@@ -68,6 +68,11 @@
 
 /* Statistic */
 
+#profil {
+	width: 100%;
+	height: 100%;
+}
+
 .perso-scores-div {
 	padding-top: 0.5em;
 	padding-bottom: 0.5em;
@@ -75,7 +80,7 @@
     flex-wrap: wrap;
     justify-content: space-between;
 	overflow-y: scroll;
-	height: 23em;
+	height: 68%;
 	-webkit-mask: 
     	linear-gradient(to top, black 95%, transparent 100%),
     	linear-gradient(to bottom, black 95%, transparent 100%);
@@ -83,13 +88,13 @@
 }
 
 .perso-scores-div > * {
-	margin-bottom: 0.5em;
+	margin-bottom: 6%;
 }
 
 .perso-scores-stat-square-div {
 	padding: 0.5em;
-	width: 9.5em;
-	height: 9.5em;
+	height: 47%;
+	aspect-ratio: 1/1;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
@@ -108,7 +113,8 @@
 
 	padding: 0.5em;
 	width: calc(100%);
-	height: 9.5em;
+	height: 47%;
+	width: 100%;
     overflow: hidden;
 	border-radius: 10px;
 	background: rgba(0, 0, 0, 0.25);
@@ -122,7 +128,7 @@
 }
 
 .perso-scores-stat-title img {
-	width: 1.5em;
+	width: 20%;
 	margin-right: 0.5em;
 }
 
