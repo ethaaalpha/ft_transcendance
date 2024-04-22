@@ -1,3 +1,7 @@
+import { changeScene } from './sceneManagement.js';
+import { searchProfil } from './profil.js';
+
+// Setters
 function setEventListener(scene) {
     switch (scene) {
         case "conversation-list":
@@ -39,6 +43,7 @@ function setEventConversationList() {
 	});
 }
 
+// Unsetters
 function unsetEventListener(scene) {
 	switch (scene) {
 		case "conversation-display":
@@ -56,3 +61,5 @@ function unsetEventConversationDisplay() {
     searchInput.removeEventListener("input", onInputCleared);
     searchInput.removeEventListener("keypress", searchProfil);
 }
+
+export { setEventListener, unsetEventListener }

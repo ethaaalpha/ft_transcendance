@@ -1,21 +1,29 @@
-let gChatConversations;
-let gUser;
+import User from './User.js';
+import { fetchData } from './api.js';
+import { changeScene }  from './sceneManagement.js';
+
+var globalVariables = {
+    currentUser: null,
+    userConversations: null,
+    currentScene: 'start'
+};
 
 //check at launch if logged
 (async function() {
-    const logged = await isLogged();
+	const logged = await isLogged();
     if (logged) {
-        await fetchUserData();
+		await fetchUserData();
+		console.log("first function");
         // await fetchConversations();
         changeScene("home");
     } else {
-        changeScene("signIn");
+		changeScene("signIn");
     }
 })();
 
 
 async function isLogged() {
-    const response = await fetch('/api/dashboard');
+	const response = await fetch('/api/dashboard');
     return response.status === 200;
 }
 
@@ -24,11 +32,11 @@ async function fetchUserData() {
 		fetchData('/api/dashboard')
 		.then(data => {
 			if (data.status === 200) {
-				if (!gUser) {
+				if (!globalVariables.currentUser) {
 					// console.log(data.data);
-					gUser = new User(data.data);
+					globalVariables.currentUser = new User(data.data);
 				} else {
-					gUser.update(data.data);
+					globalVariables.currentUser.update(data.data);
 				}
 				resolve(true);
 			} else {
@@ -41,3 +49,15 @@ async function fetchUserData() {
 		});
 	});
 };
+
+export { fetchUserData };
+export default globalVariables;
+
+// // main.js
+// window.addEventListener('DOMContentLoaded', (event) => {
+	//     // Ici, vous pouvez exécuter vos fonctions une fois que la page est chargée
+	//     // par exemple :
+	//     maFonctionDuModule1();
+	//     maFonctionDuModule2();
+	// });
+	

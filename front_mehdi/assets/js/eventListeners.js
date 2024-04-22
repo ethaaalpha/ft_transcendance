@@ -1,3 +1,5 @@
+import globalVariables from './main.js';
+
 // form parsing
 document.getElementById("username").addEventListener("input", function() {
     var usernameInput = this.value;
@@ -51,10 +53,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     usernameInput.addEventListener("keypress", function(event) {
         if (event.key === "Enter") {
-			if (currentScene == "signIn") {
+			if (globalVariables.currentScene == "signIn") {
             	signIn();
 			}
-			else if (currentScene == "signUp") {
+			else if (globalVariables.currentScene == "signUp") {
 				signUp();
 			}
         }
@@ -62,10 +64,10 @@ document.addEventListener("DOMContentLoaded", function() {
 	
     passwordInput.addEventListener("keypress", function(event) {
 		if (event.key === "Enter") {
-			if (currentScene == "signIn") {
+			if (globalVariables.currentScene == "signIn") {
 				signIn();
 			}
-			else if (currentScene == "signUp") {
+			else if (globalVariables.currentScene == "signUp") {
 				signUp();
 			}
         }
@@ -84,4 +86,3 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
 });
-
