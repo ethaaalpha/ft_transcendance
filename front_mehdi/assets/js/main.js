@@ -19,7 +19,7 @@ var globalVariables = {
 		await fetchUserData();
 		console.log("first function");
         // await fetchConversations();
-        changeScene("home");
+        await changeScene("home");
     } else {
 		changeScene("signIn");
     }

@@ -103,12 +103,13 @@ function sceneConversationDisplay(user) {
     globalVariables.currentScene = "conversation-display";
 }
 
-function sceneSettings() {
+async function sceneSettings() {
+    globalVariables.currentScene = "settings";
 	unsetEventListener("conversation-list");
     hideElements("conversation-display", "conversation-list", "chat", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
 	resetFormFields("settings-actual-password", "settings-new-password", "settings-confirm-password", "settings-actual-email", "settings-new-email", "settings-confirm-email");
+	await createChildDiv("settings");
 	unhideElements("settings");
-    globalVariables.currentScene = "settings";
 }
 
 async function sceneProfil(user) {
@@ -173,22 +174,4 @@ function unhideElements(...elementIds) {
     });
 }
 
-//navbar button
-function settingsAction() {
-    if (globalVariables.currentScene == "settings") {
-        changeScene("home");
-    } else {
-        changeScene("settings");
-    }
-}
-
-async function profilAction() {
-    if (globalVariables.currentScene == "profil") {
-        changeScene("home");
-    } else {
-		const username = await fetchCurrentUsername();
-        changeScene("profil", username);
-    }
-}
-
-export { changeScene, settingsAction, profilAction };
+export { changeScene };

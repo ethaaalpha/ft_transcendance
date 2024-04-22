@@ -3,6 +3,7 @@ import { fetchConversations, sendMessage } from './chatManagement.js';
 import { fetchCurrentUsername, fetchProfilPicture, fetchUserStats } from './httpGetters.js';
 import { fetchUserData } from './main.js';
 import { changeScene } from './sceneManagement.js';
+import { navBarButton } from './navBarButton.js';
 
 function removeChildDiv(...parentIds) {
     parentIds.forEach(parentId => {
@@ -30,8 +31,11 @@ function createChildDiv(divId, user) {
 		// 	handleSearchProfil();
 		// 	break;
         case "profil":
-            handleProfilDisplay(user);
+			handleProfilDisplay(user);
             break;
+		case "settings":
+			handleSettingsDisplay(user);
+			break;
         default:
             console.log("Invalid divId: ", divId);
     }
@@ -133,7 +137,7 @@ async function handleConversationList() {
 	// 	}
 	}
 
-	handleNavButtons();
+	handleNavButtons(false, username);
 
 }
 
@@ -375,9 +379,9 @@ async function handleProfilDisplay(username) {
     persoScoresDiv.appendChild(createStatElement("hits per match", userStats.averagePong, "The less you touch the ball the better.", "square"));
 
 	if (!myProfil)
-		handleNavButtons(true);
+		handleNavButtons(true, username);
 	else
-		handleNavButtons();
+		handleNavButtons(false, username);
 }
 
 function createStatElement(title, data, description, shape) {
@@ -416,6 +420,10 @@ function createStatElement(title, data, description, shape) {
     return statElement;
 }
 
+
+function handleSettingsDisplay() {
+	handleNavButtons();
+}
 
 
 
@@ -491,14 +499,14 @@ function getSelected() {
 
 // Utils
 
-function handleNavButtons(friendProfilScene) {
+function handleNavButtons(friendProfilScene, username) {
     removeChildDiv("nav-bar");
     const navBar = document.getElementById("nav-bar");
 
     let leftLabel, rightLabel, leftColor, rightColor ;
 
     if (friendProfilScene) {
-        leftLabel = "Game";
+        leftLabel = "Play";
         rightLabel = "Chat";
         leftColor = "#B4B4B4";
         rightColor = "#B4B4B4";
@@ -509,22 +517,27 @@ function handleNavButtons(friendProfilScene) {
         rightColor = globalVariables.currentScene === "settings" ? "#05FF00" : "#B4B4B4";
     }
 
-    const buttonLeft = createButton(leftLabel, leftColor, "left");
-    const buttonRight = createButton(rightLabel, rightColor, "right");
+    const buttonLeft = createButton(leftLabel, leftColor, "left", username);
+    const buttonRight = createButton(rightLabel, rightColor, "right", username);
 
     navBar.appendChild(buttonLeft);
     navBar.appendChild(buttonRight);
 }
 
-function createButton(label, color, id) {
+function createButton(label, color, id, username) {
     const button = document.createElement("button");
     button.type = "button";
     button.id = "nav-bar-button-" + id;
     button.className = "btn col-6 btn-light bordered-button title-4 d-flex align-items-center justify-content-center nav-button-";
     button.style.setProperty("--main_color", color);
     button.innerHTML = `<img src="assets/images/${label.toLowerCase()}.svg" class="icon-button"></img> ${label}`;
+	
+	button.onclick = function() {
+		navBarButton(label, username);
+	};
     return button;
 }
 
+// { navBarSettings, navBarProfil, navBarPlay, navBarChat };
 
 export { removeChildDiv, createChildDiv, handleConversationList, handleConversationDisplay, handleProfilDisplay, getSelected };
