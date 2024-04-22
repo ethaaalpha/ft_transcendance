@@ -1,10 +1,7 @@
 import globalVariables from './main.js';
 import { fetchConversations, sendMessage } from './chatManagement.js';
 import { fetchCurrentUsername, fetchProfilPicture, fetchUserStats } from './httpGetters.js';
-// import { getUsername } from './User.js';
-// import User from './User.js';
 import { fetchUserData } from './main.js';
-
 
 function removeChildDiv(...parentIds) {
     parentIds.forEach(parentId => {
