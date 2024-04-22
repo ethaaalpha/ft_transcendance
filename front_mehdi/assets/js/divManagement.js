@@ -222,25 +222,15 @@ async function handleProfilDisplay(username) {
 
     // back button
     const backButton = document.createElement("button");
-    backButton.classList.add("arrow-back");
+    backButton.classList.add("arrow-back", "d-flex", "justify-content-start", "align-items-center");
     backButton.onclick = function() {
         changeScene('conversation-list');
     };
 
-    const svgContent = `
-        <svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#clip0_116_82)">
-                <path d="M7.70801 18.5H29.2913" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M18.4997 7.70825L7.70801 18.4999L18.4997 29.2916" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </g>
-            <defs>
-                <clipPath id="clip0_116_82">
-                    <rect width="37" height="37" fill="white"/>
-                </clipPath>
-            </defs>
-        </svg>
-    `;
-    backButton.innerHTML = svgContent;
+	const imgButton = document.createElement('img');
+	imgButton.src = 'assets/images/arrow.svg';
+	backButton.appendChild(imgButton)
+
     profilDisplay.appendChild(backButton);
 
     // create parent div
@@ -267,7 +257,7 @@ async function handleProfilDisplay(username) {
     const currentUsername = await gUser.getUsername();
     const usernameElement = document.createElement("div");
     usernameElement.textContent = username;
-    usernameElement.classList.add("username");
+    usernameElement.classList.add("username", "title-2");
     nameActionsDiv.appendChild(usernameElement);
 
     // Check if username is different from current user
@@ -351,11 +341,11 @@ async function handleProfilDisplay(username) {
 	console.log(userStats.matchesWon);
 
     // Display user statistics
-    persoScoresDiv.appendChild(createStatElement("Matches Won", userStats.numberOfVictory, "The more the better.", "square"));
-    persoScoresDiv.appendChild(createStatElement("Matches Lost", userStats.numberOfLoses, "The less the better.", "square"));
-    persoScoresDiv.appendChild(createStatElement("Soccer Field Ball Distance", userStats.traveledDistance, "The distance the ball traveled on the soccer field while you played.", "rectangle"));
-    persoScoresDiv.appendChild(createStatElement("Average Duration", userStats.averagePong, "The shorter you are in game the better.", "square"));
-    persoScoresDiv.appendChild(createStatElement("Hits Per Match", userStats.averagePong, "The less you touch the ball the better.", "square"));
+    persoScoresDiv.appendChild(createStatElement("matches mon", userStats.numberOfVictory, "The more the better.", "square"));
+    persoScoresDiv.appendChild(createStatElement("matches lost", userStats.numberOfLoses, "The less the better.", "square"));
+    persoScoresDiv.appendChild(createStatElement("soccer field ball distance", userStats.traveledDistance, "The distance the ball traveled on the soccer field while you played.", "rectangle"));
+    persoScoresDiv.appendChild(createStatElement("average duration", userStats.averagePong, "The shorter you are in game the better.", "square"));
+    persoScoresDiv.appendChild(createStatElement("hits per match", userStats.averagePong, "The less you touch the ball the better.", "square"));
 }
 
 function createStatElement(title, data, description, shape) {
@@ -363,11 +353,21 @@ function createStatElement(title, data, description, shape) {
     const statElement = document.createElement("div");
     statElement.classList.add("perso-scores-stat-" + shape + "-div");
 
+	// Create top bar element
+	const topElement = document.createElement('div');
+	topElement.classList.add("d-flex", 'align-items-center', 'justify-content-start', 'flex-row', "perso-scores-stat-title")
+
+	// Create the icon element
+	const iconElement = document.createElement('img');
+	iconElement.src = 'assets/images/info.svg';
+
     // Create the title element
     const titleElement = document.createElement("div");
     titleElement.textContent = title;
-    titleElement.classList.add("perso-scores-stat-title");
-    statElement.appendChild(titleElement);
+
+	topElement.appendChild(iconElement);
+	topElement.appendChild(titleElement)
+    statElement.appendChild(topElement);
 
     // Create the data element
     const dataElement = document.createElement("div");
