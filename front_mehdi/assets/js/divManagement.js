@@ -250,25 +250,43 @@ async function handleProfilDisplay(username) {
     profilDisplay.appendChild(persoInfoDiv);
 
     // Fetch and add profile picture
+	const leftDiv = document.createElement("div");
+	leftDiv.classList.add("perso-info-container-left")
+
+	// Image
     const pictureUrl = await fetchProfilPicture(username);
     const profileImage = document.createElement("img");
     profileImage.src = pictureUrl;
     profileImage.alt = "Profile Picture";
-    profileImage.classList.add("profile-image");
-    persoInfoDiv.appendChild(profileImage);
+
+	// Status
+	const connectionStatus = document.createElement('div');
+	connectionStatus.classList.add('perso-info-container-left-status')
+	connectionStatus.style.setProperty('--item-color', 'red');
+
+	leftDiv.appendChild(profileImage);
+    persoInfoDiv.appendChild(leftDiv);
+	persoInfoDiv.appendChild(connectionStatus);
+
+	// Right div block
+	const rightDiv = document.createElement('div');
+	rightDiv.classList.add('perso-info-container-right');
 
     // create nameActionsDiv
     const nameActionsDiv = document.createElement("div");
     nameActionsDiv.id = "name-actions-id";
-    nameActionsDiv.classList.add("name-actions-div");
-    persoInfoDiv.appendChild(nameActionsDiv);
+    nameActionsDiv.classList.add("perso-info-container-actions");
+    persoInfoDiv.appendChild(rightDiv);
 
     // Fetch and add current username
+
     const currentUsername = await globalVariables.currentUser.getUsername();
-    const usernameElement = document.createElement("div");
+    const usernameElement = document.createElement("span");
     usernameElement.textContent = username;
     usernameElement.classList.add("username", "title-2");
-    nameActionsDiv.appendChild(usernameElement);
+
+	rightDiv.appendChild(usernameElement)
+    rightDiv.appendChild(nameActionsDiv);
 
     // Check if username is different from current user
     if (username !== currentUsername) {
@@ -327,7 +345,7 @@ async function handleProfilDisplay(username) {
             button2.onclick = function() {
                 manageFriend(username, "unblock");
             };
-            button2.style.backgroundColor = "green";
+            button2.style.backgroundColor = "#05FF00";
         } else {
             button2.onclick = function() {
                 manageFriend(username, "block");
@@ -351,7 +369,7 @@ async function handleProfilDisplay(username) {
 	console.log(userStats.matchesWon);
 
     // Display user statistics
-    persoScoresDiv.appendChild(createStatElement("matches mon", userStats.numberOfVictory, "The more the better.", "square"));
+    persoScoresDiv.appendChild(createStatElement("matches won", userStats.numberOfVictory, "The more the better.", "square"));
     persoScoresDiv.appendChild(createStatElement("matches lost", userStats.numberOfLoses, "The less the better.", "square"));
     persoScoresDiv.appendChild(createStatElement("soccer field ball distance", userStats.traveledDistance, "The distance the ball traveled on the soccer field while you played.", "rectangle"));
     persoScoresDiv.appendChild(createStatElement("average duration", userStats.averagePong, "The shorter you are in game the better.", "square"));

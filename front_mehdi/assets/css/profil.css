@@ -2,41 +2,54 @@
 
 .perso-info-container {
     display: flex;
-    align-items: center;
-	background-color: rebeccapurple;
+    align-items: end;
 	margin-bottom: 1em;
 }
 
-.profile-image {
+.perso-info-container-left {
 	width: 35%;
 	height: 35%;
-	background-color: violet;
-	border-radius: 10px;
-	margin-right: 1em;
 }
 
-.name-actions-div {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    flex-grow: 1;
+.perso-info-container-left img {
+	width: 100%;
+	height: 100%;
+	border-radius: 10px;
+}
+
+.perso-info-container-left-status {
+	width: 2em;
+	height: 2em;
+	border-radius: 1em;
+	margin-left: -10%;
+	background: var(--item-color);
+}
+
+.perso-info-container-right {
+	margin-left: 1em;
+	display: flex;
+	flex-direction: column;
+	justify-content: end;
+	align-items: start;
+}
+
+.perso-info-container-actions {
+	display: flex;
+	flex-direction: row;
+	justify-content: start;
+	align-items: center;
 }
 
 .username {
 	color: #05FF00;
     font-weight: bold;
 	font-style: italic;
-    margin-bottom: 1em;
-}
-
-.action-buttons {
-    display: flex;
-    gap: 10px;
 }
 
 .action-button {
     width: 30px;
     height: 30px;
+	margin-right: 0.5em;
     border-radius: 5px;
     border: none;
     background-color: #ccc;
@@ -47,6 +60,7 @@
 }
 
 .arrow-back {
+	margin-bottom: 1em;
     background: none;
     border: none;
     cursor: pointer;
@@ -55,12 +69,17 @@
 /* Statistic */
 
 .perso-scores-div {
-	background-color: red;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
 	overflow-y: scroll;
 	height: 23em;
+	-webkit-mask: 
+    	linear-gradient(to top, black 95%, transparent 100%),
+    	linear-gradient(to bottom, black 95%, transparent 100%);
+	-webkit-mask-composite: destination-in;
 }
 
 .perso-scores-div > * {
@@ -82,6 +101,11 @@
 }
 
 .perso-scores-stat-rectangle-div {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: start;
+
 	padding: 0.5em;
 	width: calc(100%);
 	height: 9.5em;
@@ -107,8 +131,6 @@
 	font-family: "Roboto Mono", monospace;
 	font-size: 2.8em;
 	font-style: normal;
-	/* font-weight: 700; */
-	line-height: 18px; /* 56.25% */
 }
 
 .perso-scores-stat-description {
