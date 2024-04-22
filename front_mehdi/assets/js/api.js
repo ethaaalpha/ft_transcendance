@@ -1,4 +1,3 @@
-				
 function getCookie(name) {
 	let cookieValue = null;
 	if (document.cookie && document.cookie !== '') {
@@ -47,3 +46,5 @@ function fetchData(apiUrl, method, data = null) {
             return { status: 500, data: null }; // Default status code for error
         });
 }
+
+export { getCookie, fetchData };

@@ -3,6 +3,7 @@ class User {
 	constructor(data) {
 		this.friends = {};
 		this.update(data);
+		this.username = 'random';
 		// console.log("Liste des amis dans le constructeur :");
 		// console.log(this.friends);
 	}
@@ -71,3 +72,6 @@ class User {
 	}
 	
 }
+
+export default User;
+// export { getUsername };
