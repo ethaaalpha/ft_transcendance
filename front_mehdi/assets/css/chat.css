@@ -1,16 +1,31 @@
 /* chatList */
 
-
-/* Pour la barre de recherche */
 .conversation-list-searchbar-container {
 	padding-bottom: 1em;
 }
 
 .conversation-list-searchbar-input {
     width: 100%;
-    padding: 5px;
-	border-radius: 20px;
+    padding: 0.5em;
+	border-radius: 10px;
+	background: url('/test/assets/images/loop.svg'), rgba(180, 180, 180, 0.25);
+	background-position: 0.8em;
+	background-repeat: no-repeat;
+	padding-left: 2.8em;
+	border: 0px;
+	font-size: 1em;
+    color: #B4B4B4;
 }
+
+.conversation-list-searchbar-input::placeholder {
+    color: #B4B4B4;
+}
+
+.conversation-list-searchbar-input:focus {
+    color: #B4B4B4;
+    outline: none;
+}
+
 
 /* Pour les boutons de contact */
 .conversation-list-contact-container {
@@ -21,6 +36,7 @@
 
 .conversation-list-contact-button {
     width: 100%;
+	height: 4em;
     padding: 0.7em;
     background-color: rgba(0, 0, 0, 0.25);
     border: 0px solid #ccc; 
@@ -31,9 +47,10 @@
 }
 
 .conversation-list-contact-button img {
-    width: 3em;
+    width: 2.5em;
+	height: 2.5em;
     border-radius: 0.8em;
-    margin-right: 10px; /* Espacement entre l'image et le texte */
+    margin-right: 1em;
 }
 
 .conversation-list-contact-button .conversation-list-user {
@@ -43,8 +60,8 @@
 }
 
 .conversation-list-contact-button .conversation-list-last-message {
-    color: #666; /* Couleur du texte */
-	background-color: red;
+    color: #666;
+	background-color: yellow;
 }
 
 
@@ -74,35 +91,112 @@
 
 /* chatDisplay */
 
+.conversation-display-messages {
+	-webkit-mask: 
+    	linear-gradient(to top, black 95%, transparent 100%),
+    	linear-gradient(to bottom, black 95%, transparent 100%);
+	-webkit-mask-composite: destination-in;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	height: 26em; 
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+}
+
+.message {
+	display: inline-flex;
+	align-items: center;
+}
+
+.message span {
+	color: #DADADA;
+    padding: 0.5em 1em;
+	border-radius: 10px;
+	text-align: left;
+	overflow-wrap: break-word;
+	margin-bottom: 1em;
+	max-width: 17em;
+}
+
 .message-sent {
-    background-color: #007bff; /* bleu */
-    color: white;
-    padding: 8px 16px;
-    border-radius: 8px;
-    margin: 10px 10px 10px 50px; /* marge haut, droite, bas, gauche */
+	justify-content: right;
+}
+
+.message-sent span {
+	background: rgba(5, 255, 0, 0.25);
 }
 
 .message-received {
-    background-color: #f8f9fa; /* gris */
-    color: #495057;
-    padding: 8px 16px;
-    border-radius: 8px;
-    margin: 10px 50px 10px 10px; /* marge haut, droite, bas, gauche */
+	justify-content: left;
+}
+
+.message-received span {
+	background: rgba(0, 0, 0, 0.25);
 }
   
-  .conversation-display-messages {
-	height: 400px; /* vous pouvez ajuster la hauteur selon vos besoins */
-	overflow-y: auto; /* permet de rendre la div scrollable si les messages sont trop nombreux */
-	margin-bottom: 10px;
-  }
+.conversation-display-top {
+	height: 4.8em;
+	display: flex;
+	flex-direction: row;
+	margin-top: -1em;
+	margin-left: -1em;
+	margin-right: -1em;
+	padding-left: 1em;
+	border-top-right-radius: 25px;
+	border-top-left-radius: 25px;
+	align-items: center;
+	justify-content: start;
+}
+
+.conversation-display-top-person {
+	display: flex;
+	height: 70%;
+	padding: 0.2em;
+	margin-left: 1em;
+	flex-direction: row;
+	align-items: center;
+	justify-content: start;
+	margin-left: 2.5em;
+	border-radius: 10px;
+	width: 70%;
+	color: #B4B4B4;
+	font-style: italic;
+	background: rgba(180, 180, 180, 0.25);
+}
+
+.conversation-display-top-person img {
+	width: 3em;
+	padding: 0.2em;
+	border-radius: 10px;
+	margin-right: 0.4em;
+}
   
-  .conversation-display-input {
-	display: flex; /* permet d'aligner l'input et le bouton côte à côte */
-	justify-content: space-between; /* permet d'aligner l'input à gauche et le bouton à droite */
-  }
-  
-  .message-input {
-	flex-grow: 1; /* permet à l'input de prendre toute la largeur disponible */
-	margin-right: 10px; /* ajoute une marge à droite de l'input pour séparer l'input et le bouton */
-  }
-  
+.conversation-display-input {
+	display: flex; 
+	justify-content: space-between;
+	background: rgba(180, 180, 180, 0.25);
+	height: 3em;
+	padding: 0.5em;
+	padding-left: 1em;
+	border-radius: 20px;
+}
+
+.conversation-display-input button {
+	background: rgba(180, 180, 180, 0.25);
+	border: 0px;
+	border-radius: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.conversation-display-input input {
+	background: transparent;
+	border: 0px;
+	color: #B4B4B4;
+}
+
+.conversation-display-input input:focus {
+	outline: none;
+}
