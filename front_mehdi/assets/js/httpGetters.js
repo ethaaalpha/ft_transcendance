@@ -1,3 +1,5 @@
+import { fetchData } from './api.js';
+
 function fetchCurrentUsername() {
 	return new Promise((resolve, reject) => {
 	  fetchData('/api/dashboard')
@@ -36,3 +38,5 @@ function fetchUserStats(username) {
 		});
 	});
 }
+
+export { fetchCurrentUsername, fetchProfilPicture, fetchUserStats };

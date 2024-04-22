@@ -1,4 +1,7 @@
-let currentScene = "start";
+import globalVariables from './main.js';
+import { removeChildDiv, createChildDiv } from './divManagement.js';
+import { fetchUserData } from './main.js';
+import { setEventListener, unsetEventListener } from './eventListenerManagement.js'
 
 function changeScene(newScene, user) {
     switch (newScene) {
@@ -42,44 +45,44 @@ function changeScene(newScene, user) {
             console.log("Invalid scene: ", newScene);
     }
 
-    console.log("Current scene is:", currentScene);
+    console.log("Current scene is:", globalVariables.currentScene);
 }
 
 //scene
 function sceneSignIn() {
-    if (currentScene === "start") {
+    if (globalVariables.currentScene === "start") {
         unhideElements("signForm");
-        currentScene = "signIn";
+        globalVariables.currentScene = "signIn";
 	}
-	else if (currentScene == "settings") {
+	else if (globalVariables.currentScene == "settings") {
 		hideElements("titleSignUp", "passwordConfirmDiv", "signUpButton", "emailDiv", "home", "settings");
 		unhideElements("titleSignIn", "signWith42Button", "signInButton", "forgotPasswordButton", "signForm", "orDiv");
 	}
-	currentScene = "signIn";
+	globalVariables.currentScene = "signIn";
 }
 
 function sceneSignUp() {
 	hideElements("titleSignIn", "signWith42Button", "signInButton", "forgotPasswordButton", "orDiv");
     unhideElements("titleSignUp", "passwordConfirmDiv", "signUpButton", "emailDiv");
-    currentScene = "signUp";
+    globalVariables.currentScene = "signUp";
 }
 
 function sceneHome() {
 	hideElements("signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
 	resetFormFields("username", "password", "passwordConfirm", "email");
     unhideElements("home");
-    currentScene = "home";
+    globalVariables.currentScene = "home";
 	changeScene("conversation-list");
 }
 
 async function sceneConversationList() {
 	hideElements("conversation-display", "signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
     removeChildDiv("conversation-display", "conversation-list", "profil");
+	await fetchUserData();
 	await createChildDiv("conversation-list");
 	setEventListener("conversation-list");
 	unhideElements("conversation-list");
-    currentScene = "conversation-list";
-	fetchUserData();
+    globalVariables.currentScene = "conversation-list";
 }
 
 function sceneSearch() {
@@ -87,7 +90,7 @@ function sceneSearch() {
     removeChildDiv("conversation-display", "conversation-list-contact-container-id", "profil");
 	// createChildDiv("conversation-list");
 	// unhideElements("conversation-list");
-    currentScene = "search";
+    globalVariables.currentScene = "search";
 }
 
 function sceneConversationDisplay(user) {
@@ -96,7 +99,7 @@ function sceneConversationDisplay(user) {
 	removeChildDiv("conversation-display", "conversation-list", "profil");
 	createChildDiv("conversation-display", user);
 	unhideElements("conversation-display");
-    currentScene = "conversation-display";
+    globalVariables.currentScene = "conversation-display";
 }
 
 function sceneSettings() {
@@ -104,41 +107,41 @@ function sceneSettings() {
     hideElements("conversation-display", "conversation-list", "chat", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
 	resetFormFields("settings-actual-password", "settings-new-password", "settings-confirm-password", "settings-actual-email", "settings-new-email", "settings-confirm-email");
 	unhideElements("settings");
-    currentScene = "settings";
+    globalVariables.currentScene = "settings";
 }
 
-function sceneProfil(user) {
+async function sceneProfil(user) {
 	unsetEventListener("conversation-list");
     hideElements("conversation-display", "conversation-list", "chat", "settings", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
 	removeChildDiv("conversation-display", "conversation-list", "profil");
-	fetchUserData();
+	await fetchUserData();
 	createChildDiv("profil", user);
 	unhideElements("profil");
-    currentScene = "profil";
+    globalVariables.currentScene = "profil";
 }
 
 function sceneModifyGameTheme() {
 	hideElements("conversation-display", "conversation-list", "chat", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture");
 	unhideElements("modify-game-theme");
-	currentScene = "modifyGameTheme";
+	globalVariables.currentScene = "modifyGameTheme";
 }
 
 function sceneModifyProfilPicture() {
 	hideElements("conversation-display", "conversation-list", "chat", "settings", "profil", "modify-password", "modify-email", "modify-game-theme");
 	unhideElements("modify-profil-picture");
-	currentScene = "modifyProfilPicture";
+	globalVariables.currentScene = "modifyProfilPicture";
 }
 
 function sceneModifyPassword() {
     hideElements("conversation-display", "conversation-list", "chat", "settings", "profil", "modify-email", "modify-profil-picture", "modify-game-theme");
     unhideElements("modify-password");
-    currentScene = "modifyPassword";
+    globalVariables.currentScene = "modifyPassword";
 }
 
 function sceneModifyEmail() {
     hideElements("conversation-display", "conversation-list", "chat", "settings", "profil", "modify-password", "modify-profil-picture", "modify-game-theme");
     unhideElements("modify-email");
-    currentScene = "modifyEmail";
+    globalVariables.currentScene = "modifyEmail";
 }
 
 //utils
@@ -169,9 +172,9 @@ function unhideElements(...elementIds) {
     });
 }
 
-//social button
+//navbar button
 function settingsAction() {
-    if (currentScene == "settings") {
+    if (globalVariables.currentScene == "settings") {
         changeScene("home");
     } else {
         changeScene("settings");
@@ -179,10 +182,12 @@ function settingsAction() {
 }
 
 async function profilAction() {
-    if (currentScene == "profil") {
+    if (globalVariables.currentScene == "profil") {
         changeScene("home");
     } else {
 		const username = await fetchCurrentUsername();
         changeScene("profil", username);
     }
 }
+
+export { changeScene, settingsAction, profilAction };

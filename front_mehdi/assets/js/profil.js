@@ -1,3 +1,6 @@
+import { fetchProfilPicture } from './httpGetters.js';
+import { changeScene } from './sceneManagement.js'
+
 async function searchProfil() {
 
 	const searchInput = document.getElementById("conversation-list-searchbar-input-id").value;
@@ -30,3 +33,5 @@ async function searchProfil() {
 			console.log("merde");
 
 }
+
+export { searchProfil };
