@@ -1,75 +1,13 @@
-
-class Conversations {
-	constructor(myUsername, conversations = {}) {
-	  this.conversations = conversations;
-	  this.myUsername = myUsername;
-	}
-  
-	addMessage(from, to, content, sendAt) {
-	  const message = { sender: from, content, sendAt: sendAt };
-	  let target = from === this.myUsername ? to : from;
-  
-	  if (!this.conversations[target]) {
-		this.conversations[target] = [];
-	  }
-  
-	  this.conversations[target].push(message);
-	}
-  
-	addMessageFromSocket(messageData) {
-		console.log('messageData :', messageData);
-	
-		if (!messageData.hasOwnProperty('from') && !messageData.hasOwnProperty('sendAt')) {
-			messageData.from = this.myUsername;
-			messageData.sendAt = new Date();
-		}
-
-		const { from, to, content, sendAt } = messageData;
-		let target = from === this.myUsername ? to : from;
-	
-		const message = { sender: from, content, sendAt };
-	
-		if (!this.conversations[target]) {
-			this.conversations[target] = [];
-		}
-	
-		this.conversations[target].unshift(message);
-
-		// create div in conversation dynamically, to move?
-		const conversationDisplay = document.getElementById("conversation-display-messages-id");
-		const messageElement = document.createElement("div");
-		const messageText = document.createElement('span');
-		messageText.textContent = message.content;
-        messageElement.appendChild(messageText)
-
-		if (message.sender === gChatConversations.myUsername) {
-			messageElement.classList.add("message-sent", "message");
-		} else {
-			messageElement.classList.add("message-received", "message");
-		}
-		conversationDisplay.appendChild(messageElement);
-		scrollMessagesToBottom();
-		
-		let inputElement = document.getElementById("send-message-input-id");
-		inputElement.value = "";
-
-	}
-
-	getConversation(withUser) {
-	  if (this.conversations[withUser]) {
-		return this.conversations[withUser];
-	  } else {
-		console.log(`La conversation avec ${withUser} n'existe pas.`);
-		return [];
-	  }
-	}
-}
+import globalVariables from './main.js';
+import Conversations from './Conversation.js';
+import { fetchData } from './api.js';
+import { fetchCurrentUsername } from './httpGetters.js';
 
 async function fetchConversations() {
 	try {
 	  const username = await fetchCurrentUsername();
 	  const data = await fetchData('/api/dashboard/conversations');
-	  gChatConversations = new Conversations(username, data.data.conversations);
+	  globalVariables.userConversations = new Conversations(username, data.data.conversations);
 	} catch (error) {
 	  console.error('Error fetching user data:', error);
 	}
@@ -86,7 +24,7 @@ function sendMessage() {
             'event': 'chat',
             'data': data,
         }));
-		gChatConversations.addMessageFromSocket(data);
+		globalVariables.userConversations.addMessageFromSocket(data);
     } else {
         console.error("Erreur lors de l'envoi du message : Websocket non connecté.");
     }
@@ -96,3 +34,5 @@ function scrollMessagesToBottom() {
     const messagesElement = document.getElementById("conversation-display-messages-id");
     messagesElement.scrollTop = messagesElement.scrollHeight;
 }
+
+export { fetchConversations, sendMessage, scrollMessagesToBottom };

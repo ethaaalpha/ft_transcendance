@@ -1,3 +1,8 @@
+import globalVariables from './main.js';
+import { fetchConversations, sendMessage } from './chatManagement.js';
+import { fetchCurrentUsername, fetchProfilPicture, fetchUserStats } from './httpGetters.js';
+import { fetchUserData } from './main.js';
+
 function removeChildDiv(...parentIds) {
     parentIds.forEach(parentId => {
         const parent = document.getElementById(parentId);
@@ -29,7 +34,7 @@ function createChildDiv(divId, user) {
         default:
             console.log("Invalid divId: ", divId);
     }
-    console.log("Current divId is:", currentScene);
+    console.log("Current divId is:", globalVariables.currentScene);
 }
 
 // handler
@@ -57,7 +62,7 @@ async function handleConversationList() {
 	messageInput.setAttribute("id", "conversation-list-searchbar-input-id");
 	searchbarDiv.appendChild(messageInput);
 	
-    if (!gChatConversations) {// to delete and put in main
+    if (!globalVariables.userConversations) {// to delete and put in main
         try {
             await fetchConversations();
         } catch (error) {
@@ -66,8 +71,8 @@ async function handleConversationList() {
         }
     }
 
-	for (let user in gChatConversations.conversations) {
-		if (gChatConversations.conversations.hasOwnProperty(user)) {
+	for (let user in globalVariables.userConversations.conversations) {
+		if (globalVariables.userConversations.conversations.hasOwnProperty(user)) {
 			const conversationButton = document.createElement("button");
 			conversationButton.classList.add("conversation-list-contact-button");
 
@@ -106,8 +111,8 @@ async function handleConversationList() {
 		}
 
 
-	// for (let user in gChatConversations.conversations) {
-	// 	if (gChatConversations.conversations.hasOwnProperty(user)) {
+	// for (let user in globalVariables.userConversations.conversations) {
+	// 	if (globalVariables.userConversations.conversations.hasOwnProperty(user)) {
 	// 		const conversationButton = document.createElement("button");
 	// 		conversationButton.textContent = user;
 	// 		conversationButton.classList.add("conversation-list-contact-button");
@@ -123,7 +128,7 @@ async function handleConversationList() {
 
 function handleConversationDisplay(user) {
 
-    const conversation = gChatConversations.getConversation(user);
+    const conversation = globalVariables.userConversations.getConversation(user);
     const conversationDisplay = document.getElementById("conversation-display");
     conversationDisplay.innerHTML = "";
 
@@ -182,8 +187,9 @@ function handleConversationDisplay(user) {
 		messageText.textContent = message.content;
         messageElement.appendChild(messageText)
         
-        if (message.sender === gChatConversations.myUsername) {
+        if (message.sender === globalVariables.userConversations.myUsername) {
 			messageElement.classList.add("message-sent", "message");
+
         } else {
 			messageElement.classList.add("message-received", "message");
         }
@@ -218,6 +224,10 @@ function handleConversationDisplay(user) {
 }
 
 async function handleProfilDisplay(username) {
+	if (!globalVariables.currentUser) {
+        await fetchUserData();
+    }
+
     const profilDisplay = document.getElementById("profil");
 
     // back button
@@ -254,7 +264,7 @@ async function handleProfilDisplay(username) {
     persoInfoDiv.appendChild(nameActionsDiv);
 
     // Fetch and add current username
-    const currentUsername = await gUser.getUsername();
+    const currentUsername = await globalVariables.currentUser.getUsername();
     const usernameElement = document.createElement("div");
     usernameElement.textContent = username;
     usernameElement.classList.add("username", "title-2");
@@ -263,7 +273,7 @@ async function handleProfilDisplay(username) {
     // Check if username is different from current user
     if (username !== currentUsername) {
         // Check if user is not a friend
-        const status = await gUser.isFriend(username);
+        const status = await globalVariables.currentUser.isFriend(username);
 		console.log("username here: " + username);
 		console.log(status);
         if (status === "notFriend") {
@@ -305,7 +315,7 @@ async function handleProfilDisplay(username) {
         }
 
         // Check if user is blocked
-        const isBlocked = await gUser.isBlocked(username);
+        const isBlocked = await globalVariables.currentUser.isBlocked(username);
         const button2 = document.createElement("button");
         button2.classList.add("action-button");
         button2.innerHTML = `
@@ -392,10 +402,6 @@ function createStatElement(title, data, description, shape) {
 
 
 
-
-
-
-
 // legacy from settings game theme, to handle
 function genererDivsAvecImages(nbDivs) {
 	const conteneur = document.getElementById("modify-game-theme-menu");
@@ -458,3 +464,5 @@ function getSelected() {
     console.log('Aucune div sélectionnée');
   }
 }
+
+export { removeChildDiv, createChildDiv, handleConversationList, handleConversationDisplay, handleProfilDisplay, getSelected };

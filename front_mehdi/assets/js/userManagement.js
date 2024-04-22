@@ -187,3 +187,5 @@ function manageFriend(username, action) {
 		console.error('Error:', error);
     });
 }
+
+// export { signIn, signUp, signWith42, signOut, forgotPassword, modifyPassword, modifyEmail, modifyProfilPicture, manageFriend };

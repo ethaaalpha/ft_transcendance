@@ -1,3 +1,5 @@
+import globalVariables from './main.js';
+
 class connect {
 	constructor() {
 		this.socket = new WebSocket('wss://' + window.location.host + '/api/activity/');
@@ -14,10 +16,10 @@ class connect {
 			if (event === 'state') {
 				console.log("state message");
 			} else if (event === 'chat') {
-				if (gChatConversations) {
-					gChatConversations.addMessageFromSocket(data);
+				if (globalVariables.userConversations) {
+					globalVariables.userConversations.addMessageFromSocket(data);
 				} else {
-					console.log("gChatConversations est undefined");
+					console.log("globalVariables.userConversations est undefined");
 				}
 			} else if (event === 'friends') {
 				console.log("friends message");

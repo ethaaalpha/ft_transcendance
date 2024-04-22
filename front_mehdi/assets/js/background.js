@@ -12,3 +12,5 @@ function backgroundRunner() {
 }
 
 backgroundRunner();
+
+export { backgroundRunner };
