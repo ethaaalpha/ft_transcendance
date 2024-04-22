@@ -1,11 +1,15 @@
 import { changeScene } from './sceneManagement.js';
 import { searchProfil } from './profil.js';
+import { sendMessage } from './chatManagement.js';
 
 // Setters
 function setEventListener(scene) {
     switch (scene) {
         case "conversation-list":
             setEventConversationList();
+            break;
+        case "conversation-display":
+            setEventConversationDisplay();
             break;
         default:
             console.log("Invalid scene for setEventListener: ", scene);
@@ -41,6 +45,17 @@ function setEventConversationList() {
 			searchProfil();
 		}
 	});
+}
+
+function setEventConversationDisplay() {
+	const messageInput = document.getElementById("send-message-input-id");
+
+	messageInput.addEventListener("keypress", function(event) {
+		if (event.key === "Enter") {
+			sendMessage();
+		}
+	});
+
 }
 
 // Unsetters

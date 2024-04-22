@@ -98,6 +98,7 @@ function sceneConversationDisplay(user) {
 	hideElements("conversation-list", "signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
 	removeChildDiv("conversation-display", "conversation-list", "profil");
 	createChildDiv("conversation-display", user);
+	setEventListener("conversation-display");
 	unhideElements("conversation-display");
     globalVariables.currentScene = "conversation-display";
 }
