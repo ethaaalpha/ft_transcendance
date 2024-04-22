@@ -60,4 +60,3 @@ export default globalVariables;
 	//     maFonctionDuModule1();
 	//     maFonctionDuModule2();
 	// });
-	

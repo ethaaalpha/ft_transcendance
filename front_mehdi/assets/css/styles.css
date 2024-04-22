@@ -3,28 +3,34 @@
 	--default-gray: #B4B4B4;
 	--default-baba: #DADADA;
 	--default-green: #05FF00;
-
-}	
+}
 
 body {
 	font-family: "Roboto Mono", monospace;
 }
 
-.home-div {
+.wrapper {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	gap: 30px;
-	
-    height: 100vh;
-	/* border: 1px solid #0800ff; */
+	height: 100vh;
+	width: 100vw;
+	padding-top: 10%;
+	padding-bottom: 10%;
+}
+
+.home-div {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	width: 90%;
+	aspect-ratio: 16/9;
 }
 
 .game-div {
-	/* margin-right: 20px;  */
-	
-	width: 950px;
-	height: 700px;
+	height: 100%;
+	width: 65%;
 }
 
 .social-div {
@@ -32,11 +38,8 @@ body {
 	flex-direction: column;
 	justify-content: space-between;
 	
-	width: 350px;
-	height: 700px;
-	max-height: 700px;
-	
-	/* border: 1px solid #0800ff; */
+	width: 30%;
+	height: 100%;
 }
 
 .social-display-div {
