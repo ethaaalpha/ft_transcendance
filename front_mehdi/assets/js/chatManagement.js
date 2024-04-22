@@ -19,8 +19,8 @@ function sendMessage() {
 
 	// console.log(to);
     const data = {'to': to, 'content': content};
-    if (activity && activity.socket.readyState === WebSocket.OPEN) {
-        activity.socket.send(JSON.stringify({
+    if (globalVariables.activity && globalVariables.activity.socket.readyState === WebSocket.OPEN) {
+        globalVariables.activity.socket.send(JSON.stringify({
             'event': 'chat',
             'data': data,
         }));

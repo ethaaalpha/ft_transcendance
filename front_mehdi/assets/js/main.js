@@ -1,12 +1,16 @@
 import User from './User.js';
+import Connect from './Connect.js';
 import { fetchData } from './api.js';
 import { changeScene }  from './sceneManagement.js';
 
 var globalVariables = {
     currentUser: null,
     userConversations: null,
-    currentScene: 'start'
+    currentScene: 'start',
+	activity: new Connect()
 };
+
+
 
 //check at launch if logged
 (async function() {
