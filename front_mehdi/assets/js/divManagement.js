@@ -124,6 +124,9 @@ async function handleConversationList() {
 	// 		conversationDiv.appendChild(conversationButton);
 	// 	}
 	}
+
+	handleNavButtons();
+
 }
 
 function handleConversationDisplay(user) {
@@ -224,9 +227,10 @@ function handleConversationDisplay(user) {
 }
 
 async function handleProfilDisplay(username) {
-	if (!globalVariables.currentUser) {
-        await fetchUserData();
-    }
+
+	// if (!globalVariables.currentUser) {
+    //     await fetchUserData();
+    // }
 
     const profilDisplay = document.getElementById("profil");
 
@@ -270,8 +274,16 @@ async function handleProfilDisplay(username) {
     usernameElement.classList.add("username", "title-2");
     nameActionsDiv.appendChild(usernameElement);
 
+	let myProfil;
+
+	if (username !== currentUsername) {
+		myProfil = false;
+	} else {
+		myProfil = true;
+	}
+
     // Check if username is different from current user
-    if (username !== currentUsername) {
+	if (!myProfil) {
         // Check if user is not a friend
         const status = await globalVariables.currentUser.isFriend(username);
 		console.log("username here: " + username);
@@ -356,6 +368,11 @@ async function handleProfilDisplay(username) {
     persoScoresDiv.appendChild(createStatElement("soccer field ball distance", userStats.traveledDistance, "The distance the ball traveled on the soccer field while you played.", "rectangle"));
     persoScoresDiv.appendChild(createStatElement("average duration", userStats.averagePong, "The shorter you are in game the better.", "square"));
     persoScoresDiv.appendChild(createStatElement("hits per match", userStats.averagePong, "The less you touch the ball the better.", "square"));
+
+	if (!myProfil)
+		handleNavButtons(true);
+	else
+		handleNavButtons();
 }
 
 function createStatElement(title, data, description, shape) {
@@ -464,5 +481,79 @@ function getSelected() {
     console.log('Aucune div sélectionnée');
   }
 }
+
+
+
+// Utils
+
+function handleNavButtons(friendProfilScene) {
+    removeChildDiv("nav-bar");
+    const navBar = document.getElementById("nav-bar");
+
+	let leftLabel, rightLabel, leftColor, rightColor ;
+
+	if (friendProfilScene) {
+		leftLabel = "Game";
+		rightLabel = "Chat";
+		leftColor = "#B4B4B4";
+		rightColor = "#B4B4B4";
+	} else  {
+		leftLabel = "Profil";
+		rightLabel = "Settings";
+		leftColor = globalVariables.currentScene === "profil" ? "#05FF00" : "#B4B4B4";
+		rightColor = globalVariables.currentScene === "settings" ? "#05FF00" : "#B4B4B4";
+	}
+
+    const buttonLeft = createButton(leftLabel, leftColor);
+    const buttonRight = createButton(rightLabel, rightColor);
+
+    navBar.appendChild(buttonLeft);
+    navBar.appendChild(buttonRight);
+}
+
+function createButton(label, color) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "btn col-6 btn-light bordered-button title-4 d-flex align-items-center justify-content-center nav-button-";
+    button.style.setProperty("--main_color", color);
+    button.innerHTML = `<img src="assets/images/${label.toLowerCase()}.svg" class="icon-button"></img> ${label}`;
+    return button;
+}
+
+function handleNavButtons(friendProfilScene) {
+    removeChildDiv("nav-bar");
+    const navBar = document.getElementById("nav-bar");
+
+    let leftLabel, rightLabel, leftColor, rightColor ;
+
+    if (friendProfilScene) {
+        leftLabel = "Game";
+        rightLabel = "Chat";
+        leftColor = "#B4B4B4";
+        rightColor = "#B4B4B4";
+    } else  {
+        leftLabel = "Profil";
+        rightLabel = "Settings";
+        leftColor = globalVariables.currentScene === "profil" ? "#05FF00" : "#B4B4B4";
+        rightColor = globalVariables.currentScene === "settings" ? "#05FF00" : "#B4B4B4";
+    }
+
+    const buttonLeft = createButton(leftLabel, leftColor, "left");
+    const buttonRight = createButton(rightLabel, rightColor, "right");
+
+    navBar.appendChild(buttonLeft);
+    navBar.appendChild(buttonRight);
+}
+
+function createButton(label, color, id) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.id = "nav-bar-button-" + id;
+    button.className = "btn col-6 btn-light bordered-button title-4 d-flex align-items-center justify-content-center nav-button-";
+    button.style.setProperty("--main_color", color);
+    button.innerHTML = `<img src="assets/images/${label.toLowerCase()}.svg" class="icon-button"></img> ${label}`;
+    return button;
+}
+
 
 export { removeChildDiv, createChildDiv, handleConversationList, handleConversationDisplay, handleProfilDisplay, getSelected };

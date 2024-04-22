@@ -111,13 +111,13 @@ function sceneSettings() {
 }
 
 async function sceneProfil(user) {
+    globalVariables.currentScene = "profil";
 	unsetEventListener("conversation-list");
     hideElements("conversation-display", "conversation-list", "chat", "settings", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
 	removeChildDiv("conversation-display", "conversation-list", "profil");
 	await fetchUserData();
 	createChildDiv("profil", user);
 	unhideElements("profil");
-    globalVariables.currentScene = "profil";
 }
 
 function sceneModifyGameTheme() {
