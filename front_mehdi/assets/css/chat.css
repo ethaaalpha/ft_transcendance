@@ -1,7 +1,5 @@
 /* chatList */
 
-
-/* Pour la barre de recherche */
 .conversation-list-searchbar-container {
 	padding-bottom: 1em;
 }
@@ -16,9 +14,6 @@
 	padding-left: 2.8em;
 	border: 0px;
 	font-size: 1em;
-}
-
-.conversation-list-searchbar-input input:focus {
     color: #B4B4B4;
 }
 
@@ -27,6 +22,7 @@
 }
 
 .conversation-list-searchbar-input:focus {
+    color: #B4B4B4;
     outline: none;
 }
 
