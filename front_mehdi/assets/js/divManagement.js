@@ -2,6 +2,7 @@ import globalVariables from './main.js';
 import { fetchConversations, sendMessage } from './chatManagement.js';
 import { fetchCurrentUsername, fetchProfilPicture, fetchUserStats } from './httpGetters.js';
 import { fetchUserData } from './main.js';
+import { changeScene } from './sceneManagement.js';
 
 function removeChildDiv(...parentIds) {
     parentIds.forEach(parentId => {
@@ -34,7 +35,7 @@ function createChildDiv(divId, user) {
         default:
             console.log("Invalid divId: ", divId);
     }
-    console.log("Current divId is:", globalVariables.currentScene);
+    // console.log("Current divId is:", globalVariables.currentScene);
 }
 
 // handler
@@ -103,9 +104,16 @@ async function handleConversationList() {
 			conversationButton.appendChild(userInfo);
 			// conversationButton.appendChild(lastMessage);
 	
-			conversationButton.addEventListener("click", function() {
+			conversationButton.onclick = function() {
 				changeScene("conversation-display", user);
-			});
+			}
+			// addEventListener("click", function() {
+			// 	changeScene("conversation-display", user);
+			// });
+
+            // button2.onclick = function() {
+            //     manageFriend(username, "unblock");
+            // };
 
 			conversationDiv.appendChild(conversationButton);
 		}
@@ -192,11 +200,10 @@ function handleConversationDisplay(user) {
         
         if (message.sender === globalVariables.userConversations.myUsername) {
 			messageElement.classList.add("message-sent", "message");
-
         } else {
 			messageElement.classList.add("message-received", "message");
         }
-		
+
         messagesDiv.appendChild(messageElement);
     }
 
@@ -211,11 +218,9 @@ function handleConversationDisplay(user) {
 	messageInput.setAttribute("id", "send-message-input-id");
 	inputDiv.appendChild(messageInput);
 
-
 	const imageInput = document.createElement('img');
 	imageInput.src = 'assets/images/send.svg';
 	
-
 	// send button
 	const sendButton = document.createElement("button");
 	sendButton.classList.add("send-button");
@@ -485,40 +490,6 @@ function getSelected() {
 
 
 // Utils
-
-function handleNavButtons(friendProfilScene) {
-    removeChildDiv("nav-bar");
-    const navBar = document.getElementById("nav-bar");
-
-	let leftLabel, rightLabel, leftColor, rightColor ;
-
-	if (friendProfilScene) {
-		leftLabel = "Game";
-		rightLabel = "Chat";
-		leftColor = "#B4B4B4";
-		rightColor = "#B4B4B4";
-	} else  {
-		leftLabel = "Profil";
-		rightLabel = "Settings";
-		leftColor = globalVariables.currentScene === "profil" ? "#05FF00" : "#B4B4B4";
-		rightColor = globalVariables.currentScene === "settings" ? "#05FF00" : "#B4B4B4";
-	}
-
-    const buttonLeft = createButton(leftLabel, leftColor);
-    const buttonRight = createButton(rightLabel, rightColor);
-
-    navBar.appendChild(buttonLeft);
-    navBar.appendChild(buttonRight);
-}
-
-function createButton(label, color) {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "btn col-6 btn-light bordered-button title-4 d-flex align-items-center justify-content-center nav-button-";
-    button.style.setProperty("--main_color", color);
-    button.innerHTML = `<img src="assets/images/${label.toLowerCase()}.svg" class="icon-button"></img> ${label}`;
-    return button;
-}
 
 function handleNavButtons(friendProfilScene) {
     removeChildDiv("nav-bar");
