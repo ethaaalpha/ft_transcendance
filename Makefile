@@ -1,10 +1,9 @@
 # Directories 
 BACK_DIR			= 'pong_back'
 MEDIA_DIR			= 'media'
-DATABASE_DIR 		= 'database'
 LIBS_DIR			= 'libs'
 
-NEEDED_DIR			= ${DATABASE_DIR} ${LIBS_DIR}
+NEEDED_DIR			= ${LIBS_DIR}
 
 # Files
 DEFAULT_PICTURE		= "pokemon.png"
@@ -13,32 +12,27 @@ DEFAULT_PICTURE		= "pokemon.png"
 CONTAINERS		 	= daphne nginx postgresql redis geth
 
 all: 
-	$(MAKE) run
-
-${CONTAINERS}:
-	docker exec -it $@ sh
-
-run:
-	@mkdir -p ${NEEDED_DIR}
-	docker compose up --build
+	$(MAKE) up
 
 up:
-	docker compose up
+	@mkdir -p ${NEEDED_DIR}
+	docker compose up --build
 
 down:
 	docker compose down
 
 clean:
-	docker compose down -v
+	docker compose down --rmi local -v
 
-reset:
-	@rm -rf ${DATABASE_DIR}
+fclean: clean
+	@echo "Deleting user media !"
 	@find ${MEDIA_DIR} -type f ! -name ${DEFAULT_PICTURE} -exec rm {} +
+	docker compose down --rmi all -v --remove-orphans
+
+${CONTAINERS}:
+	docker exec -it $@ sh
 
 pyreset:
 	@find ${BACK_DIR} -type d \( -name migrations -o -name __pycache__ \) -exec rm -rf {} +
 
-fclean: clean reset pyreset
-	@echo "Full reset !"
-
-.PHONY: reset pyreset run down clean fclean ${CONTAINERS_DEBUG}
+.PHONY: pyreset run down clean fclean ${CONTAINERS}

@@ -27,7 +27,7 @@ services:
       - POSTGRES_USER=$DB_USER
       - POSTGRES_PASSWORD=$DB_PASSWORD
     volumes:
-      - ./database:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ethaniellegrand"]
       interval: 2s
@@ -93,3 +93,4 @@ networks:
 
 volumes:
   geth:
+  postgres:
