@@ -1,6 +1,6 @@
-import globalVariables from './main.js';
+import globalVariables from '../init.js';
 
-class connect {
+class Connect {
 	constructor() {
 		this.socket = new WebSocket('wss://' + window.location.host + '/api/activity/');
 
@@ -36,4 +36,4 @@ class connect {
 	}
 }
 
-activity = new connect();
+export default Connect;

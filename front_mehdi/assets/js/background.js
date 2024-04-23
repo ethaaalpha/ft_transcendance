@@ -11,6 +11,4 @@ function backgroundRunner() {
 	requestAnimationFrame(scrollBackground);
 }
 
-backgroundRunner();
-
 export { backgroundRunner };

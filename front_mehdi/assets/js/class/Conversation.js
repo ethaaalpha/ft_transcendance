@@ -1,12 +1,12 @@
-
-import globalVariables from './main.js';
+import globalVariables from '../init.js';
+import { scrollMessagesToBottom } from '../chatManagement.js';
 
 class Conversations {
 	constructor(myUsername, conversations = {}) {
 	  this.conversations = conversations;
 	  this.myUsername = myUsername;
 	}
-  
+
 	addMessage(from, to, content, sendAt) {
 	  const message = { sender: from, content, sendAt: sendAt };
 	  let target = from === this.myUsername ? to : from;
@@ -37,17 +37,19 @@ class Conversations {
 	
 		this.conversations[target].unshift(message);
 
-		// create div in conversation dynamically, to move?
+		// create div in conversation dynamically
 		const conversationDisplay = document.getElementById("conversation-display-messages-id");
 		const messageElement = document.createElement("div");
-		messageElement.textContent = message.content;
+		const messageText = document.createElement('span');
+		messageText.textContent = message.content;
+        messageElement.appendChild(messageText)
 
 		if (message.sender === globalVariables.userConversations.myUsername) {
-			messageElement.classList.add("message-sent");
+			messageElement.classList.add("message-sent", "message");
 		} else {
-			messageElement.classList.add("message-received");
+			messageElement.classList.add("message-received", "message");
 		}
-		messageElement.classList.add("message-margin");
+
 		conversationDisplay.appendChild(messageElement);
 		scrollMessagesToBottom();
 		
