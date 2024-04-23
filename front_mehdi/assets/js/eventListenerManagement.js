@@ -16,35 +16,38 @@ function setEventListener(scene) {
     }
 }
 
+let onInputFilled, onInputCleared;
+
 function setEventConversationList() {
-	const searchInput = document.getElementById("conversation-list-searchbar-input-id");
-	let isInputEmpty = true;
+    const searchInput = document.getElementById("conversation-list-searchbar-input-id");
+    let isInputEmpty = true;
 
-	function onInputFilled() {
-		changeScene("search");
-		isInputEmpty = false;
-	}
+    // Redéfinition des fonctions onInputFilled et onInputCleared à l'intérieur de setEventConversationList
+    onInputFilled = function() {
+        changeScene("search");
+        isInputEmpty = false;
+    }
 
-	function onInputCleared() {
-		changeScene("conversation-list");
-		isInputEmpty = true;
-	}
+    onInputCleared = function() {
+        changeScene("conversation-list");
+        isInputEmpty = true;
+    }
 
-	searchInput.addEventListener("input", function() {
-		const inputValue = searchInput.value.trim();
-		
-		if (inputValue && isInputEmpty) {
-			onInputFilled();
-		} else if (!inputValue && !isInputEmpty) {
-			onInputCleared();
-		}
-	});
-	
-	searchInput.addEventListener("keypress", function(event) {
-		if (event.key === "Enter") {
-			searchProfil();
-		}
-	});
+    searchInput.addEventListener("input", function() {
+        const inputValue = searchInput.value.trim();
+
+        if (inputValue && isInputEmpty) {
+            onInputFilled();
+        } else if (!inputValue && !isInputEmpty) {
+            onInputCleared();
+        }
+    });
+
+    searchInput.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            searchProfil();
+        }
+    });
 }
 
 function setEventConversationDisplay() {
@@ -61,6 +64,9 @@ function setEventConversationDisplay() {
 // Unsetters
 function unsetEventListener(scene) {
 	switch (scene) {
+		case "conversation-list":
+			unsetEventConversationList();
+			break;
 		case "conversation-display":
 			unsetEventConversationDisplay();
 			break;
@@ -70,11 +76,22 @@ function unsetEventListener(scene) {
 }
 
 function unsetEventConversationDisplay() {
-    const searchInput = document.getElementById("conversation-list-searchbar-input-id");
-    
-    searchInput.removeEventListener("input", onInputFilled);
-    searchInput.removeEventListener("input", onInputCleared);
-    searchInput.removeEventListener("keypress", searchProfil);
+    const messageInput = document.getElementById("send-message-input-id");
+
+	if (messageInput) {
+		messageInput.removeEventListener("keypress", sendMessage);
+	}
 }
+
+function unsetEventConversationList() {
+    const searchInput = document.getElementById("conversation-list-searchbar-input-id");
+
+	if (searchInput) {
+		searchInput.removeEventListener("input", onInputFilled);
+		searchInput.removeEventListener("input", onInputCleared);
+		searchInput.removeEventListener("keypress", searchProfil);
+	}
+}
+
 
 export { setEventListener, unsetEventListener }
