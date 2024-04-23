@@ -1,5 +1,5 @@
 import { fetchProfilPicture } from './httpGetters.js';
-import { changeScene } from './sceneManagement.js'
+import { changeScene } from './spaManagement/scene.js'
 
 async function searchProfil() {
 

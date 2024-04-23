@@ -1,10 +1,10 @@
-import globalVariables from './main.js';
-import { fetchConversations, sendMessage } from './chatManagement.js';
-import { fetchCurrentUsername, fetchProfilPicture, fetchUserStats } from './httpGetters.js';
-import { fetchUserData } from './main.js';
-import { changeScene } from './sceneManagement.js';
-import { navBarButton } from './navBarButton.js';
-import { manageFriend, signOut, modifyProfilPicture, modifyPassword, modifyEmail } from './userManagement.js'; 
+import globalVariables from '../init.js';
+import { fetchConversations, sendMessage } from '../chatManagement.js';
+import { fetchCurrentUsername, fetchProfilPicture, fetchUserStats } from '../httpGetters.js';
+import { fetchUserData } from '../init.js';
+import { changeScene } from './scene.js';
+import { navBarButton } from '../navBarButton.js';
+import { manageFriend, signOut, modifyProfilPicture, modifyPassword, modifyEmail } from '../userManagement.js'; 
 
 function removeChildDiv(...parentIds) {
 	parentIds.forEach(parentId => {

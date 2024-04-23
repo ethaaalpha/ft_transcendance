@@ -1,4 +1,4 @@
-import globalVariables from './main.js';
+import globalVariables from '../init.js';
 
 class Connect {
 	constructor() {

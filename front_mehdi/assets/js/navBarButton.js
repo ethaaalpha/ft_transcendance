@@ -1,5 +1,5 @@
-import globalVariables from './main.js';
-import { changeScene } from './sceneManagement.js';
+import globalVariables from './init.js';
+import { changeScene } from './spaManagement/scene.js';
 
 function navBarButton(action, username) {
 	switch (action) {
