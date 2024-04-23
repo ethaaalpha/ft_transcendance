@@ -2,6 +2,7 @@ import User from './User.js';
 import Connect from './Connect.js';
 import { fetchData } from './api.js';
 import { changeScene }  from './sceneManagement.js';
+import { backgroundRunner } from './background.js';
 
 var globalVariables = {
     currentUser: null,
@@ -11,24 +12,20 @@ var globalVariables = {
 	gameTheme: 1
 };
 
-//check at launch if logged
 (async function() {
-	const logged = await isLogged();
-    if (logged) {
-		await fetchUserData();
-		console.log("first function");
-        // await fetchConversations();
-        await changeScene("home");
-    } else {
-		changeScene("signIn");
+	backgroundRunner();
+    try {
+        const logged = await fetchUserData();
+        if (logged) {
+            changeScene("home");
+            return;
+        }
+    } catch (error) {
+        console.error("Error in fetchUserData: ", error);
     }
+    changeScene("signIn");
 })();
 
-
-async function isLogged() {
-	const response = await fetch('/api/dashboard');
-    return response.status === 200;
-}
 
 async function fetchUserData() {
 	return new Promise((resolve, reject) => {
@@ -36,7 +33,6 @@ async function fetchUserData() {
 		.then(data => {
 			if (data.status === 200) {
 				if (!globalVariables.currentUser) {
-					// console.log(data.data);
 					globalVariables.currentUser = new User(data.data);
 				} else {
 					globalVariables.currentUser.update(data.data);
@@ -55,12 +51,3 @@ async function fetchUserData() {
 
 export { fetchUserData };
 export default globalVariables;
-
-// // main.js
-// window.addEventListener('DOMContentLoaded', (event) => {
-	//     // Ici, vous pouvez exécuter vos fonctions une fois que la page est chargée
-	//     // par exemple :
-	//     maFonctionDuModule1();
-	//     maFonctionDuModule2();
-	// });
-	

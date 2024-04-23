@@ -2,6 +2,7 @@ import globalVariables from './main.js';
 import { removeChildDiv, createChildDiv } from './divManagement.js';
 import { fetchUserData } from './main.js';
 import { setEventListener, unsetEventListener } from './eventListenerManagement.js'
+import { fetchConversations } from './chatManagement.js';
 
 function changeScene(newScene, user) {
     switch (newScene) {
@@ -68,37 +69,37 @@ function sceneSignUp() {
 }
 
 function sceneHome() {
+    globalVariables.currentScene = "home";
 	hideElements("signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
 	resetFormFields("username", "password", "passwordConfirm", "email");
     unhideElements("home");
-    globalVariables.currentScene = "home";
 	changeScene("conversation-list");
 }
 
 async function sceneConversationList() {
+    globalVariables.currentScene = "conversation-list";
 	hideElements("conversation-display", "signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
     removeChildDiv("conversation-display", "conversation-list", "profil", "settings", "modify-game-theme");
-	await fetchUserData();
+	// await fetchConversations();
 	await createChildDiv("conversation-list");
 	setEventListener("conversation-list");
 	unhideElements("conversation-list");
-    globalVariables.currentScene = "conversation-list";
 }
 
 function sceneSearch() {
+    globalVariables.currentScene = "search";
 	hideElements("conversation-display", "signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
     removeChildDiv("conversation-display", "conversation-list-contact-container-id", "profil");
 	// createChildDiv("conversation-list");
 	// unhideElements("conversation-list");
-    globalVariables.currentScene = "search";
 }
 
-function sceneConversationDisplay(user) {
+async function sceneConversationDisplay(user) {
     globalVariables.currentScene = "conversation-display";
 	unsetEventListener("conversation-list");
 	hideElements("conversation-list", "signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
 	removeChildDiv("conversation-display", "conversation-list", "profil");
-	createChildDiv("conversation-display", user);
+	await createChildDiv("conversation-display", user);
 	setEventListener("conversation-display");
 	unhideElements("conversation-display");
 }
