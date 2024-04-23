@@ -7,7 +7,8 @@ var globalVariables = {
     currentUser: null,
     userConversations: null,
     currentScene: 'start',
-	activity: new Connect()
+	activity: new Connect(),
+	gameTheme: 1
 };
 
 //check at launch if logged

@@ -4,7 +4,7 @@ import { fetchCurrentUsername, fetchProfilPicture, fetchUserStats } from './http
 import { fetchUserData } from './main.js';
 import { changeScene } from './sceneManagement.js';
 import { navBarButton } from './navBarButton.js';
-import { manageFriend } from './userManagement.js';
+import { manageFriend, signOut, modifyProfilPicture, modifyPassword, modifyEmail } from './userManagement.js'; 
 
 function removeChildDiv(...parentIds) {
     parentIds.forEach(parentId => {
@@ -23,28 +23,39 @@ function removeChildDiv(...parentIds) {
 function createChildDiv(divId, user) {
     switch (divId) {
         case "conversation-list":
-            handleConversationList();
+            createConversationList();
             break;
         case "conversation-display":
-            handleConversationDisplay(user);
+            createConversationDisplay(user);
             break;
 		// case "searchProfil":
 		// 	handleSearchProfil();
 		// 	break;
         case "profil":
-			handleProfilDisplay(user);
+			createProfil(user);
             break;
 		case "settings":
-			handleSettingsDisplay(user);
+			createSettings();
+			break;
+		case "modify-game-theme":
+			createModifyGameTheme();
+			break;
+		case "modify-profil-picture":
+			createModifyProfilPicture();
+			break;
+		case "modify-password":
+			createModifyPassword();
+			break;
+		case "modify-email":
+			createModifyEmail();
 			break;
         default:
             console.log("Invalid divId: ", divId);
     }
-    // console.log("Current divId is:", globalVariables.currentScene);
 }
 
-// handler
-async function handleConversationList() {
+// Handler
+async function createConversationList() {
 	
 	const conversationList = document.getElementById("conversation-list");
 
@@ -142,7 +153,7 @@ async function handleConversationList() {
 
 }
 
-function handleConversationDisplay(user) {
+function createConversationDisplay(user) {
 
     const conversation = globalVariables.userConversations.getConversation(user);
     const conversationDisplay = document.getElementById("conversation-display");
@@ -237,7 +248,7 @@ function handleConversationDisplay(user) {
 	handleNavButtons();
 }
 
-async function handleProfilDisplay(username) {
+async function createProfil(username) {
 
 	// if (!globalVariables.currentUser) {
     //     await fetchUserData();
@@ -422,85 +433,320 @@ function createStatElement(title, data, description, shape) {
     return statElement;
 }
 
+function createSettings() {
 
-function handleSettingsDisplay() {
+	const settingsDiv = document.getElementById("settings");
+
+	// Back button
+	const backButton = document.createElement("button");
+	backButton.className = "arrow-back d-flex justify-content-start align-items-center";
+	backButton.onclick = function() {
+		changeScene('home');
+	};
+	const backButtonImage = document.createElement("img");
+	backButtonImage.src = "assets/images/arrow.svg";
+	backButton.appendChild(backButtonImage);
+	settingsDiv.appendChild(backButton);
+
+	// Title and description
+	const title = document.createElement("span");
+	title.className = "title-2 greened";
+	title.textContent = "Settings";
+	settingsDiv.appendChild(title);
+
+	const description = document.createElement("span");
+	description.className = "body-text settings-text";
+	description.textContent = "Change everything we allow you to.";
+	settingsDiv.appendChild(description);
+
+	// Settings buttons
+	const settingsButtons = [
+		{ label: "Modify game theme", icon: "gamepad.svg", scene: "modify-game-theme" },
+		{ label: "Modify profile picture", icon: "user_settings.svg", scene: "modify-profil-picture" },
+		{ label: "Modify password", icon: "lock.svg", scene: "modify-password" },
+		{ label: "Modify email", icon: "mail.svg", scene: "modify-email" },
+		{ label: "Sign out", icon: "logout.svg", action: signOut }
+	];
+
+	settingsButtons.forEach(button => {
+		const buttonElement = document.createElement("button");
+		buttonElement.className = "modify-btn btn btn-block btn-light d-flex align-items-center justify-content-start bordered-button-expanded";
+		buttonElement.style.setProperty("--main_color", "#DADADA");
+		buttonElement.onclick = button.scene ? function() { changeScene(button.scene); } : button.action;
+		const iconImage = document.createElement("img");
+		iconImage.src = `assets/images/${button.icon}`;
+		iconImage.className = "icon-button";
+		if (button.label === "Sign out") {
+			iconImage.style.paddingLeft = "0.05em";
+			iconImage.style.paddingRight = "0.4em";
+			buttonElement.className += " bordered-button-logout";
+		} else {
+			iconImage.style.paddingRight = "0.5em";
+		}
+		buttonElement.appendChild(iconImage);
+		const labelSpan = document.createElement("span");
+		labelSpan.textContent = button.label;
+		buttonElement.appendChild(labelSpan);
+		settingsDiv.appendChild(buttonElement);
+	});
+	
 	handleNavButtons();
 }
 
+function createModifyGameTheme() {
 
+	const modifyGameThemeDiv = document.getElementById("modify-game-theme");
 
+	// Back button
+	const backButton = document.createElement("button");
+	backButton.className = "arrow-back d-flex justify-content-start align-items-center";
+	backButton.onclick = function() {
+		changeScene('settings');
+	};
+	const backButtonImage = document.createElement("img");
+	backButtonImage.src = "assets/images/arrow.svg";
+	backButton.appendChild(backButtonImage);
+	modifyGameThemeDiv.appendChild(backButton);
 
+	// Title and description
+	const title = document.createElement("span");
+	title.className = "title-2 greened";
+	title.textContent = "Modify game theme";
+	modifyGameThemeDiv.appendChild(title);
 
+	const description = document.createElement("span");
+	description.className = "body-text settings-text";
+	description.textContent = "Go through parallel universes.";
+	modifyGameThemeDiv.appendChild(description);
 
-
-
-// legacy from settings game theme, to handle
-function genererDivsAvecImages(nbDivs) {
-	const conteneur = document.getElementById("modify-game-theme-menu");
-  
-	for (let i = 0; i < nbDivs; i++) {
-	  // Création de l'élément div
-	  const div = document.createElement("div");
-  
-	  // Attribution de classes CSS
-	//   div.classList.add("modify-game-theme-image-container");
-	div.classList.add("modify-game-theme-image-container", "selectable");
-
-	  // Création de l'élément image
-	  const image = document.createElement("img");
-  
-	  // Attribution de la source de l'image en utilisant l'index de la boucle pour incrémenter le chiffre dans le nom de l'image
-	  image.src = `assets/images/theme/${i}.jpg`;
-  
-	  // Ajout des classes CSS pour les bords arrondis
-	  image.classList.add("modify-game-theme-image");
-  
-	  // Ajout de l'image à la div
-	  div.appendChild(image);
-  
-	  div.onclick = function() {
-		selectDiv(i + 1);
-	  };
-
-	  // Ajout de la div au conteneur
-	  conteneur.appendChild(div);
+	// Menu container
+	const menuContainer = document.createElement("div");
+	menuContainer.id = "modify-game-theme-menu";
+	menuContainer.className = "modify-game-theme-container";
+	modifyGameThemeDiv.appendChild(menuContainer);
+	
+	// Image button
+	for (let i = 0; i < 6; i++) {
+		const div = document.createElement("div");
+		
+		div.classList.add("modify-game-theme-image-container", "selectable");
+		const image = document.createElement("img");
+		image.src = `assets/images/theme/${i}.jpg`;
+		image.classList.add("modify-game-theme-image");
+		div.appendChild(image);
+		div.onclick = function() {
+			selectGameTheme(i + 1);
+		};
+		menuContainer.appendChild(div);
 	}
-  }
-  
-  // Appel de la fonction pour générer 3 divs avec des images
-genererDivsAvecImages(6);
 
-let selectedDiv = 1; // le theme du jeu selectionné, changer par la valeur que nico veut modifier
+	// Overlay button
+	const overlayButton = document.createElement("button");
+	overlayButton.className = "modify-btn overlay-btn btn btn-block btn-light d-flex align-items-center justify-content-start bordered-button-expanded";
+	overlayButton.style.setProperty("--main_color", "#B4B4B4");
+	overlayButton.onclick = changeGameTheme; // to modify with Nico
+	const overlayButtonText = document.createElement("span");
+	overlayButtonText.textContent = "Change game theme";
+	overlayButton.appendChild(overlayButtonText);
+	modifyGameThemeDiv.appendChild(overlayButton);
 
-  window.onload = function() {
-	selectDiv(selectedDiv);
-};
+	selectGameTheme(globalVariables.gameTheme);
 
-function selectDiv(id) {
-  // Réinitialiser les bordures de toutes les div
-  const divs = document.querySelectorAll('.selectable');
-  divs.forEach(div => {
-    div.classList.remove('selected');
-  });
-
-  // Mettre en surbrillance la div sélectionnée
-  const selected = document.querySelector(`.selectable:nth-child(${id})`);
-  selected.classList.add('selected');
-  selectedDiv = id;
+	handleNavButtons();
 }
 
-function getSelected() {
-  if (selectedDiv !== null) {
-    console.log(`La div sélectionnée est la ${selectedDiv}`);
-  } else {
-    console.log('Aucune div sélectionnée');
-  }
+function selectGameTheme(id) {
+	const divs = document.querySelectorAll('.selectable');
+	divs.forEach(div => {
+		div.classList.remove('selected');
+	});
+
+	const selected = document.querySelector(`.selectable:nth-child(${id})`);
+	selected.classList.add('selected');
+	globalVariables.gameTheme = id;
 }
 
+function changeGameTheme() { // to modify with Nico
+	if (globalVariables.gameTheme !== null) {
+	  console.log(`La div sélectionnée est la ${globalVariables.gameTheme}`);
+	} else {
+	  console.log('Aucune div sélectionnée');
+	}
+}
 
+function createModifyProfilPicture() {
+
+	const modifyProfilPictureDiv = document.getElementById("modify-profil-picture");
+
+	// Back button
+	const backButton = document.createElement("button");
+	backButton.className = "arrow-back d-flex justify-content-start align-items-center";
+	backButton.onclick = function() {
+		changeScene('settings');
+	};
+	const backButtonImage = document.createElement("img");
+	backButtonImage.src = "assets/images/arrow.svg";
+	backButton.appendChild(backButtonImage);
+	modifyProfilPictureDiv.appendChild(backButton);
+
+	// Title and description
+	const title = document.createElement("span");
+	title.className = "title-2 greened";
+	title.textContent = "Modify profil picture";
+	modifyProfilPictureDiv.appendChild(title);
+
+	const description = document.createElement("span");
+	description.className = "body-text settings-text";
+	description.textContent = "So we can see your lovely smile.";
+	modifyProfilPictureDiv.appendChild(description);
+
+	// Custom file input
+	const customFileInput = document.createElement("div");
+	customFileInput.className = "custom-file-input";
+	const fileImage = document.createElement("img");
+	fileImage.src = "assets/images/upload.svg";
+	customFileInput.appendChild(fileImage);
+	const fileLabel = document.createElement("label");
+	fileLabel.htmlFor = "settings-profil-picture";
+	fileLabel.textContent = "Choose a file";
+	customFileInput.appendChild(fileLabel);
+	const fileInput = document.createElement("input");
+	fileInput.type = "file";
+	fileInput.id = "settings-profil-picture";
+	fileInput.accept = "image/*";
+	customFileInput.appendChild(fileInput);
+	modifyProfilPictureDiv.appendChild(customFileInput);
+
+	// Button
+	const button = document.createElement("button");
+	button.className = "btn btn-light bordered-button-expanded";
+	button.style.setProperty("--main_color", "#DADADA");
+	button.onclick = modifyProfilPicture;
+	const buttonSpan = document.createElement("span");
+	buttonSpan.className = "btn-title";
+	buttonSpan.textContent = "Change my profil picture";
+	button.appendChild(buttonSpan);
+	modifyProfilPictureDiv.appendChild(button);	
+
+	handleNavButtons();
+}
+
+function createModifyPassword() {
+
+	const modifyPasswordDiv = document.getElementById("modify-password");
+
+	// Back button
+	const backButton = document.createElement("button");
+	backButton.className = "arrow-back d-flex justify-content-start align-items-center";
+	backButton.onclick = function() {
+		changeScene('settings');
+	};
+	const backButtonImage = document.createElement("img");
+	backButtonImage.src = "assets/images/arrow.svg";
+	backButton.appendChild(backButtonImage);
+	modifyPasswordDiv.appendChild(backButton);
+
+	// Title and description
+	const title = document.createElement("span");
+	title.className = "title-2 greened";
+	title.textContent = "Modify password";
+	modifyPasswordDiv.appendChild(title);
+
+	const description = document.createElement("span");
+	description.className = "body-text settings-text";
+	description.textContent = "Minimum 5 and a maximum of 32 characters.";
+	modifyPasswordDiv.appendChild(description);
+
+	// Password inputs
+	const passwordInputs = ["Actual password", "New password", "Confirm password"];
+	passwordInputs.forEach(inputLabel => {
+		const formGroup = document.createElement("div");
+		formGroup.className = "form-floating fixed item-spacer";
+		const inputField = document.createElement("input");
+		inputField.type = "password";
+		inputField.className = "form-control dark-form-input";
+		inputField.id = `settings-${inputLabel.toLowerCase().replace(/\s/g, '-')}`;
+		inputField.placeholder = inputLabel;
+		const label = document.createElement("label");
+		label.htmlFor = `settings-${inputLabel.toLowerCase().replace(/\s/g, '-')}`;
+		label.textContent = inputLabel;
+		formGroup.appendChild(inputField);
+		formGroup.appendChild(label);
+		modifyPasswordDiv.appendChild(formGroup);
+	});
+
+	// Button
+	const button = document.createElement("button");
+	button.className = "btn btn-light bordered-button-expanded";
+	button.style.setProperty("--main_color", "#DADADA");
+	button.onclick = modifyPassword;
+	const buttonSpan = document.createElement("span");
+	buttonSpan.className = "btn-title";
+	buttonSpan.textContent = "Change my password";
+	button.appendChild(buttonSpan);
+	modifyPasswordDiv.appendChild(button);	
+
+	handleNavButtons();
+}
+
+function createModifyEmail() {
+	const modifyEmailDiv = document.getElementById("modify-email");
+
+	// Back button
+	const backButton = document.createElement("button");
+	backButton.className = "arrow-back d-flex justify-content-start align-items-center";
+	backButton.onclick = function() {
+		changeScene('settings');
+	};
+	const backButtonImage = document.createElement("img");
+	backButtonImage.src = "assets/images/arrow.svg";
+	backButton.appendChild(backButtonImage);
+	modifyEmailDiv.appendChild(backButton);
+
+	// Title and description
+	const title = document.createElement("span");
+	title.className = "title-2 greened";
+	title.textContent = "Modify email";
+	modifyEmailDiv.appendChild(title);
+
+	const description = document.createElement("span");
+	description.className = "body-text settings-text";
+	description.textContent = "So we can send you love letters.";
+	modifyEmailDiv.appendChild(description);
+
+	// Email inputs
+	const emailInputs = ["Actual email", "New email", "Confirm email"];
+	emailInputs.forEach(inputLabel => {
+		const formGroup = document.createElement("div");
+		formGroup.className = "form-floating fixed item-spacer";
+		const inputField = document.createElement("input");
+		inputField.type = "email";
+		inputField.className = "form-control dark-form-input";
+		inputField.id = `settings-${inputLabel.toLowerCase().replace(/\s/g, '-')}`;
+		inputField.placeholder = inputLabel;
+		const label = document.createElement("label");
+		label.htmlFor = `settings-${inputLabel.toLowerCase().replace(/\s/g, '-')}`;
+		label.textContent = inputLabel;
+		formGroup.appendChild(inputField);
+		formGroup.appendChild(label);
+		modifyEmailDiv.appendChild(formGroup);
+	});
+
+	// Button
+	const button = document.createElement("button");
+	button.className = "btn btn-light bordered-button-expanded";
+	button.style.setProperty("--main_color", "#DADADA");
+	button.onclick = modifyEmail;
+	const buttonSpan = document.createElement("span");
+	buttonSpan.className = "btn-title";
+	buttonSpan.textContent = "Change my email";
+	button.appendChild(buttonSpan);
+	modifyEmailDiv.appendChild(button);
+	
+	handleNavButtons();
+}
 
 // Utils
-
 function handleNavButtons(friendProfilScene, username) {
     removeChildDiv("nav-bar");
     const navBar = document.getElementById("nav-bar");
@@ -540,4 +786,4 @@ function createButton(label, color, id, username) {
     return button;
 }
 
-export { removeChildDiv, createChildDiv, handleConversationList, handleConversationDisplay, handleProfilDisplay, getSelected };
+export { createChildDiv, removeChildDiv };
