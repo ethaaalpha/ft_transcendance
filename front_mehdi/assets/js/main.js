@@ -1,4 +1,4 @@
-import User from './User.js';
+import User from './user.js';
 import { fetchData } from './api.js';
 import { changeScene }  from './sceneManagement.js';
 
@@ -60,4 +60,3 @@ export default globalVariables;
 	//     maFonctionDuModule1();
 	//     maFonctionDuModule2();
 	// });
-	
