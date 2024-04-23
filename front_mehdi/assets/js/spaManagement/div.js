@@ -239,27 +239,45 @@ async function createProfil(username) {
 		persoInfoDiv.id = "perso-info-id";
 		persoInfoDiv.classList.add("perso-info-container");
 		profilDisplay.appendChild(persoInfoDiv);
-
+	
 		// Fetch and add profile picture
+		const leftDiv = document.createElement("div");
+		leftDiv.classList.add("perso-info-container-left")
+	
+		// Image
 		const pictureUrl = await fetchProfilPicture(username);
 		const profileImage = document.createElement("img");
 		profileImage.src = pictureUrl;
 		profileImage.alt = "Profile Picture";
-		profileImage.classList.add("profile-image");
-		persoInfoDiv.appendChild(profileImage);
-
-		// Create nameActionsDiv
+	
+		// Status
+		const connectionStatus = document.createElement('div');
+		connectionStatus.classList.add('perso-info-container-left-status')
+		connectionStatus.style.setProperty('--item-color', 'red');
+	
+		leftDiv.appendChild(profileImage);
+		persoInfoDiv.appendChild(leftDiv);
+		persoInfoDiv.appendChild(connectionStatus);
+	
+		// Right div block
+		const rightDiv = document.createElement('div');
+		rightDiv.classList.add('perso-info-container-right');
+	
+		// create nameActionsDiv
 		const nameActionsDiv = document.createElement("div");
 		nameActionsDiv.id = "name-actions-id";
-		nameActionsDiv.classList.add("name-actions-div");
-		persoInfoDiv.appendChild(nameActionsDiv);
-
-		// Fetch and add username
+		nameActionsDiv.classList.add("perso-info-container-actions");
+		persoInfoDiv.appendChild(rightDiv);
+	
+		// Fetch and add current username
+	
 		const currentUsername = globalVariables.currentUser.getUsername();
-		const usernameElement = document.createElement("div");
+		const usernameElement = document.createElement("span");
 		usernameElement.textContent = username;
 		usernameElement.classList.add("username", "title-2");
-		nameActionsDiv.appendChild(usernameElement);
+	
+		rightDiv.appendChild(usernameElement)
+		rightDiv.appendChild(nameActionsDiv);
 
 		let isMyProfil;
 

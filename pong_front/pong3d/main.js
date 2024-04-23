@@ -3,14 +3,26 @@ import { RGBELoader } from 'three/module/loaders/RGBELoader.js';
 import { GLTFLoader } from 'three/module/loaders/GLTFLoader.js';
 import { FontLoader } from 'three/module/loaders/FontLoader.js';
 import { OrbitControls } from 'three/module/controls/OrbitControls.js';
+import FormTournament from './tournament.js';
 import Game from './game.js';
 import Menu from './menu.js';
 import GameLocal from './gameLocal.js';
 import GameInv from './gameInv.js';
-import { hideLoadingAnimation, hideTournamentCode, showLoadingAnimation, showTournamentCode, status } from './utilsPong.js';
+import { hideLoadingAnimation, showLoadingAnimation, status } from './utilsPong.js';
 
-hideTournamentCode()
 var data = null;
+var view;
+var i = 0;
+var ft = new FormTournament(sendTournament)
+var appli = document.querySelector('#app');
+if (!appli) {
+	console.log("querySelector error");
+}
+
+function sendTournament(data){
+	socketTmp.send(JSON.stringify(data))
+}
+
 function waitForNextMatch(code){
     console.log(data);
     return new Promise((resolve) => {
@@ -30,25 +42,7 @@ function waitForNextMatch(code){
     });
 
 };
-document.getElementById("codeForm").addEventListener("submit", function(event) {
-    event.preventDefault();
-  
-    var code = document.getElementById("codeInput").value;
-    if (code == null || code == ""){
-        socketTmp.send(JSON.stringify({'event': 'create', 'data': {'mode' : 'tournament4'}}))
-    }
-    else{
-        socketTmp.send(JSON.stringify({'event': 'tournament', 'data': {'action' : 'join', 'room-id' : code}}))
-    }
-    return waitForNextMatch(code)
-});
 
-var view;
-var i = 0;
-var appli = document.querySelector('#app');
-if (!appli) {
-    console.log("querySelector error");
-}
 const socketTmp = new WebSocket("wss://" + window.location.host + "/api/coordination/")
 socketTmp.onmessage = (event) => {
     console.log(JSON.parse(event.data))
@@ -59,6 +53,16 @@ socketTmp.onmessage = (event) => {
         data = tmp
     else if (tmp.event == "win")
         data = tmp
+	else if (tmp.event == "create" && tmp.data.status == true){
+		ft.changeToRoom(tmp.data.message)
+		waitForNextMatch(tmp.data.message)
+	}
+	else if (tmp.event == "tournament" && tmp.data.status == true){
+		ft.changeToRoom(null)
+		waitForNextMatch(ft.roomCode)
+	}
+	else if (tmp.event == "count")
+		ft.eventPlayer(tmp.data.updater, tmp.data.count, tmp.data.max)
 }
 var loadingManager = new THREE.LoadingManager();
 var gameData = {
@@ -109,7 +113,7 @@ async function initialize() {
     		    await createGame(0);
             }
             else if (status.status === 2){
-                showTournamentCode()
+                ft.changeToWait();
                 hideLoadingAnimation();
                 await waitForData();
                 await createGame(4);
@@ -214,6 +218,8 @@ function waitForData(time) {
         }, time);
     });
 }
+
+
 initLoading();
 initialize();
 //waitstatus(500);

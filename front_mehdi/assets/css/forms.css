@@ -1,3 +1,5 @@
+@import url('variables.css');
+
 .form-floating.fixed > .form-control-plaintext ~ label::after,
 .form-floating.fixed > .form-control:focus ~ label::after,
 .form-floating.fixed > .form-control:not(:placeholder-shown) ~ label::after,
@@ -12,18 +14,7 @@
 	background: linear-gradient(334deg, rgba(255, 255, 255, 0.10) 13.43%, rgba(255, 255, 255, 0.40) 97.55%);
 	box-shadow: 0px 4px 24px -1px rgba(0, 0, 0, 0.20);
 	backdrop-filter: blur(10px);
-	/* margin: 20vh auto; */
 	margin-left: 5px; 
-}
-
-.dark-form h1 {
-	color: var(--default-green);
-	/* font-style: normal; */
-	/* mix-blend-mode: overlay; */
-}
-
-.form-label {
-	color: var(--default-gray);
 }
 
 .dark-form input {
@@ -31,6 +22,10 @@
 	border-color: transparent;
 	background-color: rgba(0, 0, 0, 0.25);
 	color: var(--default-baba) !important;
+}
+
+.dark-form h1 {
+	color: var(--default-green);
 }
 
 .dark-form input:focus {
@@ -50,6 +45,10 @@
 	border-radius: var(--default-radius);
 	border-color: #028a00;
 	background-color: rgba(0, 0, 0, 0.25);
+}
+
+.form-label {
+	color: var(--default-gray);
 }
 
 .custom-file-input {
