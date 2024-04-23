@@ -1,3 +1,5 @@
+@import url('variables.css');
+
 .form-floating.fixed > .form-control-plaintext ~ label::after,
 .form-floating.fixed > .form-control:focus ~ label::after,
 .form-floating.fixed > .form-control:not(:placeholder-shown) ~ label::after,
@@ -15,21 +17,15 @@
 	margin-left: 5px; 
 }
 
-.dark-form h1 {
-	color: var(--default-green);
-	/* font-style: normal; */
-	/* mix-blend-mode: overlay; */
-}
-
-.form-label {
-	color: var(--default-gray);
-}
-
 .dark-form input {
 	border-radius: var(--default-radius);
 	border-color: transparent;
 	background-color: rgba(0, 0, 0, 0.25);
 	color: var(--default-baba) !important;
+}
+
+.dark-form h1 {
+	color: var(--default-green);
 }
 
 .dark-form input:focus {
@@ -49,6 +45,10 @@
 	border-radius: var(--default-radius);
 	border-color: #028a00;
 	background-color: rgba(0, 0, 0, 0.25);
+}
+
+.form-label {
+	color: var(--default-gray);
 }
 
 .custom-file-input {

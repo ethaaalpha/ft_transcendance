@@ -1,9 +1,6 @@
-:root {
-	--default-radius: 1em;
-	--default-gray: #B4B4B4;
-	--default-baba: #DADADA;
-	--default-green: #05FF00;
-}
+@import url('variables.css');
+
+/* Main tools */
 
 body {
 	font-family: "Roboto Mono", monospace;
@@ -64,8 +61,8 @@ body {
 }
 
 
-/* inside social-display-div */
 
+/* inside social-display-div */
 .settings-div {
 	display: flex;
 	justify-content: start;
@@ -218,7 +215,8 @@ body {
 .selectable {
 	border: 3px solid transparent;
 	cursor: pointer;
-  }
+}
+
   .selected {
 	border-color: var(--default-green);
   }
