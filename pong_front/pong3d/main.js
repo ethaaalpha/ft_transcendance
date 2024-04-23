@@ -54,15 +54,15 @@ socketTmp.onmessage = (event) => {
     else if (tmp.event == "win")
         data = tmp
 	else if (tmp.event == "create" && tmp.data.status == true){
-		ft.changeToRoom(tmp.data.message, 10)
+		ft.changeToRoom(tmp.data.message)
 		waitForNextMatch(tmp.data.message)
 	}
 	else if (tmp.event == "tournament" && tmp.data.status == true){
-		ft.changeToRoom(null, 10)
+		ft.changeToRoom(null)
 		waitForNextMatch(ft.roomCode)
 	}
 	else if (tmp.event == "count")
-		ft.eventPlayer(tmp.data.updater, tmp.data.count)
+		ft.eventPlayer(tmp.data.updater, tmp.data.count, tmp.data.max)
 }
 var loadingManager = new THREE.LoadingManager();
 var gameData = {
