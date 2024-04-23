@@ -25,24 +25,28 @@ body {
 	aspect-ratio: 16/9;
 }
 
+.social-div {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	
+	width: 29%;
+	height: 100%;
+}
+
 @media only screen and (min-width: 2000px) {
 	.home-div {
-		width: 80%;
+		width: 65%;
+	}
+
+	.social-div {
+		width: 25%;
 	}
 }
 
 .game-div {
 	height: 100%;
 	width: 65%;
-}
-
-.social-div {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	
-	width: 30%;
-	height: 100%;
 }
 
 .social-display-div {
