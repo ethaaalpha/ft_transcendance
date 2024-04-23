@@ -94,28 +94,29 @@ class FormTournament {
 		if (this.historic.length >= 2) {
 			this.historic[1].getChild().style.setProperty('--opacity', opacity_medium);
 		}
-
 	}
-	eventPlayer(player, newcount) {
+
+	eventPlayer(player, newcount, max) {
+		this.max = max;
 		if (newcount > this.count)
-			this.joinPlayer(player)
+			this.joinPlayer(player, newcount)
 		else
-			this.leavePlayer(player)
+			this.leavePlayer(player, newcount)
 	}
 	
-	joinPlayer(player) {
+	joinPlayer(player, newcount, max) {
 		if (this.state == 0)
 			return;
-		this.count += 1;
+		this.count = newcount;
 		this.updateCount();
 		this.historic.push(new FormTournamentEvent(player, 'join').build('tournament-form-content'));
 		this.updateOpacity();
 	}
 
-	leavePlayer(player) {
+	leavePlayer(player, newcount) {
 		if (this.state == 0)
 			return;
-		this.count -= 1;
+		this.count = newcount;
 		this.updateCount();
 		this.historic.push(new FormTournamentEvent(player, 'left').build('tournament-form-content'));
 		this.updateOpacity();
@@ -162,11 +163,11 @@ class FormTournament {
 		})
 	}
 
-	changeToRoom(roomCode, max) {
+	changeToRoom(roomCode) {
 		if (roomCode != null)
 			this.roomCode = roomCode;
 		this.state = 1;
-		this.max = max;
+		this.max = 0;
 		unhideElement('game');
 		hideElement('tournament-a');
 		unhideElement('tournament-b');
