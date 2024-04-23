@@ -1,10 +1,10 @@
 import globalVariables from '../init.js';
-import { fetchConversations, sendMessage } from '../chatManagement.js';
-import { fetchCurrentUsername, fetchProfilPicture, fetchUserStats } from '../httpGetters.js';
+import { fetchConversations, sendMessage } from '../action/chat.js';
+import { fetchCurrentUsername, fetchProfilPicture, fetchUserStats } from '../fetch/http.js';
 import { fetchUserData } from '../init.js';
 import { changeScene } from './scene.js';
-import { navBarButton } from '../navBarButton.js';
-import { manageFriend, signOut, modifyProfilPicture, modifyPassword, modifyEmail } from '../userManagement.js'; 
+import { navBarActionHandler } from '../action/navBar.js';
+import { manageFriend, signOut, modifyProfilPicture, modifyPassword, modifyEmail } from '../action/userManagement.js'; 
 
 function removeChildDiv(...parentIds) {
 	parentIds.forEach(parentId => {
@@ -25,6 +25,9 @@ async function createChildDiv(divId, user) {
 		switch (divId) {
 			case "conversation-list":
 				createConversationList().then(resolve).catch(reject);
+				break;
+			case "search":
+				createSearch().then(resolve).catch(reject);
 				break;
 			case "conversation-display":
 				createConversationDisplay(user).then(resolve).catch(reject);
@@ -113,6 +116,47 @@ async function createConversationList() {
 	}
 }
 
+
+async function createSearch() {
+	try {
+
+		const searchInput = document.getElementById("conversation-list-searchbar-input-id").value;
+		const conversationDiv = document.getElementById("conversation-list-contact-container-id");
+
+		conversationDiv.innerHTML = '';
+
+		const imgUrl = await fetchProfilPicture(searchInput)
+
+		if (imgUrl) {
+			const conversationButton = document.createElement("button");
+			conversationButton.classList.add("conversation-list-contact-button");
+
+			const img = document.createElement("img");
+			img.src = imgUrl;
+			img.alt = "Profile Picture";
+			conversationButton.appendChild(img);
+	
+			const userInfo = document.createElement("div");
+			userInfo.classList.add("conversation-list-user");
+			userInfo.textContent = searchInput;
+
+			conversationButton.appendChild(userInfo);
+
+			conversationButton.addEventListener("click", function() {
+				changeScene("profil", searchInput);
+			});
+
+			conversationDiv.appendChild(conversationButton);
+		}
+		else
+			console.error('Error fetching user data:', error);
+
+		handleNavButtons();
+	} catch (error) {
+		console.error('Error in createSearch: ', error);
+		throw error;
+	}
+}
 
 async function createConversationDisplay(user) {
 
@@ -794,7 +838,7 @@ function createButton(label, color, id, username) {
 	button.innerHTML = `<img src="assets/images/icons/${label.toLowerCase()}.svg" class="icon-button"></img> ${label}`;
 	
 	button.onclick = function() {
-		navBarButton(label, username);
+		navBarActionHandler(label, username);
 	};
 	return button;
 }

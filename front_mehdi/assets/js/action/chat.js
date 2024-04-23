@@ -1,6 +1,6 @@
-import globalVariables from './init.js';
-import Conversations from './class/Conversation.js';
-import { fetchData } from './api.js';;
+import globalVariables from '../init.js';
+import Conversations from '../class/Conversation.js';
+import { fetchData } from '../fetch/api.js';;
 
 async function fetchConversations() {
 	try {
