@@ -1,7 +1,7 @@
-import globalVariables from './init.js';
-import { changeScene } from './spaManagement/scene.js';
+import globalVariables from '../init.js';
+import { changeScene } from '../spaManagement/scene.js';
 
-function navBarButton(action, username) {
+function navBarActionHandler(action, username) {
 	switch (action) {
         case "Settings":
             navBarSettings();
@@ -45,4 +45,4 @@ async function navBarChat(username) {
 	changeScene("conversation-display", username);
 }
 
-export { navBarButton };
+export { navBarActionHandler };

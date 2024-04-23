@@ -1,6 +1,6 @@
 import { changeScene } from './scene.js';
-import { searchProfil } from '../profil.js';
-import { sendMessage } from '../chatManagement.js';
+import { createChildDiv } from './div.js';
+import { sendMessage } from '../action/chat.js';
 
 // Setters
 function setEventListener(scene) {
@@ -45,7 +45,7 @@ function setEventConversationList() {
 
     searchInput.addEventListener("keypress", function(event) {
         if (event.key === "Enter") {
-            searchProfil();
+            createChildDiv("search");
         }
     });
 }
@@ -89,7 +89,7 @@ function unsetEventConversationList() {
 	if (searchInput) {
 		searchInput.removeEventListener("input", onInputFilled);
 		searchInput.removeEventListener("input", onInputCleared);
-		searchInput.removeEventListener("keypress", searchProfil);
+		searchInput.removeEventListener("keypress", createChildDiv);
 	}
 }
 

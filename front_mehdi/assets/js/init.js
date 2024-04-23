@@ -1,8 +1,8 @@
 import User from './class/User.js';
 import Connect from './class/Connect.js';
-import { fetchData } from './api.js';
+import { fetchData } from './fetch/api.js';
 import { changeScene }  from './spaManagement/scene.js';
-import { backgroundRunner } from './background.js';
+import { backgroundRunner } from './action/background.js';
 
 var globalVariables = {
     currentUser: null,
