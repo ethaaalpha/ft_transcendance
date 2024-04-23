@@ -1,11 +1,10 @@
 import globalVariables from './main.js';
 import Conversations from './Conversation.js';
-import { fetchData } from './api.js';
-import { fetchCurrentUsername } from './httpGetters.js';
+import { fetchData } from './api.js';;
 
 async function fetchConversations() {
 	try {
-	  const username = await fetchCurrentUsername();
+	  const username = globalVariables.currentUser.getUsername();
 	  const data = await fetchData('/api/dashboard/conversations');
 	  globalVariables.userConversations = new Conversations(username, data.data.conversations);
 	} catch (error) {
