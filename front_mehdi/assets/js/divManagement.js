@@ -404,124 +404,134 @@ function createStatElement(title, data, description, shape) {
 
 async function createSettings() {
 
-	const settingsDiv = document.getElementById("settings");
+	try {
+		const settingsDiv = document.getElementById("settings");
 
-	// Back button
-	const backButton = document.createElement("button");
-	backButton.className = "arrow-back d-flex justify-content-start align-items-center";
-	backButton.onclick = function() {
-		changeScene('home');
-	};
-	const backButtonImage = document.createElement("img");
-	backButtonImage.src = "assets/images/icons/arrow.svg";
-	backButton.appendChild(backButtonImage);
-	settingsDiv.appendChild(backButton);
+		// Back button
+		const backButton = document.createElement("button");
+		backButton.className = "arrow-back d-flex justify-content-start align-items-center";
+		backButton.onclick = function() {
+			changeScene('home');
+		};
+		const backButtonImage = document.createElement("img");
+		backButtonImage.src = "assets/images/icons/arrow.svg";
+		backButton.appendChild(backButtonImage);
+		settingsDiv.appendChild(backButton);
 
-	// Title and description
-	const title = document.createElement("span");
-	title.className = "title-2 greened";
-	title.textContent = "Settings";
-	settingsDiv.appendChild(title);
+		// Title and description
+		const title = document.createElement("span");
+		title.className = "title-2 greened";
+		title.textContent = "Settings";
+		settingsDiv.appendChild(title);
 
-	const description = document.createElement("span");
-	description.className = "body-text settings-text";
-	description.textContent = "Change everything we allow you to.";
-	settingsDiv.appendChild(description);
+		const description = document.createElement("span");
+		description.className = "body-text settings-text";
+		description.textContent = "Change everything we allow you to.";
+		settingsDiv.appendChild(description);
 
-	// Settings buttons
-	const settingsButtons = [
-		{ label: "Modify game theme", icon: "gamepad.svg", scene: "modify-game-theme" },
-		{ label: "Modify profile picture", icon: "user_settings.svg", scene: "modify-profil-picture" },
-		{ label: "Modify password", icon: "lock.svg", scene: "modify-password" },
-		{ label: "Modify email", icon: "mail.svg", scene: "modify-email" },
-		{ label: "Sign out", icon: "logout.svg", action: signOut }
-	];
+		// Settings buttons
+		const settingsButtons = [
+			{ label: "Modify game theme", icon: "gamepad.svg", scene: "modify-game-theme" },
+			{ label: "Modify profile picture", icon: "user_settings.svg", scene: "modify-profil-picture" },
+			{ label: "Modify password", icon: "lock.svg", scene: "modify-password" },
+			{ label: "Modify email", icon: "mail.svg", scene: "modify-email" },
+			{ label: "Sign out", icon: "logout.svg", action: signOut }
+		];
 
-	settingsButtons.forEach(button => {
-		const buttonElement = document.createElement("button");
-		buttonElement.className = "modify-btn btn btn-block btn-light d-flex align-items-center justify-content-start bordered-button-expanded";
-		buttonElement.style.setProperty("--main_color", "#DADADA");
-		buttonElement.onclick = button.scene ? function() { changeScene(button.scene); } : button.action;
-		const iconImage = document.createElement("img");
-		iconImage.src = `assets/images/icons/${button.icon}`;
-		iconImage.className = "icon-button";
-		if (button.label === "Sign out") {
-			iconImage.style.paddingLeft = "0.05em";
-			iconImage.style.paddingRight = "0.4em";
-			buttonElement.className += " bordered-button-logout";
-		} else {
-			iconImage.style.paddingRight = "0.5em";
-		}
-		buttonElement.appendChild(iconImage);
-		const labelSpan = document.createElement("span");
-		labelSpan.textContent = button.label;
-		buttonElement.appendChild(labelSpan);
-		settingsDiv.appendChild(buttonElement);
-	});
-	
-	handleNavButtons();
+		settingsButtons.forEach(button => {
+			const buttonElement = document.createElement("button");
+			buttonElement.className = "modify-btn btn btn-block btn-light d-flex align-items-center justify-content-start bordered-button-expanded";
+			buttonElement.style.setProperty("--main_color", "#DADADA");
+			buttonElement.onclick = button.scene ? function() { changeScene(button.scene); } : button.action;
+			const iconImage = document.createElement("img");
+			iconImage.src = `assets/images/icons/${button.icon}`;
+			iconImage.className = "icon-button";
+			if (button.label === "Sign out") {
+				iconImage.style.paddingLeft = "0.05em";
+				iconImage.style.paddingRight = "0.4em";
+				buttonElement.className += " bordered-button-logout";
+			} else {
+				iconImage.style.paddingRight = "0.5em";
+			}
+			buttonElement.appendChild(iconImage);
+			const labelSpan = document.createElement("span");
+			labelSpan.textContent = button.label;
+			buttonElement.appendChild(labelSpan);
+			settingsDiv.appendChild(buttonElement);
+		});
+		
+		handleNavButtons();
+	} catch (error) {
+		console.error("Error in createSettings: ", error);
+		throw error;
+	}
 }
 
 async function createModifyGameTheme() {
 
-	const modifyGameThemeDiv = document.getElementById("modify-game-theme");
+	try {
+		const modifyGameThemeDiv = document.getElementById("modify-game-theme");
 
-	// Back button
-	const backButton = document.createElement("button");
-	backButton.className = "arrow-back d-flex justify-content-start align-items-center";
-	backButton.onclick = function() {
-		changeScene('settings');
-	};
-	const backButtonImage = document.createElement("img");
-	backButtonImage.src = "assets/images/icons/arrow.svg";
-	backButton.appendChild(backButtonImage);
-	modifyGameThemeDiv.appendChild(backButton);
-
-	// Title and description
-	const title = document.createElement("span");
-	title.className = "title-2 greened";
-	title.textContent = "Modify game theme";
-	modifyGameThemeDiv.appendChild(title);
-
-	const description = document.createElement("span");
-	description.className = "body-text settings-text";
-	description.textContent = "Go through parallel universes.";
-	modifyGameThemeDiv.appendChild(description);
-
-	// Menu container
-	const menuContainer = document.createElement("div");
-	menuContainer.id = "modify-game-theme-menu";
-	menuContainer.className = "modify-game-theme-container";
-	modifyGameThemeDiv.appendChild(menuContainer);
-	
-	// Image button
-	for (let i = 0; i < 6; i++) {
-		const div = document.createElement("div");
-		
-		div.classList.add("modify-game-theme-image-container", "selectable");
-		const image = document.createElement("img");
-		image.src = `assets/images/theme/${i}.jpg`;
-		image.classList.add("modify-game-theme-image");
-		div.appendChild(image);
-		div.onclick = function() {
-			selectGameTheme(i + 1);
+		// Back button
+		const backButton = document.createElement("button");
+		backButton.className = "arrow-back d-flex justify-content-start align-items-center";
+		backButton.onclick = function() {
+			changeScene('settings');
 		};
-		menuContainer.appendChild(div);
+		const backButtonImage = document.createElement("img");
+		backButtonImage.src = "assets/images/icons/arrow.svg";
+		backButton.appendChild(backButtonImage);
+		modifyGameThemeDiv.appendChild(backButton);
+
+		// Title and description
+		const title = document.createElement("span");
+		title.className = "title-2 greened";
+		title.textContent = "Modify game theme";
+		modifyGameThemeDiv.appendChild(title);
+
+		const description = document.createElement("span");
+		description.className = "body-text settings-text";
+		description.textContent = "Go through parallel universes.";
+		modifyGameThemeDiv.appendChild(description);
+
+		// Menu container
+		const menuContainer = document.createElement("div");
+		menuContainer.id = "modify-game-theme-menu";
+		menuContainer.className = "modify-game-theme-container";
+		modifyGameThemeDiv.appendChild(menuContainer);
+		
+		// Image button
+		for (let i = 0; i < 6; i++) {
+			const div = document.createElement("div");
+			
+			div.classList.add("modify-game-theme-image-container", "selectable");
+			const image = document.createElement("img");
+			image.src = `assets/images/theme/${i}.jpg`;
+			image.classList.add("modify-game-theme-image");
+			div.appendChild(image);
+			div.onclick = function() {
+				selectGameTheme(i + 1);
+			};
+			menuContainer.appendChild(div);
+		}
+
+		// Overlay button
+		const overlayButton = document.createElement("button");
+		overlayButton.className = "modify-btn overlay-btn btn btn-block btn-light d-flex align-items-center justify-content-start bordered-button-expanded";
+		overlayButton.style.setProperty("--main_color", "#B4B4B4");
+		overlayButton.onclick = changeGameTheme; // to modify with Nico
+		const overlayButtonText = document.createElement("span");
+		overlayButtonText.textContent = "Change game theme";
+		overlayButton.appendChild(overlayButtonText);
+		modifyGameThemeDiv.appendChild(overlayButton);
+
+		selectGameTheme(globalVariables.gameTheme);
+
+		handleNavButtons();
+	} catch (error) {
+		console.error("Error in createModifyGameTheme: ", error);
+		throw error;
 	}
-
-	// Overlay button
-	const overlayButton = document.createElement("button");
-	overlayButton.className = "modify-btn overlay-btn btn btn-block btn-light d-flex align-items-center justify-content-start bordered-button-expanded";
-	overlayButton.style.setProperty("--main_color", "#B4B4B4");
-	overlayButton.onclick = changeGameTheme; // to modify with Nico
-	const overlayButtonText = document.createElement("span");
-	overlayButtonText.textContent = "Change game theme";
-	overlayButton.appendChild(overlayButtonText);
-	modifyGameThemeDiv.appendChild(overlayButton);
-
-	selectGameTheme(globalVariables.gameTheme);
-
-	handleNavButtons();
 }
 
 function selectGameTheme(id) {
@@ -545,174 +555,190 @@ function changeGameTheme() { // to modify with Nico
 
 async function createModifyProfilPicture() {
 
-	const modifyProfilPictureDiv = document.getElementById("modify-profil-picture");
+	try {
+		const modifyProfilPictureDiv = document.getElementById("modify-profil-picture");
 
-	// Back button
-	const backButton = document.createElement("button");
-	backButton.className = "arrow-back d-flex justify-content-start align-items-center";
-	backButton.onclick = function() {
-		changeScene('settings');
-	};
-	const backButtonImage = document.createElement("img");
-	backButtonImage.src = "assets/images/icons/arrow.svg";
-	backButton.appendChild(backButtonImage);
-	modifyProfilPictureDiv.appendChild(backButton);
+		// Back button
+		const backButton = document.createElement("button");
+		backButton.className = "arrow-back d-flex justify-content-start align-items-center";
+		backButton.onclick = function() {
+			changeScene('settings');
+		};
+		const backButtonImage = document.createElement("img");
+		backButtonImage.src = "assets/images/icons/arrow.svg";
+		backButton.appendChild(backButtonImage);
+		modifyProfilPictureDiv.appendChild(backButton);
 
-	// Title and description
-	const title = document.createElement("span");
-	title.className = "title-2 greened";
-	title.textContent = "Modify profil picture";
-	modifyProfilPictureDiv.appendChild(title);
+		// Title and description
+		const title = document.createElement("span");
+		title.className = "title-2 greened";
+		title.textContent = "Modify profil picture";
+		modifyProfilPictureDiv.appendChild(title);
 
-	const description = document.createElement("span");
-	description.className = "body-text settings-text";
-	description.textContent = "So we can see your lovely smile.";
-	modifyProfilPictureDiv.appendChild(description);
+		const description = document.createElement("span");
+		description.className = "body-text settings-text";
+		description.textContent = "So we can see your lovely smile.";
+		modifyProfilPictureDiv.appendChild(description);
 
-	// Custom file input
-	const customFileInput = document.createElement("div");
-	customFileInput.className = "custom-file-input";
-	const fileImage = document.createElement("img");
-	fileImage.src = "assets/images/icons/upload.svg";
-	customFileInput.appendChild(fileImage);
-	const fileLabel = document.createElement("label");
-	fileLabel.htmlFor = "settings-profil-picture";
-	fileLabel.textContent = "Choose a file";
-	customFileInput.appendChild(fileLabel);
-	const fileInput = document.createElement("input");
-	fileInput.type = "file";
-	fileInput.id = "settings-profil-picture";
-	fileInput.accept = "image/*";
-	customFileInput.appendChild(fileInput);
-	modifyProfilPictureDiv.appendChild(customFileInput);
+		// Custom file input
+		const customFileInput = document.createElement("div");
+		customFileInput.className = "custom-file-input";
+		const fileImage = document.createElement("img");
+		fileImage.src = "assets/images/icons/upload.svg";
+		customFileInput.appendChild(fileImage);
+		const fileLabel = document.createElement("label");
+		fileLabel.htmlFor = "settings-profil-picture";
+		fileLabel.textContent = "Choose a file";
+		customFileInput.appendChild(fileLabel);
+		const fileInput = document.createElement("input");
+		fileInput.type = "file";
+		fileInput.id = "settings-profil-picture";
+		fileInput.accept = "image/*";
+		customFileInput.appendChild(fileInput);
+		modifyProfilPictureDiv.appendChild(customFileInput);
 
-	// Button
-	const button = document.createElement("button");
-	button.className = "btn btn-light bordered-button-expanded";
-	button.style.setProperty("--main_color", "#DADADA");
-	button.onclick = modifyProfilPicture;
-	const buttonSpan = document.createElement("span");
-	buttonSpan.className = "btn-title";
-	buttonSpan.textContent = "Change my profil picture";
-	button.appendChild(buttonSpan);
-	modifyProfilPictureDiv.appendChild(button);	
+		// Button
+		const button = document.createElement("button");
+		button.className = "btn btn-light bordered-button-expanded";
+		button.style.setProperty("--main_color", "#DADADA");
+		button.onclick = modifyProfilPicture;
+		const buttonSpan = document.createElement("span");
+		buttonSpan.className = "btn-title";
+		buttonSpan.textContent = "Change my profil picture";
+		button.appendChild(buttonSpan);
+		modifyProfilPictureDiv.appendChild(button);	
 
-	handleNavButtons();
+		handleNavButtons();
+	} catch (error) {
+		console.error("Error in createModifyProfilPicture: ", error);
+		throw error;
+	}
 }
 
 async function createModifyPassword() {
 
-	const modifyPasswordDiv = document.getElementById("modify-password");
+	try {
+		const modifyPasswordDiv = document.getElementById("modify-password");
 
-	// Back button
-	const backButton = document.createElement("button");
-	backButton.className = "arrow-back d-flex justify-content-start align-items-center";
-	backButton.onclick = function() {
-		changeScene('settings');
-	};
-	const backButtonImage = document.createElement("img");
-	backButtonImage.src = "assets/images/icons/arrow.svg";
-	backButton.appendChild(backButtonImage);
-	modifyPasswordDiv.appendChild(backButton);
+		// Back button
+		const backButton = document.createElement("button");
+		backButton.className = "arrow-back d-flex justify-content-start align-items-center";
+		backButton.onclick = function() {
+			changeScene('settings');
+		};
+		const backButtonImage = document.createElement("img");
+		backButtonImage.src = "assets/images/icons/arrow.svg";
+		backButton.appendChild(backButtonImage);
+		modifyPasswordDiv.appendChild(backButton);
 
-	// Title and description
-	const title = document.createElement("span");
-	title.className = "title-2 greened";
-	title.textContent = "Modify password";
-	modifyPasswordDiv.appendChild(title);
+		// Title and description
+		const title = document.createElement("span");
+		title.className = "title-2 greened";
+		title.textContent = "Modify password";
+		modifyPasswordDiv.appendChild(title);
 
-	const description = document.createElement("span");
-	description.className = "body-text settings-text";
-	description.textContent = "Minimum 5 and a maximum of 32 characters.";
-	modifyPasswordDiv.appendChild(description);
+		const description = document.createElement("span");
+		description.className = "body-text settings-text";
+		description.textContent = "Minimum 5 and a maximum of 32 characters.";
+		modifyPasswordDiv.appendChild(description);
 
-	// Password inputs
-	const passwordInputs = ["Actual password", "New password", "Confirm password"];
-	passwordInputs.forEach(inputLabel => {
-		const formGroup = document.createElement("div");
-		formGroup.className = "form-floating fixed item-spacer";
-		const inputField = document.createElement("input");
-		inputField.type = "password";
-		inputField.className = "form-control dark-form-input";
-		inputField.id = `settings-${inputLabel.toLowerCase().replace(/\s/g, '-')}`;
-		inputField.placeholder = inputLabel;
-		const label = document.createElement("label");
-		label.htmlFor = `settings-${inputLabel.toLowerCase().replace(/\s/g, '-')}`;
-		label.textContent = inputLabel;
-		formGroup.appendChild(inputField);
-		formGroup.appendChild(label);
-		modifyPasswordDiv.appendChild(formGroup);
-	});
+		// Password inputs
+		const passwordInputs = ["Actual password", "New password", "Confirm password"];
+		passwordInputs.forEach(inputLabel => {
+			const formGroup = document.createElement("div");
+			formGroup.className = "form-floating fixed item-spacer";
+			const inputField = document.createElement("input");
+			inputField.type = "password";
+			inputField.className = "form-control dark-form-input";
+			inputField.id = `settings-${inputLabel.toLowerCase().replace(/\s/g, '-')}`;
+			inputField.placeholder = inputLabel;
+			const label = document.createElement("label");
+			label.htmlFor = `settings-${inputLabel.toLowerCase().replace(/\s/g, '-')}`;
+			label.textContent = inputLabel;
+			formGroup.appendChild(inputField);
+			formGroup.appendChild(label);
+			modifyPasswordDiv.appendChild(formGroup);
+		});
 
-	// Button
-	const button = document.createElement("button");
-	button.className = "btn btn-light bordered-button-expanded";
-	button.style.setProperty("--main_color", "#DADADA");
-	button.onclick = modifyPassword;
-	const buttonSpan = document.createElement("span");
-	buttonSpan.className = "btn-title";
-	buttonSpan.textContent = "Change my password";
-	button.appendChild(buttonSpan);
-	modifyPasswordDiv.appendChild(button);	
+		// Button
+		const button = document.createElement("button");
+		button.className = "btn btn-light bordered-button-expanded";
+		button.style.setProperty("--main_color", "#DADADA");
+		button.onclick = modifyPassword;
+		const buttonSpan = document.createElement("span");
+		buttonSpan.className = "btn-title";
+		buttonSpan.textContent = "Change my password";
+		button.appendChild(buttonSpan);
+		modifyPasswordDiv.appendChild(button);	
 
-	handleNavButtons();
+		handleNavButtons();
+	} catch (error) {
+		console.error("Error in createModifyPassword: ", error);
+		throw error;
+	}
 }
 
 async function createModifyEmail() {
-	const modifyEmailDiv = document.getElementById("modify-email");
 
-	// Back button
-	const backButton = document.createElement("button");
-	backButton.className = "arrow-back d-flex justify-content-start align-items-center";
-	backButton.onclick = function() {
-		changeScene('settings');
-	};
-	const backButtonImage = document.createElement("img");
-	backButtonImage.src = "assets/images/icons/arrow.svg";
-	backButton.appendChild(backButtonImage);
-	modifyEmailDiv.appendChild(backButton);
+	try {
+		const modifyEmailDiv = document.getElementById("modify-email");
 
-	// Title and description
-	const title = document.createElement("span");
-	title.className = "title-2 greened";
-	title.textContent = "Modify email";
-	modifyEmailDiv.appendChild(title);
+		// Back button
+		const backButton = document.createElement("button");
+		backButton.className = "arrow-back d-flex justify-content-start align-items-center";
+		backButton.onclick = function() {
+			changeScene('settings');
+		};
+		const backButtonImage = document.createElement("img");
+		backButtonImage.src = "assets/images/icons/arrow.svg";
+		backButton.appendChild(backButtonImage);
+		modifyEmailDiv.appendChild(backButton);
 
-	const description = document.createElement("span");
-	description.className = "body-text settings-text";
-	description.textContent = "So we can send you love letters.";
-	modifyEmailDiv.appendChild(description);
+		// Title and description
+		const title = document.createElement("span");
+		title.className = "title-2 greened";
+		title.textContent = "Modify email";
+		modifyEmailDiv.appendChild(title);
 
-	// Email inputs
-	const emailInputs = ["Actual email", "New email", "Confirm email"];
-	emailInputs.forEach(inputLabel => {
-		const formGroup = document.createElement("div");
-		formGroup.className = "form-floating fixed item-spacer";
-		const inputField = document.createElement("input");
-		inputField.type = "email";
-		inputField.className = "form-control dark-form-input";
-		inputField.id = `settings-${inputLabel.toLowerCase().replace(/\s/g, '-')}`;
-		inputField.placeholder = inputLabel;
-		const label = document.createElement("label");
-		label.htmlFor = `settings-${inputLabel.toLowerCase().replace(/\s/g, '-')}`;
-		label.textContent = inputLabel;
-		formGroup.appendChild(inputField);
-		formGroup.appendChild(label);
-		modifyEmailDiv.appendChild(formGroup);
-	});
+		const description = document.createElement("span");
+		description.className = "body-text settings-text";
+		description.textContent = "So we can send you love letters.";
+		modifyEmailDiv.appendChild(description);
 
-	// Button
-	const button = document.createElement("button");
-	button.className = "btn btn-light bordered-button-expanded";
-	button.style.setProperty("--main_color", "#DADADA");
-	button.onclick = modifyEmail;
-	const buttonSpan = document.createElement("span");
-	buttonSpan.className = "btn-title";
-	buttonSpan.textContent = "Change my email";
-	button.appendChild(buttonSpan);
-	modifyEmailDiv.appendChild(button);
-	
-	handleNavButtons();
+		// Email inputs
+		const emailInputs = ["Actual email", "New email", "Confirm email"];
+		emailInputs.forEach(inputLabel => {
+			const formGroup = document.createElement("div");
+			formGroup.className = "form-floating fixed item-spacer";
+			const inputField = document.createElement("input");
+			inputField.type = "email";
+			inputField.className = "form-control dark-form-input";
+			inputField.id = `settings-${inputLabel.toLowerCase().replace(/\s/g, '-')}`;
+			inputField.placeholder = inputLabel;
+			const label = document.createElement("label");
+			label.htmlFor = `settings-${inputLabel.toLowerCase().replace(/\s/g, '-')}`;
+			label.textContent = inputLabel;
+			formGroup.appendChild(inputField);
+			formGroup.appendChild(label);
+			modifyEmailDiv.appendChild(formGroup);
+		});
+
+		// Button
+		const button = document.createElement("button");
+		button.className = "btn btn-light bordered-button-expanded";
+		button.style.setProperty("--main_color", "#DADADA");
+		button.onclick = modifyEmail;
+		const buttonSpan = document.createElement("span");
+		buttonSpan.className = "btn-title";
+		buttonSpan.textContent = "Change my email";
+		button.appendChild(buttonSpan);
+		modifyEmailDiv.appendChild(button);
+		
+		handleNavButtons();
+	} catch (error) {
+		console.error("Error in createModifyEmail: ", error);
+		throw error;
+	}
 }
 
 // Utils
