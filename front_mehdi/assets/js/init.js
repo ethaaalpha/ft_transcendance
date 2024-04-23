@@ -1,7 +1,7 @@
-import User from './User.js';
-import Connect from './Connect.js';
+import User from './class/User.js';
+import Connect from './class/Connect.js';
 import { fetchData } from './api.js';
-import { changeScene }  from './sceneManagement.js';
+import { changeScene }  from './spaManagement/scene.js';
 import { backgroundRunner } from './background.js';
 
 var globalVariables = {

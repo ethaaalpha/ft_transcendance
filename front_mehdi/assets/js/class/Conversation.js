@@ -1,5 +1,5 @@
-import globalVariables from './main.js';
-import { scrollMessagesToBottom } from './chatManagement.js';
+import globalVariables from '../init.js';
+import { scrollMessagesToBottom } from '../chatManagement.js';
 
 class Conversations {
 	constructor(myUsername, conversations = {}) {

@@ -1,8 +1,8 @@
-import globalVariables from './main.js';
-import { removeChildDiv, createChildDiv } from './divManagement.js';
-import { fetchUserData } from './main.js';
-import { setEventListener, unsetEventListener } from './eventListenerManagement.js'
-import { fetchConversations } from './chatManagement.js';
+import globalVariables from '../init.js';
+import { removeChildDiv, createChildDiv } from './div.js';
+import { fetchUserData } from '../init.js';
+import { setEventListener, unsetEventListener } from './eventListener.js'
+import { fetchConversations } from '../chatManagement.js';
 
 function changeScene(newScene, user) {
     switch (newScene) {
@@ -118,7 +118,7 @@ async function sceneSettings() {
 	globalVariables.currentScene = "settings";
 	hideElements("conversation-display", "signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
 	unsetEventListener("conversation-list");// same as below
-    removeChildDiv("conversation-display", "conversation-list", "profil", "modify-game-theme");//add all to be deleted list, remove hidder after
+    removeChildDiv("conversation-display", "conversation-list", "profil", "modify-game-theme", "modify-profil-picture");//add all to be deleted list, remove hidder after
 	await fetchUserData();
 	await createChildDiv("settings");
 	unhideElements("settings");

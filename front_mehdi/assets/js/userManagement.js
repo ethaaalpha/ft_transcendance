@@ -1,5 +1,5 @@
 import { fetchData } from './api.js';
-import { changeScene } from './sceneManagement.js';
+import { changeScene } from './spaManagement/scene.js';
 
 function signIn() {
 	var username = document.getElementById("username").value;
