@@ -1,3 +1,6 @@
+import { fetchData } from './api.js';
+import { changeScene } from './spaManagement/scene.js';
+
 function signIn() {
 	var username = document.getElementById("username").value;
 	var password = document.getElementById("password").value;
@@ -188,4 +191,4 @@ function manageFriend(username, action) {
     });
 }
 
-// export { signIn, signUp, signWith42, signOut, forgotPassword, modifyPassword, modifyEmail, modifyProfilPicture, manageFriend };
+export { signIn, signUp, signWith42, signOut, forgotPassword, modifyPassword, modifyEmail, modifyProfilPicture, manageFriend };

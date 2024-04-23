@@ -1,7 +1,8 @@
-import globalVariables from './main.js';
-import { removeChildDiv, createChildDiv } from './divManagement.js';
-import { fetchUserData } from './main.js';
-import { setEventListener, unsetEventListener } from './eventListenerManagement.js'
+import globalVariables from '../init.js';
+import { removeChildDiv, createChildDiv } from './div.js';
+import { fetchUserData } from '../init.js';
+import { setEventListener, unsetEventListener } from './eventListener.js'
+import { fetchConversations } from '../chatManagement.js';
 
 function changeScene(newScene, user) {
     switch (newScene) {
@@ -29,16 +30,16 @@ function changeScene(newScene, user) {
 		case "settings":
 			sceneSettings();
 			break;
-		case "modifyGameTheme":
+		case "modify-game-theme":
 			sceneModifyGameTheme();
 			break;
-		case "modifyProfilPicture":
+		case "modify-profil-picture":
 			sceneModifyProfilPicture();
 			break;
-        case "modifyPassword":
+        case "modify-password":
             sceneModifyPassword();
             break;
-        case "modifyEmail":
+        case "modify-email":
             sceneModifyEmail();
             break;
         default:
@@ -48,7 +49,7 @@ function changeScene(newScene, user) {
     console.log("Current scene is:", globalVariables.currentScene);
 }
 
-//scene
+// Handler
 function sceneSignIn() {
     if (globalVariables.currentScene === "start") {
         unhideElements("signForm");
@@ -68,83 +69,98 @@ function sceneSignUp() {
 }
 
 function sceneHome() {
+    globalVariables.currentScene = "home";
 	hideElements("signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
 	resetFormFields("username", "password", "passwordConfirm", "email");
     unhideElements("home");
-    globalVariables.currentScene = "home";
 	changeScene("conversation-list");
 }
 
 async function sceneConversationList() {
+    globalVariables.currentScene = "conversation-list";
 	hideElements("conversation-display", "signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
-    removeChildDiv("conversation-display", "conversation-list", "profil");
-	await fetchUserData();
+    removeChildDiv("conversation-display", "conversation-list", "profil", "settings", "modify-game-theme");
+	// await fetchConversations();
 	await createChildDiv("conversation-list");
 	setEventListener("conversation-list");
 	unhideElements("conversation-list");
-    globalVariables.currentScene = "conversation-list";
 }
 
 function sceneSearch() {
+    globalVariables.currentScene = "search";
 	hideElements("conversation-display", "signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
     removeChildDiv("conversation-display", "conversation-list-contact-container-id", "profil");
 	// createChildDiv("conversation-list");
 	// unhideElements("conversation-list");
-    globalVariables.currentScene = "search";
 }
 
-function sceneConversationDisplay(user) {
+async function sceneConversationDisplay(user) {
+    globalVariables.currentScene = "conversation-display";
 	unsetEventListener("conversation-list");
 	hideElements("conversation-list", "signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
 	removeChildDiv("conversation-display", "conversation-list", "profil");
-	createChildDiv("conversation-display", user);
+	await createChildDiv("conversation-display", user);
+	setEventListener("conversation-display");
 	unhideElements("conversation-display");
-    globalVariables.currentScene = "conversation-display";
-}
-
-function sceneSettings() {
-	unsetEventListener("conversation-list");
-    hideElements("conversation-display", "conversation-list", "chat", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
-	resetFormFields("settings-actual-password", "settings-new-password", "settings-confirm-password", "settings-actual-email", "settings-new-email", "settings-confirm-email");
-	unhideElements("settings");
-    globalVariables.currentScene = "settings";
 }
 
 async function sceneProfil(user) {
+	globalVariables.currentScene = "profil";
 	unsetEventListener("conversation-list");
     hideElements("conversation-display", "conversation-list", "chat", "settings", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
-	removeChildDiv("conversation-display", "conversation-list", "profil");
+	removeChildDiv("conversation-display", "conversation-list", "profil", "settings", "modify-game-theme");
 	await fetchUserData();
-	createChildDiv("profil", user);
+	await createChildDiv("profil", user);
 	unhideElements("profil");
-    globalVariables.currentScene = "profil";
 }
 
-function sceneModifyGameTheme() {
+async function sceneSettings() {
+	globalVariables.currentScene = "settings";
+	hideElements("conversation-display", "signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
+	unsetEventListener("conversation-list");// same as below
+    removeChildDiv("conversation-display", "conversation-list", "profil", "modify-game-theme", "modify-profil-picture");//add all to be deleted list, remove hidder after
+	await fetchUserData();
+	await createChildDiv("settings");
+	unhideElements("settings");
+	// hideElements("conversation-display", "conversation-list", "chat", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
+	// resetFormFields("settings-actual-password", "settings-new-password", "settings-confirm-password", "settings-actual-email", "settings-new-email", "settings-confirm-email");
+}
+
+async function sceneModifyGameTheme() {
+	globalVariables.currentScene = "modify-game-theme";
 	hideElements("conversation-display", "conversation-list", "chat", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture");
+	removeChildDiv("settings", "modify-game-theme");
+	await createChildDiv("modify-game-theme");
 	unhideElements("modify-game-theme");
-	globalVariables.currentScene = "modifyGameTheme";
 }
 
-function sceneModifyProfilPicture() {
+async function sceneModifyProfilPicture() {
+	globalVariables.currentScene = "modify-profil-picture";
 	hideElements("conversation-display", "conversation-list", "chat", "settings", "profil", "modify-password", "modify-email", "modify-game-theme");
+	removeChildDiv("settings", "modify-game-theme", "modify-email");
+	await createChildDiv("modify-profil-picture");
 	unhideElements("modify-profil-picture");
-	globalVariables.currentScene = "modifyProfilPicture";
 }
 
-function sceneModifyPassword() {
+async function sceneModifyPassword() {
+    globalVariables.currentScene = "modify-password";
     hideElements("conversation-display", "conversation-list", "chat", "settings", "profil", "modify-email", "modify-profil-picture", "modify-game-theme");
-    unhideElements("modify-password");
-    globalVariables.currentScene = "modifyPassword";
+	removeChildDiv("settings", "modify-game-theme", "modify-password", "modify-email");
+	await createChildDiv("modify-password");
+	unhideElements("modify-password");
 }
 
-function sceneModifyEmail() {
+async function sceneModifyEmail() {
+    globalVariables.currentScene = "modify-email";
     hideElements("conversation-display", "conversation-list", "chat", "settings", "profil", "modify-password", "modify-profil-picture", "modify-game-theme");
-    unhideElements("modify-email");
-    globalVariables.currentScene = "modifyEmail";
+    
+	removeChildDiv("settings", "modify-game-theme", "modify-password", "modify-email");
+	await createChildDiv("modify-email");
+	
+	unhideElements("modify-email");
 }
 
-//utils
+// Utils
 function resetFormFields(...elementIds) {
     elementIds.forEach(elementId => {
         const element = document.getElementById(elementId);
@@ -172,22 +188,4 @@ function unhideElements(...elementIds) {
     });
 }
 
-//navbar button
-function settingsAction() {
-    if (globalVariables.currentScene == "settings") {
-        changeScene("home");
-    } else {
-        changeScene("settings");
-    }
-}
-
-async function profilAction() {
-    if (globalVariables.currentScene == "profil") {
-        changeScene("home");
-    } else {
-		const username = await fetchCurrentUsername();
-        changeScene("profil", username);
-    }
-}
-
-export { changeScene, settingsAction, profilAction };
+export { changeScene };
