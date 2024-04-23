@@ -4,6 +4,7 @@ import { fetchCurrentUsername, fetchProfilPicture, fetchUserStats } from './http
 import { fetchUserData } from './main.js';
 import { changeScene } from './sceneManagement.js';
 import { navBarButton } from './navBarButton.js';
+import { manageFriend } from './userManagement.js';
 
 function removeChildDiv(...parentIds) {
     parentIds.forEach(parentId => {
@@ -233,6 +234,7 @@ function handleConversationDisplay(user) {
 	sendButton.appendChild(imageInput)
 	inputDiv.appendChild(sendButton);
 
+	handleNavButtons();
 }
 
 async function handleProfilDisplay(username) {
@@ -537,7 +539,5 @@ function createButton(label, color, id, username) {
 	};
     return button;
 }
-
-// { navBarSettings, navBarProfil, navBarPlay, navBarChat };
 
 export { removeChildDiv, createChildDiv, handleConversationList, handleConversationDisplay, handleProfilDisplay, getSelected };
