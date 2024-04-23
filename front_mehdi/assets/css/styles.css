@@ -25,6 +25,12 @@ body {
 	aspect-ratio: 16/9;
 }
 
+@media only screen and (min-width: 2000px) {
+	.home-div {
+		width: 80%;
+	}
+}
+
 .game-div {
 	height: 100%;
 	width: 65%;
