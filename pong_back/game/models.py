@@ -359,7 +359,7 @@ class Room(models.Model):
 		count = self.opponents.count()
 
 		for p in self.opponents.all():
-			data = {'room-id': self.id, 'count': count, 'updater': updater.username}
+			data = {'room-id': self.id, 'count': count, 'updater': updater.username, 'max': int(self.mode)}
 			CoordinationConsumer.sendMessageToConsumer(p.username, data, 'count')
 		return
 	
