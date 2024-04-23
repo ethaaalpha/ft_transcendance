@@ -1,4 +1,5 @@
 import { fetchData } from './api.js';
+import { changeScene } from './sceneManagement.js';
 
 function signIn() {
 	var username = document.getElementById("username").value;

@@ -97,117 +97,19 @@
 				<div id="profil"></div>
 
 				<!-- SETTINGS -->
-				<div id="settings" class="settings-div d-none">
-					<button class="arrow-back d-flex justify-content-start align-items-center" onclick="changeScene('home')">
-						<img src="assets/images/arrow.svg"></img>				
-					</button>
-					<span class="title-2 greened">Settings</span>
-					<span class="body-text settings-text">Change everything we allow you to.</span>
-					<button class="modify-btn btn btn-block btn-light d-flex align-items-center justify-content-start bordered-button-expanded" style="--main_color: #DADADA;" onclick="changeScene('modifyGameTheme')">
-						<img src="assets/images/gamepad.svg" class="icon-button" style="padding-right: 0.6em;"></img>
-						<span>Modify game theme</span>
-					</button>
-					<button class="modify-btn btn btn-block btn-light d-flex align-items-center justify-content-start bordered-button-expanded" style="--main_color: #DADADA;" onclick="changeScene('modifyProfilPicture')">
-						<img src="assets/images/user_settings.svg" class="icon-button" style="padding-right: 0.5em;"></img>
-						<span>Modify profile picture</span>
-					</button>
-					<button class="modify-btn btn btn-block btn-light d-flex align-items-center justify-content-start bordered-button-expanded" style="--main_color: #DADADA;" onclick="changeScene('modifyPassword')">
-						<img src="assets/images/lock.svg" class="icon-button" style="padding-left: 0.1em; padding-right: 0.8em;"></img>
-						<span>Modify password</span>
-					</button>
-					<button class="modify-btn btn btn-block btn-light d-flex align-items-center justify-content-start bordered-button-expanded" style="--main_color: #DADADA;" onclick="changeScene('modifyEmail')">
-						<img src="assets/images/mail.svg" class="icon-button" style="padding-right: 0.5em;"></img>
-						<span>Modify email</span>
-					</button>
-					<button class="modify-btn btn btn-block btn-light d-flex align-items-center justify-content-start bordered-button-expanded bordered-button-logout" style="--main_color: #DADADA;" onclick="signOut()">
-						<img src="assets/images/logout.svg" class="icon-button" style="padding-left: 0.05em; padding-right: 0.4em;"></img>
-						<span>Sign out</span>	
-					</button>
-				</div>
-
+				<div id="settings" class="settings-div d-none"></div>
 
 				<!-- MODIFY GAME THEME -->
-				<div id="modify-game-theme" class="settings-div d-none">
-					<button class="arrow-back d-flex justify-content-start align-items-center" onclick="changeScene('settings')">
-						<img src="assets/images/arrow.svg"></img>				
-					</button>
-					<span class="title-2 greened">Modify game theme</span>
-					<span class="body-text settings-text">Go through parallel universes.</span>
-					<div id="modify-game-theme-menu" class="modify-game-theme-container"></div>
-					<div class="overlay-zone">
-						<button class="modify-btn overlay-btn btn btn-block btn-light d-flex align-items-center justify-content-start bordered-button-expanded" style="--main_color: #B4B4B4;" onclick="getSelected()">
-							<span>Change game theme</span>
-						</button>
-					</div>
-					
-				</div>
+				<div id="modify-game-theme" class="settings-div d-none"></div>
 
 				<!-- MODIFY PROFIL PICTURE -->
-				<div id="modify-profil-picture" class="settings-div d-none">
-					<button class="arrow-back d-flex justify-content-start align-items-center" onclick="changeScene('settings')">
-						<img src="assets/images/arrow.svg"></img>				
-					</button>
-					<span class="title-2 greened">Modify profil picture</span>
-					<span class="body-text settings-text">So we can see your lovely smile.</span>
-					<div class="custom-file-input">
-						<img src="assets/images/upload.svg">
-						<label for="settings-profil-picture">Choose a file</label>
-						<input type="file" id="settings-profil-picture" accept="image/*">
-					</div>
-					<button class="btn btn-light bordered-button-expanded" style="--main_color: #DADADA;">			
-						<span class="btn-title" onclick="modifyProfilPicture()">Change my profil picture</span>
-					</button>
-				</div>
+				<div id="modify-profil-picture" class="settings-div d-none"></div>
 
 				<!-- MODIFY PASSWORD -->
-				<div id="modify-password" class="settings-div d-none">
-					<button class="arrow-back d-flex justify-content-start align-items-center" onclick="changeScene('settings')">
-						<img src="assets/images/arrow.svg"></img>				
-					</button>
-					<span class="title-2 greened">Modify password</span>
-					<span class="body-text settings-text">Minimum 5 and a maximum of 32 characters.</span>
-					<div class="form-floating fixed item-spacer">
-						<input type="password" class="form-control dark-form-input" id="settings-actual-password" placeholder="Old password">
-						<label for="settings-actual-password">Old password</label>
-					</div>
-					<div class="form-floating fixed item-spacer">
-						<input type="password" class="form-control dark-form-input" id="settings-new-password" placeholder="New password">
-						<label for="settings-new-password">New password</label>
-					</div>
-					<div class="form-floating fixed item-spacer">
-						<input type="password" class="form-control dark-form-input" id="settings-confirm-password" placeholder="Confirm password">
-						<label for="settings-confirm-password">Confirm password</label>
-					</div>
-					<button class="btn btn-light bordered-button-expanded" style="--main_color: #DADADA;">			
-						<span class="btn-title" onclick="modifyPassword()">Change my password</span>
-					</button>
-				</div>
+				<div id="modify-password" class="settings-div d-none"></div>
 				
 				<!-- MODIFY EMAIL -->
-				<div id="modify-email" class="settings-div d-none">
-					<button class="arrow-back d-flex justify-content-start align-items-center" onclick="changeScene('settings')">
-						<img src="assets/images/arrow.svg"></img>				
-					</button>
-					<span class="title-2 greened">Modify email</span>
-					<span class="body-text settings-text">So we can send you love letters.</span>
-					<div class="d-flex flex-column">
-						<div class="form-floating fixed item-spacer">
-							<input id="settings-actual-email" type="email" class="form-control dark-form-input" placeholder="Actual email">
-							<label for="settings-actual-email">Actual email</label>
-						</div>
-						<div class="form-floating fixed item-spacer">
-							<input id="settings-new-email" type="email" class="form-control dark-form-input" placeholder="New email">
-							<label for="settings-new-email">New email</label>
-						</div>
-						<div class="form-floating fixed item-spacer">
-							<input id="settings-confirm-email" type="email" class="form-control dark-form-input" placeholder="Confirm email">
-							<label for="settings-confirm-email">Confirm email</label>
-						</div>
-						<button class="btn btn-light bordered-button-expanded" style="--main_color: #DADADA;">			
-							<span class="btn-title" onclick="modifyEmail()">Change my email</span>
-						</button>
-					</div>
-				</div>
+				<div id="modify-email" class="settings-div d-none"></div>
 
 			</div>
 
@@ -216,24 +118,7 @@
 		</div>
 	</div>
 
-
 	<script type="module" src="assets/js/main.js"></script>
-
-	<!-- <script src="assets/js/User.js"></script> -->
-    <!-- <script src="assets/js/alerts.js"></script> -->
-    <!-- <script src="assets/js/api.js"></script> -->
-    <!-- <script src="assets/js/background.js"></script> -->
-	<!-- <script src="assets/js/chatManagement.js"></script> -->
-	<!-- <script src="assets/js/divManagement.js"></script> -->
-    <!-- <script src="assets/js/eventListeners.js"></script> -->
-	<!-- <script src="assets/js/profil.js"></script> -->
-    <!-- <script src="assets/js/sceneManagement.js"></script> -->
-    <!-- <script src="assets/js/userManagement.js"></script> -->
-	<!-- <script src="assets/js/Connect.js"></script> -->
-	<!-- <script src="assets/js/httpGetters.js"></script> -->
-	<!-- <script src="assets/js/eventListenerManagement.js"></script> -->
-
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </body>
 </html>
