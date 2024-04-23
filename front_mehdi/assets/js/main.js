@@ -10,8 +10,6 @@ var globalVariables = {
 	activity: new Connect()
 };
 
-
-
 //check at launch if logged
 (async function() {
 	const logged = await isLogged();

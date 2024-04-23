@@ -48,7 +48,7 @@ function changeScene(newScene, user) {
     console.log("Current scene is:", globalVariables.currentScene);
 }
 
-//scene
+// Scene
 function sceneSignIn() {
     if (globalVariables.currentScene === "start") {
         unhideElements("signForm");
@@ -94,13 +94,13 @@ function sceneSearch() {
 }
 
 function sceneConversationDisplay(user) {
+    globalVariables.currentScene = "conversation-display";
 	unsetEventListener("conversation-list");
 	hideElements("conversation-list", "signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
 	removeChildDiv("conversation-display", "conversation-list", "profil");
 	createChildDiv("conversation-display", user);
 	setEventListener("conversation-display");
 	unhideElements("conversation-display");
-    globalVariables.currentScene = "conversation-display";
 }
 
 async function sceneSettings() {
@@ -146,7 +146,7 @@ function sceneModifyEmail() {
     globalVariables.currentScene = "modifyEmail";
 }
 
-//utils
+// Utils
 function resetFormFields(...elementIds) {
     elementIds.forEach(elementId => {
         const element = document.getElementById(elementId);
