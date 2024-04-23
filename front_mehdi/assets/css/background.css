@@ -15,14 +15,14 @@ body {
   }
   
   .backgroundZ0 {
-	background-image: url('../images/backgroundZ0.png');
+	background-image: url('../images/background/Z0.png');
 	background-repeat: repeat-x;
 	background-size: auto 100%;
 	background-position: 0 0;
   }
   
   .backgroundZ1 {
-	background-image: url('../images/backgroundZ1.png');
+	background-image: url('../images/background/Z1.png');
 	background-repeat: repeat-x;
 	background-size: auto 100%;
 	background-position: 0 0;
