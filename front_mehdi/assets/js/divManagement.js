@@ -131,7 +131,7 @@ async function createConversationDisplay(user) {
 		};
 
 		const imgButton = document.createElement('img');
-		imgButton.src = 'assets/images/arrow.svg';
+		imgButton.src = 'assets/images/icons/arrow.svg';
 		backButton.appendChild(imgButton)
 		
 		// Create parents div
@@ -199,7 +199,7 @@ async function createConversationDisplay(user) {
 		inputDiv.appendChild(messageInput);
 
 		const imageInput = document.createElement('img');
-		imageInput.src = 'assets/images/send.svg';
+		imageInput.src = 'assets/images/icons/send.svg';
 		
 		// Send button
 		const sendButton = document.createElement("button");
@@ -229,7 +229,7 @@ async function createProfil(username) {
 		};
 
 		const imgButton = document.createElement('img');
-		imgButton.src = 'assets/images/arrow.svg';
+		imgButton.src = 'assets/images/icons/arrow.svg';
 		backButton.appendChild(imgButton)
 
 		profilDisplay.appendChild(backButton);
@@ -377,7 +377,7 @@ function createStatElement(title, data, description, shape) {
 
 	// Create the icon element
 	const iconElement = document.createElement('img');
-	iconElement.src = 'assets/images/info.svg';
+	iconElement.src = 'assets/images/icons/info.svg';
 
 	// Create the title element
 	const titleElement = document.createElement("div");
@@ -413,7 +413,7 @@ async function createSettings() {
 		changeScene('home');
 	};
 	const backButtonImage = document.createElement("img");
-	backButtonImage.src = "assets/images/arrow.svg";
+	backButtonImage.src = "assets/images/icons/arrow.svg";
 	backButton.appendChild(backButtonImage);
 	settingsDiv.appendChild(backButton);
 
@@ -443,7 +443,7 @@ async function createSettings() {
 		buttonElement.style.setProperty("--main_color", "#DADADA");
 		buttonElement.onclick = button.scene ? function() { changeScene(button.scene); } : button.action;
 		const iconImage = document.createElement("img");
-		iconImage.src = `assets/images/${button.icon}`;
+		iconImage.src = `assets/images/icons/${button.icon}`;
 		iconImage.className = "icon-button";
 		if (button.label === "Sign out") {
 			iconImage.style.paddingLeft = "0.05em";
@@ -473,7 +473,7 @@ async function createModifyGameTheme() {
 		changeScene('settings');
 	};
 	const backButtonImage = document.createElement("img");
-	backButtonImage.src = "assets/images/arrow.svg";
+	backButtonImage.src = "assets/images/icons/arrow.svg";
 	backButton.appendChild(backButtonImage);
 	modifyGameThemeDiv.appendChild(backButton);
 
@@ -554,7 +554,7 @@ async function createModifyProfilPicture() {
 		changeScene('settings');
 	};
 	const backButtonImage = document.createElement("img");
-	backButtonImage.src = "assets/images/arrow.svg";
+	backButtonImage.src = "assets/images/icons/arrow.svg";
 	backButton.appendChild(backButtonImage);
 	modifyProfilPictureDiv.appendChild(backButton);
 
@@ -573,7 +573,7 @@ async function createModifyProfilPicture() {
 	const customFileInput = document.createElement("div");
 	customFileInput.className = "custom-file-input";
 	const fileImage = document.createElement("img");
-	fileImage.src = "assets/images/upload.svg";
+	fileImage.src = "assets/images/icons/upload.svg";
 	customFileInput.appendChild(fileImage);
 	const fileLabel = document.createElement("label");
 	fileLabel.htmlFor = "settings-profil-picture";
@@ -611,7 +611,7 @@ async function createModifyPassword() {
 		changeScene('settings');
 	};
 	const backButtonImage = document.createElement("img");
-	backButtonImage.src = "assets/images/arrow.svg";
+	backButtonImage.src = "assets/images/icons/arrow.svg";
 	backButton.appendChild(backButtonImage);
 	modifyPasswordDiv.appendChild(backButton);
 
@@ -668,7 +668,7 @@ async function createModifyEmail() {
 		changeScene('settings');
 	};
 	const backButtonImage = document.createElement("img");
-	backButtonImage.src = "assets/images/arrow.svg";
+	backButtonImage.src = "assets/images/icons/arrow.svg";
 	backButton.appendChild(backButtonImage);
 	modifyEmailDiv.appendChild(backButton);
 
@@ -747,7 +747,7 @@ function createButton(label, color, id, username) {
 	button.id = "nav-bar-button-" + id;
 	button.className = "btn col-6 btn-light bordered-button title-4 d-flex align-items-center justify-content-center nav-button-";
 	button.style.setProperty("--main_color", color);
-	button.innerHTML = `<img src="assets/images/${label.toLowerCase()}.svg" class="icon-button"></img> ${label}`;
+	button.innerHTML = `<img src="assets/images/icons/${label.toLowerCase()}.svg" class="icon-button"></img> ${label}`;
 	
 	button.onclick = function() {
 		navBarButton(label, username);
