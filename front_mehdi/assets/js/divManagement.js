@@ -221,7 +221,7 @@ async function createProfil(username) {
 	try {
 		const profilDisplay = document.getElementById("profil");
 
-		// back button
+		// Back button
 		const backButton = document.createElement("button");
 		backButton.classList.add("arrow-back", "d-flex", "justify-content-start", "align-items-center");
 		backButton.onclick = function() {
@@ -234,7 +234,7 @@ async function createProfil(username) {
 
 		profilDisplay.appendChild(backButton);
 
-		// create parent div
+		// Create parent div
 		const persoInfoDiv = document.createElement("div");
 		persoInfoDiv.id = "perso-info-id";
 		persoInfoDiv.classList.add("perso-info-container");
@@ -248,29 +248,29 @@ async function createProfil(username) {
 		profileImage.classList.add("profile-image");
 		persoInfoDiv.appendChild(profileImage);
 
-		// create nameActionsDiv
+		// Create nameActionsDiv
 		const nameActionsDiv = document.createElement("div");
 		nameActionsDiv.id = "name-actions-id";
 		nameActionsDiv.classList.add("name-actions-div");
 		persoInfoDiv.appendChild(nameActionsDiv);
 
-		// Fetch and add current username
-		const currentUsername = await globalVariables.currentUser.getUsername();
+		// Fetch and add username
+		const currentUsername = globalVariables.currentUser.getUsername();
 		const usernameElement = document.createElement("div");
 		usernameElement.textContent = username;
 		usernameElement.classList.add("username", "title-2");
 		nameActionsDiv.appendChild(usernameElement);
 
-		let myProfil;
+		let isMyProfil;
 
 		if (username !== currentUsername) {
-			myProfil = false;
+			isMyProfil = false;
 		} else {
-			myProfil = true;
+			isMyProfil = true;
 		}
 
 		// Check if username is different from current user
-		if (!myProfil) {
+		if (!isMyProfil) {
 			// Check if user is not a friend
 			const status = await globalVariables.currentUser.isFriend(username);
 			console.log("username here: " + username);
@@ -278,11 +278,11 @@ async function createProfil(username) {
 			if (status === "notFriend") {
 				const button1 = document.createElement("button");
 				button1.classList.add("action-button");
-				button1.innerHTML = `
-				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-					<path d="M15 19C15 16.7909 12.3137 15 9 15C5.68629 15 3 16.7909 3 19M19 16V13M19 13V10M19 13H16M19 13H22M9 12C6.79086 12 5 10.2091 5 8C5 5.79086 6.79086 4 9 4C11.2091 4 13 5.79086 13 8C13 10.2091 11.2091 12 9 12Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-				</svg>			
-				`;
+
+				const imgButton = document.createElement('img');
+				imgButton.src = 'assets/images/icons/notFriend.svg';
+				button1.appendChild(imgButton)
+
 				button1.onclick = function() {
 					manageFriend(username, "add");
 				};
@@ -290,11 +290,11 @@ async function createProfil(username) {
 			} else if (status === "pending") {
 				const button1 = document.createElement("button");
 				button1.classList.add("action-button");
-				button1.innerHTML = `
-					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path d="M15 19C15 16.7909 12.3137 15 9 15C5.68629 15 3 16.7909 3 19M21 10L17 14L15 12M9 12C6.79086 12 5 10.2091 5 8C5 5.79086 6.79086 4 9 4C11.2091 4 13 5.79086 13 8C13 10.2091 11.2091 12 9 12Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-					</svg>
-				`;
+
+				const imgButton = document.createElement('img');
+				imgButton.src = 'assets/images/icons/pending.svg';
+				button1.appendChild(imgButton)
+				
 				button1.onclick = function() {
 					// Do nothing for pending status
 				};
@@ -302,11 +302,11 @@ async function createProfil(username) {
 			} else if (status === "friend") {
 				const button1 = document.createElement("button");
 				button1.classList.add("action-button");
-				button1.innerHTML = `
-					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path d="M15 19C15 16.7909 12.3137 15 9 15C5.68629 15 3 16.7909 3 19M15 13H21M9 12C6.79086 12 5 10.2091 5 8C5 5.79086 6.79086 4 9 4C11.2091 4 13 5.79086 13 8C13 10.2091 11.2091 12 9 12Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-					</svg>
-				`;
+				
+				const imgButton = document.createElement('img');
+				imgButton.src = 'assets/images/icons/friend.svg';
+				button1.appendChild(imgButton)
+
 				button1.onclick = function() {
 					manageFriend(username, "remove");
 				};
@@ -317,16 +317,16 @@ async function createProfil(username) {
 			const isBlocked = await globalVariables.currentUser.isBlocked(username);
 			const button2 = document.createElement("button");
 			button2.classList.add("action-button");
-			button2.innerHTML = `
-				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-					<path d="M18 19C18 16.7909 15.3137 15 12 15C8.68629 15 6 16.7909 6 19M12 12C9.79086 12 8 10.2091 8 8C8 5.79086 9.79086 4 12 4C14.2091 4 16 5.79086 16 8C16 10.2091 14.2091 12 12 12Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-				</svg>
-			`;
+			
+			const imgButton = document.createElement('img');
+			imgButton.src = 'assets/images/icons/blocked.svg';
+			button2.appendChild(imgButton)
+
 			if (isBlocked) {
 				button2.onclick = function() {
 					manageFriend(username, "unblock");
 				};
-				button2.style.backgroundColor = "green";
+				button2.style.backgroundColor = "#05FF00";
 			} else {
 				button2.onclick = function() {
 					manageFriend(username, "block");
@@ -355,7 +355,7 @@ async function createProfil(username) {
 		persoScoresDiv.appendChild(createStatElement("average duration", userStats.averagePong, "The shorter you are in game the better.", "square"));
 		persoScoresDiv.appendChild(createStatElement("hits per match", userStats.averagePong, "The less you touch the ball the better.", "square"));
 
-		if (!myProfil)
+		if (!isMyProfil)
 			handleNavButtons(true, username);
 		else
 			handleNavButtons(false, username);
@@ -365,7 +365,6 @@ async function createProfil(username) {
 		throw error;
 	}
 }
-
 
 function createStatElement(title, data, description, shape) {
 	// Create the statistics element
