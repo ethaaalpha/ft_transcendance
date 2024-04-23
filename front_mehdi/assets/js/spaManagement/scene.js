@@ -2,7 +2,7 @@ import globalVariables from '../init.js';
 import { removeChildDiv, createChildDiv } from './div.js';
 import { fetchUserData } from '../init.js';
 import { setEventListener, unsetEventListener } from './eventListener.js'
-import { fetchConversations } from '../chatManagement.js';
+import { fetchConversations } from '../action/chat.js';
 
 function changeScene(newScene, user) {
     switch (newScene) {
