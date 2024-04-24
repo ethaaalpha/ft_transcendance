@@ -1,7 +1,6 @@
 @import url('variables.css');
 
 /* chatList */
-
 .conversation-list-searchbar-container {
 	padding-bottom: 1em;
 }
@@ -67,32 +66,7 @@
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* chatDisplay */
-
 .conversation-display-messages {
 	-webkit-mask: 
     	linear-gradient(to top, black 95%, transparent 100%),
