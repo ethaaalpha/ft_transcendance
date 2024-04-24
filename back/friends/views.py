@@ -5,6 +5,7 @@ from .forms import FriendsFrom
 from users.models import Profile
 from activity.notifier import ActivityNotifier
 from activity.status import Status
+from conversations.models import Conversation
 
 def entryPoint(request: HttpRequest):
 	if (request.method == "POST"):
@@ -50,6 +51,11 @@ def add(user: User, target: User, targetProfile: Profile):
 	targetProfile.pendingFriendsFrom.add(user)
 	target.save()
 	ActivityNotifier.sendFriendRequest(user.username, target.username)
+
+	# Re-active Conversation if desactived
+	conv = Conversation.getConversation([user, target])
+	if conv:
+		conv.setState(True)
 	return tResponses.OKAY.request(f'You successfully send an friend request to {target.username} !')
 
 def remove(user: User, target: User, targetProfile: Profile):
@@ -58,12 +64,18 @@ def remove(user: User, target: User, targetProfile: Profile):
 
 	targetProfile.friends.remove(user)
 	target.save()
+
+	# Desactive Conversation if actived
+	conv = Conversation.getConversation([user, target])
+	if conv:
+		conv.setState(False)
 	return tResponses.OKAY.request(f'You are not longger friend with {target.username} !')
 
 def block(user: User, target: User, targetProfile: Profile):
 	if user.Profile.is_block(target):
 		return (tResponses.FORBIDDEN.request("You already block this user !"))
 	
+	remove(user, target, targetProfile)
 	user.Profile.blockedUsers.add(target)
 	user.save()
 	return tResponses.OKAY.request(f'You successfully block {target.username}')
