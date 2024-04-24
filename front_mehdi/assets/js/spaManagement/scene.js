@@ -3,6 +3,7 @@ import { removeChildDiv, createChildDiv } from './div.js';
 import { fetchUserData } from '../init.js';
 import { setEventListener, unsetEventListener } from './eventListener.js'
 import { fetchConversations } from '../action/chat.js';
+import { signIn } from '../action/userManagement.js';
 
 function changeScene(newScene, user) {
     switch (newScene) {
@@ -50,28 +51,39 @@ function changeScene(newScene, user) {
 }
 
 // Handler
+
+//earch create div has to delete his childs before creating it
+
 function sceneSignIn() {
-    if (globalVariables.currentScene === "start") {
-        unhideElements("signForm");
-        globalVariables.currentScene = "signIn";
-	}
-	else if (globalVariables.currentScene == "settings") {
-		hideElements("titleSignUp", "passwordConfirmDiv", "signUpButton", "emailDiv", "home", "settings");
-		unhideElements("titleSignIn", "signWith42Button", "signInButton", "forgotPasswordButton", "signForm", "orDiv");
-	}
-	globalVariables.currentScene = "signIn";
+	globalVariables.currentScene = "sign-in";
+
+	hideElements("sign-in");
+	createChildDiv("sign-in");
+
+	hideElements();//everything
+
+	unhideElements("sign-in");
+	removeChildDiv();// everything exept sign in
 }
 
 function sceneSignUp() {
-	hideElements("titleSignIn", "signWith42Button", "signInButton", "forgotPasswordButton", "orDiv");
-    unhideElements("titleSignUp", "passwordConfirmDiv", "signUpButton", "emailDiv");
-    globalVariables.currentScene = "signUp";
+	globalVariables.currentScene = "sign-up";
+	
+	hideElements("sign-up");
+	createChildDiv("sign-up");//get text input in username and password if it exist
+	
+	hideElements();//everything
+	
+	unhideElements("sign-up");
+	removeChildDiv();// everything exept sign up
 }
+
+//
 
 function sceneHome() {
     globalVariables.currentScene = "home";
-	hideElements("signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
-	resetFormFields("username", "password", "passwordConfirm", "email");
+	// hideElements("signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
+	// resetFormFields("username", "password", "passwordConfirm", "email");
     unhideElements("home");
 	changeScene("conversation-list");
 }
