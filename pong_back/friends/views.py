@@ -4,6 +4,7 @@ from tools.responses import tResponses
 from .forms import FriendsFrom
 from users.models import Profile
 from activity.notifier import ActivityNotifier
+from activity.status import Status
 
 def entryPoint(request: HttpRequest):
 	if (request.method == "POST"):
@@ -84,6 +85,8 @@ def accept(user: User, target: User, targetProfile: Profile):
 	user.Profile.friends.add(target)
 	user.Profile.pendingFriendsFrom.remove(target)
 	user.save()
+	Status.warnFriend(user, target, 'Online')
+	Status.warnFriend(target, user, 'Online')
 	return tResponses.OKAY.request(f'You are now friend with {target.username}')
 
 def refuse(user: User, target: User, targetProfile: Profile):

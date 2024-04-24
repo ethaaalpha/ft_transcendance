@@ -27,6 +27,14 @@ class Status:
 			}, 'state')
 
 	@staticmethod
+	def warnFriend(warner: User, target: User, content: str):
+		from .consumers import ActivityConsumer
+		ActivityConsumer.sendMessageToConsumer(target.username, {
+			'user': warner.username,
+			'state': content,
+		}, 'state')
+
+	@staticmethod
 	def connect(user: User):
 		uProfile: Profile = user.Profile
 		uProfile.setState(1)
