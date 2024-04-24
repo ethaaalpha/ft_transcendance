@@ -25,6 +25,9 @@ function changeScene(newScene, user) {
 		case "search":
 			sceneSearch();
 			break;
+		case "search-contact":
+			sceneSearchContact(user);
+			break;
 		case "profil":
 			sceneProfil(user);
 			break;
@@ -58,6 +61,8 @@ const parentToHide = [
     "sign-up",
     "conversation-list",
     "conversation-display",
+	"search",
+	"search-contact",
     "profil",
     "settings",
 	"home",
@@ -73,12 +78,31 @@ const parentToremove = [
     "sign-up",
     "conversation-list",
     "conversation-display",
+	"search",
+	"search-contact",
     "profil",
     "settings",
     "modify-game-theme",
     "modify-profil-picture",
     "modify-password",
     "modify-email",
+    // "nav-bar"
+];
+
+
+const eventToUnset = [
+    // "sign-in",
+    // "sign-up",
+    "conversation-list",
+    "conversation-display",
+	"search",
+	"search-contact"
+    // "profil",
+    // "settings",
+    // "modify-game-theme",
+    // "modify-profil-picture",
+    // "modify-password",
+    // "modify-email",
     // "nav-bar"
 ];
 
@@ -120,11 +144,11 @@ async function sceneConversationList() {
 	hideElements("conversation-list");
 	await createChildDiv("conversation-list");
 	setEventListener("conversation-list");
-
+	
 	hideElements(parentToHide);
-
 	unhideElements("home");
 	unhideElements("conversation-list");
+	unsetEventListener(eventToUnset, "conversation-list");
 	removeChildDiv(parentToremove, "conversation-list");
 }
 
@@ -136,24 +160,41 @@ async function sceneSearch() {
 	setEventListener("search");
 
 	hideElements(parentToHide);
-
 	unhideElements("home");
 	unhideElements("search");
-	removeChildDiv(parentToremove, "search");
+	unsetEventListener(eventToUnset, "search");
+	removeChildDiv(parentToremove, "search");	
+}
 
-	// "conversation-list-contact-container-id"
-	
+async function sceneSearchContact(user) {
+	globalVariables.currentScene = "search-contact";
+
+	hideElements("search-contact");
+	await createChildDiv("search-contact", user);
+	setEventListener("search-contact");
+
+	hideElements(parentToHide);
+	unhideElements("home");
+	unhideElements("search-contact");
+	unsetEventListener(eventToUnset, "search-contact");
+	removeChildDiv(parentToremove, "search-contact");	
 }
 
 async function sceneConversationDisplay(user) {
-    globalVariables.currentScene = "conversation-display";
-	unsetEventListener("conversation-list");
-	hideElements("conversation-list", "signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
-	removeChildDiv("conversation-display", "conversation-list", "profil");
+	globalVariables.currentScene = "conversation-display";
+
+	hideElements("conversation-display");
 	await createChildDiv("conversation-display", user);
 	setEventListener("conversation-display");
+
+	hideElements(parentToHide);
+	unhideElements("home");
 	unhideElements("conversation-display");
+	unsetEventListener(eventToUnset, "conversation-display");
+	removeChildDiv(parentToremove, "conversation-display");
 }
+
+// to update below
 
 async function sceneProfil(user) {
 	globalVariables.currentScene = "profil";

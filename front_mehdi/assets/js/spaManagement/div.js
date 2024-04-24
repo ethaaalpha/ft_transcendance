@@ -55,6 +55,9 @@ async function createChildDiv(divId, user) {
 			case "search":
 				createSearch().then(resolve).catch(reject);
 				break;
+			case "search-contact":
+				createSearchContact(user).then(resolve).catch(reject);
+				break;
 			case "profil":
 				createProfil(user).then(resolve).catch(reject);
 				break;
@@ -484,26 +487,152 @@ async function createConversationDisplay(user) {
 		sendButton.appendChild(imageInput)
 		inputDiv.appendChild(sendButton);
 
-		handleNavButtons();
+		// handleNavButtons();
 	} catch (error) {
 		console.error("Error in createConversationDisplay: ", error);
 		throw error;
 	}
 }
 
+
+
 async function createSearch() {
 	try {
+		const searchParentDiv = document.getElementById("search");
 
-		const searchInput = document.getElementById("conversation-list-searchbar-input-id").value;
-		const conversationDiv = document.getElementById("conversation-list-contact-container-id");
+		// Create parents div
+		const searchbarDiv = document.createElement("div");
+		searchbarDiv.id = "search-searchbar-container-id";
+		searchbarDiv.classList.add("search-searchbar-container");
 
-		conversationDiv.innerHTML = '';
+		const conversationDiv = document.createElement("div");
+		conversationDiv.id = "search-contact-container-id";
+		conversationDiv.classList.add("search-contact-container");
+
+		searchParentDiv.appendChild(searchbarDiv);
+		searchParentDiv.appendChild(conversationDiv);
+
+		// Input search
+		const messageInput = document.createElement("input");
+		messageInput.setAttribute("type", "text");
+		messageInput.setAttribute("placeholder", "Search a contact...");
+		messageInput.classList.add("search-searchbar-input");
+		messageInput.setAttribute("id", "search-searchbar-input-id");
+
+		// Vérifier si l'élément existe avant d'accéder à sa valeur
+		const searchInput = document.getElementById("conversation-list-searchbar-input-id");
+		if (searchInput) {
+			messageInput.value = searchInput.value; // Utiliser value pour définir la valeur
+		} else {
+			console.error("L'élément conversation-list-searchbar-input-id n'existe pas.");
+			return;
+		}
+
+		searchbarDiv.appendChild(messageInput);
+
+		// handleNavButtons();
+	} catch (error) {
+		console.error('Error in createSearch: ', error);
+		throw error;
+	}
+}
+
+
+// async function createSearch() {
+// 	try {
+		
+// 		const searchInput = document.getElementById("conversation-list-searchbar-input-id").value;//if exist, try
+
+// 		const searchParentDiv = document.getElementById("search");
+
+// 		// Create parents div
+// 		const searchbarDiv = document.createElement("div");
+// 		searchbarDiv.id = "search-searchbar-container-id";
+// 		searchbarDiv.classList.add("search-searchbar-container");
+
+// 		const conversationDiv = document.createElement("div");
+// 		conversationDiv.id = "search-contact-container-id";
+// 		conversationDiv.classList.add("search-contact-container");
+
+// 		searchParentDiv.appendChild(searchbarDiv);
+// 		searchParentDiv.appendChild(conversationDiv);
+
+// 		// Input search
+// 		const messageInput = document.createElement("input");
+// 		messageInput.setAttribute("type", "text");
+// 		messageInput.setAttribute("placeholder", "Search a contact...");
+// 		messageInput.classList.add("search-searchbar-input");
+// 		messageInput.setAttribute("id", "search-searchbar-input-id");
+// 		messageInput.value(searchInput);//does it works?
+// 		searchbarDiv.appendChild(messageInput);
+
+// 		// conversationDiv.innerHTML = '';
+
+// 		const imgUrl = await fetchProfilPicture(searchInput)
+
+// 		if (imgUrl) {
+// 			const conversationButton = document.createElement("button");
+// 			conversationButton.classList.add("search-contact-button");
+
+// 			const img = document.createElement("img");
+// 			img.src = imgUrl;
+// 			img.alt = "Profile Picture";
+// 			conversationButton.appendChild(img);
+	
+// 			const userInfo = document.createElement("div");
+// 			userInfo.classList.add("search-user");
+// 			userInfo.textContent = searchInput;
+
+// 			conversationButton.appendChild(userInfo);
+
+// 			conversationButton.addEventListener("click", function() {
+// 				changeScene("profil", searchInput);
+// 			});
+
+// 			conversationDiv.appendChild(conversationButton);
+// 		}
+// 		else
+// 			console.error('Error fetching user data:', error);
+
+// 		// handleNavButtons();
+// 	} catch (error) {
+// 		console.error('Error in createSearch: ', error);
+// 		throw error;
+// 	}
+// }
+
+async function createSearchContact(user) {
+	try {
+		
+		const searchInput = user;//document.getElementById("search-searchbar-input-id").value;//if exist, try
+		const searchContactParentDiv = document.getElementById("search-contact");
+
+		// Create parents div
+		const searchContactBarDiv = document.createElement("div");
+		searchContactBarDiv.id = "search-contact-searchbar-container-id";
+		searchContactBarDiv.classList.add("search-contact-searchbar-container");
+
+		const conversationDiv = document.createElement("div");
+		conversationDiv.id = "search-contact-contact-container-id";
+		conversationDiv.classList.add("search-contact-contact-container");
+
+		searchContactParentDiv.appendChild(searchContactBarDiv);
+		searchContactParentDiv.appendChild(conversationDiv);
+
+		// Input search
+		const messageInput = document.createElement("input");
+		messageInput.setAttribute("type", "text");
+		messageInput.setAttribute("placeholder", "Search a contact...");
+		messageInput.classList.add("search-contact-searchbar-input");
+		messageInput.setAttribute("id", "search-contact-searchbar-input-id");
+		messageInput.value = searchInput.value;
+		searchContactBarDiv.appendChild(messageInput);
 
 		const imgUrl = await fetchProfilPicture(searchInput)
 
 		if (imgUrl) {
 			const conversationButton = document.createElement("button");
-			conversationButton.classList.add("conversation-list-contact-button");
+			conversationButton.classList.add("search-contact-button");
 
 			const img = document.createElement("img");
 			img.src = imgUrl;
@@ -511,7 +640,7 @@ async function createSearch() {
 			conversationButton.appendChild(img);
 	
 			const userInfo = document.createElement("div");
-			userInfo.classList.add("conversation-list-user");
+			userInfo.classList.add("search-user");
 			userInfo.textContent = searchInput;
 
 			conversationButton.appendChild(userInfo);
@@ -525,9 +654,9 @@ async function createSearch() {
 		else
 			console.error('Error fetching user data:', error);
 
-		handleNavButtons();
+		// handleNavButtons();
 	} catch (error) {
-		console.error('Error in createSearch: ', error);
+		console.error('Error in createSearchContact: ', error);
 		throw error;
 	}
 }
