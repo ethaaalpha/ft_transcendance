@@ -6,19 +6,36 @@ import { changeScene } from './scene.js';
 import { navBarActionHandler } from '../action/navBar.js';
 import { manageFriend, signOut, modifyProfilPicture, modifyPassword, modifyEmail, signWith42, signIn, forgotPassword, signUp } from '../action/userManagement.js';
 
-function removeChildDiv(...parentIds) {
-	parentIds.forEach(parentId => {
-		const parent = document.getElementById(parentId);
-		if (!parent) {
-			console.error(`L'élément avec l'id "${parentId}" n'existe pas.`);
-			return;
-		}
+// function removeChildDiv(...parentIds) {
+// 	parentIds.forEach(parentId => {
+// 		const parent = document.getElementById(parentId);
+// 		if (!parent) {
+// 			console.error(`L'élément avec l'id "${parentId}" n'existe pas.`);
+// 			return;
+// 		}
 
-		while (parent.firstChild) {
-			parent.removeChild(parent.firstChild);
-		}
-	});
+// 		while (parent.firstChild) {
+// 			parent.removeChild(parent.firstChild);
+// 		}
+// 	});
+// }
+
+function removeChildDiv(parentIds, excludeId) {
+    parentIds.forEach(parentId => {
+        if (parentId === excludeId) return; // Skip the excluded element
+
+        const parent = document.getElementById(parentId);
+        if (!parent) {
+            console.error(`L'élément avec l'id "${parentId}" n'existe pas.`);
+            return;
+        }
+
+        while (parent.firstChild) {
+            parent.removeChild(parent.firstChild);
+        }
+    });
 }
+
 
 async function createChildDiv(divId, user) {
 	return new Promise((resolve, reject) => {
@@ -315,6 +332,7 @@ async function createSignUp() {
 
 async function createConversationList() {
 	try {
+		await fetchUserData();
 		await fetchConversations();
 
 		const conversationList = document.getElementById("conversation-list");
@@ -364,7 +382,7 @@ async function createConversationList() {
 			}
 		}
 
-		handleNavButtons(false, username);
+		// handleNavButtons(false);
 	} catch (error) {
 		console.error("Error in createConversationList: ", error);
 		throw error;
@@ -1059,7 +1077,7 @@ async function createModifyEmail() {
 
 // Utils
 function handleNavButtons(friendProfilScene, username) {
-	removeChildDiv("nav-bar");
+	removeChildDiv("nav-bar", "home");
 	const navBar = document.getElementById("nav-bar");
 
 	let leftLabel, rightLabel, leftColor, rightColor ;

@@ -13,9 +13,9 @@ function changeScene(newScene, user) {
         case "sign-up":
             sceneSignUp();
             break;
-        case "home":
-            sceneHome();
-            break;
+        // case "home":
+        //     sceneHome();
+        //     break;
         case "conversation-list":
             sceneConversationList();
             break;
@@ -52,58 +52,97 @@ function changeScene(newScene, user) {
 
 // Handler
 
-//earch create div has to delete his childs before creating it
 
-function sceneSignIn() {
+const parentToHide = [
+    "sign-in",
+    "sign-up",
+    "conversation-list",
+    "conversation-display",
+    "profil",
+    "settings",
+	"home",
+    "modify-game-theme",
+    "modify-profil-picture",
+    "modify-password",
+    "modify-email",
+    // "nav-bar"
+];
+
+const parentToremove = [
+    "sign-in",
+    "sign-up",
+    "conversation-list",
+    "conversation-display",
+    "profil",
+    "settings",
+    "modify-game-theme",
+    "modify-profil-picture",
+    "modify-password",
+    "modify-email",
+    // "nav-bar"
+];
+
+async function sceneSignIn() {
 	globalVariables.currentScene = "sign-in";
 
 	hideElements("sign-in");
-	createChildDiv("sign-in");
+	await createChildDiv("sign-in");
 
-	hideElements();//everything
+	hideElements(parentToHide);
 
 	unhideElements("sign-in");
-	removeChildDiv();// everything exept sign in
+	removeChildDiv(parentToremove, "sign-in");
 }
 
-function sceneSignUp() {
+async function sceneSignUp() {
 	globalVariables.currentScene = "sign-up";
 	
 	hideElements("sign-up");
-	createChildDiv("sign-up");//get text input in username and password if it exist
+	await createChildDiv("sign-up");
 	
-	hideElements();//everything
+	hideElements(parentToHide);
 	
 	unhideElements("sign-up");
-	removeChildDiv();// everything exept sign up
+	removeChildDiv(parentToremove, "sign-up");
 }
 
-//
+// function sceneHome() {
+//     globalVariables.currentScene = "home";
+// 	hideElements(parentToHide);
 
-function sceneHome() {
-    globalVariables.currentScene = "home";
-	// hideElements("signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
-	// resetFormFields("username", "password", "passwordConfirm", "email");
-    unhideElements("home");
-	changeScene("conversation-list");
-}
+//     unhideElements("home");
+// 	changeScene("conversation-list");
+// }
 
 async function sceneConversationList() {
-    globalVariables.currentScene = "conversation-list";
-	hideElements("conversation-display", "signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
-    removeChildDiv("conversation-display", "conversation-list", "profil", "settings", "modify-game-theme");
-	// await fetchConversations();
+	globalVariables.currentScene = "conversation-list";
+
+	hideElements("conversation-list");
 	await createChildDiv("conversation-list");
 	setEventListener("conversation-list");
+
+	hideElements(parentToHide);
+
+	unhideElements("home");
 	unhideElements("conversation-list");
+	removeChildDiv(parentToremove, "conversation-list");
 }
 
-function sceneSearch() {
-    globalVariables.currentScene = "search";
-	hideElements("conversation-display", "signForm", "settings", "profil", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
-    removeChildDiv("conversation-display", "conversation-list-contact-container-id", "profil");
-	// createChildDiv("conversation-list");
-	// unhideElements("conversation-list");
+async function sceneSearch() {
+	globalVariables.currentScene = "search";
+
+	hideElements("search");
+	await createChildDiv("search");
+	setEventListener("search");
+
+	hideElements(parentToHide);
+
+	unhideElements("home");
+	unhideElements("search");
+	removeChildDiv(parentToremove, "search");
+
+	// "conversation-list-contact-container-id"
+	
 }
 
 async function sceneConversationDisplay(user) {
