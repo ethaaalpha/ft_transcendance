@@ -34,5 +34,6 @@ ${CONTAINERS}:
 
 pyreset:
 	@find ${BACK_DIR} -type d \( -name migrations -o -name __pycache__ \) -exec rm -rf {} +
+	@echo 'Cleaned py cache and migrations !'
 
 .PHONY: pyreset run down clean fclean ${CONTAINERS}

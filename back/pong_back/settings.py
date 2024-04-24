@@ -63,7 +63,7 @@ ROOT_URLCONF = 'pong_back.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ["../pong_front/templates"],
+        'DIRS': ["../front/templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -114,7 +114,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'fr-fr'
 
-
 USE_I18N = True
 
 USE_TZ = True
@@ -129,9 +128,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = "../media/"
 MEDIA_URL = "media/"
 STATIC_URL = "static/"
-STATIC_ROOT = "../pong_front/static"
+STATIC_ROOT = "../front/static"
 STATICFILES_DIRS = [
-	BASE_DIR / "../pong_front",
+	BASE_DIR / "../front",
 ]
 
 # API - 42 #
