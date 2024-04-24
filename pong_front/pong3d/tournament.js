@@ -155,9 +155,8 @@ class FormTournament {
 		});
 
 		document.getElementById('tournament-escape-button').addEventListener('click', (event) => {
-			this.callback({'event': 'tournament', 'data': {
-				'action': 'quit',
-				'room-id': this.roomCode,
+			this.callback({'event': 'end', 'data': {
+				'message': 'Forced by player',
 				},
 			})
 		})
