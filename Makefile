@@ -1,5 +1,5 @@
 # Directories 
-BACK_DIR			= 'pong_back'
+BACK_DIR			= 'back'
 MEDIA_DIR			= 'media'
 LIBS_DIR			= 'libs'
 

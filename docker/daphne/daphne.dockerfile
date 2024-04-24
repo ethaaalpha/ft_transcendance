@@ -7,6 +7,6 @@ ADD requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 ADD runner.sh /script/
 
-WORKDIR /workdir/pong_back
+WORKDIR /workdir/back
 
 CMD ["sh", "/script/runner.sh"]
