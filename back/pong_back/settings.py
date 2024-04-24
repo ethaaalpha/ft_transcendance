@@ -128,10 +128,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = "/usr/share/media/"
 MEDIA_URL = "media/"
 STATIC_URL = "static/"
-STATIC_ROOT = "/workdir/front/static"
-STATICFILES_DIRS = [
-	BASE_DIR / "/workdir/front",
-]
+STATIC_ROOT = "/workdir/front/"
 
 # API - 42 #
 API_CALLBACK = os.getenv('API_CALLBACK').replace("DOMAIN", os.getenv('DOMAIN'))
