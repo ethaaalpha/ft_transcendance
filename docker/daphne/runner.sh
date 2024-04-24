@@ -1,3 +1,4 @@
+# Django
 python manage.py makemigrations conversations game stats users blockchain admin auth contenttypes sessions
 python manage.py makemigrations
 python manage.py migrate

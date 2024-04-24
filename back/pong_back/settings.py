@@ -125,7 +125,7 @@ TIME_ZONE = 'CET'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Media / Static settings #
-MEDIA_ROOT = "../media/"
+MEDIA_ROOT = "/usr/share/media/"
 MEDIA_URL = "media/"
 STATIC_URL = "static/"
 STATIC_ROOT = "../front/static"

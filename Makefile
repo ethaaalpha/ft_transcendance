@@ -1,12 +1,8 @@
 # Directories 
 BACK_DIR			= 'back'
-MEDIA_DIR			= 'media'
 LIBS_DIR			= 'libs'
 
 NEEDED_DIR			= ${LIBS_DIR}
-
-# Files
-DEFAULT_PICTURE		= "pokemon.png"
 
 # Containers
 CONTAINERS		 	= daphne nginx postgresql redis geth
@@ -26,7 +22,6 @@ clean:
 
 fclean: clean
 	@echo "Deleting user media !"
-	@find ${MEDIA_DIR} -type f ! -name ${DEFAULT_PICTURE} -exec rm {} +
 	docker compose down --rmi all -v --remove-orphans
 
 ${CONTAINERS}:
