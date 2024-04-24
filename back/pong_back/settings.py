@@ -63,7 +63,7 @@ ROOT_URLCONF = 'pong_back.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ["../front/templates"],
+        'DIRS': ["/workdir/front/templates/"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

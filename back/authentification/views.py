@@ -1,5 +1,6 @@
 from django.http import HttpRequest, JsonResponse
-from django.utils.html import format_html
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 from tools.responses import tResponses
 from tools.functions import isOtherKeysInList, areKeysFromList
 from django.core.mail import send_mail
@@ -128,18 +129,13 @@ def reset_password(request: HttpRequest):
 					return tResponses.FORBIDDEN.request("User from 42 must use 42 portal to connect !")
 				newPass = generatePassword()
 				response = user.Profile.changePassword(newPass)
-
+	
 				# send the mail if it's okay !
 				if response.status_code == 200:
+					email_body_unstriped = render_to_string('reset-password.html', {'username': user.username, 'password': newPass})
 					email_subject = 'PokePong -- Password Reset'
-					email_body = format_html(
-   						"You asked for a password reset. Your new password is {} ."
-						"You will be able to change it in 5 minutes.\n"
-						"Have a nice day.\n"
-						"PokePong team.\n"
-						, newPass
-					)
-					send_mail(email_subject, email_body, from_email=None, recipient_list=[user.email])
+					email_body = strip_tags(email_body_unstriped)
+					send_mail(email_subject, email_body, from_email=None, recipient_list=[user.email], html_message=email_body_unstriped)
 				return response
 			else:
 				return tResponses.BAD_REQUEST.request("Form failed !")
