@@ -49,7 +49,7 @@ socketTmp.onmessage = (event) => {
     const tmp = JSON.parse(event.data)
     if (tmp.event == "next")
         data = tmp;
-    else if (tmp.event == "end")
+    else if (tmp.event == "end") // ici vérifier si le statut dans le message était okay (dans le cas ou le gars leave pile quand la room commence et du coup c'est pas bon)
         data = tmp
     else if (tmp.event == "win")
         data = tmp
