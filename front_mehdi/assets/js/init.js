@@ -8,7 +8,7 @@ var globalVariables = {
     currentUser: null,
     userConversations: null,
     currentScene: 'start',
-	activity: new Connect(),
+	activity: null,
 	gameTheme: 1
 };
 
@@ -18,12 +18,13 @@ var globalVariables = {
         const logged = await fetchUserData();
         if (logged) {
             changeScene("home");
+			globalVariables =  new Connect();
             return;
         }
     } catch (error) {
         console.error("Error in fetchUserData: ", error);
     }
-    changeScene("sign-up");
+    changeScene("sign-in");
 })();
 
 

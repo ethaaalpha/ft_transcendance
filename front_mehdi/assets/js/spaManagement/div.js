@@ -119,10 +119,10 @@ async function createSignIn() {
 		const usernameInput = document.createElement("input");
 		usernameInput.setAttribute("type", "text");
 		usernameInput.classList.add("form-control");
-		usernameInput.setAttribute("id", "sign-form-username");
+		usernameInput.setAttribute("id", "sign-in-username");
 		usernameInput.setAttribute("placeholder", "Username");
 		const usernameInputLabel = document.createElement("label");
-		usernameInputLabel.setAttribute("for", "sign-form-username");
+		usernameInputLabel.setAttribute("for", "sign-in-username");
 		usernameInputLabel.classList.add("form-label");
 		usernameInputLabel.textContent = "Username";
 		usernameInputDiv.appendChild(usernameInput);
@@ -135,10 +135,10 @@ async function createSignIn() {
 		const passwordInput = document.createElement("input");
 		passwordInput.setAttribute("type", "password");
 		passwordInput.classList.add("form-control");
-		passwordInput.setAttribute("id", "sign-form-password");
+		passwordInput.setAttribute("id", "sign-in-password");
 		passwordInput.setAttribute("placeholder", "Password");
 		const passwordInputLabel = document.createElement("label");
-		passwordInputLabel.setAttribute("for", "sign-form-password");
+		passwordInputLabel.setAttribute("for", "sign-in-password");
 		passwordInputLabel.classList.add("form-label");
 		passwordInputLabel.textContent = "Password";
 		passwordInputDiv.appendChild(passwordInput);
@@ -188,7 +188,6 @@ async function createSignIn() {
 
 async function createSignUp() {
 	try {
-
 		const signUpContainer = document.getElementById("sign-up");
 
 		// Create container div
@@ -218,10 +217,10 @@ async function createSignUp() {
 		const usernameInput = document.createElement("input");
 		usernameInput.setAttribute("type", "text");
 		usernameInput.classList.add("form-control");
-		usernameInput.setAttribute("id", "sign-form-username");
+		usernameInput.setAttribute("id", "sign-up-username");
 		usernameInput.setAttribute("placeholder", "Username");
 		const usernameInputLabel = document.createElement("label");
-		usernameInputLabel.setAttribute("for", "sign-form-username");
+		usernameInputLabel.setAttribute("for", "sign-up-username");
 		usernameInputLabel.classList.add("form-label");
 		usernameInputLabel.textContent = "Username";
 		usernameInputDiv.appendChild(usernameInput);
@@ -234,10 +233,10 @@ async function createSignUp() {
 		const passwordInput = document.createElement("input");
 		passwordInput.setAttribute("type", "password");
 		passwordInput.classList.add("form-control");
-		passwordInput.setAttribute("id", "sign-form-password");
+		passwordInput.setAttribute("id", "sign-up-password");
 		passwordInput.setAttribute("placeholder", "Password");
 		const passwordInputLabel = document.createElement("label");
-		passwordInputLabel.setAttribute("for", "sign-form-password");
+		passwordInputLabel.setAttribute("for", "sign-up-password");
 		passwordInputLabel.classList.add("form-label");
 		passwordInputLabel.textContent = "Password";
 		passwordInputDiv.appendChild(passwordInput);
@@ -250,10 +249,10 @@ async function createSignUp() {
 		const confirmPasswordInput = document.createElement("input");
 		confirmPasswordInput.setAttribute("type", "password");
 		confirmPasswordInput.classList.add("form-control");
-		confirmPasswordInput.setAttribute("id", "sign-form-password-confirm");
+		confirmPasswordInput.setAttribute("id", "sign-up-password-confirm");
 		confirmPasswordInput.setAttribute("placeholder", "Confirm password");
 		const confirmPasswordInputLabel = document.createElement("label");
-		confirmPasswordInputLabel.setAttribute("for", "sign-form-password-confirm");
+		confirmPasswordInputLabel.setAttribute("for", "sign-up-password-confirm");
 		confirmPasswordInputLabel.classList.add("form-label");
 		confirmPasswordInputLabel.textContent = "Confirm password";
 		confirmPasswordInputDiv.appendChild(confirmPasswordInput);
@@ -266,10 +265,10 @@ async function createSignUp() {
 		const emailInput = document.createElement("input");
 		emailInput.setAttribute("type", "email");
 		emailInput.classList.add("form-control");
-		emailInput.setAttribute("id", "sign-form-email");
+		emailInput.setAttribute("id", "sign-up-email");
 		emailInput.setAttribute("placeholder", "Email address");
 		const emailInputLabel = document.createElement("label");
-		emailInputLabel.setAttribute("for", "sign-form-email");
+		emailInputLabel.setAttribute("for", "sign-up-email");
 		emailInputLabel.classList.add("form-label");
 		emailInputLabel.textContent = "Email address";
 		emailInputDiv.appendChild(emailInput);
@@ -299,6 +298,14 @@ async function createSignUp() {
 
 		// Append container div to sign-up container
 		signUpContainer.appendChild(containerDiv);
+
+		// Fill input fields with sign-in data if available
+		const signInUsername = document.getElementById("sign-in-username");
+		const signInPassword = document.getElementById("sign-in-password");
+		if (signInUsername && signInPassword) {
+			usernameInput.value = signInUsername.value;
+			passwordInput.value = signInPassword.value;
+		}
 
 	} catch (error) {
 		console.error("Error in createSignUp: ", error);
