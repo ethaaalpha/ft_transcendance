@@ -23,7 +23,7 @@ var globalVariables = {
     } catch (error) {
         console.error("Error in fetchUserData: ", error);
     }
-    changeScene("signIn");
+    changeScene("sign-up");
 })();
 
 
