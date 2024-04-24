@@ -4,7 +4,7 @@ import { fetchCurrentUsername, fetchProfilPicture, fetchUserStats } from '../fet
 import { fetchUserData } from '../init.js';
 import { changeScene } from './scene.js';
 import { navBarActionHandler } from '../action/navBar.js';
-import { manageFriend, signOut, modifyProfilPicture, modifyPassword, modifyEmail } from '../action/userManagement.js'; 
+import { manageFriend, signOut, modifyProfilPicture, modifyPassword, modifyEmail, signWith42, signIn, forgotPassword } from '../action/userManagement.js';
 
 function removeChildDiv(...parentIds) {
 	parentIds.forEach(parentId => {
@@ -23,14 +23,20 @@ function removeChildDiv(...parentIds) {
 async function createChildDiv(divId, user) {
 	return new Promise((resolve, reject) => {
 		switch (divId) {
+			case "sign-in":
+				createSignIn().then(resolve).catch(reject);
+				break;
+			case "sign-up":
+				createSignUp().then(resolve).catch(reject);
+				break;
 			case "conversation-list":
 				createConversationList().then(resolve).catch(reject);
 				break;
-			case "search":
-				createSearch().then(resolve).catch(reject);
-				break;
 			case "conversation-display":
 				createConversationDisplay(user).then(resolve).catch(reject);
+				break;
+			case "search":
+				createSearch().then(resolve).catch(reject);
 				break;
 			case "profil":
 				createProfil(user).then(resolve).catch(reject);
@@ -58,6 +64,138 @@ async function createChildDiv(divId, user) {
 }
 
 // Handler
+
+async function createSignIn() {
+	try {
+
+		const signInContainer = document.getElementById("sign-in");
+
+		// Create container div
+		const containerDiv = document.createElement("div");
+		containerDiv.classList.add("container");
+
+		// Create row div with classes
+		const rowDiv = document.createElement("div");
+		rowDiv.classList.add("row", "align-items-center", "justify-content-center", "vh-100");
+
+		// Create col div with classes
+		const colDiv = document.createElement("div");
+		colDiv.classList.add("col-md-6", "col-lg-4", "dark-form");
+
+		// Create form element
+		const signInForm = document.createElement("form");
+
+		// Title
+		const title = document.createElement("h1");
+		title.classList.add("title-1", "mb-3", "fw-bold");
+		title.textContent = "signIn";
+		signInForm.appendChild(title);
+
+		// Continue with 42 button
+		const continueWith42Button = document.createElement("button");
+		continueWith42Button.setAttribute("type", "button");
+		continueWith42Button.classList.add("btn", "btn-success", "btn-block", "col-8", "opacity-50", "login-form-green-button");
+		continueWith42Button.onclick = signWith42;
+		const img = document.createElement("img");
+		img.id = "picture-42";
+		img.setAttribute("src", "assets/images/icons/42.svg");
+		img.alt = "42 Logo";
+		continueWith42Button.appendChild(img);
+		continueWith42Button.innerHTML += " Continue with 42";
+		const continueWith42Div = document.createElement("div");
+		continueWith42Div.classList.add("mb-3", "text-center", "mx-auto");
+		continueWith42Div.appendChild(continueWith42Button);
+		signInForm.appendChild(continueWith42Div);
+
+
+		// Or divider
+		const orDiv = document.createElement("div");
+		orDiv.classList.add("mb-3", "text-center", "mx-auto", "col-8", "opacity-75", "d-flex", "align-items-center");
+		orDiv.innerHTML = `<div class="form-tab"></div><span style="margin-left: 2em; margin-right: 2em;">or</span><div class="form-tab"></div>`;
+		signInForm.appendChild(orDiv);
+
+		// Username input
+		const usernameInputDiv = document.createElement("div");
+		usernameInputDiv.classList.add("form-floating", "fixed", "mb-3", "col-8", "mx-auto");
+		const usernameInput = document.createElement("input");
+		usernameInput.setAttribute("type", "text");
+		usernameInput.classList.add("form-control");
+		usernameInput.setAttribute("id", "sign-form-username");
+		usernameInput.setAttribute("placeholder", "Username");
+		const usernameInputLabel = document.createElement("label");
+		usernameInputLabel.setAttribute("for", "sign-form-username");
+		usernameInputLabel.classList.add("form-label");
+		usernameInputLabel.textContent = "Username";
+		usernameInputDiv.appendChild(usernameInput);
+		usernameInputDiv.appendChild(usernameInputLabel);
+		signInForm.appendChild(usernameInputDiv);
+
+		// Password input
+		const passwordInputDiv = document.createElement("div");
+		passwordInputDiv.classList.add("form-floating", "fixed", "mb-3", "col-8", "mx-auto");
+		const passwordInput = document.createElement("input");
+		passwordInput.setAttribute("type", "password");
+		passwordInput.classList.add("form-control");
+		passwordInput.setAttribute("id", "sign-form-password");
+		passwordInput.setAttribute("placeholder", "Password");
+		const passwordInputLabel = document.createElement("label");
+		passwordInputLabel.setAttribute("for", "sign-form-password");
+		passwordInputLabel.classList.add("form-label");
+		passwordInputLabel.textContent = "Password";
+		passwordInputDiv.appendChild(passwordInput);
+		passwordInputDiv.appendChild(passwordInputLabel);
+		signInForm.appendChild(passwordInputDiv);
+
+		// Continue with username button
+		const continueWithUsernameButton = document.createElement("button");
+		continueWithUsernameButton.setAttribute("type", "button");
+		continueWithUsernameButton.classList.add("btn", "btn-light", "btn-block", "col-8", "opacity-75", "bordered-button");
+		continueWithUsernameButton.style.setProperty("--main_color", "white");
+		continueWithUsernameButton.textContent = "Continue with username";
+		continueWithUsernameButton.onclick = signIn;
+		const continueWithUsernameDiv = document.createElement("div");
+		continueWithUsernameDiv.classList.add("mb-3", "text-center", "mx-auto");
+		continueWithUsernameDiv.appendChild(continueWithUsernameButton);
+		signInForm.appendChild(continueWithUsernameDiv);
+
+		// Forgot password button
+		const forgotPasswordButton = document.createElement("button");
+		forgotPasswordButton.setAttribute("type", "button");
+		forgotPasswordButton.classList.add("col-8", "text-button");
+		forgotPasswordButton.textContent = "Forgot password?";
+		forgotPasswordButton.onclick = forgotPassword;
+		const forgotPasswordDiv = document.createElement("div");
+		forgotPasswordDiv.classList.add("mb-3", "text-center", "mx-auto");
+		forgotPasswordDiv.appendChild(forgotPasswordButton);
+		signInForm.appendChild(forgotPasswordDiv);
+
+		// Append form to col div
+		colDiv.appendChild(signInForm);
+
+		// Append col div to row div
+		rowDiv.appendChild(colDiv);
+
+		// Append row div to container div
+		containerDiv.appendChild(rowDiv);
+
+		// Append container div to sign-in container
+		signInContainer.appendChild(containerDiv);
+
+	} catch (error) {
+		console.error("Error in createSignIn: ", error);
+		throw error;
+	}
+}
+
+async function createSignUp() {
+	try {
+		console.log("here");
+	} catch (error) {
+		console.error("Error in createConversationList: ", error);
+		throw error;
+	}
+}
+
 async function createConversationList() {
 	try {
 		await fetchConversations();
@@ -112,48 +250,6 @@ async function createConversationList() {
 		handleNavButtons(false, username);
 	} catch (error) {
 		console.error("Error in createConversationList: ", error);
-		throw error;
-	}
-}
-
-
-async function createSearch() {
-	try {
-
-		const searchInput = document.getElementById("conversation-list-searchbar-input-id").value;
-		const conversationDiv = document.getElementById("conversation-list-contact-container-id");
-
-		conversationDiv.innerHTML = '';
-
-		const imgUrl = await fetchProfilPicture(searchInput)
-
-		if (imgUrl) {
-			const conversationButton = document.createElement("button");
-			conversationButton.classList.add("conversation-list-contact-button");
-
-			const img = document.createElement("img");
-			img.src = imgUrl;
-			img.alt = "Profile Picture";
-			conversationButton.appendChild(img);
-	
-			const userInfo = document.createElement("div");
-			userInfo.classList.add("conversation-list-user");
-			userInfo.textContent = searchInput;
-
-			conversationButton.appendChild(userInfo);
-
-			conversationButton.addEventListener("click", function() {
-				changeScene("profil", searchInput);
-			});
-
-			conversationDiv.appendChild(conversationButton);
-		}
-		else
-			console.error('Error fetching user data:', error);
-
-		handleNavButtons();
-	} catch (error) {
-		console.error('Error in createSearch: ', error);
 		throw error;
 	}
 }
@@ -256,6 +352,47 @@ async function createConversationDisplay(user) {
 		handleNavButtons();
 	} catch (error) {
 		console.error("Error in createConversationDisplay: ", error);
+		throw error;
+	}
+}
+
+async function createSearch() {
+	try {
+
+		const searchInput = document.getElementById("conversation-list-searchbar-input-id").value;
+		const conversationDiv = document.getElementById("conversation-list-contact-container-id");
+
+		conversationDiv.innerHTML = '';
+
+		const imgUrl = await fetchProfilPicture(searchInput)
+
+		if (imgUrl) {
+			const conversationButton = document.createElement("button");
+			conversationButton.classList.add("conversation-list-contact-button");
+
+			const img = document.createElement("img");
+			img.src = imgUrl;
+			img.alt = "Profile Picture";
+			conversationButton.appendChild(img);
+	
+			const userInfo = document.createElement("div");
+			userInfo.classList.add("conversation-list-user");
+			userInfo.textContent = searchInput;
+
+			conversationButton.appendChild(userInfo);
+
+			conversationButton.addEventListener("click", function() {
+				changeScene("profil", searchInput);
+			});
+
+			conversationDiv.appendChild(conversationButton);
+		}
+		else
+			console.error('Error fetching user data:', error);
+
+		handleNavButtons();
+	} catch (error) {
+		console.error('Error in createSearch: ', error);
 		throw error;
 	}
 }
