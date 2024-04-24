@@ -22,7 +22,7 @@ function navBarActionHandler(action, username) {
 
 function navBarSettings() {
     if (globalVariables.currentScene == "settings") {
-        changeScene("home");
+        changeScene("conversation-list");
     } else {
         changeScene("settings");
     }
@@ -30,7 +30,7 @@ function navBarSettings() {
 
 function navBarProfil() {
     if (globalVariables.currentScene == "profil") {
-        changeScene("home");
+        changeScene("conversation-list");
     } else {
 		const username = globalVariables.currentUser.getUsername();
         changeScene("profil", username);

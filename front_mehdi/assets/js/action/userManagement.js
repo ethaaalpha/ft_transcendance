@@ -2,8 +2,8 @@ import { fetchData } from '../fetch/api.js';
 import { changeScene } from '../spaManagement/scene.js';
 
 function signIn() {
-	var username = document.getElementById("username").value;
-	var password = document.getElementById("password").value;
+	var username = document.getElementById("sign-in-username").value;
+	var password = document.getElementById("sign-in-password").value;
 	
     var formData = new FormData();
     
@@ -19,13 +19,13 @@ function signIn() {
 			}
 			if (data.status === 404) {
 				console.log("You need to create an account");
-				changeScene("signUp");
-				document.getElementById("passwordConfirm").focus();
+				changeScene("sign-up");
+				document.getElementById("sign-up-password-confirm").focus();
 			}
 			if (data.status === 200) {
 				console.log("Successful connection");
-				changeScene("home");
-                appendAlert('Successful connection', 'success'); // Afficher l'alerte de succès
+				changeScene("conversation-list");
+                appendAlert('Successful connection', 'success');
 			} else {
 				console.log("Connexion error");
 			}
@@ -37,9 +37,9 @@ function signIn() {
 
 
 function signUp() {
-	var username = document.getElementById("username").value;
-	var password = document.getElementById("password").value;
-	var email = document.getElementById("email").value;
+	var username = document.getElementById("sign-up-username").value;
+	var password = document.getElementById("sign-up-password").value;
+	var email = document.getElementById("sign-up-email").value;
 	
     var formData = new FormData();
     
@@ -50,10 +50,10 @@ function signUp() {
 	fetchData("/api/auth/register", 'POST', formData).then(
 	(data) => {
 		if (data.status === 200) {
-			console.log("Register réussie");
-			changeScene("home");
+			console.log("Register sucess");
+			changeScene("conversation-list");
 		} else {
-			console.log("Erreur de connexion");
+			console.log("Error conexion");
 		}
     })
     .catch(error => {
@@ -78,7 +78,7 @@ function signOut() {
 	fetchData("/api/auth/logout", 'POST')
 	.then(() => {
 		console.log("Deconexion réussie");
-		changeScene("signIn");
+		changeScene("sign-in");
 	})
 	.catch(error => {
 		console.error('Error:', error);

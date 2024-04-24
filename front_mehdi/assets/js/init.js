@@ -17,7 +17,7 @@ var globalVariables = {
     try {
         const logged = await fetchUserData();
         if (logged) {
-            changeScene("home");
+            changeScene("conversation-list");
 			globalVariables =  new Connect();
             return;
         }
