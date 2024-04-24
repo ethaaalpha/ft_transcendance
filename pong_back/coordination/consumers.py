@@ -82,7 +82,7 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 							case 'join':
 								await self.messageResponse('tournament', await sync_to_async(Room.joinRoom)(user, data['room-id']))
 							case 'quit':
-								await self.messageResponse('tournament', await sync_to_async(Room.leaveRoom)(user, data['room-id']))
+								await self.messageResponse('end', await sync_to_async(Room.leaveRoom)(user, data['room-id']))
 				# case to create a private tournament
 				case 'create':
 					if 'mode' in data:
@@ -102,6 +102,8 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 				case 'refuse':
 					if target:
 						await self.messageResponse('refuse', await sync_to_async(InvitationStack.refuse)(await self.getUser(username=target), await self.getUser()))
+				case 'end':
+					await self.messageResponse('end', ['You leave the tournament pannel', True])
 
 	@staticmethod
 	def sendMessageToConsumerDelayed(username: str, content: str, event: str, delay):

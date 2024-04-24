@@ -432,7 +432,7 @@ class Room(models.Model):
 		if not targetRoom:
 			return ("Room is inexisting !", False)
 		else:
-			match targetRoom.removePlayer():
+			match targetRoom.removePlayer(player):
 				case 1:
 					return (f"Room is already launched can't leave !", False)
 				case 0: #success !
