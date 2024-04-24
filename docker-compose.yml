@@ -51,7 +51,8 @@ services:
       context: docker/daphne
       dockerfile: daphne.dockerfile
     volumes:
-      - .:/workdir/
+      - ./front:/workdir/front/
+      - ./back:/workdir/back/
       - media:/usr/share/media
     depends_on:
       postgresql:
@@ -91,3 +92,8 @@ networks:
   pongNetwork:
     name: "teamrocket"
     driver: bridge
+
+volumes:
+  geth:
+  postgres:
+  media:

@@ -128,9 +128,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = "/usr/share/media/"
 MEDIA_URL = "media/"
 STATIC_URL = "static/"
-STATIC_ROOT = "../front/static"
+STATIC_ROOT = "/workdir/front/static"
 STATICFILES_DIRS = [
-	BASE_DIR / "../front",
+	BASE_DIR / "/workdir/front",
 ]
 
 # API - 42 #
