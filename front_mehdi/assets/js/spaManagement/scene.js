@@ -7,10 +7,10 @@ import { signIn } from '../action/userManagement.js';
 
 function changeScene(newScene, user) {
     switch (newScene) {
-        case "signIn":
+        case "sign-in":
             sceneSignIn();
             break;
-        case "signUp":
+        case "sign-up":
             sceneSignUp();
             break;
         case "home":

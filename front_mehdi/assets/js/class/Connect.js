@@ -25,7 +25,6 @@ class Connect {
 				console.log("friends message");
 			}
 		};
-		
 
 		this.socket.onclose = (e) => {
 			console.error('Chat socket closed unexpectedly ! Retrying to connect !');
