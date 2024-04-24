@@ -52,6 +52,7 @@ services:
       dockerfile: daphne.dockerfile
     volumes:
       - .:/workdir/
+      - media:/usr/share/media
     depends_on:
       postgresql:
         condition: service_healthy
@@ -73,7 +74,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./media:/usr/share/media
+      - media:/usr/share/media
       - ./front:/usr/share/static
       - ./libs:/usr/share/libs
       - ./front_mehdi:/usr/share/test
@@ -90,7 +91,3 @@ networks:
   pongNetwork:
     name: "teamrocket"
     driver: bridge
-
-volumes:
-  geth:
-  postgres:
