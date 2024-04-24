@@ -38,7 +38,7 @@ class Profile(models.Model):
 	pendingFriendsFrom = models.ManyToManyField(User, related_name="pendingFriendsFrom", symmetrical=False, blank=True)
 	profilePicture = models.ImageField(upload_to=generateUniqueImageID, default=settings.DEFAULT_PROFILE_PICTURE_NAME, editable=True)
 	blockedUsers = models.ManyToManyField(User, related_name="blockedUsers", symmetrical=False, blank=True)
-	lastPasswordChange = models.DateTimeField(default=now, blank=True)
+	lastPasswordChange = models.DateTimeField(default=(now() - timedelta(minutes=5)), blank=True)
 	gameTheme = models.CharField(max_length=64, default='default')
 	isPlaying = models.BooleanField(default=False)
 	state = models.IntegerField(default=0)
