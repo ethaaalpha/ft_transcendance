@@ -8,6 +8,7 @@ class Conversation(models.Model):
 	participants = models.ManyToManyField(User, related_name='participants')
 	createdAt = models.DateTimeField(auto_now_add=True)
 	lastUpdated = models.DateTimeField(auto_now_add=True)
+	state = models.BooleanField(default=True)
 	
 	def getMessages(self, n = 10):
 		"""
@@ -23,6 +24,10 @@ class Conversation(models.Model):
 		self.save()
 		message = Message(conversation=self, sender=Profile.getUserFromUsername(sender), content=content)
 		message.save()
+
+	def setState(self, state: bool):
+		self.state = state
+		self.save()
 
 	@staticmethod
 	def getConversation(peopleName: list):
@@ -48,7 +53,7 @@ class Conversation(models.Model):
 		"""
 		Return the 15 (max) recents conversations and their content		
 		"""
-		conversations = Conversation.objects.filter(participants=_from).order_by('-lastUpdated')[:15]
+		conversations = Conversation.objects.filter(participants=_from, state=True).order_by('-lastUpdated')[:15]
 		responses = {}
 		
 		for c in conversations:
