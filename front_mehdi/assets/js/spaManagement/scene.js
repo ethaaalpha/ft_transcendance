@@ -19,12 +19,12 @@ function changeScene(newScene, user) {
         case "conversation-list":
             sceneConversationList();
             break;
+		case "conversation-display":
+			sceneConversationDisplay(user);
+			break;
 		case "search":
 			sceneSearch();
 			break;
-        case "conversation-display":
-            sceneConversationDisplay(user);
-            break;
 		case "profil":
 			sceneProfil(user);
 			break;
