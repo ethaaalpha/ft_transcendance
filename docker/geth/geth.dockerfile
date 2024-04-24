@@ -1,4 +1,4 @@
-FROM ethereum/client-go:alltools-stable
+FROM ethereum/client-go:alltools-v1.13.8
 
 RUN apk add python3 py3-pip && rm /usr/lib/python3.11/EXTERNALLY-MANAGED
 RUN pip install web3
