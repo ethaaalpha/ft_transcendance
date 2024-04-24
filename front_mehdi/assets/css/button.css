@@ -1,11 +1,5 @@
 @import url('variables.css');
 
-.modify-btn {
-	font-size: 1em;
-	padding: 1em !important;
-	margin-bottom: 1em;
-}
-
 .dark-form-green-button {
 	background-color: #04ff00f2;
 	border-color: transparent;
@@ -56,4 +50,27 @@
 	background: none;
 	color: rgba(245, 245, 245, 0.604);
 	border: none;
+}
+
+.modify-btn {
+	font-size: 1em;
+	padding: 1em !important;
+}
+
+.icon-button {
+	padding-right: 0.4em;
+}
+
+.modify-btn:hover {
+	background-color: #e7e7e7;
+}
+
+.btn-title {
+	flex-grow: 1; /* Titre occupe tout l'espace restant */
+	text-align: left;
+	font-family: "Roboto Mono", monospace;
+}
+
+.btn-settings {
+	margin-bottom: 2%;
 }
