@@ -12,7 +12,7 @@ if [ ! -d "/usr/share/libs/$THREEJS_DIR" ]; then
     mv "$THREEJS_DIR" /usr/share/libs/
 else
     echo "Threejs archive already exists. Skipping download."
-fi
+fi		
 
 # About the profile picture
 echo "Copying default profil picture !"
