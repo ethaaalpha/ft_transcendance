@@ -1,5 +1,7 @@
 import sys
 from web3 import Web3
+from web3.middleware import geth_poa_middleware
+
 
 def	extract_address(content):
 	"""
@@ -34,6 +36,25 @@ def blocktest():
 		exit(0)
 	exit(1)
 
+def transact(address_to: str):
+	# Must be use from GETH Container (inside console)
+	url = "http://localhost:8545"
+
+	w3 = Web3(Web3.HTTPProvider(url))
+	w3.middleware_onion.inject(geth_poa_middleware, layer=0) # This because POA -> geth 14 Pos
+
+	account = w3.eth.accounts[4]
+	amount_in_wei = w3.to_wei(0.4, 'ether')
+
+	transaction = {
+		'from': account,
+	    'to': address_to,
+	    'value': amount_in_wei,
+	}
+	w3.eth.send_transaction(transaction)
+	return (f'Transaction sended to {address_to} | (0.4)')
+
+
 def main():
 	args = sys.argv
 	
@@ -44,8 +65,10 @@ def main():
 			return replace(args[2], args[3], args[4])
 		case 'test':
 			return blocktest()
+		case 'transact':
+			return transact(args[2])
 		case _:
-			return ("No match")
+			return ("No match !")
 
 if __name__ == "__main__":
     print(main())
