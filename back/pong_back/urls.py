@@ -38,7 +38,7 @@ urlpatterns = [
 	path('api/dashboard/conversations', ensure_csrf_cookie(logged_required(cV.entryPoint))),
 	path('api/dashboard/match', ensure_csrf_cookie(logged_required(sV.entryPoint))),
 	path('api/auth/', include('authentification.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 websocket_urlpatterns = [
 	path("api/activity/", ActivityConsumer.as_asgi()),
