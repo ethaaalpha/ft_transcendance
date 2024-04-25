@@ -1,6 +1,4 @@
 import globalVariables from '../init.js';
-import { createChildDiv } from './div.js';
-import { sendMessage } from '../action/chat.js';
 
 function unsetEventListener(eventToUnset, exception) {
 	eventToUnset.forEach(event => {
@@ -20,9 +18,6 @@ function unsetEventListener(eventToUnset, exception) {
 					break;
 				case "search":
 					unsetEventSearch();
-					break;
-				case "search-contact":
-					unsetEventSearchContact();
 					break;
 				default:
 					console.log("Invalid event for unsetEventListener: ", event);
@@ -62,84 +57,32 @@ function unsetEventSignUp() {
 	removeEventListener("keypress", "sign-up-email");
 }
 
+function unsetEventConversationList() {
+	removeEventListener("keypress", "conversation-list-searchbar-input-id");
+}
+
 function unsetEventConversationDisplay() {
 	removeEventListener("keypress", "send-message-input-id");
 }
 
-function unsetEventConversationList() {
-	removeEventListener("input", "conversation-list-searchbar-input-id");
-	removeEventListener("keypress", "conversation-list-searchbar-input-id");
-}
-
 function unsetEventSearch() {
 	removeEventListener("input", "search-searchbar-input-id");
-	removeEventListener("keypress", "search-searchbar-input-id");
 }
-
-function unsetEventSearchContact() {
-	removeEventListener("input", "search-contact-searchbar-input-id");
-	removeEventListener("keypress", "search-contact-searchbar-input-id");
-}
-
-
-
-
-
-
-
-// function unsetEventConversationDisplay() {
-// 	const messageInput = document.getElementById("send-message-input-id");
-
-// 	if (messageInput) {
-// 		messageInput.removeEventListener("keypress", sendMessage);
-// 	}
-// }
-
-// function unsetEventConversationList() {
-// 	const searchInput = document.getElementById("conversation-list-searchbar-input-id");
-
-// 	if (searchInput) {
-// 		searchInput.removeEventListener("input", onInputFilled);
-// 		searchInput.removeEventListener("input", onInputCleared);
-// 		searchInput.removeEventListener("keypress", createChildDiv);
-// 	}
-// }
-
-// function unsetEventSearch() {
-// 	const searchInput = document.getElementById("search-searchbar-input-id");
-
-// 	if (searchInput) {
-// 		searchInput.removeEventListener("input", onInputFilled);
-// 		searchInput.removeEventListener("input", onInputCleared);
-// 		searchInput.removeEventListener("keypress", createChildDiv);
-// 	}
-// }
-
-// function unsetEventSearchContact() {
-// 	const searchInput = document.getElementById("search-contact-searchbar-input-id");
-
-// 	if (searchInput) {
-// 		searchInput.removeEventListener("input", onInputFilled);
-// 		searchInput.removeEventListener("input", onInputCleared);
-// 		searchInput.removeEventListener("keypress", createChildDiv);
-// 	}
-// }
 
 export { unsetEventListener }
 
-
 // REMOVE ALL
 // function removeAllglobalVariables.EventListeners() {
-//     for (const eventName in globalVariables.eventListeners) {
-//         const listeners = globalVariables.eventListeners[eventName];
-//         for (const elementId in listeners) {
-//             const eventHandler = listeners[elementId];
-//             const element = document.getElementById(elementId);
-//             if (element) {
-//                 element.removeEventListener(eventName, eventHandler);
-//             }
-//         }
-//     }
+// 	for (const eventName in globalVariables.eventListeners) {
+// 		const listeners = globalVariables.eventListeners[eventName];
+// 		for (const elementId in listeners) {
+// 			const eventHandler = listeners[elementId];
+// 			const element = document.getElementById(elementId);
+// 			if (element) {
+// 				element.removeEventListener(eventName, eventHandler);
+// 			}
+// 		}
+// 	}
 
 // 	globalVariables.eventListeners = {};
 // }

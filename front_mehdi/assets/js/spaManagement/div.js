@@ -4,7 +4,6 @@ import { createSignUp } from './div/createSignUp.js';
 import { createConversationList } from './div/createConversationList.js';
 import { createConversationDisplay } from './div/createConversationDisplay.js';
 import { createSearch } from './div/createSearch.js';
-import { createSearchContact } from './div/createSearchContact.js';
 import { createProfil } from './div/createProfil.js';
 import { createSettings } from './div/createSettings.js';
 import { createModifyGameTheme } from './div/createModifyGameTheme.js';
@@ -48,10 +47,7 @@ async function createChildDiv(divIds, username) {
 					await createConversationDisplay(username);
 					break;
 				case "search":
-					await createSearch();
-					break;
-				case "search-contact":
-					await createSearchContact(username);
+					await createSearch(username);
 					break;
 				case "profil":
 					await createProfil(username);
