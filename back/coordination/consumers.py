@@ -82,7 +82,9 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 							case 'join':
 								await self.messageResponse('tournament', await sync_to_async(Room.joinRoom)(user, data['room-id']))
 							case 'quit':
-								await self.messageResponse('end', await sync_to_async(Room.leaveRoom)(user, data['room-id']))
+								data = await sync_to_async(Room.leaveRoom)(user, data['room-id'])
+								# if data[1]:
+								await self.messageResponse('end', data)
 				# case to create a private tournament
 				case 'create':
 					if 'mode' in data:
