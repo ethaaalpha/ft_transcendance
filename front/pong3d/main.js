@@ -38,7 +38,7 @@ function waitForNextMatch(code){
                 hideLoadingAnimation();
                 resolve();
             }
-        }, 5000);
+        }, 500);
     });
 
 };
@@ -47,12 +47,8 @@ const socketTmp = new WebSocket("wss://" + window.location.host + "/api/coordina
 socketTmp.onmessage = (event) => {
     console.log(JSON.parse(event.data))
     const tmp = JSON.parse(event.data)
-    if (tmp.event == "next")
+    if (tmp.event == "next" || tmp.event == "win" || tmp.event == "end")
         data = tmp;
-    else if (tmp.event == "end") // ici vérifier si le statut dans le message était okay (dans le cas ou le gars leave pile quand la room commence et du coup c'est pas bon)
-        data = tmp
-    else if (tmp.event == "win")
-        data = tmp
 	else if (tmp.event == "create" && tmp.data.status == true){
 		ft.changeToRoom(tmp.data.message)
 		waitForNextMatch(tmp.data.message)
@@ -115,8 +111,13 @@ async function initialize() {
             else if (status.status === 2){
                 ft.changeToWait();
                 hideLoadingAnimation();
-                await waitForData();
-                await createGame(4);
+                await waitForNextMatch("")
+				ft.changeToInactive();
+				if (status.status == 5)
+					await createGame(4)
+				if (status.status == 0)
+					showLoadingAnimation();
+
             }
             else if (status.status === 3)
                 await createGame();

@@ -129,6 +129,7 @@ class FormTournament {
 				'room-id': this.roomCode,
 				},
 			})
+			this.changeToInactive()
 			// finir ici en send ws
 		});
 	}
@@ -159,6 +160,7 @@ class FormTournament {
 				'message': 'Forced by player',
 				},
 			})
+			this.changeToInactive();
 		})
 	}
 
@@ -185,6 +187,8 @@ class FormTournament {
 
 	changeToInactive() {
 		this.defaultValues();
+		var element = document.getElementById('tournament-js-code')
+		element.value = "";
 		hideElement('tournament-b');
 		hideElement('tournament-a');
 		hideElement('game');
