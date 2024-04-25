@@ -10,7 +10,7 @@ class Matchmaking:
 		return False
 
 	@staticmethod
-	def addPlayerToQueue(user: User) -> str:
+	def addPlayerToQueue(user: User) -> tuple:
 		from game.models import Room, Mode
 		from coordination.tools import isAvailableToPlay
 
@@ -33,7 +33,7 @@ class Matchmaking:
 		return ("Successfully added to the matchmaking queue !", True)
 	
 	@staticmethod
-	def removePlayerToQueue(user: User) -> str:
+	def removePlayerToQueue(user: User) -> tuple:
 		if user in Matchmaking._stack:
 			Matchmaking._stack.remove(user)
 			return ("Successfully added to the matchmaking queue !", True)

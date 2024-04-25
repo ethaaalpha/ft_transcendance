@@ -415,7 +415,7 @@ class Room(models.Model):
 		return (room)
 
 	@staticmethod
-	def joinRoom(player: User, code: str) -> str:
+	def joinRoom(player: User, code: str) -> tuple:
 		from coordination.tools import isAvailableToPlay
 		targetRoom: Room = Room.getRoom(code)
 		check = isAvailableToPlay(player)
@@ -428,7 +428,7 @@ class Room(models.Model):
 			return targetRoom.addPlayer(player)
 
 	@staticmethod
-	def leaveRoom(player: User, code: str) -> str:
+	def leaveRoom(player: User, code: str) -> tuple:
 		targetRoom: Room = Room.getRoom(code)
 		if not targetRoom:
 			return ("Room is inexisting !", False)
