@@ -2,6 +2,7 @@ import game.consumers as C
 from .models import Match
 from channels.db import database_sync_to_async
 from asgiref.sync import async_to_sync
+from math import sqrt
 import sys
 
 class Game:
@@ -18,6 +19,8 @@ class Game:
         self.goalP = False
         self.ready = [False, False]
         self.sent = False
+        self.nbTap = 0
+        self.distance = 0
 
     async def addVec(self, vec1, vec2):
         for i in range(len(vec1)):
@@ -49,7 +52,10 @@ class Game:
             if (data['p2Pos']):
                 self.p2Pos = data['p2Pos']
             if data['p1Pos']:
+                if (self.ballVec[1] > 0 and data['ballVec'][1] < 0) or (self.ballVec[1] < 0 and data['ballVec'][1] > 0):
+                    self.nbTap += 1
                 self.ballVec = data['ballVec']
+                self.distance += sqrt(self.ballVec[0] ** 2 + self.ballVec[1] ** 2 + self.ballVec[2] ** 2)
             if (data['p1Pos']):
                 await self.addVec(self.ballPos, self.ballVec)
             if (self.ballPos[1] > 13.5):
@@ -65,7 +71,7 @@ class Game:
         if self.sent == False:
 
             match = Match.getMatch(id = self.matchId)
-            match.finish((self.score[0], self.score[1]))   
+            match.finish((self.score[0], self.score[1]), distance=self.distance, tap=self.nbTap)   
             async_to_sync(C.GameConsumer.sendMessageToConsumer)(self.matchId, {}, "end")
             self.sent = True
             
