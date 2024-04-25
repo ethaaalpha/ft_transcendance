@@ -878,7 +878,7 @@ async function createSettings() {
 		const backButton = document.createElement("button");
 		backButton.className = "arrow-back d-flex justify-content-start align-items-center";
 		backButton.onclick = function() {
-			changeScene('home');
+			changeScene('conversation-list');
 		};
 		const backButtonImage = document.createElement("img");
 		backButtonImage.src = "assets/images/icons/arrow.svg";

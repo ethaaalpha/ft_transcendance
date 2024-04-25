@@ -77,7 +77,7 @@ function signWith42() {
 function signOut() {
 	fetchData("/api/auth/logout", 'POST')
 	.then(() => {
-		console.log("Deconexion réussie");
+		console.log("Sign out sucess");
 		changeScene("sign-in");
 	})
 	.catch(error => {
