@@ -5,10 +5,11 @@ import { changeScene }  from './spaManagement/scene.js';
 import { backgroundRunner } from './action/background.js';
 
 var globalVariables = {
+	currentScene: 'start',
 	currentUser: null,
 	userConversations: null,
-	currentScene: 'start',
 	activity: null,
+	eventListeners: {},
 	gameTheme: 1
 };
 

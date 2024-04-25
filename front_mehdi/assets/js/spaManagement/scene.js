@@ -58,12 +58,12 @@ const parentsToHide = [
 	"search-contact",
 	"profil",
 	"settings",
-	"home",
 	"modify-game-theme",
 	"modify-profil-picture",
 	"modify-password",
 	"modify-email",
-	"nav-bar"
+	"nav-bar",
+	"home",
 ];
 
 const parentsToremove = [
@@ -80,23 +80,15 @@ const parentsToremove = [
 	"modify-password",
 	"modify-email",
 	"nav-bar"
-	// "home"
 ];
 
 const eventsToUnset = [
-	// "sign-in",
-	// "sign-up",
-	// "conversation-list",
+	"sign-in",
+	"sign-up",
+	"conversation-list",
 	"conversation-display",
-	// "search",
-	// "search-contact"
-	// "profil",
-	// "settings",
-	// "modify-game-theme",
-	// "modify-profil-picture",
-	// "modify-password",
-	// "modify-email",
-	// "nav-bar"
+	"search",
+	"search-contact"
 ];
 
 // Handler
@@ -104,7 +96,7 @@ async function sceneSignIn() {
 	globalVariables.currentScene = "sign-in";
 	hideElements("sign-in");
 	await createChildDiv(["sign-in"]);
-	// setEventListener("sign-in");
+	setEventListener("sign-in");
 	
 	hideElements(parentsToHide);
 	unhideElements("sign-in");
