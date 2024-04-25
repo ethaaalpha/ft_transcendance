@@ -18,7 +18,7 @@ var globalVariables = {
         const logged = await fetchUserData();
         if (logged) {
             changeScene("conversation-list");
-			globalVariables =  new Connect();
+			globalVariables.activity =  new Connect();
             return;
         }
     } catch (error) {

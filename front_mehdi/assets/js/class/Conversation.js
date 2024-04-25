@@ -3,23 +3,22 @@ import { scrollMessagesToBottom } from '../action/chat.js';
 
 class Conversations {
 	constructor(myUsername, conversations = {}) {
-	  this.conversations = conversations;
-	  this.myUsername = myUsername;
+	this.conversations = conversations;
+	this.myUsername = myUsername;
 	}
 
 	addMessage(from, to, content, sendAt) {
-	  const message = { sender: from, content, sendAt: sendAt };
-	  let target = from === this.myUsername ? to : from;
-  
-	  if (!this.conversations[target]) {
+	const message = { sender: from, content, sendAt: sendAt };
+	let target = from === this.myUsername ? to : from;
+
+	if (!this.conversations[target]) {
 		this.conversations[target] = [];
-	  }
-  
-	  this.conversations[target].push(message);
 	}
-  
+
+	this.conversations[target].push(message);
+	}
+
 	addMessageFromSocket(messageData) {
-		console.log('messageData :', messageData);
 	
 		if (!messageData.hasOwnProperty('from') && !messageData.hasOwnProperty('sendAt')) {
 			messageData.from = this.myUsername;
@@ -42,7 +41,7 @@ class Conversations {
 		const messageElement = document.createElement("div");
 		const messageText = document.createElement('span');
 		messageText.textContent = message.content;
-        messageElement.appendChild(messageText)
+		messageElement.appendChild(messageText)
 
 		if (message.sender === globalVariables.userConversations.myUsername) {
 			messageElement.classList.add("message-sent", "message");
@@ -59,12 +58,12 @@ class Conversations {
 	}
 
 	getConversation(withUser) {
-	  if (this.conversations[withUser]) {
+	if (this.conversations[withUser]) {
 		return this.conversations[withUser];
-	  } else {
+	} else {
 		console.log(`La conversation avec ${withUser} n'existe pas.`);
 		return [];
-	  }
+	}
 	}
 }
 

@@ -6,20 +6,6 @@ import { changeScene } from './scene.js';
 import { navBarActionHandler } from '../action/navBar.js';
 import { manageFriend, signOut, modifyProfilPicture, modifyPassword, modifyEmail, signWith42, signIn, forgotPassword, signUp } from '../action/userManagement.js';
 
-// function removeChildDiv(...parentIds) {
-// 	parentIds.forEach(parentId => {
-// 		const parent = document.getElementById(parentId);
-// 		if (!parent) {
-// 			console.error(`L'élément avec l'id "${parentId}" n'existe pas.`);
-// 			return;
-// 		}
-
-// 		while (parent.firstChild) {
-// 			parent.removeChild(parent.firstChild);
-// 		}
-// 	});
-// }
-
 function removeChildDiv(parentIds, ...excludeIds) {
     parentIds.forEach(parentId => {
         if (excludeIds.includes(parentId)) return;
@@ -35,8 +21,6 @@ function removeChildDiv(parentIds, ...excludeIds) {
         }
     });
 }
-
-
 
 async function createChildDiv(divIds, username) {
     try {
@@ -91,7 +75,6 @@ async function createChildDiv(divIds, username) {
         throw error;
     }
 }
-
 
 // Handler
 async function createSignIn() {
@@ -502,8 +485,6 @@ async function createConversationDisplay(user) {
 	}
 }
 
-
-
 async function createSearch() {
 	try {
 		const searchParentDiv = document.getElementById("search");
@@ -543,70 +524,6 @@ async function createSearch() {
 		throw error;
 	}
 }
-
-
-// async function createSearch() {
-// 	try {
-		
-// 		const searchInput = document.getElementById("conversation-list-searchbar-input-id").value;//if exist, try
-
-// 		const searchParentDiv = document.getElementById("search");
-
-// 		// Create parents div
-// 		const searchbarDiv = document.createElement("div");
-// 		searchbarDiv.id = "search-searchbar-container-id";
-// 		searchbarDiv.classList.add("search-searchbar-container");
-
-// 		const conversationDiv = document.createElement("div");
-// 		conversationDiv.id = "search-contact-container-id";
-// 		conversationDiv.classList.add("search-contact-container");
-
-// 		searchParentDiv.appendChild(searchbarDiv);
-// 		searchParentDiv.appendChild(conversationDiv);
-
-// 		// Input search
-// 		const messageInput = document.createElement("input");
-// 		messageInput.setAttribute("type", "text");
-// 		messageInput.setAttribute("placeholder", "Search a contact...");
-// 		messageInput.classList.add("search-searchbar-input");
-// 		messageInput.setAttribute("id", "search-searchbar-input-id");
-// 		messageInput.value(searchInput);//does it works?
-// 		searchbarDiv.appendChild(messageInput);
-
-// 		// conversationDiv.innerHTML = '';
-
-// 		const imgUrl = await fetchProfilPicture(searchInput)
-
-// 		if (imgUrl) {
-// 			const conversationButton = document.createElement("button");
-// 			conversationButton.classList.add("search-contact-button");
-
-// 			const img = document.createElement("img");
-// 			img.src = imgUrl;
-// 			img.alt = "Profile Picture";
-// 			conversationButton.appendChild(img);
-	
-// 			const userInfo = document.createElement("div");
-// 			userInfo.classList.add("search-user");
-// 			userInfo.textContent = searchInput;
-
-// 			conversationButton.appendChild(userInfo);
-
-// 			conversationButton.addEventListener("click", function() {
-// 				changeScene("profil", searchInput);
-// 			});
-
-// 			conversationDiv.appendChild(conversationButton);
-// 		}
-// 		else
-// 			console.error('Error fetching user data:', error);
-
-// 		// createNavBar();
-// 	} catch (error) {
-// 		console.error('Error in createSearch: ', error);
-// 		throw error;
-// 	}
-// }
 
 async function createSearchContact(user) {
 	try {
@@ -724,7 +641,6 @@ async function createProfil(username) {
 		persoInfoDiv.appendChild(rightDiv);
 	
 		// Fetch and add current username
-	
 		const currentUsername = globalVariables.currentUser.getUsername();
 		const usernameElement = document.createElement("span");
 		usernameElement.textContent = username;
@@ -1203,16 +1119,6 @@ async function createModifyEmail() {
 	}
 }
 
-// Utils
-
-
-// in profil only
-
-// if (!isMyProfil)
-// 	createNavBar(true, username);
-// else
-// 	createNavBar(false, username);
-
 async function createNavBar(username) {
 	try {
 		const navBar = document.getElementById("nav-bar");
@@ -1268,7 +1174,6 @@ async function createNavBar(username) {
 	}
 }
 
-
 function createButton(label, color, id, username) {
 	const button = document.createElement("button");
 	button.type = "button";
@@ -1282,6 +1187,5 @@ function createButton(label, color, id, username) {
 	};
 	return button;
 }
-
 
 export { createChildDiv, removeChildDiv };

@@ -28,7 +28,6 @@ function setEventConversationList() {
 	const searchInput = document.getElementById("conversation-list-searchbar-input-id");
 	let isInputEmpty = true;
 
-	// Redéfinition des fonctions onInputFilled et onInputCleared à l'intérieur de setEventConversationList
 	onInputFilled = function() {
 		changeScene("search");
 		isInputEmpty = false;
@@ -61,7 +60,6 @@ function setEventSearch() {
 	const searchInput = document.getElementById("search-searchbar-input-id");
 	let isInputEmpty = true;
 
-	// Redéfinition des fonctions onInputFilled et onInputCleared à l'intérieur de setEventConversationList
 	onInputFilled = function() {
 		// changeScene("search");
 		isInputEmpty = false;
@@ -93,7 +91,6 @@ function setEventSearchContact() {
 	const searchInput = document.getElementById("search-contact-searchbar-input-id");
 	let isInputEmpty = true;
 
-	// Redéfinition des fonctions onInputFilled et onInputCleared à l'intérieur de setEventConversationList
 	onInputFilled = function() {
 		changeScene("search");
 		isInputEmpty = false;
