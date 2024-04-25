@@ -2,6 +2,7 @@ import globalVariables from '../init.js';
 import { removeChildDiv, createChildDiv } from './div.js';
 import { setEventListener } from './setEvent.js';
 import { unsetEventListener } from './unsetEvent.js';
+import { setFocus } from './setFocus.js';
 
 function changeScene(newScene, username) {
 	switch (newScene) {
@@ -18,10 +19,7 @@ function changeScene(newScene, username) {
 			sceneConversationDisplay(username);
 			break;
 		case "search":
-			sceneSearch();
-			break;
-		case "search-contact":
-			sceneSearchContact(username);
+			sceneSearch(username);
 			break;
 		case "profil":
 			sceneProfil(username);
@@ -44,7 +42,6 @@ function changeScene(newScene, username) {
 		default:
 			console.log("Invalid scene in changeScene: ", newScene);
 	}
-
 	console.log("Scene:", globalVariables.currentScene);
 }
 
@@ -55,7 +52,6 @@ const parentsToHide = [
 	"conversation-list",
 	"conversation-display",
 	"search",
-	"search-contact",
 	"profil",
 	"settings",
 	"modify-game-theme",
@@ -72,7 +68,6 @@ const parentsToremove = [
 	"conversation-list",
 	"conversation-display",
 	"search",
-	"search-contact",
 	"profil",
 	"settings",
 	"modify-game-theme",
@@ -87,8 +82,7 @@ const eventsToUnset = [
 	"sign-up",
 	"conversation-list",
 	"conversation-display",
-	"search",
-	"search-contact"
+	"search"
 ];
 
 // Handler
@@ -102,21 +96,23 @@ async function sceneSignIn() {
 	unhideElements("sign-in");
 	unsetEventListener(eventsToUnset, "sign-in");
 	removeChildDiv(parentsToremove, "sign-in");
+	setFocus("sign-in");
 }
 
 async function sceneSignUp() {
 	globalVariables.currentScene = "sign-up";
 	hideElements("sign-up");
 	await createChildDiv(["sign-up"]);
-	// setEventListener("sign-up");
+	setEventListener("sign-up");
 	
 	hideElements(parentsToHide);
 	unhideElements("sign-up");
 	unsetEventListener(eventsToUnset, "sign-up");
 	removeChildDiv(parentsToremove, "sign-up");
+	setFocus("sign-up");
 }
 
-async function sceneConversationList() {//template
+async function sceneConversationList() {
 	globalVariables.currentScene = "conversation-list";
 	hideElements("conversation-list");
 	await createChildDiv(["conversation-list", "nav-bar"]);
@@ -128,42 +124,31 @@ async function sceneConversationList() {//template
 	removeChildDiv(parentsToremove, "conversation-list", "nav-bar");
 }
 
-async function sceneSearch() {
-	globalVariables.currentScene = "search";
-	hideElements("search");
-	await createChildDiv(["search", "nav-bar"]);
-	setEventListener("search");
-	
-	hideElements(parentsToHide);
-	unhideElements("home", "nav-bar", "search");
-	unsetEventListener(eventsToUnset, "search");
-	removeChildDiv(parentsToremove, "search", "nav-bar");
-}
-
-async function sceneSearchContact(user) {
-	globalVariables.currentScene = "search-contact";
-	hideElements("search-contact");
-	await createChildDiv(["search-contact", "nav-bar"], user);
-	setEventListener("search-contact");
-	
-	hideElements(parentsToHide);
-	unhideElements("home", "nav-bar", "search-contact");
-	unsetEventListener(eventsToUnset, "search-contact");
-	removeChildDiv(parentsToremove, "search-contact", "nav-bar");
-}
-
-async function sceneConversationDisplay(user) {
+async function sceneConversationDisplay(username) {
 	globalVariables.currentScene = "conversation-display";
 	hideElements("conversation-display");
-	await createChildDiv(["conversation-display", "nav-bar"], user);
+	await createChildDiv(["conversation-display", "nav-bar"], username);
 	setEventListener("conversation-display");
 	
 	hideElements(parentsToHide);
 	unhideElements("home", "nav-bar", "conversation-display");
 	unsetEventListener(eventsToUnset, "conversation-display");
 	removeChildDiv(parentsToremove, "conversation-display", "nav-bar");
+	setFocus("conversation-display");
 }
 
+async function sceneSearch(username) {
+	globalVariables.currentScene = "search";
+	hideElements("search");
+	await createChildDiv(["search", "nav-bar"], username);
+	setEventListener("search");
+	
+	hideElements(parentsToHide);
+	unhideElements("home", "nav-bar", "search");
+	unsetEventListener(eventsToUnset, "search");
+	removeChildDiv(parentsToremove, "search", "nav-bar");
+	setFocus("search");
+}
 
 async function sceneProfil(username) {
 	globalVariables.currentScene = "profil";
@@ -189,7 +174,6 @@ async function sceneSettings() {
 	unsetEventListener(eventsToUnset, "settings");
 	removeChildDiv(parentsToremove, "settings", "nav-bar");
 }
-// to update below
 
 async function sceneModifyGameTheme() {
 	globalVariables.currentScene = "modify-game-theme";
@@ -240,15 +224,6 @@ async function sceneModifyEmail() {
 }
 
 // Utils
-function resetFormFields(...elementIds) {
-	elementIds.forEach(elementId => {
-		const element = document.getElementById(elementId);
-		if (element && element.tagName === "INPUT") {
-			element.value = "";
-		}
-	});
-}
-
 function hideElements(...elementIds) {
 	elementIds.forEach(elementId => {
 		const element = document.getElementById(elementId);
@@ -258,7 +233,7 @@ function hideElements(...elementIds) {
 	});
 }
 
-function unhideElements(...elementIds) {
+async function unhideElements(...elementIds) {
 	elementIds.forEach(elementId => {
 		var element = document.getElementById(elementId);
 		if (element) {
