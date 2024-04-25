@@ -127,7 +127,7 @@ class Match(models.Model):
 		ContractBuilder.threaded(score, self) # Blockchain Runner !
 		self.setDuration(timezone.now() - self.start_time)
 		self.setState(2)
-		self.setData({'distance': 1, 'duration': self.duration.total_seconds(), 'pong': 20})  #change to real values
+		self.setData({'distance': kwargs['distance'], 'duration': self.duration.total_seconds(), 'pong': kwargs['tap']})  #change to real values
 		setOutMatch(loser) # let free the loser
 
 		# Statistics
@@ -166,6 +166,7 @@ class Match(models.Model):
 		self.save()
 
 	def setData(self, tab):
+		print(tab, file=sys.stderr)
 		self.data = tab
 		self.save()
 
