@@ -25,7 +25,7 @@ function signIn() {
 			if (data.status === 200) {
 				console.log("Successful connection");
 				changeScene("conversation-list");
-                appendAlert('Successful connection', 'success');
+                // appendAlert('Successful connection', 'success');
 			} else {
 				console.log("Connexion error");
 			}
