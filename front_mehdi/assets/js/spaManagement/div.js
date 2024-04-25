@@ -664,6 +664,9 @@ async function createSearchContact(user) {
 async function createProfil(username) {
 
 	try {
+
+		await fetchUserData();
+
 		const profilDisplay = document.getElementById("profil");
 
 		// Back button
@@ -736,8 +739,8 @@ async function createProfil(username) {
 		if (!isMyProfil) {
 			// Check if user is not a friend
 			const status = await globalVariables.currentUser.isFriend(username);
-			console.log("username here: " + username);
-			console.log(status);
+			// console.log("username here: " + username);
+			// console.log(status);
 			if (status === "notFriend") {
 				const button1 = document.createElement("button");
 				button1.classList.add("action-button");
@@ -808,8 +811,8 @@ async function createProfil(username) {
 		persoScoresDiv.classList.add("perso-scores-div");
 		profilDisplay.appendChild(persoScoresDiv);
 		
-		console.log(userStats);
-		console.log(userStats.matchesWon);
+		// console.log(userStats);
+		// console.log(userStats.matchesWon);
 
 		// Display user statistics
 		persoScoresDiv.appendChild(createStatElement("matches mon", userStats.numberOfVictory, "The more the better.", "square"));
@@ -818,10 +821,10 @@ async function createProfil(username) {
 		persoScoresDiv.appendChild(createStatElement("average duration", userStats.averagePong, "The shorter you are in game the better.", "square"));
 		persoScoresDiv.appendChild(createStatElement("hits per match", userStats.averagePong, "The less you touch the ball the better.", "square"));
 
-		if (!isMyProfil)
-			handleNavButtons(true, username);
-		else
-			handleNavButtons(false, username);
+		// if (!isMyProfil)
+		// 	handleNavButtons(true, username);
+		// else
+		// 	handleNavButtons(false, username);
 
 	} catch (error) {
 		console.error("Error in createProfil: ", error);
