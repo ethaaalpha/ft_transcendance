@@ -31,16 +31,16 @@ class User {
 	}
 
 	getUserStats() {
-        return this.userStats;
-    }
+		return this.userStats;
+	}
 
 	getUsername() {
-        return this.username;
-    }
+		return this.username;
+	}
 
 	getProfilePicture() {
-        return this.profilePicture;
-    }
+		return this.profilePicture;
+	}
 	
 	isFriend(username) {
 		if (this.friends.includes(username)) {
