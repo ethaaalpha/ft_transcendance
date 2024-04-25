@@ -34,17 +34,17 @@ function fetchData(apiUrl, method, data = null) {
 	}
 	
 	return fetch(apiUrl, requestOptions)
-        .then(response => {
-            const statusCode = response.status;
-            return response.json()
-                .then(data => {
-                    return { status: statusCode, data: data };
-                });
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            return { status: 500, data: null }; // Default status code for error
-        });
+		.then(response => {
+			const statusCode = response.status;
+			return response.json()
+				.then(data => {
+					return { status: statusCode, data: data };
+				});
+		})
+		.catch(error => {
+			console.error('Error:', error);
+			return { status: 500, data: null }; // Default status code for error
+		});
 }
 
 export { getCookie, fetchData };

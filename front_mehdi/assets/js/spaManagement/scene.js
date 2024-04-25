@@ -1,9 +1,7 @@
 import globalVariables from '../init.js';
 import { removeChildDiv, createChildDiv } from './div.js';
-import { fetchUserData } from '../init.js';
-import { setEventListener, unsetEventListener } from './eventListener.js'
-import { fetchConversations } from '../action/chat.js';
-import { signIn } from '../action/userManagement.js';
+import { setEventListener } from './setEvent.js';
+import { unsetEventListener } from './unsetEvent.js';
 
 function changeScene(newScene, username) {
 	switch (newScene) {
@@ -44,7 +42,7 @@ function changeScene(newScene, username) {
 			sceneModifyEmail();
 			break;
 		default:
-			console.log("Invalid scene: ", newScene);
+			console.log("Invalid scene in changeScene: ", newScene);
 	}
 
 	console.log("Scene:", globalVariables.currentScene);
@@ -88,10 +86,10 @@ const parentsToremove = [
 const eventsToUnset = [
 	// "sign-in",
 	// "sign-up",
-	"conversation-list",
+	// "conversation-list",
 	"conversation-display",
-	"search",
-	"search-contact"
+	// "search",
+	// "search-contact"
 	// "profil",
 	// "settings",
 	// "modify-game-theme",

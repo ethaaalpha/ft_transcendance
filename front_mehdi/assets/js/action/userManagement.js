@@ -5,10 +5,10 @@ function signIn() {
 	var username = document.getElementById("sign-in-username").value;
 	var password = document.getElementById("sign-in-password").value;
 	
-    var formData = new FormData();
-    
-    formData.append("username", username);
-    formData.append("password", password);
+	var formData = new FormData();
+	
+	formData.append("username", username);
+	formData.append("password", password);
 
 	fetchData("/api/auth/login?mode=intern", 'POST', formData).then(
 		(data) => {
@@ -25,7 +25,7 @@ function signIn() {
 			if (data.status === 200) {
 				console.log("Successful connection");
 				changeScene("conversation-list");
-                // appendAlert('Successful connection', 'success');
+				// appendAlert('Successful connection', 'success');
 			} else {
 				console.log("Connexion error");
 			}
@@ -41,11 +41,11 @@ function signUp() {
 	var password = document.getElementById("sign-up-password").value;
 	var email = document.getElementById("sign-up-email").value;
 	
-    var formData = new FormData();
-    
-    formData.append("username", username);
-    formData.append("password", password);
-    formData.append("email", email);
+	var formData = new FormData();
+	
+	formData.append("username", username);
+	formData.append("password", password);
+	formData.append("email", email);
 	
 	fetchData("/api/auth/register", 'POST', formData).then(
 	(data) => {
@@ -55,15 +55,15 @@ function signUp() {
 		} else {
 			console.log("Error conexion");
 		}
-    })
-    .catch(error => {
+	})
+	.catch(error => {
 		console.error('Error:', error);
-    });
+	});
 }
 
 function signWith42() {
 	fetchData("/api/auth/login?mode=42")
-    .then((data) => {
+	.then((data) => {
 		data.json().then(
 			(dataJSON) => {
 				console.log(dataJSON)
@@ -88,9 +88,9 @@ function signOut() {
 function forgotPassword() {
 	var username = document.getElementById("username").value;
 	
-    var formData = new FormData();
-    
-    formData.append("username", username);
+	var formData = new FormData();
+	
+	formData.append("username", username);
 	
 	fetchData("/api/auth/reset-password", 'POST', formData).then(
 	(data) => {
@@ -100,20 +100,20 @@ function forgotPassword() {
 		} else {
 			console.log("Erreur de connexion");
 		}
-    })
-    .catch(error => {
+	})
+	.catch(error => {
 		console.error('Error:', error);
-    });
+	});
 }
 
 function modifyPassword() {
 	var actualPassword = document.getElementById("settings-actual-password").value;
 	var newPassword = document.getElementById("settings-new-password").value;
 	
-    var formData = new FormData();
-    
-    formData.append("actualPassword", actualPassword);
-    formData.append("newPassword", newPassword);
+	var formData = new FormData();
+	
+	formData.append("actualPassword", actualPassword);
+	formData.append("newPassword", newPassword);
 	
 	fetchData("/api/dashboard?filter=password", 'POST', formData).then(
 	(data) => {
@@ -123,20 +123,20 @@ function modifyPassword() {
 		} else {
 			console.log("Password do not match !");
 		}
-    })
-    .catch(error => {
+	})
+	.catch(error => {
 		console.error('Error:', error);
-    });	
+	});	
 }
 
 function modifyEmail() {
 	var actualEmail = document.getElementById("settings-actual-email").value;
 	var newEmail = document.getElementById("settings-new-email").value;
 	
-    var formData = new FormData();
-    
-    formData.append("actualEmail", actualEmail);
-    formData.append("newEmail", newEmail);
+	var formData = new FormData();
+	
+	formData.append("actualEmail", actualEmail);
+	formData.append("newEmail", newEmail);
 	
 	fetchData("/api/dashboard?filter=email", 'POST', formData).then(
 	(data) => {
@@ -146,18 +146,18 @@ function modifyEmail() {
 		} else {
 			console.log("Email do not match !");
 		}
-    })
-    .catch(error => {
+	})
+	.catch(error => {
 		console.error('Error:', error);
-    });	
+	});	
 }
 
 function modifyProfilPicture() {
 	var profilePicture = document.getElementById("settings-actual-email").files;
 	
-    var formData = new FormData();
-    
-    formData.append("profilePicture", profilePicture);
+	var formData = new FormData();
+	
+	formData.append("profilePicture", profilePicture);
 	
 	fetchData("/api/dashboard?filter=profilePicture", 'POST', formData).then(
 	(data) => {
@@ -167,16 +167,16 @@ function modifyProfilPicture() {
 		} else {
 			console.log("Size problem !");
 		}
-    })
-    .catch(error => {
+	})
+	.catch(error => {
 		console.error('Error:', error);
-    });	
+	});	
 }
 
 function manageFriend(username, action) {	
-    var formData = new FormData();
-    formData.append("action", action);
-    formData.append("username", username);
+	var formData = new FormData();
+	formData.append("action", action);
+	formData.append("username", username);
 	
 	fetchData("/api/dashboard/friends", 'POST', formData).then(
 	(data) => {
@@ -185,10 +185,10 @@ function manageFriend(username, action) {
 		} else {
 			console.log("Login error");
 		}
-    })
-    .catch(error => {
+	})
+	.catch(error => {
 		console.error('Error:', error);
-    });
+	});
 }
 
 export { signIn, signUp, signWith42, signOut, forgotPassword, modifyPassword, modifyEmail, modifyProfilPicture, manageFriend };
