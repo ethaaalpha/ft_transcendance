@@ -50,7 +50,7 @@ function changeScene(newScene, user) {
             console.log("Invalid scene: ", newScene);
     }
 
-    console.log("Current scene is:", globalVariables.currentScene);
+    console.log("Current scene:", globalVariables.currentScene);
 }
 
 // Handler
@@ -194,17 +194,22 @@ async function sceneConversationDisplay(user) {
 	removeChildDiv(parentToremove, "conversation-display");
 }
 
-// to update below
 
 async function sceneProfil(user) {
 	globalVariables.currentScene = "profil";
-	unsetEventListener("conversation-list");
-    hideElements("conversation-display", "conversation-list", "chat", "settings", "modify-password", "modify-email", "modify-profil-picture", "modify-game-theme");
-	removeChildDiv("conversation-display", "conversation-list", "profil", "settings", "modify-game-theme");
-	await fetchUserData();
+
+	hideElements("profil");
 	await createChildDiv("profil", user);
+	setEventListener("profil");
+
+	hideElements(parentToHide);
+	unhideElements("home");
 	unhideElements("profil");
+	unsetEventListener(eventToUnset, "profil");
+	removeChildDiv(parentToremove, "profil");
 }
+
+// to update below
 
 async function sceneSettings() {
 	globalVariables.currentScene = "settings";
