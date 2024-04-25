@@ -20,13 +20,13 @@ import { manageFriend, signOut, modifyProfilPicture, modifyPassword, modifyEmail
 // 	});
 // }
 
-function removeChildDiv(parentIds, excludeId) {
+function removeChildDiv(parentIds, ...excludeIds) {
     parentIds.forEach(parentId => {
-        if (parentId === excludeId) return; // Skip the excluded element
+        if (excludeIds.includes(parentId)) return;
 
         const parent = document.getElementById(parentId);
         if (!parent) {
-            console.error(`L'élément avec l'id "${parentId}" n'existe pas.`);
+            console.error(`The element with ID "${parentId}" does not exist.`);
             return;
         }
 
@@ -37,51 +37,61 @@ function removeChildDiv(parentIds, excludeId) {
 }
 
 
-async function createChildDiv(divId, user) {
-	return new Promise((resolve, reject) => {
-		switch (divId) {
-			case "sign-in":
-				createSignIn().then(resolve).catch(reject);
-				break;
-			case "sign-up":
-				createSignUp().then(resolve).catch(reject);
-				break;
-			case "conversation-list":
-				createConversationList().then(resolve).catch(reject);
-				break;
-			case "conversation-display":
-				createConversationDisplay(user).then(resolve).catch(reject);
-				break;
-			case "search":
-				createSearch().then(resolve).catch(reject);
-				break;
-			case "search-contact":
-				createSearchContact(user).then(resolve).catch(reject);
-				break;
-			case "profil":
-				createProfil(user).then(resolve).catch(reject);
-				break;
-			case "settings":
-				createSettings().then(resolve).catch(reject);
-				break;
-			case "modify-game-theme":
-				createModifyGameTheme().then(resolve).catch(reject);
-				break;
-			case "modify-profil-picture":
-				createModifyProfilPicture().then(resolve).catch(reject);
-				break;
-			case "modify-password":
-				createModifyPassword().then(resolve).catch(reject);
-				break;
-			case "modify-email":
-				createModifyEmail().then(resolve).catch(reject);
-				break;
-			default:
-				console.log("Invalid divId: ", divId);
-				reject(new Error("Invalid divId"));
-		}
-	});
+
+async function createChildDiv(divIds, username) {
+    try {
+        for (const divId of divIds) {
+            switch (divId) {
+                case "nav-bar":
+                    await createNavBar(username);
+                    break;
+                case "sign-in":
+                    await createSignIn();
+                    break;
+                case "sign-up":
+                    await createSignUp();
+                    break;
+                case "conversation-list":
+                    await createConversationList();
+                    break;
+                case "conversation-display":
+                    await createConversationDisplay(username);
+                    break;
+                case "search":
+                    await createSearch();
+                    break;
+                case "search-contact":
+                    await createSearchContact(username);
+                    break;
+                case "profil":
+                    await createProfil(username);
+                    break;
+                case "settings":
+                    await createSettings();
+                    break;
+                case "modify-game-theme":
+                    await createModifyGameTheme();
+                    break;
+                case "modify-profil-picture":
+                    await createModifyProfilPicture();
+                    break;
+                case "modify-password":
+                    await createModifyPassword();
+                    break;
+                case "modify-email":
+                    await createModifyEmail();
+                    break;
+                default:
+                    console.log("Invalid divId: ", divId);
+                    throw new Error("Invalid divId");
+            }
+        }
+    } catch (error) {
+        console.error("Error creating child div: ", error);
+        throw error;
+    }
 }
+
 
 // Handler
 async function createSignIn() {
@@ -385,7 +395,6 @@ async function createConversationList() {
 			}
 		}
 
-		// handleNavButtons(false);
 	} catch (error) {
 		console.error("Error in createConversationList: ", error);
 		throw error;
@@ -487,7 +496,6 @@ async function createConversationDisplay(user) {
 		sendButton.appendChild(imageInput)
 		inputDiv.appendChild(sendButton);
 
-		// handleNavButtons();
 	} catch (error) {
 		console.error("Error in createConversationDisplay: ", error);
 		throw error;
@@ -530,7 +538,6 @@ async function createSearch() {
 
 		searchbarDiv.appendChild(messageInput);
 
-		// handleNavButtons();
 	} catch (error) {
 		console.error('Error in createSearch: ', error);
 		throw error;
@@ -594,7 +601,7 @@ async function createSearch() {
 // 		else
 // 			console.error('Error fetching user data:', error);
 
-// 		// handleNavButtons();
+// 		// createNavBar();
 // 	} catch (error) {
 // 		console.error('Error in createSearch: ', error);
 // 		throw error;
@@ -654,7 +661,6 @@ async function createSearchContact(user) {
 		else
 			console.error('Error fetching user data:', error);
 
-		// handleNavButtons();
 	} catch (error) {
 		console.error('Error in createSearchContact: ', error);
 		throw error;
@@ -821,11 +827,6 @@ async function createProfil(username) {
 		persoScoresDiv.appendChild(createStatElement("average duration", userStats.averagePong, "The shorter you are in game the better.", "square"));
 		persoScoresDiv.appendChild(createStatElement("hits per match", userStats.averagePong, "The less you touch the ball the better.", "square"));
 
-		// if (!isMyProfil)
-		// 	handleNavButtons(true, username);
-		// else
-		// 	handleNavButtons(false, username);
-
 	} catch (error) {
 		console.error("Error in createProfil: ", error);
 		throw error;
@@ -926,7 +927,6 @@ async function createSettings() {
 			settingsDiv.appendChild(buttonElement);
 		});
 		
-		handleNavButtons();
 	} catch (error) {
 		console.error("Error in createSettings: ", error);
 		throw error;
@@ -993,7 +993,6 @@ async function createModifyGameTheme() {
 
 		selectGameTheme(globalVariables.gameTheme);
 
-		handleNavButtons();
 	} catch (error) {
 		console.error("Error in createModifyGameTheme: ", error);
 		throw error;
@@ -1074,7 +1073,6 @@ async function createModifyProfilPicture() {
 		button.appendChild(buttonSpan);
 		modifyProfilPictureDiv.appendChild(button);	
 
-		handleNavButtons();
 	} catch (error) {
 		console.error("Error in createModifyProfilPicture: ", error);
 		throw error;
@@ -1137,7 +1135,6 @@ async function createModifyPassword() {
 		button.appendChild(buttonSpan);
 		modifyPasswordDiv.appendChild(button);	
 
-		handleNavButtons();
 	} catch (error) {
 		console.error("Error in createModifyPassword: ", error);
 		throw error;
@@ -1200,7 +1197,6 @@ async function createModifyEmail() {
 		button.appendChild(buttonSpan);
 		modifyEmailDiv.appendChild(button);
 		
-		handleNavButtons();
 	} catch (error) {
 		console.error("Error in createModifyEmail: ", error);
 		throw error;
@@ -1208,29 +1204,64 @@ async function createModifyEmail() {
 }
 
 // Utils
-function handleNavButtons(friendProfilScene, username) {
-	removeChildDiv("nav-bar", "home");
-	const navBar = document.getElementById("nav-bar");
 
-	let leftLabel, rightLabel, leftColor, rightColor ;
 
-	if (friendProfilScene) {
-		leftLabel = "Play";
-		rightLabel = "Chat";
-		leftColor = "#B4B4B4";
-		rightColor = "#B4B4B4";
-	} else  {
-		leftLabel = "Profil";
-		rightLabel = "Settings";
-		leftColor = globalVariables.currentScene === "profil" ? "#05FF00" : "#B4B4B4";
-		rightColor = globalVariables.currentScene === "settings" ? "#05FF00" : "#B4B4B4";
+// in profil only
+
+// if (!isMyProfil)
+// 	createNavBar(true, username);
+// else
+// 	createNavBar(false, username);
+
+async function createNavBar(username) {
+	try {
+		const navBar = document.getElementById("nav-bar");
+
+		let leftLabel = "Profil";
+		let rightLabel = "Settings";
+		let leftColor = "#B4B4B4";
+		let rightColor = "#B4B4B4";
+
+		if (globalVariables.currentScene === "profil") {
+			if (globalVariables.currentUser.getUsername() !== username) {
+				leftLabel = "Play";
+				rightLabel = "Chat";
+			} else {
+				leftColor = "#05FF00";
+			}
+		} else if (globalVariables.currentScene === "settings" || globalVariables.currentScene === "modify-game-theme" || globalVariables.currentScene === "modify-profil-picture" || globalVariables.currentScene === "modify-password" || globalVariables.currentScene === "modify-email") {
+			rightColor = "#05FF00";
+		}
+
+		let buttonLeft = document.getElementById("nav-bar-button-left");
+		let buttonRight = document.getElementById("nav-bar-button-right");
+
+		if (!buttonLeft) {
+			buttonLeft = createButton(leftLabel, leftColor, "left", username);
+			navBar.appendChild(buttonLeft);
+		} else {
+			buttonLeft.innerHTML = `<img src="assets/images/icons/${leftLabel.toLowerCase()}.svg" class="icon-button"></img> ${leftLabel}`;
+			buttonLeft.style.setProperty("--main_color", leftColor);
+			buttonLeft.onclick = function() {
+				navBarActionHandler(leftLabel, username);
+			};
+		}
+
+		if (!buttonRight) {
+			buttonRight = createButton(rightLabel, rightColor, "right", username);
+			navBar.appendChild(buttonRight);
+		} else {
+			buttonRight.innerHTML = `<img src="assets/images/icons/${rightLabel.toLowerCase()}.svg" class="icon-button"></img> ${rightLabel}`;
+			buttonRight.style.setProperty("--main_color", rightColor);
+			buttonRight.onclick = function() {
+				navBarActionHandler(rightLabel, username);
+			};
+		}
+
+	} catch (error) {
+		console.error("Error in createNavBar: ", error);
+		throw error;
 	}
-
-	const buttonLeft = createButton(leftLabel, leftColor, "left", username);
-	const buttonRight = createButton(rightLabel, rightColor, "right", username);
-
-	navBar.appendChild(buttonLeft);
-	navBar.appendChild(buttonRight);
 }
 
 function createButton(label, color, id, username) {
@@ -1246,5 +1277,6 @@ function createButton(label, color, id, username) {
 	};
 	return button;
 }
+
 
 export { createChildDiv, removeChildDiv };

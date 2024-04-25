@@ -5,7 +5,7 @@ import { setEventListener, unsetEventListener } from './eventListener.js'
 import { fetchConversations } from '../action/chat.js';
 import { signIn } from '../action/userManagement.js';
 
-function changeScene(newScene, user) {
+function changeScene(newScene, username) {
     switch (newScene) {
         case "sign-in":
             sceneSignIn();
@@ -20,16 +20,16 @@ function changeScene(newScene, user) {
             sceneConversationList();
             break;
 		case "conversation-display":
-			sceneConversationDisplay(user);
+			sceneConversationDisplay(username);
 			break;
 		case "search":
 			sceneSearch();
 			break;
 		case "search-contact":
-			sceneSearchContact(user);
+			sceneSearchContact(username);
 			break;
 		case "profil":
-			sceneProfil(user);
+			sceneProfil(username);
 			break;
 		case "settings":
 			sceneSettings();
@@ -50,13 +50,12 @@ function changeScene(newScene, user) {
             console.log("Invalid scene: ", newScene);
     }
 
-    console.log("Current scene:", globalVariables.currentScene);
+    console.log("Scene:", globalVariables.currentScene);
 }
 
 // Handler
 
-
-const parentToHide = [
+const parentsToHide = [
     "sign-in",
     "sign-up",
     "conversation-list",
@@ -70,10 +69,10 @@ const parentToHide = [
     "modify-profil-picture",
     "modify-password",
     "modify-email",
-    // "nav-bar"
+    "nav-bar"
 ];
 
-const parentToremove = [
+const parentsToremove = [
     "sign-in",
     "sign-up",
     "conversation-list",
@@ -86,11 +85,12 @@ const parentToremove = [
     "modify-profil-picture",
     "modify-password",
     "modify-email",
-    // "nav-bar"
+    "nav-bar"
+	// "home"
 ];
 
 
-const eventToUnset = [
+const eventsToUnset = [
     // "sign-in",
     // "sign-up",
     "conversation-list",
@@ -112,10 +112,10 @@ async function sceneSignIn() {
 	hideElements("sign-in");
 	await createChildDiv("sign-in");
 
-	hideElements(parentToHide);
+	hideElements(parentsToHide);
 
 	unhideElements("sign-in");
-	removeChildDiv(parentToremove, "sign-in");
+	removeChildDiv(parentsToremove, "sign-in");
 }
 
 async function sceneSignUp() {
@@ -124,89 +124,91 @@ async function sceneSignUp() {
 	hideElements("sign-up");
 	await createChildDiv("sign-up");
 	
-	hideElements(parentToHide);
+	hideElements(parentsToHide);
 	
 	unhideElements("sign-up");
-	removeChildDiv(parentToremove, "sign-up");
+	removeChildDiv(parentsToremove, "sign-up");
 }
 
 // function sceneHome() {
 //     globalVariables.currentScene = "home";
-// 	hideElements(parentToHide);
+// 	hideElements(parentsToHide);
 
 //     unhideElements("home");
 // 	changeScene("conversation-list");
 // }
 
-async function sceneConversationList() {
+async function sceneConversationList() {//template
 	globalVariables.currentScene = "conversation-list";
-
 	hideElements("conversation-list");
-	await createChildDiv("conversation-list");
+	await createChildDiv(["conversation-list", "nav-bar"]);
 	setEventListener("conversation-list");
 	
-	hideElements(parentToHide);
-	unhideElements("home");
-	unhideElements("conversation-list");
-	unsetEventListener(eventToUnset, "conversation-list");
-	removeChildDiv(parentToremove, "conversation-list");
+	hideElements(parentsToHide);
+	unhideElements("home", "nav-bar", "conversation-list");
+	unsetEventListener(eventsToUnset, "conversation-list");
+	removeChildDiv(parentsToremove, "conversation-list", "nav-bar");
 }
 
 async function sceneSearch() {
 	globalVariables.currentScene = "search";
-
 	hideElements("search");
-	await createChildDiv("search");
+	await createChildDiv(["search", "nav-bar"]);
 	setEventListener("search");
-
-	hideElements(parentToHide);
-	unhideElements("home");
-	unhideElements("search");
-	unsetEventListener(eventToUnset, "search");
-	removeChildDiv(parentToremove, "search");	
+	
+	hideElements(parentsToHide);
+	unhideElements("home", "nav-bar", "search");
+	unsetEventListener(eventsToUnset, "search");
+	removeChildDiv(parentsToremove, "search", "nav-bar");
 }
 
 async function sceneSearchContact(user) {
 	globalVariables.currentScene = "search-contact";
-
 	hideElements("search-contact");
-	await createChildDiv("search-contact", user);
+	await createChildDiv(["search-contact", "nav-bar"], user);
 	setEventListener("search-contact");
-
-	hideElements(parentToHide);
-	unhideElements("home");
-	unhideElements("search-contact");
-	unsetEventListener(eventToUnset, "search-contact");
-	removeChildDiv(parentToremove, "search-contact");	
+	
+	hideElements(parentsToHide);
+	unhideElements("home", "nav-bar", "search-contact");
+	unsetEventListener(eventsToUnset, "search-contact");
+	removeChildDiv(parentsToremove, "search-contact", "nav-bar");
 }
 
 async function sceneConversationDisplay(user) {
 	globalVariables.currentScene = "conversation-display";
-
 	hideElements("conversation-display");
-	await createChildDiv("conversation-display", user);
+	await createChildDiv(["conversation-display", "nav-bar"], user);
 	setEventListener("conversation-display");
-
-	hideElements(parentToHide);
-	unhideElements("home");
-	unhideElements("conversation-display");
-	unsetEventListener(eventToUnset, "conversation-display");
-	removeChildDiv(parentToremove, "conversation-display");
+	
+	hideElements(parentsToHide);
+	unhideElements("home", "nav-bar", "conversation-display");
+	unsetEventListener(eventsToUnset, "conversation-display");
+	removeChildDiv(parentsToremove, "conversation-display", "nav-bar");
 }
 
 
-async function sceneProfil(user) {
+async function sceneProfil(username) {
 	globalVariables.currentScene = "profil";
-
 	hideElements("profil");
-	await createChildDiv("profil", user);
-	setEventListener("profil");
+	await createChildDiv(["profil", "nav-bar"], username);
+	// setEventListener("profil");
+	
+	hideElements(parentsToHide);
+	unhideElements("home", "nav-bar", "profil");
+	unsetEventListener(eventsToUnset, "profil");
+	removeChildDiv(parentsToremove, "profil", "nav-bar");
 
-	hideElements(parentToHide);
-	unhideElements("home");
-	unhideElements("profil");
-	unsetEventListener(eventToUnset, "profil");
-	removeChildDiv(parentToremove, "profil");
+	// globalVariables.currentScene = "profil";
+
+	// hideElements("profil");
+	// await createChildDiv("profil", user);
+	// // setEventListener("profil");
+
+	// hideElements(parentsToHide);
+	// unhideElements("home");
+	// unhideElements("profil");
+	// unsetEventListener(eventsToUnset, "profil");
+	// removeChildDiv(parentsToremove, "profil");
 }
 
 // to update below
