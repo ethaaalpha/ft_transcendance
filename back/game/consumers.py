@@ -22,9 +22,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 	async def connect(self):
 		self.user = self.scope['user']
 		if self.user.is_authenticated:
-			# print(str(GameMap.getMatchID(await self.getUsername())), file=sys.stderr)
 			self.matchId = str(GameMap.getMatchID(await self.getUsername()))
-			# print(await self.getUsername(), sys.stderr)
 			await self.accept()
 			await self.channel_layer.group_add(self.matchId, self.channel_name)
 
@@ -45,7 +43,6 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 				data = content['data']
 				await game.updateBall(data)
 			elif content['event'] == 'ready':
-				# print(f"{content} {await self.getUsername()}", file=sys.stderr)
 				await game.makeReady(await self.getUsername())
 
 			
