@@ -33,7 +33,7 @@ class Stats(models.Model):
 		
 		for match in matchHistoric:
 			score = match.getScore()
-			if score[0] < 0 or score[1] < 0:
+			if score[0] > 5 or score[1] > 5:
 				continue
 			for key, value in match.data.items():
 				data[key] += value
