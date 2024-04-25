@@ -1240,22 +1240,26 @@ async function createNavBar(username) {
 			buttonLeft = createButton(leftLabel, leftColor, "left", username);
 			navBar.appendChild(buttonLeft);
 		} else {
-			buttonLeft.innerHTML = `<img src="assets/images/icons/${leftLabel.toLowerCase()}.svg" class="icon-button"></img> ${leftLabel}`;
-			buttonLeft.style.setProperty("--main_color", leftColor);
-			buttonLeft.onclick = function() {
-				navBarActionHandler(leftLabel, username);
-			};
+			if (buttonLeft.innerHTML !== `<img src="assets/images/icons/${leftLabel.toLowerCase()}.svg" class="icon-button"></img> ${leftLabel}` || buttonLeft.style.getPropertyValue("--main_color") !== leftColor) {
+				buttonLeft.innerHTML = `<img src="assets/images/icons/${leftLabel.toLowerCase()}.svg" class="icon-button"></img> ${leftLabel}`;
+				buttonLeft.style.setProperty("--main_color", leftColor);
+				buttonLeft.onclick = function() {
+					navBarActionHandler(leftLabel, username);
+				};
+			}
 		}
 
 		if (!buttonRight) {
 			buttonRight = createButton(rightLabel, rightColor, "right", username);
 			navBar.appendChild(buttonRight);
 		} else {
-			buttonRight.innerHTML = `<img src="assets/images/icons/${rightLabel.toLowerCase()}.svg" class="icon-button"></img> ${rightLabel}`;
-			buttonRight.style.setProperty("--main_color", rightColor);
-			buttonRight.onclick = function() {
-				navBarActionHandler(rightLabel, username);
-			};
+			if (buttonRight.innerHTML !== `<img src="assets/images/icons/${rightLabel.toLowerCase()}.svg" class="icon-button"></img> ${rightLabel}` || buttonRight.style.getPropertyValue("--main_color") !== rightColor) {
+				buttonRight.innerHTML = `<img src="assets/images/icons/${rightLabel.toLowerCase()}.svg" class="icon-button"></img> ${rightLabel}`;
+				buttonRight.style.setProperty("--main_color", rightColor);
+				buttonRight.onclick = function() {
+					navBarActionHandler(rightLabel, username);
+				};
+			}
 		}
 
 	} catch (error) {
@@ -1263,6 +1267,7 @@ async function createNavBar(username) {
 		throw error;
 	}
 }
+
 
 function createButton(label, color, id, username) {
 	const button = document.createElement("button");
