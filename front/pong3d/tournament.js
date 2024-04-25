@@ -135,8 +135,18 @@ class FormTournament {
 				},
 			})
 			this.changeToInactive()
-			// finir ici en send ws
 		});
+	}
+
+	askToJoin() {
+		let value = document.getElementById('tournament-js-code').value;
+		this.roomCode = value
+		this.callback({'event': 'tournament', 'data': {
+			'room-id': value,
+			'action': 'join',
+			},
+		})
+
 	}
 	
 	registerEventsWait() {
@@ -146,18 +156,15 @@ class FormTournament {
 				'mode': `tournament${value}`
 				},
 			})
-			// finir ici en send ws
 		});
 
 		document.getElementById('tournament-js-join').addEventListener("click", (event) => {
-			let value = document.getElementById('tournament-js-code').value;
-			this.roomCode = value
-			this.callback({'event': 'tournament', 'data': {
-				'room-id': value,
-				'action': 'join',
-				},
-			})
-			// finir ici en send ws
+			this.askToJoin();
+		});
+
+		document.getElementById('tournament-js-code').addEventListener("keydown", (event) => {
+			if (event.key === 'Enter') 
+				this.askToJoin();
 		});
 
 		document.getElementById('tournament-escape-button').addEventListener('click', (event) => {
