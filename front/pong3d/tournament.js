@@ -136,6 +136,10 @@ class FormTournament {
 			})
 			this.changeToInactive()
 		});
+
+		document.getElementById('tournament-js-code-display').addEventListener("click", (event) => {
+			navigator.clipboard.writeText(this.roomCode)
+		});
 	}
 
 	askToJoin() {
