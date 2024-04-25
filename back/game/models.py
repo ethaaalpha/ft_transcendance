@@ -105,7 +105,7 @@ class Match(models.Model):
 		if (not match.ready[0] or not match.ready[1]):
 			# mettre les stats a des valeurs par defaut !
 			match.setStartTime(timezone.now())
-			match.finish((-1, -2))
+			match.finish((10, 10))
 		return
 
 	def start(self):
@@ -172,7 +172,7 @@ class Match(models.Model):
 
 	def getScore(self):
 		if not self.contract:
-			return (0, 0)
+			return (10, 10)
 		else:
 			return (self.contract.getScore())
 
@@ -271,7 +271,7 @@ class Room(models.Model):
 		else:
 			CoordinationConsumer.sendMessageToConsumer(user.username, data, event)
 
-	def addPlayer(self, player: User) -> int:
+	def addPlayer(self, player: User) -> str:
 		actual = self.opponents.count()
 
 		if (player.Profile.isPlaying == True):
@@ -483,7 +483,7 @@ class Room(models.Model):
 				return
 			if player in room.eliminated.all():
 				print(f"j'envoie le message end à {player.username}", file=sys.stderr)
-				room.send(player, 'end', {'room-id': room.id,'rank': room.getRank(player)})
+				room.send(player, 'end', {'room-id': room.id, 'rank': room.getRank(player)})
 				room.addClosed(player)
 				return
 			if player == room.winner:

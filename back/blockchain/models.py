@@ -37,7 +37,12 @@ class ContractBuilder():
 		# Require transaction for the contract and wait for the receipt (validation)
 		contract = w3.eth.contract(abi=abi, bytecode=bytecode)
 		tx_hash = contract.constructor(score[0] & 0xFF, score[1] & 0xFF).transact()  # Parameters required by the Contract (constructor method)
-		tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+
+		try:
+			tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash, timeout=240)
+		except:
+			# Mean that the transaction couldn't be registered in the blockchain (timeout)
+			return match_instance.setScore(None)
 
 		if (tx_receipt.status == 0): # Check if transaction was reverted !
 			return match_instance.setScore(None)

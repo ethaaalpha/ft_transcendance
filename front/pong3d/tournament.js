@@ -63,6 +63,10 @@ class FormTournamentEvent {
 	getChild() {
 		return this.childElement;
 	}
+
+	destroy() {
+		this.childElement.remove();
+	}
 }
 
 class FormTournament {
@@ -70,6 +74,7 @@ class FormTournament {
 	constructor (callback) {
 		this.changeToInactive();
 		this.callback = callback
+		this.historic = []
 	}
 
 	defaultValues(){
@@ -187,6 +192,9 @@ class FormTournament {
 
 	changeToInactive() {
 		this.defaultValues();
+		var content = document.getElementById('tournament-form-content');
+		while (content.firstChild)
+			content.removeChild(content.firstChild)
 		var element = document.getElementById('tournament-js-code')
 		element.value = "";
 		hideElement('tournament-b');
@@ -194,6 +202,5 @@ class FormTournament {
 		hideElement('game');
 	}
 }
-// ft.changeToWait();
-// ft.changeToRoom('JUD2JIDE', 42)
+
 export default FormTournament
