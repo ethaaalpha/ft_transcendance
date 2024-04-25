@@ -37,7 +37,7 @@ class InvitationStack:
 		return (None)
 
 	@staticmethod
-	def invite(initier: User, target: User) -> str:
+	def invite(initier: User, target: User) -> tuple:
 		InvitationStack.update()
 		# check doublon
 		for invitation in InvitationStack.stack:
@@ -53,7 +53,7 @@ class InvitationStack:
 		return (f"Match invitation succefully send to {target.username} !", True)
 	
 	@staticmethod
-	def refuse(initier: User, target: User) -> str:
+	def refuse(initier: User, target: User) -> tuple:
 		InvitationStack.update()
 		"""
 		Target is the person who refuse the invitation !
@@ -66,7 +66,7 @@ class InvitationStack:
 		return ("This invitation do not exist anymore !", False)
 	
 	@staticmethod
-	def accept(initier: User, target: User) -> str:
+	def accept(initier: User, target: User) -> tuple:
 		InvitationStack.update()
 		"""
 		Target is the person who accept the invitation !
