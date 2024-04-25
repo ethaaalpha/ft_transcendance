@@ -40,9 +40,9 @@ class Stats(models.Model):
 			accounted += 1
 
 		accounted = 1 if accounted == 0 else accounted
-		self.traveledDistance = data['distance'] / accounted
-		self.averageDuration = data['duration'] / accounted
-		self.averagePong = data['pong'] / accounted
+		self.traveledDistance = round(data['distance'] / accounted)
+		self.averageDuration = round(data['duration'] / accounted)
+		self.averagePong = round(data['pong'] / accounted)
 		self.save()
 		return
 
