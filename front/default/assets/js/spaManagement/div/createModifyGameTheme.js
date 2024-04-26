@@ -51,7 +51,7 @@ async function createModifyGameTheme() {
 
 		// Overlay button
 		const overlayButton = document.createElement("button");
-		overlayButton.className = "modify-btn overlay-btn btn btn-block btn-light d-flex align-items-center justify-content-start bordered-button-expanded";
+		overlayButton.className = "modify-btn btn btn-block btn-light d-flex align-items-center justify-content-start bordered-button-expanded";
 		overlayButton.style.setProperty("--main_color", "#B4B4B4");
 		overlayButton.onclick = changeGameTheme; // to modify with Nico
 		const overlayButtonText = document.createElement("span");

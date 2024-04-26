@@ -95,7 +95,7 @@
 
 .perso-scores-stat-square-div {
 	padding: 0.5em;
-	height: 47%;
+	width: 47%;
 	aspect-ratio: 1/1;
 	display: flex;
 	flex-direction: column;
