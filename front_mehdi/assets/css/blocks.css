@@ -1,0 +1,86 @@
+@import url('variables.css');
+
+body {
+	font-family: "Roboto Mono", monospace;
+}
+
+.wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+	width: 100vw;
+	padding-top: 10%;
+	padding-bottom: 10%;
+}
+
+.home-div {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	width: 90%;
+	aspect-ratio: 16/9;
+}
+
+.social-div {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	
+	width: 29%;
+	height: 100%;
+}
+
+@media only screen and (min-width: 2000px) {
+	.home-div {
+		width: 65%;
+	}
+
+	.social-div {
+		width: 25%;
+	}
+}
+
+.game-div {
+	height: 100%;
+	width: 65%;
+}
+
+.social-display-div {
+    width: 100%;
+    height: 80%;
+	padding: 4%;
+}
+
+.social-button-div {
+	width: 100%;
+	height: 13%;
+	
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1em;
+	gap: 0.8em;
+}
+
+.settings-div {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: start;
+	flex-direction: column;
+	color: var(--default-gray);
+}
+
+.box-style {
+	border-radius: 25px;
+	border: 1px solid rgba(255, 255, 255, 0.29);
+	background: linear-gradient(334deg, rgba(255, 255, 255, 0.10) 13.43%, rgba(255, 255, 255, 0.40) 97.55%);
+	box-shadow: 0px 4px 24px -1px rgba(0, 0, 0, 0.20);
+	backdrop-filter: blur(100px);
+}
+
+.item-spacer {
+	padding-bottom: 1em;
+}
