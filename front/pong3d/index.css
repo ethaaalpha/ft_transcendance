@@ -1,5 +1,4 @@
 #game {
-
 	width: 100%;
 	height: 100%;
 	display: flex;
@@ -68,21 +67,22 @@
 
 #tournament-form-top-left {
 	display: flex;
-	justify-content: space-between;
-	flex-grow: 1;
+	width: 25%;
+	justify-content: space-between
 }
+
 
 #tournament-form-top-right {
 	display: flex;
-	flex-grow: 10;
 	justify-content: end;
+	align-items: center;
 }
 
 #tournament-form-top-right:hover {
 	cursor: pointer;
 }
 
-#tournament-form-content{
+#tournament-form-content {
 	overflow: hidden;
 	overflow-y: scroll;
 	display: flex;
@@ -118,5 +118,17 @@
 
 #tournament-escape {
 	font-family: 'Roboto Mono';
-	padding-bottom: 2%;;
+	padding-bottom: 2%;
+}
+
+#tournament-js-code-display {
+	color: #6ebe6d;
+	cursor: pointer;
+	transition: 400ms;
+}
+
+#tournament-js-code-display:hover {
+	color: #35df33;
+	font-size: x-large;
+	transition: 400ms;
 }
