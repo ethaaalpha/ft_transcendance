@@ -51,7 +51,7 @@ class FormTournamentEvent {
 		children.push(spanA);
 		children.push(spanB);
 
-		parentElement.appendChild(childElement);
+		parentElement.insertBefore(childElement, parentElement.firstChild)
 		children.forEach(child => {
 			childElement.appendChild(child);
 		});
@@ -95,9 +95,13 @@ class FormTournament {
 	}
 
 	updateOpacity() {
-		this.historic[0].getChild().style.setProperty('--opacity', opacity_high);
+		let maxl = this.historic.length;
+		this.historic[maxl - 1].getChild().style.setProperty('--opacity', opacity_high);
 		if (this.historic.length >= 2) {
-			this.historic[1].getChild().style.setProperty('--opacity', opacity_medium);
+			this.historic[maxl - 2].getChild().style.setProperty('--opacity', opacity_medium);
+			for (let i = 0; i < maxl - 2; i++) {
+				this.historic[i].getChild().style.setProperty('--opacity', opacity_low);
+			}
 		}
 	}
 
