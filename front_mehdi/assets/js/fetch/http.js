@@ -2,16 +2,16 @@ import { fetchData } from './api.js';
 
 function fetchCurrentUsername() {
 	return new Promise((resolve, reject) => {
-	  fetchData('/api/dashboard')
+	fetchData('/api/dashboard')
 		.then(data => {
-		  resolve(data.data['username']);
+		resolve(data.data['username']);
 		})
 		.catch(error => {
-		  console.error('Error fetching user data:', error);
-		  reject(error);
+		console.error('Error fetching user data:', error);
+		reject(error);
 		});
 	});
-  }
+}
 
 function fetchProfilPicture(username) {
 	return new Promise((resolve, reject) => {

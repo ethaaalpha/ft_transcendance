@@ -16,110 +16,53 @@
 </head>
   <body>
 
-	<div class="background backgroundZ0"></div>
-	<div class="background backgroundZ1"></div>
+		<!-- BACKGROUND -->
+		<div class="background backgroundZ0"></div>
+		<div class="background backgroundZ1"></div>
 
-	<div id="liveAlertPlaceholder"></div>
-	<!-- <button type="button" class="btn btn-primary" id="liveAlertBtn">Show live alert</button>		 -->
+		<!-- ALERT -->
+		<div id="liveAlertPlaceholder"></div>
 
+		<!-- SIGN IN / SIGN UP -->
+		<div class="container d-none" id="sign-in"></div>
+		<div class="container d-none" id="sign-up"></div>
 
-	<!-- SIGNFORM / LOGIN PAGE -->
-	  
-	<div class="container d-none" id="signForm">
-		<div class="row align-items-center justify-content-center vh-100">	
-			<div class="col-md-6 col-lg-4 dark-form">
-				<form>
-					<h1 id="titleSignIn" class="title-1 mb-3 fw-bold">signIn</h1>
-					<h1 id="titleSignUp" class="title-1 mb-3 fw-bold d-none">signUp</h1>
-				
-				<!-- SIGN IN -->
-					<!-- <div id="signIn"> -->
-						<div class="mb-3 text-center mx-auto">
-							<button type="button" class="btn btn-success btn-block col-8 opacity-50 login-form-green-button" id="signWith42Button" onclick="signWith42()"><img src="assets/images/icons/42.svg" id="picture-42"></img> Continue with 42</button>
-						</div>
-						<div class="mb-3 text-center mx-auto col-8 opacity-75 d-flex align-items-center" id="orDiv">
-							<div class="form-tab"></div>
-							<span style="margin-left: 2em; margin-right: 2em;">or</span>
-							<div class="form-tab"></div>
-						</div>
-						<div class="form-floating fixed mb-3 col-8 mx-auto">
-							<input type="text" class="form-control" id="username" placeholder="Username">
-							<label for="username" class="form-label">Username</label>
-						</div>
-						<div class="form-floating fixed mb-3 col-8 mx-auto">
-							<input type="password" class="form-control" id="password" placeholder="Password">
-							<label for="username" class="form-label">Password</label>
-						</div>
-						<div class="mb-3 text-center mx-auto">
-							<button type="button" class="btn btn-light btn-block col-8 opacity-75 bordered-button" style="--main_color: white;" id="signInButton" onclick="signIn()">Continue with username</button>
-						</div>
-						<div class="mb-3 text-center mx-auto">
-							<button type="button" class="col-8 text-button" id="forgotPasswordButton" onclick="forgotPassword()">Forgot password?</button>
-						</div>
-					<!-- </div> -->
-					
-					<!-- SIGN UP -->
-					<!-- <div id="SignUp"> -->
-						<div id="passwordConfirmDiv" class="form-floating fixed mb-3 col-8 mx-auto d-none">
-							<input id="passwordConfirm" type="password" class="form-control" placeholder="Confirm password">
-							<label for="username" class="form-label">Confirm password</label>
-						</div>
-						<div id="emailDiv" class="form-floating fixed mb-3 col-8 mx-auto d-none">
-							<input id="email" type="email" class="form-control" placeholder="Email adress">
-							<label for="username" class="form-label">Email address</label>
-							<!-- <small id="emailHelp" class="form-text text-muted">We'll sell your email on darkweb.</small> -->
-						</div>
-						<div id="signUpButton" class="mb-3 text-center mx-auto d-none">
-							<button type="button" class="btn btn-light btn-block col-8 opacity-75 bordered-button" style="--main_color: white;" onclick="signUp()">Create an account</button>
-						</div>
-					<!-- </div> -->
-			</form>
-		</div>
-		</div>
-	</div>
-		
+		<!-- HOME -->
+		<div class="wrapper">
+			<div id="home" class="home-div d-none">
 
-	<div class="wrapper">
-		<div id="home" class="home-div d-none">
+				<!-- GAME -->
+				<div class="game-div box-style"></div>
 
-			<!-- GAME -->
-			<div class="game-div box-style"></div>
+				<!-- SOCIAL -->
+				<div class="social-div">
+					<div class="social-display-div box-style">
+						
+						<!-- CHAT -->
+						<div id="conversation-list" class="d-none"></div>
+						<div id="conversation-display" class="d-none"></div>
 
-			<!-- SOCIAL -->
-			<div class="test"></div>
-			<div class="social-div">
-				<div class="social-display-div box-style">
-					
-					<!-- CHAT -->
-					<div id="conversation-list" class="d-none"></div>
-					<div id="conversation-display" class="d-none"></div>
+						<!-- SEARCH -->
+						<div id="search" class="d-none"></div>
 
-					<!-- PROFIL -->
-					<div id="profil"></div>
+						<!-- PROFIL -->
+						<div id="profil"></div>
 
-					<!-- SETTINGS -->
-					<div id="settings" class="settings-div d-none"></div>
-					<div id="modify-game-theme" class="settings-div d-none"></div>
-					<div id="modify-profil-picture" class="settings-div d-none"></div>
-					<div id="modify-password" class="settings-div d-none"></div>
-					<div id="modify-email" class="settings-div d-none"></div>
+						<!-- SETTINGS -->
+						<div id="settings" class="settings-div d-none"></div>
+						<div id="modify-game-theme" class="settings-div d-none"></div>
+						<div id="modify-profil-picture" class="settings-div d-none"></div>
+						<div id="modify-password" class="settings-div d-none"></div>
+						<div id="modify-email" class="settings-div d-none"></div>
+					</div>
+
+					<!-- NAVBAR -->
+					<div id="nav-bar" class="social-button-div box-style d-none"></div>
 				</div>
-
-				<!-- NAVBAR -->
-				<div id="nav-bar" class="social-button-div box-style"></div>
 			</div>
 		</div>
 
-	<script type="module" src="assets/js/init.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  </body>
+		<script type="module" src="assets/js/init.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+	</body>
 </html>
-
-
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-	<rect x="4" y="9" width="16" height="12" rx="4" stroke="black" stroke-width="2"/>
-	<path d="M12 16L12 14" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-	<path d="M16 9V7C16 4.79086 14.2091 3 12 3V3C9.79086 3 8 4.79086 8 7L8 9" stroke="black" stroke-width="2"/>
-	</svg>
-	
-

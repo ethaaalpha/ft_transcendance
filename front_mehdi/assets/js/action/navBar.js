@@ -3,38 +3,38 @@ import { changeScene } from '../spaManagement/scene.js';
 
 function navBarActionHandler(action, username) {
 	switch (action) {
-        case "Settings":
-            navBarSettings();
-            break;
-        case "Profil":
-            navBarProfil();
-            break;
-        case "Play":
-            navBarPlay(username);
-            break;
-        case "Chat":
-            navBarChat(username);
-            break;
+		case "Settings":
+			navBarSettings();
+			break;
+		case "Profil":
+			navBarProfil();
+			break;
+		case "Play":
+			navBarPlay(username);
+			break;
+		case "Chat":
+			navBarChat(username);
+			break;
 		default:
 			console.log("Invalid button: ", action);
 	}
 }
 
 function navBarSettings() {
-    if (globalVariables.currentScene == "settings") {
-        changeScene("home");
-    } else {
-        changeScene("settings");
-    }
+	if (globalVariables.currentScene == "settings") {
+		changeScene("conversation-list");
+	} else {
+		changeScene("settings");
+	}
 }
 
 function navBarProfil() {
-    if (globalVariables.currentScene == "profil") {
-        changeScene("home");
-    } else {
+	if (globalVariables.currentScene == "profil") {
+		changeScene("conversation-list");
+	} else {
 		const username = globalVariables.currentUser.getUsername();
-        changeScene("profil", username);
-    }
+		changeScene("profil", username);
+	}
 }
 
 async function navBarPlay(username) {

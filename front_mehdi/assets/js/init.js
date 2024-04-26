@@ -5,25 +5,27 @@ import { changeScene }  from './spaManagement/scene.js';
 import { backgroundRunner } from './action/background.js';
 
 var globalVariables = {
-    currentUser: null,
-    userConversations: null,
-    currentScene: 'start',
-	activity: new Connect(),
+	currentScene: 'start',
+	currentUser: null,
+	userConversations: null,
+	activity: null,
+	eventListeners: {},
 	gameTheme: 1
 };
 
 (async function() {
 	backgroundRunner();
-    try {
-        const logged = await fetchUserData();
-        if (logged) {
-            changeScene("home");
-            return;
-        }
-    } catch (error) {
-        console.error("Error in fetchUserData: ", error);
-    }
-    changeScene("signIn");
+	try {
+		const logged = await fetchUserData();
+		if (logged) {
+			changeScene("conversation-list");
+			globalVariables.activity =  new Connect();
+			return;
+		}
+	} catch (error) {
+		console.error("Error in fetchUserData: ", error);
+	}
+	changeScene("sign-in");
 })();
 
 
