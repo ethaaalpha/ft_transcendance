@@ -117,7 +117,7 @@ class Menu {
 	load3D () {
 		
 		//this.loadergl.load( '/cube/scene.gltf', (gltf) => {this.createobj(gltf)} );
-		this.loader.load( '/static/fonts/default2.json', (font) => { this.createTxt(font);});
+		this.loader.load( '/static/pong3d/fonts/default2.json', (font) => { this.createTxt(font);});
 	}
 	async createobj (gltf) {
 		this.animMixer = new THREE.AnimationMixer(gltf.scene);

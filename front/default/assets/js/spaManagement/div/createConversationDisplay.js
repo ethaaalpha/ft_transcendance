@@ -21,7 +21,7 @@ async function createConversationDisplay(user) {
 		};
 
 		const imgButton = document.createElement('img');
-		imgButton.src = 'assets/images/icons/arrow.svg';
+		imgButton.src = '/static/default/assets/images/icons/arrow.svg';
 		backButton.appendChild(imgButton)
 		
 		// Create parents div
@@ -89,7 +89,7 @@ async function createConversationDisplay(user) {
 		inputDiv.appendChild(messageInput);
 
 		const imageInput = document.createElement('img');
-		imageInput.src = 'assets/images/icons/send.svg';
+		imageInput.src = '/static/default/assets/images/icons/send.svg';
 		
 		// Send button
 		const sendButton = document.createElement("button");

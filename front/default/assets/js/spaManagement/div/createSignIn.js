@@ -34,7 +34,7 @@ async function createSignIn() {
 		continueWith42Button.onclick = signWith42;
 		const img = document.createElement("img");
 		img.id = "picture-42";
-		img.setAttribute("src", "assets/images/icons/42.svg");
+		img.setAttribute("src", "/static/default/assets/images/icons/42.svg");
 		img.alt = "42 Logo";
 		continueWith42Button.appendChild(img);
 		continueWith42Button.innerHTML += " Continue with 42";

@@ -13,7 +13,7 @@ async function createModifyGameTheme() {
 			changeScene('settings');
 		};
 		const backButtonImage = document.createElement("img");
-		backButtonImage.src = "assets/images/icons/arrow.svg";
+		backButtonImage.src = "/static/default/assets/images/icons/arrow.svg";
 		backButton.appendChild(backButtonImage);
 		modifyGameThemeDiv.appendChild(backButton);
 
@@ -40,7 +40,7 @@ async function createModifyGameTheme() {
 			
 			div.classList.add("modify-game-theme-image-container", "selectable");
 			const image = document.createElement("img");
-			image.src = `assets/images/theme/${i}.jpg`;
+			image.src = `/static/default/assets/images/theme/${i}.jpg`;
 			image.classList.add("modify-game-theme-image");
 			div.appendChild(image);
 			div.onclick = function() {
