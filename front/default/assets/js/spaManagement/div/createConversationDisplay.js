@@ -30,6 +30,9 @@ async function createConversationDisplay(user) {
 		titleDiv.classList.add("conversation-display-top");
 		titleDiv.appendChild(backButton);
 		
+		const blockBottom = document.createElement('div');
+		blockBottom.classList.add('conversation-block-bottom');
+	
 		const messagesDiv = document.createElement("div");
 		messagesDiv.id = "conversation-display-messages-id";
 		messagesDiv.classList.add("conversation-display-messages");
@@ -55,10 +58,12 @@ async function createConversationDisplay(user) {
 
 		titleDiv.appendChild(titleRight);
 
+		blockBottom.appendChild(messagesDiv);
+		blockBottom.appendChild(inputDiv)
+
 		// Adding to global div
 		conversationDisplay.appendChild(titleDiv);
-		conversationDisplay.appendChild(messagesDiv);
-		conversationDisplay.appendChild(inputDiv);
+		conversationDisplay.appendChild(blockBottom);
 
 		// Messages
 		for (let i = conversation.length - 1; i >= 0; i--) {
