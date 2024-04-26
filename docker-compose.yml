@@ -51,7 +51,9 @@ services:
       context: docker/daphne
       dockerfile: daphne.dockerfile
     volumes:
-      - .:/workdir/
+      - ./front:/workdir/front/
+      - ./back:/workdir/back/
+      - media:/usr/share/media
     depends_on:
       postgresql:
         condition: service_healthy
@@ -73,8 +75,8 @@ services:
     env_file:
       - .env
     volumes:
-      - ./media:/usr/share/media
-      - ./pong_front:/usr/share/static
+      - media:/usr/share/media
+      - ./front:/usr/share/static
       - ./libs:/usr/share/libs
       - ./front_mehdi:/usr/share/test
     ports: 
@@ -94,3 +96,4 @@ networks:
 volumes:
   geth:
   postgres:
+  media:
