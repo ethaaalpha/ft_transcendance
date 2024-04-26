@@ -14,7 +14,7 @@
     width: 100%;
     padding: 0.5em;
 	border-radius: 10px;
-	background: url('/test/assets/images/icons/magnifier.svg'), rgba(180, 180, 180, 0.25);
+	background: url('/static/default/assets/images/icons/magnifier.svg'), rgba(180, 180, 180, 0.25);
 	background-position: 0.8em;
 	background-repeat: no-repeat;
 	padding-left: 2.8em;

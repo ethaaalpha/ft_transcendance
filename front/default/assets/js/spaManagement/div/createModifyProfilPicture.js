@@ -13,7 +13,7 @@ async function createModifyProfilPicture() {
 			changeScene('settings');
 		};
 		const backButtonImage = document.createElement("img");
-		backButtonImage.src = "assets/images/icons/arrow.svg";
+		backButtonImage.src = "/static/default/assets/images/icons/arrow.svg";
 		backButton.appendChild(backButtonImage);
 		modifyProfilPictureDiv.appendChild(backButton);
 
@@ -32,7 +32,7 @@ async function createModifyProfilPicture() {
 		const customFileInput = document.createElement("div");
 		customFileInput.className = "custom-file-input";
 		const fileImage = document.createElement("img");
-		fileImage.src = "assets/images/icons/upload.svg";
+		fileImage.src = "/static/default/assets/images/icons/upload.svg";
 		customFileInput.appendChild(fileImage);
 		const fileLabel = document.createElement("label");
 		fileLabel.htmlFor = "settings-profil-picture";

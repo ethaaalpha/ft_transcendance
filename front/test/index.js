@@ -59,7 +59,7 @@ function loadLogged() {
 	fetchData('/api/dashboard')
 		.then(data => {
 			console.log(data)
-			updatePP('media/' + data['profilePicture']);
+			updatePP('/media/' + data['profilePicture']);
 			updateUsername(data['username']);
 	});
 

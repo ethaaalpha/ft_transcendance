@@ -36,7 +36,7 @@ class Game {
 		this.uniforms = {
 			amplitude: {value: 0.0},
 		};
-		this.itemTexture = this.textureLoader.load('/static/assets/cube/textures/Sphere_emissive.png');
+		this.itemTexture = this.textureLoader.load('/static/pong3d/assets/cube/textures/Sphere_emissive.png');
 		this.controls = gameData.controlsGameLocal;
 		this.init()
 			
@@ -97,7 +97,7 @@ class Game {
 
 	load3d(){
 		this.gltfLoader.load( '/cub2/scene.gltf', (gltf) => {this.createobj(gltf)} );
-		this.fontLoader.load( '/static/fonts/default2.json', (font) => this.scoreInit(font))
+		this.fontLoader.load( '/static/pong3d/fonts/default2.json', (font) => this.scoreInit(font))
 		this.waitForSocketNLoad(this.socket, this.allLoaded);
 	}
 
@@ -337,7 +337,7 @@ class Game {
 			console.log(this.p1Score);
 			console.log(this.p2Score);
 			if (this.p1Score < 5 && this.p2Score < 5);
-				this.fontLoader.load( '/static/fonts/default2.json', (font) => this.scoreInit(font));
+				this.fontLoader.load( '/static/pong3d/fonts/default2.json', (font) => this.scoreInit(font));
 			this.explode = false;
 			this.uniforms.amplitude.value = 0.0;
 			this.cycleScore = 0.1;

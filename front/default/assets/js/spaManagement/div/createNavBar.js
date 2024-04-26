@@ -28,8 +28,8 @@ async function createNavBar(username) {
 			buttonLeft = createButton(leftLabel, leftColor, "left", username);
 			navBar.appendChild(buttonLeft);
 		} else {
-			if (buttonLeft.innerHTML !== `<img src="assets/images/icons/${leftLabel.toLowerCase()}.svg" class="icon-button"></img> ${leftLabel}` || buttonLeft.style.getPropertyValue("--main_color") !== leftColor) {
-				buttonLeft.innerHTML = `<img src="assets/images/icons/${leftLabel.toLowerCase()}.svg" class="icon-button"></img> ${leftLabel}`;
+			if (buttonLeft.innerHTML !== `<img src="/static/default/assets/images/icons/${leftLabel.toLowerCase()}.svg" class="icon-button"></img> ${leftLabel}` || buttonLeft.style.getPropertyValue("--main_color") !== leftColor) {
+				buttonLeft.innerHTML = `<img src="/static/default/assets/images/icons/${leftLabel.toLowerCase()}.svg" class="icon-button"></img> ${leftLabel}`;
 				buttonLeft.style.setProperty("--main_color", leftColor);
 				buttonLeft.onclick = function() {
 					navBarActionHandler(leftLabel, username);
@@ -41,8 +41,8 @@ async function createNavBar(username) {
 			buttonRight = createButton(rightLabel, rightColor, "right", username);
 			navBar.appendChild(buttonRight);
 		} else {
-			if (buttonRight.innerHTML !== `<img src="assets/images/icons/${rightLabel.toLowerCase()}.svg" class="icon-button"></img> ${rightLabel}` || buttonRight.style.getPropertyValue("--main_color") !== rightColor) {
-				buttonRight.innerHTML = `<img src="assets/images/icons/${rightLabel.toLowerCase()}.svg" class="icon-button"></img> ${rightLabel}`;
+			if (buttonRight.innerHTML !== `<img src="/static/default/assets/images/icons/${rightLabel.toLowerCase()}.svg" class="icon-button"></img> ${rightLabel}` || buttonRight.style.getPropertyValue("--main_color") !== rightColor) {
+				buttonRight.innerHTML = `<img src="/static/default/assets/images/icons/${rightLabel.toLowerCase()}.svg" class="icon-button"></img> ${rightLabel}`;
 				buttonRight.style.setProperty("--main_color", rightColor);
 				buttonRight.onclick = function() {
 					navBarActionHandler(rightLabel, username);
@@ -62,7 +62,7 @@ function createButton(label, color, id, username) {
 	button.id = "nav-bar-button-" + id;
 	button.className = "btn col-6 btn-light bordered-button title-4 d-flex align-items-center justify-content-center nav-button-";
 	button.style.setProperty("--main_color", color);
-	button.innerHTML = `<img src="assets/images/icons/${label.toLowerCase()}.svg" class="icon-button"></img> ${label}`;
+	button.innerHTML = `<img src="/static/default/assets/images/icons/${label.toLowerCase()}.svg" class="icon-button"></img> ${label}`;
 	
 	button.onclick = function() {
 		navBarActionHandler(label, username);

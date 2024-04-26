@@ -41,7 +41,7 @@ class GameLocal {
 			amplitude: {value: 0.0},
 		};
 		this.textureLoader = gameData.textureLoader;
-		this.itemTexture = this.textureLoader.load('/static/assets/pokeball-texture.jpg');
+		this.itemTexture = this.textureLoader.load('/static/pong3d/assets/pokeball-texture.jpg');
 		this.controls = gameData.controlsGameLocal;
 		this.controls.enableZoom = false;
 		this.init().then(() => {
@@ -80,7 +80,7 @@ class GameLocal {
 	}
 
 	load3d(){
-		this.loader.load( '/static/fonts/default2.json', (font) => this.scoreInit(font))
+		this.loader.load( '/static/pong3d/fonts/default2.json', (font) => this.scoreInit(font))
 	}
 
 	async scoreInit(font){

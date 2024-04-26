@@ -13,7 +13,7 @@ async function createSettings() {
 			changeScene('conversation-list');
 		};
 		const backButtonImage = document.createElement("img");
-		backButtonImage.src = "assets/images/icons/arrow.svg";
+		backButtonImage.src = "/static/default/assets/images/icons/arrow.svg";
 		backButton.appendChild(backButtonImage);
 		settingsDiv.appendChild(backButton);
 
@@ -43,7 +43,7 @@ async function createSettings() {
 			buttonElement.style.setProperty("--main_color", "#DADADA");
 			buttonElement.onclick = button.scene ? function() { changeScene(button.scene); } : button.action;
 			const iconImage = document.createElement("img");
-			iconImage.src = `assets/images/icons/${button.icon}`;
+			iconImage.src = `/static/default/assets/images/icons/${button.icon}`;
 			iconImage.className = "icon-button";
 			if (button.label === "Sign out") {
 				iconImage.style.paddingLeft = "0.05em";

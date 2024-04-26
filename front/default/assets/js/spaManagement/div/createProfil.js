@@ -21,7 +21,7 @@ async function createProfil(username) {
 		};
 
 		const imgButton = document.createElement('img');
-		imgButton.src = 'assets/images/icons/arrow.svg';
+		imgButton.src = '/static/default/assets/images/icons/arrow.svg';
 		backButton.appendChild(imgButton)
 
 		profilDisplay.appendChild(backButton);
@@ -89,7 +89,7 @@ async function createProfil(username) {
 				button1.classList.add("action-button");
 
 				const imgButton = document.createElement('img');
-				imgButton.src = 'assets/images/icons/notFriend.svg';
+				imgButton.src = '/static/default/assets/images/icons/notFriend.svg';
 				button1.appendChild(imgButton)
 
 				button1.onclick = function() {
@@ -101,7 +101,7 @@ async function createProfil(username) {
 				button1.classList.add("action-button");
 
 				const imgButton = document.createElement('img');
-				imgButton.src = 'assets/images/icons/pending.svg';
+				imgButton.src = '/static/default/assets/images/icons/pending.svg';
 				button1.appendChild(imgButton)
 				
 				button1.onclick = function() {
@@ -113,7 +113,7 @@ async function createProfil(username) {
 				button1.classList.add("action-button");
 				
 				const imgButton = document.createElement('img');
-				imgButton.src = 'assets/images/icons/friend.svg';
+				imgButton.src = '/static/default/assets/images/icons/friend.svg';
 				button1.appendChild(imgButton)
 
 				button1.onclick = function() {
@@ -128,7 +128,7 @@ async function createProfil(username) {
 			button2.classList.add("action-button");
 			
 			const imgButton = document.createElement('img');
-			imgButton.src = 'assets/images/icons/blocked.svg';
+			imgButton.src = '/static/default/assets/images/icons/blocked.svg';
 			button2.appendChild(imgButton)
 
 			if (isBlocked) {
@@ -181,7 +181,7 @@ function createStatElement(title, data, description, shape) {
 
 	// Create the icon element
 	const iconElement = document.createElement('img');
-	iconElement.src = 'assets/images/icons/info.svg';
+	iconElement.src = '/static/default/assets/images/icons/info.svg';
 
 	// Create the title element
 	const titleElement = document.createElement("div");

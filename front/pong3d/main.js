@@ -62,7 +62,7 @@ socketTmp.onmessage = (event) => {
 }
 var loadingManager = new THREE.LoadingManager();
 var gameData = {
-    gltfLoader: new GLTFLoader(loadingManager).setPath( '/static/assets/' ),
+    gltfLoader: new GLTFLoader(loadingManager).setPath( '/static/pong3d/assets/' ),
     textureLoader : new THREE.TextureLoader(loadingManager),
     fontLoader : new FontLoader(loadingManager),
     sceneGameLocal : new THREE.Scene(),
@@ -157,7 +157,7 @@ function initLoading(){
 async function loadTexture() {
     return new Promise((resolve, reject) => {
         
-        // var RGBELoad = new RGBELoader(loadingManager).setPath('/static/assets/hdr/');
+        // var RGBELoad = new RGBELoader(loadingManager).setPath('/static/pong3d/assets/hdr/');
         // RGBELoad.load('d2.hdr', (texture) => {
         //     texture.mapping = THREE.EquirectangularReflectionMapping;
         //     var textureRev = texture.clone()
