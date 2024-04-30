@@ -7,8 +7,10 @@ async function createNavBar(username) {
 
 		let leftLabel = "Profil";
 		let rightLabel = "Settings";
+		let leftExtension = '';
 		let leftColor = "#B4B4B4";
 		let rightColor = "#B4B4B4";
+		let rightExtension = '';
 
 		if (globalVariables.currentScene === "profil") {
 			if (globalVariables.currentUser.getUsername() !== username) {
@@ -16,9 +18,11 @@ async function createNavBar(username) {
 				rightLabel = "Chat";
 			} else {
 				leftColor = "#05FF00";
+				leftExtension += '_green';
 			}
 		} else if (globalVariables.currentScene === "settings" || globalVariables.currentScene === "modify-game-theme" || globalVariables.currentScene === "modify-profil-picture" || globalVariables.currentScene === "modify-password" || globalVariables.currentScene === "modify-email") {
 			rightColor = "#05FF00";
+			rightExtension += '_green';
 		}
 
 		let buttonLeft = document.getElementById("nav-bar-button-left");
@@ -28,8 +32,8 @@ async function createNavBar(username) {
 			buttonLeft = createButton(leftLabel, leftColor, "left", username);
 			navBar.appendChild(buttonLeft);
 		} else {
-			if (buttonLeft.innerHTML !== `<img src="/static/default/assets/images/icons/${leftLabel.toLowerCase()}.svg" class="icon-button"></img> ${leftLabel}` || buttonLeft.style.getPropertyValue("--main_color") !== leftColor) {
-				buttonLeft.innerHTML = `<img src="/static/default/assets/images/icons/${leftLabel.toLowerCase()}.svg" class="icon-button"></img> ${leftLabel}`;
+			if (buttonLeft.innerHTML !== `<img src="/static/default/assets/images/icons/${leftLabel.toLowerCase() + leftExtension}.svg" class="icon-button"></img> ${leftLabel}` || buttonLeft.style.getPropertyValue("--main_color") !== leftColor) {
+				buttonLeft.innerHTML = `<img src="/static/default/assets/images/icons/${leftLabel.toLowerCase() + leftExtension}.svg" class="icon-button"></img> ${leftLabel}`;
 				buttonLeft.style.setProperty("--main_color", leftColor);
 				buttonLeft.onclick = function() {
 					navBarActionHandler(leftLabel, username);
@@ -41,8 +45,8 @@ async function createNavBar(username) {
 			buttonRight = createButton(rightLabel, rightColor, "right", username);
 			navBar.appendChild(buttonRight);
 		} else {
-			if (buttonRight.innerHTML !== `<img src="/static/default/assets/images/icons/${rightLabel.toLowerCase()}.svg" class="icon-button"></img> ${rightLabel}` || buttonRight.style.getPropertyValue("--main_color") !== rightColor) {
-				buttonRight.innerHTML = `<img src="/static/default/assets/images/icons/${rightLabel.toLowerCase()}.svg" class="icon-button"></img> ${rightLabel}`;
+			if (buttonRight.innerHTML !== `<img src="/static/default/assets/images/icons/${rightLabel.toLowerCase() + rightExtension}.svg" class="icon-button"></img> ${rightLabel}` || buttonRight.style.getPropertyValue("--main_color") !== rightColor) {
+				buttonRight.innerHTML = `<img src="/static/default/assets/images/icons/${rightLabel.toLowerCase() + rightExtension}.svg" class="icon-button"></img> ${rightLabel}`;
 				buttonRight.style.setProperty("--main_color", rightColor);
 				buttonRight.onclick = function() {
 					navBarActionHandler(rightLabel, username);
