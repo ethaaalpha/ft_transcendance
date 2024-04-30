@@ -28,6 +28,11 @@ async function createModifyPassword() {
 		description.textContent = "Minimum 5 and a maximum of 32 characters.";
 		modifyPasswordDiv.appendChild(description);
 
+		// Block to wrap item
+		const blockDiv = document.createElement('div')
+		blockDiv.classList.add('settings-block-scroll')
+		blockDiv.style.setProperty('--top', '5%')
+
 		// Password inputs
 		const passwordInputs = ["Actual password", "New password", "Confirm password"];
 		passwordInputs.forEach(inputLabel => {
@@ -43,7 +48,7 @@ async function createModifyPassword() {
 			label.textContent = inputLabel;
 			formGroup.appendChild(inputField);
 			formGroup.appendChild(label);
-			modifyPasswordDiv.appendChild(formGroup);
+			blockDiv.appendChild(formGroup);
 		});
 
 		// Button
@@ -55,7 +60,9 @@ async function createModifyPassword() {
 		buttonSpan.className = "btn-title";
 		buttonSpan.textContent = "Change my password";
 		button.appendChild(buttonSpan);
-		modifyPasswordDiv.appendChild(button);	
+
+		blockDiv.appendChild(button);	
+		modifyPasswordDiv.appendChild(blockDiv);	
 
 	} catch (error) {
 		console.error("Error in createModifyPassword: ", error);
