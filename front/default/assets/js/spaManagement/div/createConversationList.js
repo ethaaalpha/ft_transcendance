@@ -50,7 +50,7 @@ async function createConversationList() {
 				userInfo.textContent = user;
 				conversationButton.appendChild(userInfo);
 				conversationButton.onclick = function() {
-					changeScene("conversation-display", user);
+					history.pushState({}, '', '/chat?with=' + user);
 				}
 				conversationDiv.appendChild(conversationButton);
 			}

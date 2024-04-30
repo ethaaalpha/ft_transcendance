@@ -10,7 +10,7 @@ async function createSettingsEmail() {
 		const backButton = document.createElement("button");
 		backButton.className = "arrow-back d-flex justify-content-start align-items-center";
 		backButton.onclick = function() {
-			changeScene('settings');
+			history.pushState({}, '', '/settings');
 		};
 		const backButtonImage = document.createElement("img");
 		backButtonImage.src = "/static/default/assets/images/icons/arrow.svg";

@@ -19,12 +19,12 @@ function signIn() {
 			}
 			if (data.status === 404) {
 				console.log("You need to create an account");
-				changeScene("sign-up");
+				history.pushState({}, '', '/sign-up');
 				document.getElementById("sign-up-password-confirm").focus();
 			}
 			if (data.status === 200) {
 				console.log("Successful connection");
-				changeScene("conversation-list");
+				history.pushState({}, '', '/');
 				// appendAlert('Successful connection', 'success');
 			} else {
 				console.log("Connexion error");
@@ -51,7 +51,7 @@ function signUp() {
 	(data) => {
 		if (data.status === 200) {
 			console.log("Register sucess");
-			changeScene("conversation-list");
+			history.pushState({}, '', '/');
 		} else {
 			console.log("Error conexion");
 		}
@@ -78,7 +78,7 @@ function signOut() {
 	fetchData("/api/auth/logout", 'POST')
 	.then(() => {
 		console.log("Sign out sucess");
-		changeScene("sign-in");
+		history.pushState({}, '', '/sign-in');
 	})
 	.catch(error => {
 		console.error('Error:', error);
@@ -119,7 +119,7 @@ function modifyPassword() {
 	(data) => {
 		if (data.status === 200) {
 			console.log("Password changed");
-			changeScene("settings");
+			history.pushState({}, '', '/settings');
 		} else {
 			console.log("Password do not match !");
 		}
@@ -142,7 +142,7 @@ function modifyEmail() {
 	(data) => {
 		if (data.status === 200) {
 			console.log("Email changed");
-			changeScene("settings");
+			history.pushState({}, '', '/settings');
 		} else {
 			console.log("Email do not match !");
 		}
@@ -163,7 +163,7 @@ function modifyProfilPicture() {
 	(data) => {
 		if (data.status === 200) {
 			console.log("Profile picture changed");
-			changeScene("settings");
+			history.pushState({}, '', '/settings');
 		} else {
 			console.log("Size problem !");
 		}

@@ -172,7 +172,7 @@ function setEventSearch() {
 	addEventListener("input", "search-searchbar-input-id", function() {
 		const inputValue = this.value.trim();
 		if (!inputValue) {
-			changeScene("conversation-list");
+			history.pushState({}, '', '/');
 		}
 	});
 }
