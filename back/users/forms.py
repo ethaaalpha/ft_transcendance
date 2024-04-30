@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import ModelForm
 from django.contrib.auth.models import User
 from .models import Profile
 from tools.functions import is42
@@ -20,6 +21,21 @@ class ProfilePictureForm(forms.ModelForm):
 	class Meta:
 		model = Profile
 		fields = ['profilePicture']
+
+class GameThemeForm(ModelForm):
+	class Meta:
+		model = Profile
+		fields = ["gameTheme"]
+
+def form_changeGameTheme(profile: Profile, request: HttpRequest):
+	form: GameThemeForm = GameThemeForm(request.POST, instance=profile)
+
+	if (form.is_valid()):
+		form.save()
+		return (tResponses.OKAY.request("Game theme successfully changed !"))
+	else:
+		return (tResponses.BAD_REQUEST.request("Game theme is not valid !"))
+
 
 def form_changePassword(profile: Profile, request: HttpRequest) -> HttpResponse:
 	form: PasswordForm = PasswordForm(request.POST)
@@ -48,6 +64,8 @@ def form_changeProfilePicture(profile: Profile, request: HttpRequest) -> HttpRes
 	form: ProfilePictureForm = ProfilePictureForm(request.POST, request.FILES, instance=profile)
 
 	if (form.is_valid()):
+		import sys
+		print(f'Files included in the request: {", ".join(file.name for file in request.FILES.values())}', file=sys.stderr)
 		if (os.path.exists(oldPicture) and os.path.basename(oldPicture) != settings.DEFAULT_PROFILE_PICTURE_NAME):
 			os.remove(oldPicture)		
 		form.save()

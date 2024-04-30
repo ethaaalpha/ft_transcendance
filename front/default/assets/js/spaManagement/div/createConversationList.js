@@ -14,11 +14,11 @@ async function createConversationList() {
 		// Create parents div
 		const searchbarDiv = document.createElement("div");
 		searchbarDiv.id = "conversation-list-searchbar-container-id";
-		searchbarDiv.classList.add("conversation-list-searchbar-container");
 
 		const conversationDiv = document.createElement("div");
 		conversationDiv.id = "conversation-list-contact-container-id";
-		conversationDiv.classList.add("conversation-list-contact-container");
+		conversationDiv.classList.add("block-scroll");
+		conversationDiv.style.setProperty("--top", '5%');
 
 		conversationList.appendChild(searchbarDiv);
 		conversationList.appendChild(conversationDiv);
@@ -27,7 +27,7 @@ async function createConversationList() {
 		const messageInput = document.createElement("input");
 		messageInput.setAttribute("type", "text");
 		messageInput.setAttribute("placeholder", "Search a contact...");
-		messageInput.classList.add("conversation-list-searchbar-input");
+		messageInput.classList.add("searchbar-input");
 		messageInput.setAttribute("id", "conversation-list-searchbar-input-id");
 		searchbarDiv.appendChild(messageInput);
 

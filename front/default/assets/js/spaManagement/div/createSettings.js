@@ -28,6 +28,11 @@ async function createSettings() {
 		description.textContent = "Change everything we allow you to.";
 		settingsDiv.appendChild(description);
 
+		// Settings choice block
+		const blockDiv = document.createElement('div')
+		blockDiv.classList.add('block-scroll')
+		blockDiv.style.setProperty('--top', '3%')
+
 		// Settings buttons
 		const settingsButtons = [
 			{ label: "Modify game theme", icon: "gamepad.svg", scene: "modify-game-theme" },
@@ -56,8 +61,10 @@ async function createSettings() {
 			const labelSpan = document.createElement("span");
 			labelSpan.textContent = button.label;
 			buttonElement.appendChild(labelSpan);
-			settingsDiv.appendChild(buttonElement);
+			blockDiv.appendChild(buttonElement);
 		});
+
+		settingsDiv.appendChild(blockDiv);
 		
 	} catch (error) {
 		console.error("Error in createSettings: ", error);
