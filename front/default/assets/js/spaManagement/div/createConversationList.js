@@ -27,7 +27,7 @@ async function createConversationList() {
 		const messageInput = document.createElement("input");
 		messageInput.setAttribute("type", "text");
 		messageInput.setAttribute("placeholder", "Search a contact...");
-		messageInput.classList.add("conversation-list-searchbar-input");
+		messageInput.classList.add("searchbar-input");
 		messageInput.setAttribute("id", "conversation-list-searchbar-input-id");
 		searchbarDiv.appendChild(messageInput);
 

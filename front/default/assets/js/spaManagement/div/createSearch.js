@@ -22,16 +22,21 @@ async function createSearch(username) {
 		const messageInput = document.createElement("input");
 		messageInput.setAttribute("type", "text");
 		messageInput.setAttribute("placeholder", "Search a contact...");
-		messageInput.classList.add("search-searchbar-input");
+		messageInput.classList.add("searchbar-input");
 		messageInput.setAttribute("id", "search-searchbar-input-id");
 		messageInput.value = searchInput;
 		searchBarDiv.appendChild(messageInput);
+
+		// Block to wrap item
+		const blockDiv = document.createElement('div')
+		blockDiv.classList.add('block-scroll')
+		blockDiv.style.setProperty('--top', '5%')
 
 		const imgUrl = await fetchProfilPicture(searchInput)
 
 		if (imgUrl) {
 			const conversationButton = document.createElement("button");
-			conversationButton.classList.add("search-button");
+			conversationButton.classList.add("search-item");
 
 			const img = document.createElement("img");
 			img.src = imgUrl;
@@ -48,7 +53,8 @@ async function createSearch(username) {
 				changeScene("profil", searchInput);
 			});
 
-			conversationDiv.appendChild(conversationButton);
+			blockDiv.appendChild(conversationButton)
+			conversationDiv.appendChild(blockDiv);
 		}
 		else
 			console.error('Error fetching user data:', error);
