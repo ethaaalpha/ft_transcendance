@@ -92,7 +92,7 @@ async function sceneSignIn() {
 	await createChildDiv(["sign-in"]);
 	setEventListener("sign-in");
 	
-	hideElements(parentsToHide);
+	hideElements(...parentsToHide);
 	unhideElements("sign-in");
 	unsetEventListener(eventsToUnset, "sign-in");
 	removeChildDiv(parentsToremove, "sign-in");
@@ -105,7 +105,7 @@ async function sceneSignUp() {
 	await createChildDiv(["sign-up"]);
 	setEventListener("sign-up");
 	
-	hideElements(parentsToHide);
+	hideElements(...parentsToHide);
 	unhideElements("sign-up");
 	unsetEventListener(eventsToUnset, "sign-up");
 	removeChildDiv(parentsToremove, "sign-up");
@@ -118,7 +118,7 @@ async function sceneConversationList() {
 	await createChildDiv(["conversation-list", "nav-bar"]);
 	setEventListener("conversation-list");
 	
-	hideElements(parentsToHide);
+	hideElements(...parentsToHide);
 	unhideElements("home", "nav-bar", "conversation-list");
 	unsetEventListener(eventsToUnset, "conversation-list");
 	removeChildDiv(parentsToremove, "conversation-list", "nav-bar");
@@ -130,7 +130,7 @@ async function sceneConversationDisplay(username) {
 	await createChildDiv(["conversation-display", "nav-bar"], username);
 	setEventListener("conversation-display");
 	
-	hideElements(parentsToHide);
+	hideElements(...parentsToHide);
 	unhideElements("home", "nav-bar", "conversation-display");
 	unsetEventListener(eventsToUnset, "conversation-display");
 	removeChildDiv(parentsToremove, "conversation-display", "nav-bar");
@@ -143,7 +143,7 @@ async function sceneSearch(username) {
 	await createChildDiv(["search", "nav-bar"], username);
 	setEventListener("search");
 	
-	hideElements(parentsToHide);
+	hideElements(...parentsToHide);
 	unhideElements("home", "nav-bar", "search");
 	unsetEventListener(eventsToUnset, "search");
 	removeChildDiv(parentsToremove, "search", "nav-bar");
@@ -156,7 +156,7 @@ async function sceneProfil(username) {
 	await createChildDiv(["profil", "nav-bar"], username);
 	// setEventListener("profil");
 	
-	hideElements(parentsToHide);
+	hideElements(...parentsToHide);
 	unhideElements("home", "nav-bar", "profil");
 	unsetEventListener(eventsToUnset, "profil");
 	removeChildDiv(parentsToremove, "profil", "nav-bar");
@@ -169,7 +169,7 @@ async function sceneSettings() {
 	await createChildDiv(["settings", "nav-bar"]);
 	// setEventListener("settings");
 	
-	hideElements(parentsToHide);
+	hideElements(...parentsToHide);
 	unhideElements("home", "nav-bar", "settings");
 	unsetEventListener(eventsToUnset, "settings");
 	removeChildDiv(parentsToremove, "settings", "nav-bar");
@@ -181,7 +181,7 @@ async function sceneModifyGameTheme() {
 	await createChildDiv(["modify-game-theme", "nav-bar"]);
 	// setEventListener("modify-game-theme");
 	
-	hideElements(parentsToHide);
+	hideElements(...parentsToHide);
 	unhideElements("home", "nav-bar", "modify-game-theme");
 	unsetEventListener(eventsToUnset, "modify-game-theme");
 	removeChildDiv(parentsToremove, "modify-game-theme", "nav-bar");
@@ -193,7 +193,7 @@ async function sceneModifyProfilPicture() {
 	await createChildDiv(["modify-profil-picture", "nav-bar"]);
 	// setEventListener("modify-profil-picture");
 	
-	hideElements(parentsToHide);
+	hideElements(...parentsToHide);
 	unhideElements("home", "nav-bar", "modify-profil-picture");
 	unsetEventListener(eventsToUnset, "modify-profil-picture");
 	removeChildDiv(parentsToremove, "modify-profil-picture", "nav-bar");
@@ -205,7 +205,7 @@ async function sceneModifyPassword() {
 	await createChildDiv(["modify-password", "nav-bar"]);
 	// setEventListener("modify-password");
 	
-	hideElements(parentsToHide);
+	hideElements(...parentsToHide);
 	unhideElements("home", "nav-bar", "modify-password");
 	unsetEventListener(eventsToUnset, "modify-password");
 	removeChildDiv(parentsToremove, "modify-password", "nav-bar");
@@ -217,7 +217,7 @@ async function sceneModifyEmail() {
 	await createChildDiv(["modify-email", "nav-bar"]);
 	// setEventListener("modify-email");
 	
-	hideElements(parentsToHide);
+	hideElements(...parentsToHide);
 	unhideElements("home", "nav-bar", "modify-email");
 	unsetEventListener(eventsToUnset, "modify-email");
 	removeChildDiv(parentsToremove, "modify-email", "nav-bar");
