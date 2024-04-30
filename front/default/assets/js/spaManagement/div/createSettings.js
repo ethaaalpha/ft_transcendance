@@ -30,7 +30,7 @@ async function createSettings() {
 
 		// Settings choice block
 		const blockDiv = document.createElement('div')
-		blockDiv.classList.add('settings-block-scroll')
+		blockDiv.classList.add('block-scroll')
 		blockDiv.style.setProperty('--top', '3%')
 
 		// Settings buttons

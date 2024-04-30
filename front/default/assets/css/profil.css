@@ -19,10 +19,10 @@
 }
 
 .perso-info-container-left-status {
-	width: 10%;
+	width: 7%;
 	aspect-ratio: 1;
 	border-radius: 5vw;
-	margin-left: -10%;
+	margin-left: -7%;
 	background: var(--item-color);
 }
 

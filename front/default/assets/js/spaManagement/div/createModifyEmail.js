@@ -30,7 +30,7 @@ async function createModifyEmail() {
 
 		// Block to wrap item
 		const blockDiv = document.createElement('div')
-		blockDiv.classList.add('settings-block-scroll')
+		blockDiv.classList.add('block-scroll')
 		blockDiv.style.setProperty('--top', '5%')
 
 		// Email inputs
