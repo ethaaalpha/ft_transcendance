@@ -1,10 +1,10 @@
 import { changeScene } from '../scene.js';
 import { modifyPassword } from '../../action/userManagement.js';
 
-async function createModifyPassword() {
+async function createSettingsPassword() {
 
 	try {
-		const modifyPasswordDiv = document.getElementById("modify-password");
+		const settingsPasswordDiv = document.getElementById("settings-password");
 
 		// Back button
 		const backButton = document.createElement("button");
@@ -15,18 +15,18 @@ async function createModifyPassword() {
 		const backButtonImage = document.createElement("img");
 		backButtonImage.src = "/static/default/assets/images/icons/arrow.svg";
 		backButton.appendChild(backButtonImage);
-		modifyPasswordDiv.appendChild(backButton);
+		settingsPasswordDiv.appendChild(backButton);
 
 		// Title and description
 		const title = document.createElement("span");
 		title.className = "title-2 greened";
 		title.textContent = "Modify password";
-		modifyPasswordDiv.appendChild(title);
+		settingsPasswordDiv.appendChild(title);
 
 		const description = document.createElement("span");
 		description.className = "body-text settings-text";
 		description.textContent = "Minimum 5 and a maximum of 32 characters.";
-		modifyPasswordDiv.appendChild(description);
+		settingsPasswordDiv.appendChild(description);
 
 		// Block to wrap item
 		const blockDiv = document.createElement('div')
@@ -62,12 +62,12 @@ async function createModifyPassword() {
 		button.appendChild(buttonSpan);
 
 		blockDiv.appendChild(button);	
-		modifyPasswordDiv.appendChild(blockDiv);	
+		settingsPasswordDiv.appendChild(blockDiv);	
 
 	} catch (error) {
-		console.error("Error in createModifyPassword: ", error);
+		console.error("Error in createSettingsPassword: ", error);
 		throw error;
 	}
 }
 
-export { createModifyPassword };
+export { createSettingsPassword };

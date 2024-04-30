@@ -2,7 +2,6 @@ import globalVariables from '../init.js';
 import { changeScene } from './scene.js';
 import { sendMessage } from '../action/chat.js';
 import { signIn, signUp } from '../action/userManagement.js';
-import { searchAction } from '../action/search.js';
 
 function setEventListener(scene) {
 	switch (scene) {
@@ -21,7 +20,7 @@ function setEventListener(scene) {
 		case "search":
 			setEventSearch();
 			break;
-		case 'modify-profil-picture':
+		case 'settings-profil-picture':
 			setEventChangePicture();
 			break;
 		default:
@@ -156,8 +155,7 @@ function setEventConversationList() {
 
 	addEventListener("keypress", "conversation-list-searchbar-input-id", function(event) {
 		if (event.key === "Enter") {
-			// searchAction(searchInput.value);//
-			changeScene("search", searchInput.value);
+			history.pushState({}, '', '/search?username=' + searchInput.value);
 		}
 	});
 }

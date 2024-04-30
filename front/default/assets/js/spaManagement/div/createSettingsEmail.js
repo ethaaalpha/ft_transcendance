@@ -1,10 +1,10 @@
 import { changeScene } from '../scene.js';
 import { modifyEmail } from '../../action/userManagement.js';
 
-async function createModifyEmail() {
+async function createSettingsEmail() {
 
 	try {
-		const modifyEmailDiv = document.getElementById("modify-email");
+		const settingsEmailDiv = document.getElementById("settings-email");
 
 		// Back button
 		const backButton = document.createElement("button");
@@ -15,18 +15,18 @@ async function createModifyEmail() {
 		const backButtonImage = document.createElement("img");
 		backButtonImage.src = "/static/default/assets/images/icons/arrow.svg";
 		backButton.appendChild(backButtonImage);
-		modifyEmailDiv.appendChild(backButton);
+		settingsEmailDiv.appendChild(backButton);
 
 		// Title and description
 		const title = document.createElement("span");
 		title.className = "title-2 greened";
 		title.textContent = "Modify email";
-		modifyEmailDiv.appendChild(title);
+		settingsEmailDiv.appendChild(title);
 
 		const description = document.createElement("span");
 		description.className = "body-text settings-text";
 		description.textContent = "So we can send you love letters.";
-		modifyEmailDiv.appendChild(description);
+		settingsEmailDiv.appendChild(description);
 
 		// Block to wrap item
 		const blockDiv = document.createElement('div')
@@ -62,12 +62,12 @@ async function createModifyEmail() {
 		button.appendChild(buttonSpan);
 
 		blockDiv.appendChild(button);
-		modifyEmailDiv.appendChild(blockDiv);
+		settingsEmailDiv.appendChild(blockDiv);
 		
 	} catch (error) {
-		console.error("Error in createModifyEmail: ", error);
+		console.error("Error in createSettingsEmail: ", error);
 		throw error;
 	}
 }
 
-export { createModifyEmail };
+export { createSettingsEmail };

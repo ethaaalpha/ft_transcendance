@@ -6,10 +6,10 @@ import { createConversationDisplay } from './div/createConversationDisplay.js';
 import { createSearch } from './div/createSearch.js';
 import { createProfil } from './div/createProfil.js';
 import { createSettings } from './div/createSettings.js';
-import { createModifyGameTheme } from './div/createModifyGameTheme.js';
-import { createModifyProfilPicture } from './div/createModifyProfilPicture.js';
-import { createModifyPassword } from './div/createModifyPassword.js';
-import { createModifyEmail } from './div/createModifyEmail.js';
+import { createSettingsGameTheme } from './div/createSettingsGameTheme.js';
+import { createSettingsProfilPicture } from './div/createSettingsProfilPicture.js';
+import { createSettingsPassword } from './div/createSettingsPassword.js';
+import { createSettingsEmail } from './div/createSettingsEmail.js';
 
 function removeChildDiv(parentIds, ...excludeIds) {
 	parentIds.forEach(parentId => {
@@ -55,17 +55,17 @@ async function createChildDiv(divIds, username) {
 				case "settings":
 					await createSettings();
 					break;
-				case "modify-game-theme":
-					await createModifyGameTheme();
+				case "settings-game-theme":
+					await createSettingsGameTheme();
 					break;
-				case "modify-profil-picture":
-					await createModifyProfilPicture();
+				case "settings-profil-picture":
+					await createSettingsProfilPicture();
 					break;
-				case "modify-password":
-					await createModifyPassword();
+				case "settings-password":
+					await createSettingsPassword();
 					break;
-				case "modify-email":
-					await createModifyEmail();
+				case "settings-email":
+					await createSettingsEmail();
 					break;
 				default:
 					console.log("Invalid divId: ", divId);
