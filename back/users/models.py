@@ -32,6 +32,23 @@ def generateUniqueImageID(instance, filename, extension=None):
 def generatePassword():
 	return shortuuid.uuid()[:16]
 
+class GameTheme(models.TextChoices):
+	_0 = 'd2'
+	_1 = 'land'
+	_2 = 'adibou'
+	_3 = 'penDraw'
+	_4 = 'epic'
+	_5 = 'colors'
+	_x = 'd3'
+
+	@staticmethod
+	def fromText(themestr: str):
+		themestr = themestr.lower()
+		for theme in GameTheme.labels:
+			if theme == themestr:
+				return getattr(GameTheme, themestr)
+		return GameTheme._0
+
 class Profile(models.Model):
 	user: User = models.OneToOneField(User, on_delete=models.CASCADE, blank=False, related_name='Profile', primary_key=True)
 	friends = models.ManyToManyField(User, symmetrical=True, blank=True)
@@ -39,7 +56,7 @@ class Profile(models.Model):
 	profilePicture = models.ImageField(upload_to=generateUniqueImageID, default=settings.DEFAULT_PROFILE_PICTURE_NAME, editable=True)
 	blockedUsers = models.ManyToManyField(User, related_name="blockedUsers", symmetrical=False, blank=True)
 	lastPasswordChange = models.DateTimeField(default=(now() - timedelta(minutes=5)), blank=True)
-	gameTheme = models.CharField(max_length=64, default='default')
+	gameTheme = models.CharField(max_length=64, blank=False, choices=GameTheme, default=GameTheme._0)
 	isPlaying = models.BooleanField(default=False)
 	state = models.IntegerField(default=0)
 	
@@ -56,6 +73,11 @@ class Profile(models.Model):
 
 	def setState(self, state: int):
 		self.state = state
+		self.save()
+
+	def setGameTheme(self, new_theme):
+		theme = GameTheme.fromText(new_theme)
+		self.gameTheme = theme
 		self.save()
 
 	def getManyToTab(self, many):
