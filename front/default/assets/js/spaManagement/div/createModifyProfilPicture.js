@@ -28,6 +28,11 @@ async function createModifyProfilPicture() {
 		description.textContent = "So we can see your lovely smile.";
 		modifyProfilPictureDiv.appendChild(description);
 
+		// Block to wrap item
+		const blockDiv = document.createElement('div')
+		blockDiv.classList.add('settings-block-scroll')
+		blockDiv.style.setProperty('--top', '5%')
+
 		// Custom file input
 		const customFileInput = document.createElement("div");
 		customFileInput.className = "custom-file-input";
@@ -43,7 +48,6 @@ async function createModifyProfilPicture() {
 		fileInput.id = "settings-profil-picture";
 		fileInput.accept = "image/*";
 		customFileInput.appendChild(fileInput);
-		modifyProfilPictureDiv.appendChild(customFileInput);
 
 		// Button
 		const button = document.createElement("button");
@@ -54,7 +58,10 @@ async function createModifyProfilPicture() {
 		buttonSpan.className = "btn-title";
 		buttonSpan.textContent = "Change my profil picture";
 		button.appendChild(buttonSpan);
-		modifyProfilPictureDiv.appendChild(button);	
+
+		blockDiv.appendChild(customFileInput)
+		blockDiv.appendChild(button)
+		modifyProfilPictureDiv.appendChild(blockDiv);	
 
 	} catch (error) {
 		console.error("Error in createModifyProfilPicture: ", error);

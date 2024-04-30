@@ -28,6 +28,11 @@ async function createModifyEmail() {
 		description.textContent = "So we can send you love letters.";
 		modifyEmailDiv.appendChild(description);
 
+		// Block to wrap item
+		const blockDiv = document.createElement('div')
+		blockDiv.classList.add('settings-block-scroll')
+		blockDiv.style.setProperty('--top', '5%')
+
 		// Email inputs
 		const emailInputs = ["Actual email", "New email", "Confirm email"];
 		emailInputs.forEach(inputLabel => {
@@ -43,7 +48,7 @@ async function createModifyEmail() {
 			label.textContent = inputLabel;
 			formGroup.appendChild(inputField);
 			formGroup.appendChild(label);
-			modifyEmailDiv.appendChild(formGroup);
+			blockDiv.appendChild(formGroup);
 		});
 
 		// Button
@@ -55,7 +60,9 @@ async function createModifyEmail() {
 		buttonSpan.className = "btn-title";
 		buttonSpan.textContent = "Change my email";
 		button.appendChild(buttonSpan);
-		modifyEmailDiv.appendChild(button);
+
+		blockDiv.appendChild(button);
+		modifyEmailDiv.appendChild(blockDiv);
 		
 	} catch (error) {
 		console.error("Error in createModifyEmail: ", error);
