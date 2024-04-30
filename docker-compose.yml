@@ -8,8 +8,6 @@ services:
       dockerfile: geth.dockerfile
     env_file:
       - .env
-    ports:
-      - 8545:8545
     volumes:
       - geth:/ethereum/
     networks:
