@@ -157,7 +157,7 @@ function setEventConversationList() {
 	addEventListener("keypress", "conversation-list-searchbar-input-id", function(event) {
 		if (event.key === "Enter") {
 			// searchAction(searchInput.value);//
-			// changeScene("search", searchInput.value);
+			changeScene("search", searchInput.value);
 		}
 	});
 }
