@@ -36,7 +36,6 @@ async function createModifyProfilPicture() {
 		// Custom file input
 		const customFileInput = document.createElement("label");
 		customFileInput.className = "custom-file-input";
-		customFileInput.textContent = "Choose a file"
 			
 		const fileImage = document.createElement("img");
 		fileImage.src = "/static/default/assets/images/icons/upload.svg";
@@ -45,7 +44,12 @@ async function createModifyProfilPicture() {
 		fileInput.type = "file";
 		fileInput.id = "settings-profil-picture";
 		fileInput.accept = "image/*";
-			
+
+		const fileSpan = document.createElement('span');
+		fileSpan.id = 'custom-file-input-span'
+		fileSpan.textContent = "Choose a file";
+		
+		customFileInput.appendChild(fileSpan);
 		customFileInput.appendChild(fileImage);
 		customFileInput.appendChild(fileInput);
 

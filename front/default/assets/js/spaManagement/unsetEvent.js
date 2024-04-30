@@ -19,6 +19,9 @@ function unsetEventListener(eventToUnset, exception) {
 				case "search":
 					unsetEventSearch();
 					break;
+				case "modify-profil-picture":
+					unsetEventChangePicture();
+					break;
 				default:
 					console.log("Invalid event for unsetEventListener: ", event);
 			}
@@ -67,6 +70,10 @@ function unsetEventConversationDisplay() {
 
 function unsetEventSearch() {
 	removeEventListener("input", "search-searchbar-input-id");
+}
+
+function unsetEventChangePicture() {
+	removeEventListener("change", "settings-profil-picture");
 }
 
 export { unsetEventListener }

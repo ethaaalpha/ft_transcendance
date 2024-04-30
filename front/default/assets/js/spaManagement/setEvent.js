@@ -20,6 +20,9 @@ function setEventListener(scene) {
 		case "search":
 			setEventSearch();
 			break;
+		case 'modify-profil-picture':
+			setEventChangePicture();
+			break;
 		default:
 			console.log("Invalid scene for setEventListener: ", scene);
 	}
@@ -172,6 +175,13 @@ function setEventSearch() {
 			changeScene("conversation-list");
 		}
 	});
+}
+
+function setEventChangePicture() {
+	addEventListener('change', "settings-profil-picture", function(e) {
+		const element = document.getElementById('custom-file-input-span');
+		element.textContent = e.target.files[0].name;
+	})
 }
 
 export { setEventListener }
