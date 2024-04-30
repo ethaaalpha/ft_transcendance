@@ -1,5 +1,5 @@
 import globalVariables from '../../init.js';
-import { fetchUserData } from '../../init.js';
+import { fetchUserData } from '../../fetch/http.js';
 import { fetchConversations } from '../../action/chat.js';
 import { fetchProfilPicture } from '../../fetch/http.js';
 import { changeScene } from '../scene.js';
