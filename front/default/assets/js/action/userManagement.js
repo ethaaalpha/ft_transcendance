@@ -153,8 +153,8 @@ function modifyEmail() {
 }
 
 function modifyProfilPicture() {
-	var profilePicture = document.getElementById("settings-actual-email").files;
-	
+	var profilePicture = document.getElementById("settings-profil-picture").files[0];
+
 	var formData = new FormData();
 	
 	formData.append("profilePicture", profilePicture);

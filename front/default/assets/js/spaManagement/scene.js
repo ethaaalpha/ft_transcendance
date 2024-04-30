@@ -82,7 +82,8 @@ const eventsToUnset = [
 	"sign-up",
 	"conversation-list",
 	"conversation-display",
-	"search"
+	"search",
+	'modify-profil-picture'
 ];
 
 // Handler
@@ -191,7 +192,7 @@ async function sceneModifyProfilPicture() {
 	globalVariables.currentScene = "modify-profil-picture";
 	hideElements("modify-profil-picture");
 	await createChildDiv(["modify-profil-picture", "nav-bar"]);
-	// setEventListener("modify-profil-picture");
+	setEventListener("modify-profil-picture");
 	
 	hideElements(...parentsToHide);
 	unhideElements("home", "nav-bar", "modify-profil-picture");

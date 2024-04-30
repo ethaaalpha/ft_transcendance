@@ -19,10 +19,10 @@
 }
 
 .perso-info-container-left-status {
-	width: 10%;
+	width: 7%;
 	aspect-ratio: 1;
 	border-radius: 5vw;
-	margin-left: -10%;
+	margin-left: -7%;
 	background: var(--item-color);
 }
 
@@ -48,12 +48,12 @@
 }
 
 .action-button {
-    width: 30px;
-    height: 30px;
+    width: 35%;
+	aspect-ratio: 1;
 	margin-right: 0.5em;
     border-radius: 5px;
     border: none;
-    background-color: #ccc;
+	background: rgba(0, 0, 0, 0.25);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -66,7 +66,6 @@
     border: none;
     cursor: pointer;
 }
-
 
 /* Statistic */
 

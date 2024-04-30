@@ -28,22 +28,30 @@ async function createModifyProfilPicture() {
 		description.textContent = "So we can see your lovely smile.";
 		modifyProfilPictureDiv.appendChild(description);
 
+		// Block to wrap item
+		const blockDiv = document.createElement('div')
+		blockDiv.classList.add('block-scroll')
+		blockDiv.style.setProperty('--top', '5%')
+
 		// Custom file input
-		const customFileInput = document.createElement("div");
+		const customFileInput = document.createElement("label");
 		customFileInput.className = "custom-file-input";
+			
 		const fileImage = document.createElement("img");
 		fileImage.src = "/static/default/assets/images/icons/upload.svg";
-		customFileInput.appendChild(fileImage);
-		const fileLabel = document.createElement("label");
-		fileLabel.htmlFor = "settings-profil-picture";
-		fileLabel.textContent = "Choose a file";
-		customFileInput.appendChild(fileLabel);
+			
 		const fileInput = document.createElement("input");
 		fileInput.type = "file";
 		fileInput.id = "settings-profil-picture";
 		fileInput.accept = "image/*";
+
+		const fileSpan = document.createElement('span');
+		fileSpan.id = 'custom-file-input-span'
+		fileSpan.textContent = "Choose a file";
+		
+		customFileInput.appendChild(fileSpan);
+		customFileInput.appendChild(fileImage);
 		customFileInput.appendChild(fileInput);
-		modifyProfilPictureDiv.appendChild(customFileInput);
 
 		// Button
 		const button = document.createElement("button");
@@ -54,7 +62,10 @@ async function createModifyProfilPicture() {
 		buttonSpan.className = "btn-title";
 		buttonSpan.textContent = "Change my profil picture";
 		button.appendChild(buttonSpan);
-		modifyProfilPictureDiv.appendChild(button);	
+
+		blockDiv.appendChild(customFileInput)
+		blockDiv.appendChild(button)
+		modifyProfilPictureDiv.appendChild(blockDiv);	
 
 	} catch (error) {
 		console.error("Error in createModifyProfilPicture: ", error);
