@@ -6,7 +6,14 @@ import Connect from "../class/Connect.js";
 import { fetchProfilPicture } from "../fetch/http.js";
 import { userExist } from "../fetch/http.js";
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 async function locationHandler() {
+	
+	await sleep(50);
+
 	const pathname = window.location.pathname;
 
 	console.log("pathname:" + pathname);
@@ -49,16 +56,16 @@ async function locationHandler() {
 };
 
 // HANDLER
-function routeHome() {
-	changeScene('conversation-list');
+async function routeHome() {
+	await changeScene('conversation-list');
 }
 
 const routeSignIn = async () => {
-	changeScene('sign-in');
+	await changeScene('sign-in');
 };
 
 const routeSignUp = async () => {
-	changeScene('sign-up');
+	await changeScene('sign-up');
 };
 
 const routeSearchRoute = async () => {
@@ -68,7 +75,7 @@ const routeSearchRoute = async () => {
 	if (username) {
 		const exist = await userExist(username);
 		if (exist) {
-			changeScene('search', username);
+			await changeScene('search', username);
 			return ;
 		}
 	}
@@ -83,7 +90,7 @@ const routeProfilRoute = async () => {
 	if (username) {
 		const exist = await userExist(username);
 		if (exist) {
-			changeScene('profil', username);
+			await changeScene('profil', username);
 			return ;
 		}
 	}
@@ -99,11 +106,11 @@ const routeSettingsRoute = async () => {
 	console.log('item :::' + item)
 	if (item) {
 		if (modify.includes(item)) {
-			changeScene('settings-' + item);
+			await changeScene('settings-' + item);
 			return ;
 		}
 	} else {
-		changeScene('settings');
+		await changeScene('settings');
 		return ;
 	}
 	history.pushState({}, '', '/settings');
@@ -115,7 +122,7 @@ const routeChatRoute = async () => {
 	const withUser = searchParams.get("with");
 
 	if (globalVariables.currentUser.isFriend(withUser) == 'friend') {
-		changeScene('conversation-display', withUser);
+		await changeScene('conversation-display', withUser);
 		return ;
 	}
 	history.pushState({}, '', '/');

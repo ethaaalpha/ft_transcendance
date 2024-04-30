@@ -17,7 +17,7 @@ async function createConversationDisplay(user) {
 		const backButton = document.createElement("button");
 		backButton.classList.add("arrow-back", "d-flex", "justify-content-start", "align-items-center");
 		backButton.onclick = function() {
-			changeScene('conversation-list');
+			history.pushState({}, '', '/');
 		};
 
 		const imgButton = document.createElement('img');

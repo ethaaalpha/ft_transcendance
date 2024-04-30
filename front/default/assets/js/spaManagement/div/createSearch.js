@@ -50,7 +50,7 @@ async function createSearch(username) {
 			conversationButton.appendChild(userInfo);
 
 			conversationButton.addEventListener("click", function() {
-				changeScene("profil", searchInput);
+				history.pushState({}, '', '/profil?username=' + searchInput);	
 			});
 
 			blockDiv.appendChild(conversationButton)

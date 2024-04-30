@@ -4,7 +4,7 @@ import { setEventListener } from './setEvent.js';
 import { unsetEventListener } from './unsetEvent.js';
 import { setFocus } from './setFocus.js';
 
-function changeScene(newScene, username) {
+async function changeScene(newScene, username) {
 	switch (newScene) {
 		case "sign-in":
 			sceneSignIn();
@@ -40,7 +40,7 @@ function changeScene(newScene, username) {
 			sceneSettingsEmail();
 			break;
 		default:
-			console.log("Invalid scene in changeScene: ", newScene);
+			console.log("Invalid scene in changeScene: ", globalVariables.currentScene);
 	}
 	console.log("Scene:", globalVariables.currentScene);
 }

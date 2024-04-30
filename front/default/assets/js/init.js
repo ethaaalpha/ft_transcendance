@@ -7,10 +7,9 @@ import { isConnected } from './fetch/http.js';
 
 backgroundRunner();
 window.onload = locationHandler;
-window.navigation.addEventListener("navigate", (event) => {
-    locationHandler();
-})
-// window.onpopstate = locationHandler
+window.navigation.addEventListener("navigate", async (event) => {
+    await locationHandler();
+});
 
 var globalVariables = {
 	currentScene: 'start',

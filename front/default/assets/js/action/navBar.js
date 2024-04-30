@@ -21,19 +21,20 @@ function navBarActionHandler(action, username) {
 }
 
 function navBarSettings() {
-	if (globalVariables.currentScene == "settings") {
-		changeScene("conversation-list");
+	console.log("scene in navbarhandler: " + globalVariables.currentScene + " " + "settings");
+	if (globalVariables.currentScene === "settings") {
+		history.pushState({}, '', '/');
 	} else {
-		changeScene("settings");
+		history.pushState({}, '', '/settings');
 	}
 }
 
 function navBarProfil() {
 	if (globalVariables.currentScene == "profil") {
-		changeScene("conversation-list");
+		history.pushState({}, '', '/');
 	} else {
 		const username = globalVariables.currentUser.getUsername();
-		changeScene("profil", username);
+		history.pushState({}, '', '/profil?username=' + username);
 	}
 }
 
@@ -42,7 +43,7 @@ async function navBarPlay(username) {
 }
 
 async function navBarChat(username) {
-	changeScene("conversation-display", username);
+	history.pushState({}, '', '/chat?with=' + username);
 }
 
 export { navBarActionHandler };
