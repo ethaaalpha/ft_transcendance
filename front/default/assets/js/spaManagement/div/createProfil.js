@@ -1,5 +1,5 @@
 import globalVariables from '../../init.js';
-import { fetchUserData } from '../../init.js';
+import { fetchUserData } from '../../fetch/http.js';
 import { fetchProfilPicture } from '../../fetch/http.js';
 import { fetchUserStats } from '../../fetch/http.js';
 import { manageFriend } from '../../action/userManagement.js';

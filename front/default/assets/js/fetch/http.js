@@ -1,19 +1,43 @@
 import { fetchData } from './api.js';
+import globalVariables from '../init.js';
+import User from '../class/User.js';
 
-function fetchCurrentUsername() {
-	return new Promise((resolve, reject) => {
-	fetchData('/api/dashboard')
-		.then(data => {
-		resolve(data.data['username']);
-		})
-		.catch(error => {
-		console.error('Error fetching user data:', error);
-		reject(error);
-		});
-	});
+async function isConnected() {
+	try {
+		const logged = await fetchUserData();
+		if (logged) {
+			return(true);
+		}
+		return(false);
+	} catch (error) {
+		console.error("Error in fetchUserData: ", error);
+		return(false);
+	}
 }
 
-function fetchProfilPicture(username) {
+async function fetchUserData() {
+	return new Promise((resolve, reject) => {
+		fetchData('/api/dashboard')
+		.then(data => {
+			if (data.status === 200) {
+				if (!globalVariables.currentUser) {
+					globalVariables.currentUser = new User(data.data);
+				} else {
+					globalVariables.currentUser.update(data.data);
+				}
+				resolve(true);
+			} else {
+				resolve(false);
+			}
+		})
+		.catch(error => {
+			console.error('Error fetching user data:', error);
+			reject(error);
+		});
+	});
+};
+
+async function fetchProfilPicture(username) {
 	return new Promise((resolve, reject) => {
 		fetchData('/api/dashboard?id=' + username + '&filter=profilePicture')
 		.then(data => {
@@ -39,4 +63,4 @@ function fetchUserStats(username) {
 	});
 }
 
-export { fetchCurrentUsername, fetchProfilPicture, fetchUserStats };
+export { fetchProfilPicture, fetchUserStats, isConnected, fetchUserData };

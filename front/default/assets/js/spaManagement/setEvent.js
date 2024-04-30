@@ -2,6 +2,7 @@ import globalVariables from '../init.js';
 import { changeScene } from './scene.js';
 import { sendMessage } from '../action/chat.js';
 import { signIn, signUp } from '../action/userManagement.js';
+import { searchAction } from '../action/search.js';
 
 function setEventListener(scene) {
 	switch (scene) {
@@ -155,7 +156,8 @@ function setEventConversationList() {
 
 	addEventListener("keypress", "conversation-list-searchbar-input-id", function(event) {
 		if (event.key === "Enter") {
-			changeScene("search", searchInput.value);
+			// searchAction(searchInput.value);//
+			// changeScene("search", searchInput.value);
 		}
 	});
 }
