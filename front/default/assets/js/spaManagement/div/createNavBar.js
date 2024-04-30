@@ -20,7 +20,7 @@ async function createNavBar(username) {
 				leftColor = "#05FF00";
 				leftExtension += '_green';
 			}
-		} else if (globalVariables.currentScene === "settings" || globalVariables.currentScene === "modify-game-theme" || globalVariables.currentScene === "modify-profil-picture" || globalVariables.currentScene === "modify-password" || globalVariables.currentScene === "modify-email") {
+		} else if (globalVariables.currentScene === "settings" || globalVariables.currentScene === "settings-game-theme" || globalVariables.currentScene === "settings-profil-picture" || globalVariables.currentScene === "settings-password" || globalVariables.currentScene === "settings-email") {
 			rightColor = "#05FF00";
 			rightExtension += '_green';
 		}

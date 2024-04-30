@@ -1,10 +1,10 @@
 import globalVariables from '../../init.js';
 import { changeScene } from '../scene.js';
 
-async function createModifyGameTheme() {
+async function createSettingsGameTheme() {
 
 	try {
-		const modifyGameThemeDiv = document.getElementById("modify-game-theme");
+		const settingsGameThemeDiv = document.getElementById("settings-game-theme");
 
 		// Back button
 		const backButton = document.createElement("button");
@@ -15,33 +15,33 @@ async function createModifyGameTheme() {
 		const backButtonImage = document.createElement("img");
 		backButtonImage.src = "/static/default/assets/images/icons/arrow.svg";
 		backButton.appendChild(backButtonImage);
-		modifyGameThemeDiv.appendChild(backButton);
+		settingsGameThemeDiv.appendChild(backButton);
 
 		// Title and description
 		const title = document.createElement("span");
 		title.className = "title-2 greened";
 		title.textContent = "Modify game theme";
-		modifyGameThemeDiv.appendChild(title);
+		settingsGameThemeDiv.appendChild(title);
 
 		const description = document.createElement("span");
 		description.className = "body-text settings-text";
 		description.textContent = "Go through parallel universes.";
-		modifyGameThemeDiv.appendChild(description);
+		settingsGameThemeDiv.appendChild(description);
 
 		// Menu container
 		const menuContainer = document.createElement("div");
-		menuContainer.id = "modify-game-theme-menu";
-		menuContainer.className = "modify-game-theme-container";
-		modifyGameThemeDiv.appendChild(menuContainer);
+		menuContainer.id = "settings-game-theme-menu";
+		menuContainer.className = "settings-game-theme-container";
+		settingsGameThemeDiv.appendChild(menuContainer);
 		
 		// Image button
 		for (let i = 0; i < 6; i++) {
 			const div = document.createElement("div");
 			
-			div.classList.add("modify-game-theme-image-container", "selectable");
+			div.classList.add("settings-game-theme-image-container", "selectable");
 			const image = document.createElement("img");
 			image.src = `/static/default/assets/images/theme/${i}.jpg`;
-			image.classList.add("modify-game-theme-image");
+			image.classList.add("settings-game-theme-image");
 			div.appendChild(image);
 			div.onclick = function() {
 				selectGameTheme(i + 1);
@@ -57,12 +57,12 @@ async function createModifyGameTheme() {
 		const overlayButtonText = document.createElement("span");
 		overlayButtonText.textContent = "Change game theme";
 		overlayButton.appendChild(overlayButtonText);
-		modifyGameThemeDiv.appendChild(overlayButton);
+		settingsGameThemeDiv.appendChild(overlayButton);
 
 		selectGameTheme(globalVariables.gameTheme);
 
 	} catch (error) {
-		console.error("Error in createModifyGameTheme: ", error);
+		console.error("Error in createSettingsGameTheme: ", error);
 		throw error;
 	}
 }
@@ -86,4 +86,4 @@ function changeGameTheme() { // to modify with Nico
 	}
 }
 
-export { createModifyGameTheme };
+export { createSettingsGameTheme };

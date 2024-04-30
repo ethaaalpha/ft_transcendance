@@ -4,6 +4,7 @@ import { fetchUserData } from "../fetch/http.js";
 import { isConnected } from "../fetch/http.js";
 import Connect from "../class/Connect.js";
 import { fetchProfilPicture } from "../fetch/http.js";
+import { userExist } from "../fetch/http.js";
 
 async function locationHandler() {
 	const pathname = window.location.pathname;
@@ -65,15 +66,14 @@ const routeSearchRoute = async () => {
 	const username = searchParams.get("username");
 
 	if (username) {
-		if (!await fetchProfilPicture(username)) {
-			console.log("searchAction: error to replace with alert");
-			locationHandler();
-		} else {
+		const exist = await userExist(username);
+		if (exist) {
 			changeScene('search', username);
+			return ;
 		}
-	} else {
-		routeHome();
 	}
+	console.log("routeSearchRoute: error to replace with alert");
+	history.pushState({}, '', '/')
 };
 
 const routeProfilRoute = async () => {
@@ -81,55 +81,47 @@ const routeProfilRoute = async () => {
 	const username = searchParams.get("username");
 
 	if (username) {
-		// Show profil scene with username
-		// Implement sceneProfil() function with username accordingly
-	} else {
-		// Redirect to chat if username is not provided
-		// Implement sceneChat() function accordingly
+		const exist = await userExist(username);
+		if (exist) {
+			changeScene('profil', username);
+			return ;
+		}
 	}
+	console.log("routeProfilRoute: error to replace with alert");
+	history.pushState({}, '', '/');
 };
 
 const routeSettingsRoute = async () => {
-	// const searchParams = new URLSearchParams(window.location.search);
-	// const item = searchParams.get("item");
+	const searchParams = new URLSearchParams(window.location.search);
+	const item = searchParams.get("item");
 
-	changeScene('settings');
-	// if (item) {
-	// 	// Show settings scene with specific item
-	// 	// Implement sceneSettings() function with item accordingly
-	// } else {
-	// }
+	const modify = ['game-theme', 'profil-picture', 'password', 'email'];
+	console.log('item :::' + item)
+	if (item) {
+		if (modify.includes(item)) {
+			changeScene('settings-' + item);
+			return ;
+		}
+	} else {
+		changeScene('settings');
+		return ;
+	}
+	history.pushState({}, '', '/settings');
+	console.log("routeSettingsRoute: error to replace with alert item:" + item);
 };
 
 const routeChatRoute = async () => {
 	const searchParams = new URLSearchParams(window.location.search);
 	const withUser = searchParams.get("with");
 
-	if (withUser) {
-		// Check if user is friend, if not redirect
-		// Implement friend check logic and redirection accordingly
+	if (globalVariables.currentUser.isFriend(withUser) == 'friend') {
+		changeScene('conversation-display', withUser);
+		return ;
 	}
-	// Show chat scene
-	// Implement sceneChat() function accordingly
+	history.pushState({}, '', '/');
+	console.log("routeChatRoute: error to replace with alert withUser:" + withUser);
 };
 
-const routeInGameRoute = async () => {
-	// Check if user is in game, if not redirect
-	// Implement in-game check logic and redirection accordingly
-	// Show in-game scene
-	// Implement sceneInGame() function accordingly
-};
-
-const routeDefault = async () => {
-	console.log("ethan my love");
-	const isConnected = await fetchUserData();
-	if (isConnected) {
-		// globalVariables.activity = new Connect();
-		changeScene('conversation-list');
-	} else {
-		locationHandler('sign-in');
-	}
-};
-
+const routeInGameRoute = async () => {};
 
 export { locationHandler };

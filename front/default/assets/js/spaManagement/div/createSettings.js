@@ -35,10 +35,10 @@ async function createSettings() {
 
 		// Settings buttons
 		const settingsButtons = [
-			{ label: "Modify game theme", icon: "gamepad.svg", scene: "modify-game-theme" },
-			{ label: "Modify profile picture", icon: "user_settings.svg", scene: "modify-profil-picture" },
-			{ label: "Modify password", icon: "lock.svg", scene: "modify-password" },
-			{ label: "Modify email", icon: "mail.svg", scene: "modify-email" },
+			{ label: "Modify game theme", icon: "gamepad.svg", scene: "settings-game-theme" },
+			{ label: "Modify profile picture", icon: "user_settings.svg", scene: "settings-profil-picture" },
+			{ label: "Modify password", icon: "lock.svg", scene: "settings-password" },
+			{ label: "Modify email", icon: "mail.svg", scene: "settings-email" },
 			{ label: "Sign out", icon: "logout.svg", action: signOut }
 		];
 

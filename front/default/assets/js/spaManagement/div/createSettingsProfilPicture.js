@@ -1,10 +1,10 @@
 import { changeScene } from '../scene.js';
 import { modifyProfilPicture } from '../../action/userManagement.js';
 
-async function createModifyProfilPicture() {
+async function createSettingsProfilPicture() {
 
 	try {
-		const modifyProfilPictureDiv = document.getElementById("modify-profil-picture");
+		const settingsProfilPictureDiv = document.getElementById("settings-profil-picture");
 
 		// Back button
 		const backButton = document.createElement("button");
@@ -15,18 +15,18 @@ async function createModifyProfilPicture() {
 		const backButtonImage = document.createElement("img");
 		backButtonImage.src = "/static/default/assets/images/icons/arrow.svg";
 		backButton.appendChild(backButtonImage);
-		modifyProfilPictureDiv.appendChild(backButton);
+		settingsProfilPictureDiv.appendChild(backButton);
 
 		// Title and description
 		const title = document.createElement("span");
 		title.className = "title-2 greened";
 		title.textContent = "Modify profil picture";
-		modifyProfilPictureDiv.appendChild(title);
+		settingsProfilPictureDiv.appendChild(title);
 
 		const description = document.createElement("span");
 		description.className = "body-text settings-text";
 		description.textContent = "So we can see your lovely smile.";
-		modifyProfilPictureDiv.appendChild(description);
+		settingsProfilPictureDiv.appendChild(description);
 
 		// Block to wrap item
 		const blockDiv = document.createElement('div')
@@ -65,12 +65,12 @@ async function createModifyProfilPicture() {
 
 		blockDiv.appendChild(customFileInput)
 		blockDiv.appendChild(button)
-		modifyProfilPictureDiv.appendChild(blockDiv);	
+		settingsProfilPictureDiv.appendChild(blockDiv);	
 
 	} catch (error) {
-		console.error("Error in createModifyProfilPicture: ", error);
+		console.error("Error in createSettingsProfilPicture: ", error);
 		throw error;
 	}
 }
 
-export { createModifyProfilPicture };
+export { createSettingsProfilPicture };

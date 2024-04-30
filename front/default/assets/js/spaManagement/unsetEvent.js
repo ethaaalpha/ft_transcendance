@@ -19,7 +19,7 @@ function unsetEventListener(eventToUnset, exception) {
 				case "search":
 					unsetEventSearch();
 					break;
-				case "modify-profil-picture":
+				case "settings-profil-picture":
 					unsetEventChangePicture();
 					break;
 				default:
