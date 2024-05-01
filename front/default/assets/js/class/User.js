@@ -3,6 +3,8 @@ class User {
 	constructor(data) {
 		this.friends = {};
 		this.update(data);
+		this.pendingGameFrom = [];
+		this.pendingGameTo = [];
 	}
 	
 	update(data) {
@@ -11,9 +13,26 @@ class User {
 		this.profilePicture = data['profilePicture'];
 		this.userStats = data['userStats'];
 		this.email = data['email'];
-		this.pendingFriendsFrom = data['pendingFriendsFrom'];
-		this.pendingFriendsTo = data['pendingFriendsTo'];
+		this.pendingFriendFrom = data['pendingFriendsFrom'];
+		this.pendingFriendTo = data['pendingFriendsTo'];
 		this.blocked = data['blockedUsers'];
+	}
+
+	// add game pending
+	addPendingGameFrom(username) {
+		if (!this.pendingGameFrom.includes(username)) {
+			console.log("addPendingGameFrom: " + username);
+			this.pendingGameFrom.push(username);
+			console.log(this.pendingGameFrom);
+		}
+	}
+
+	addPendingGameTo(username) {
+		if (!this.pendingGameTo.includes(username)) {
+			console.log("addPendingGameTo: " + username);
+			this.pendingGameTo.push(username);
+			console.log(this.pendingGameTo);
+		}
 	}
 
 	// setters
@@ -28,6 +47,14 @@ class User {
 		} else {
 			return undefined;
 		}
+	}
+
+	getPendingGameFrom() {
+		return this.pendingGameFrom;
+	}
+
+	getPendingGameTo() {
+		return this.pendingGameTo;
 	}
 
 	getUserStats() {
@@ -45,24 +72,44 @@ class User {
 	isFriend(username) {
 		if (this.friends.includes(username)) {
 			return 'friend';
-		} else if (this.pendingFriendsFrom.includes(username)) {
+		} else if (this.pendingFriendFrom.includes(username)) {
 			return 'pending';
-		} else if (this.pendingFriendsTo.includes(username)) {
+		} else if (this.pendingFriendTo.includes(username)) {
 			return 'pending';
 		} else {
 			return 'notFriend';
 		}
 	}
 
-	isPendingFrom(username) {
-		if (this.pendingFriendsFrom.includes(username)) {
+	isPendingFriendFrom(username) {
+		if (this.pendingFriendFrom.includes(username)) {
 			return true;
 		}
 		return false;
 	}
 	
-	isPendingTo(username) {
-		if (this.pendingFriendsTo.includes(username)) {
+	isPendingFriendTo(username) {
+		if (this.pendingFriendTo.includes(username)) {
+			return true;
+		}
+		return false;
+	}
+
+	isPendingGameFrom(username) {
+		console.log("isPendingGameFrom username: " + username);
+		console.log("isPendingGameFrom pendingGameFrom: " + this.pendingGameFrom);
+		console.log("isPendingGameFrom friends: " + this.friends);
+		if (this.pendingGameFrom.includes(username)) {
+			return true;
+		}
+		return false;
+	}
+	
+	isPendingGameTo(username) {
+		console.log("isPendingGameTo username: " + username);
+		console.log("isPendingGameTo isPendingGameTo: " + this.pendingGameTo);
+		console.log("isPendingGameTo friends: " + this.friends);
+		if (this.pendingGameTo.includes(username)) {
 			return true;
 		}
 		return false;
@@ -75,13 +122,27 @@ class User {
 		return false;
 	}
 
+	// remover
 	removeFriend(username) {
 		const index = this.friends.indexOf(username);
 		if (index > -1) {
 			this.friends.splice(index, 1);
 		}
 	}
-	
+
+	removePendingGameFrom(username) {
+		const index = this.pendingGameFrom.indexOf(username);
+		if (index !== -1) {
+			this.pendingGameFrom.splice(index, 1);
+		}
+	}
+
+	removePendingGameTo(username) {
+		const index = this.pendingGameTo.indexOf(username);
+		if (index !== -1) {
+			this.pendingGameTo.splice(index, 1);
+		}
+	}
 }
 
 export default User;

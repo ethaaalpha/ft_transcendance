@@ -42,7 +42,7 @@ async function fetchUserData(username = null) {
 				if (!globalVariables.currentUser) {
 					globalVariables.currentUser = new User(data.data);
 				} else {
-					globalVariables.currentUser.update(data.data);
+					globalVariables.currentUser.update(data.data, globalVariables.currentUser);
 				}
 				resolve(true);
 			} else {
