@@ -45,10 +45,22 @@ async function createConversationList() {
 				}
 				img.alt = "Profile Picture";
 				conversationButton.appendChild(img);
+
+				const rightBlock = document.createElement("div");
+				rightBlock.classList.add('conversation-list-contact-button-right')
+
 				const userInfo = document.createElement("div");
-				userInfo.classList.add("conversation-list-user");
 				userInfo.textContent = user;
-				conversationButton.appendChild(userInfo);
+
+				const lastMessage = document.createElement('span');
+				lastMessage.textContent = 'Nothing yet :(';
+				if (globalVariables.userConversations.conversations[user][0])
+					lastMessage.textContent = globalVariables.userConversations.conversations[user][0].content;
+
+				rightBlock.appendChild(userInfo);
+				rightBlock.appendChild(lastMessage);
+				conversationButton.appendChild(rightBlock);
+
 				conversationButton.onclick = function() {
 					history.pushState({}, '', '/chat?with=' + user);
 				}

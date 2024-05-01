@@ -14,6 +14,19 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+	font-weight: bold; 
+	font-style: italic;
+	color: var(--default-baba);;
+}
+
+.conversation-list-contact-button-right {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: start;
+	height: 100%;
+	width: 75%;
+	overflow-x: hidden;
 }
 
 .conversation-list-contact-button img {
@@ -23,15 +36,15 @@
     margin-right: 1em;
 }
 
-.conversation-list-contact-button .conversation-list-user {
-    font-weight: bold; 
-	font-style: italic;
-	color: var(--default-baba);;
-}
-
-.conversation-list-contact-button .conversation-list-last-message {
-    color: #666;
-	background-color: yellow;
+.conversation-list-contact-button span {
+	text-overflow: ellipsis;
+	text-wrap: nowrap;
+	overflow: hidden;
+	text-align: left;
+	width: 100%;
+	color: var(--default-gray);
+	font-size: 0.9em;
+	font-weight: 300;
 }
 
 
