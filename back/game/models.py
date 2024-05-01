@@ -189,7 +189,7 @@ class Match(models.Model):
 				'host': self.host.username,
 				'invited': self.invited.username,
 				'score': self.getScore(),
-				'duration': self.duration,
+				'duration': self.duration.seconds,
 				}
 		
 	
