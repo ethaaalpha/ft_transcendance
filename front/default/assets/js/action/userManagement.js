@@ -1,3 +1,4 @@
+import Alerts from '../class/Alerts.js';
 import { fetchData } from '../fetch/api.js';
 import { changeScene } from '../spaManagement/scene.js';
 
@@ -13,6 +14,7 @@ function signIn() {
 	fetchData("/api/auth/login?mode=intern", 'POST', formData).then(
 		(data) => {
 			if (data.status === 403) {
+				Alerts.createAlert(Alerts.type.FAILED, data.data.message);
 				console.log("Bad password");
 				// notif mdp mauvais ?
 				// effacer champ mdp
@@ -25,7 +27,7 @@ function signIn() {
 			if (data.status === 200) {
 				console.log("Successful connection");
 				history.pushState({}, '', '/');
-				// appendAlert('Successful connection', 'success');
+				Alerts.createAlert(Alerts.type.SUCCESS, data.data.message);
 			} else {
 				console.log("Connexion error");
 			}
@@ -49,9 +51,12 @@ function signUp() {
 	
 	fetchData("/api/auth/register", 'POST', formData).then(
 	(data) => {
+		let type = Alerts.type.FAILED;
 		if (data.status === 200) {
 			history.pushState({}, '', '/');
+			type = Alerts.type.SUCCESS;
 		}
+		Alerts.createAlert(type, data.data.message);
 		console.log(data.data);
 	})
 	.catch(error => {
@@ -92,9 +97,11 @@ function forgotPassword() {
 	
 	fetchData("/api/auth/reset-password", 'POST', formData).then(
 	(data) => {
+		let type = Alerts.type.FAILED;
 		if (data.status === 200) {
-			appendAlert('Your new password has been sent to you email!', 'warning');
+			type = Alerts.type.SUCCESS;
 		}
+		Alerts.createAlert(type, data.data.message);
 		console.log(data.data);
 	})
 	.catch(error => {
@@ -113,9 +120,12 @@ function modifyPassword() {
 	
 	fetchData("/api/dashboard?filter=password", 'POST', formData).then(
 	(data) => {
+		let type = Alerts.type.FAILED;
 		if (data.status === 200) {
 			history.pushState({}, '', '/settings');
+			type = Alerts.type.SUCCESS
 		}
+		Alerts.createAlert(type, data.data.message);
 		console.log(data.data);
 	})
 	.catch(error => {
@@ -134,9 +144,12 @@ function modifyEmail() {
 	
 	fetchData("/api/dashboard?filter=email", 'POST', formData).then(
 	(data) => {
+		let type = Alerts.type.FAILED;
 		if (data.status === 200) {
 			history.pushState({}, '', '/settings');
+			type = Alerts.type.SUCCESS
 		}
+		Alerts.createAlert(type, data.data.message);
 		console.log(data.data);
 	})
 	.catch(error => {
@@ -159,9 +172,12 @@ function modifyProfilPicture() {
 	formData.append("profilePicture", profilePicture);
 	fetchData("/api/dashboard?filter=profilePicture", 'POST', formData).then(
 	(data) => {
+		let type = Alerts.type.FAILED;
 		if (data.status === 200) {
 			history.pushState({}, '', '/settings');
+			type = Alerts.type.SUCCESS
 		}
+		Alerts.createAlert(type, data.data.message);
 		console.log(data.data);
 	})
 	.catch(error => {
