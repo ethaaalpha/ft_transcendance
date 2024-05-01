@@ -53,6 +53,7 @@ const parentsToHide = [
 	"conversation-display",
 	"search",
 	"profil",
+	"match-history",
 	"settings",
 	"settings-game-theme",
 	"settings-profil-picture",
@@ -69,6 +70,7 @@ const parentsToremove = [
 	"conversation-display",
 	"search",
 	"profil",
+	"match-history",
 	"settings",
 	"settings-game-theme",
 	"settings-profil-picture",
@@ -162,17 +164,17 @@ async function sceneSearch(username) {
 }
 
 async function sceneProfil(username) {
-	removeChildDiv(["profil"]); // Ici parce-que sinon ça pue
+	removeChildDiv(["profil", "match-history"]); // Ici parce-que sinon ça pue
 
 	globalVariables.currentScene = "profil";
-	hideElements("profil");
+	hideElements("profil", "match-history");
 	await createChildDiv(["profil", "nav-bar"], username);
 	// setEventListener("profil");
 	
 	hideElements(...parentsToHide);
-	unhideElements("home", "nav-bar", "profil");
+	unhideElements("home", "nav-bar", "profil", "match-history");
 	unsetEventListener(eventsToUnset, "profil");
-	removeChildDiv(parentsToremove, "profil", "nav-bar");
+	removeChildDiv(parentsToremove, "profil", "match-history", "nav-bar");
 }
 
 
