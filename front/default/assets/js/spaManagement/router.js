@@ -119,7 +119,7 @@ const routeChatRoute = async () => {
 	const withUser = searchParams.get("with");
 
 	if (withUser) {
-		if (globalVariables.currentUser.isFriend(withUser) == 'friend') {
+		if (globalVariables.currentUser.isFriend(withUser) == 'friend' || globalVariables.currentUser.isFriend(withUser) == 'pending') {
 			await changeScene('conversation-display', withUser);
 			return ;
 		} else {
@@ -127,6 +127,7 @@ const routeChatRoute = async () => {
 		}
 	}
 	history.pushState({}, '', '/');
+
 	// console.log("routeChatRoute: error to replace with alert withUser:" + withUser);
 };
 

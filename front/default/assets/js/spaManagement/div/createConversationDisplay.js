@@ -2,6 +2,8 @@ import globalVariables from '../../init.js';
 import { sendMessage, fetchConversations } from '../../action/chat.js';
 import { fetchProfilPicture } from '../../fetch/http.js';
 import { changeScene } from '../scene.js';
+import { manageFriend } from '../../action/userManagement.js';
+import { acceptPlayRequest, refusePlayRequest } from '../../action/play.js';
 
 
 async function createConversationDisplay(user) {
@@ -82,6 +84,76 @@ async function createConversationDisplay(user) {
 			messagesDiv.appendChild(messageElement);
 		}
 
+		// Handle pending friend requests
+		const isPendingFriendFrom = globalVariables.currentUser.isPendingFriendFrom(user);
+		const isPendingFriendTo = globalVariables.currentUser.isPendingFriendTo(user);
+
+		if (isPendingFriendFrom || isPendingFriendTo) {
+			const pendingMessage = document.createElement('div');
+			// pendingMessage.classList.add('pending-message');
+			const boldItalicText = document.createElement('span');
+			boldItalicText.innerHTML = `<b><i>${isPendingFriendFrom ? 'Wanna be friend?' : 'Friend request sent!'}</i></b>`;
+			pendingMessage.appendChild(boldItalicText);
+			messagesDiv.appendChild(pendingMessage);
+
+			if (isPendingFriendFrom) {
+				pendingMessage.classList.add('message-received', 'message');
+				const acceptButton = document.createElement('button');
+				acceptButton.textContent = 'Accept';
+				acceptButton.classList.add('accept-button');
+				acceptButton.onclick = function() {
+					manageFriend(user, 'accept');
+				};
+
+				const declineButton = document.createElement('button');
+				declineButton.textContent = 'Decline';
+				declineButton.classList.add('decline-button');
+				declineButton.onclick = function() {
+					manageFriend(user, 'refuse');
+				};
+
+				pendingMessage.appendChild(acceptButton);
+				pendingMessage.appendChild(declineButton);
+			} else if (isPendingFriendTo) {
+				pendingMessage.classList.add('message-sent', 'message');
+			}
+		}
+
+		// Handle pending game requests
+		const isPendingGameFrom = globalVariables.currentUser.isPendingGameFrom(user);
+		const isPendingGameTo = globalVariables.currentUser.isPendingGameTo(user);
+
+		if (isPendingGameFrom || isPendingGameTo) {
+			const pendingMessage = document.createElement('div');
+			// pendingMessage.classList.add('pending-message');
+			const boldItalicText = document.createElement('span');
+			boldItalicText.innerHTML = `<b><i>${isPendingGameFrom ? 'Wanna play?' : 'Play request sent!'}</i></b>`;
+			pendingMessage.appendChild(boldItalicText);
+			messagesDiv.appendChild(pendingMessage);
+
+			if (isPendingGameFrom) {
+				pendingMessage.classList.add('message-received', 'message');
+				const acceptButton = document.createElement('button');
+				acceptButton.textContent = 'Accept';
+				acceptButton.classList.add('accept-button');
+				acceptButton.onclick = function() {
+					acceptPlayRequest(user);
+				};
+
+				const declineButton = document.createElement('button');
+				declineButton.textContent = 'Decline';
+				declineButton.classList.add('decline-button');
+				declineButton.onclick = function() {
+					refusePlayRequest(user);
+				};
+
+				pendingMessage.appendChild(acceptButton);
+				pendingMessage.appendChild(declineButton);
+			} else if (isPendingGameTo) {
+				pendingMessage.classList.add('message-sent', 'message');
+			}
+		}
+				
 		setTimeout(function() {
 			messagesDiv.scrollTop = messagesDiv.scrollHeight;
 		}, 1);
