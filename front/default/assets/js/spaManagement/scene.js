@@ -7,37 +7,37 @@ import { setFocus } from './setFocus.js';
 async function changeScene(newScene, username) {
 	switch (newScene) {
 		case "sign-in":
-			sceneSignIn();
+			await sceneSignIn();
 			break;
 		case "sign-up":
-			sceneSignUp();
+			await sceneSignUp();
 			break;
 		case "conversation-list":
-			sceneConversationList();
+			await sceneConversationList();
 			break;
 		case "conversation-display":
-			sceneConversationDisplay(username);
+			await sceneConversationDisplay(username);
 			break;
 		case "search":
-			sceneSearch(username);
+			await sceneSearch(username);
 			break;
 		case "profil":
-			sceneProfil(username);
+			await sceneProfil(username);
 			break;
 		case "settings":
-			sceneSettings();
+			await sceneSettings();
 			break;
 		case "settings-game-theme":
-			sceneSettingsGameTheme();
+			await sceneSettingsGameTheme();
 			break;
 		case "settings-profil-picture":
-			sceneSettingsProfilPicture();
+			await sceneSettingsProfilPicture();
 			break;
 		case "settings-password":
-			sceneSettingsPassword();
+			await sceneSettingsPassword();
 			break;
 		case "settings-email":
-			sceneSettingsEmail();
+			await sceneSettingsEmail();
 			break;
 		default:
 			console.log("Invalid scene in changeScene: ", globalVariables.currentScene);
@@ -88,6 +88,8 @@ const eventsToUnset = [
 
 // Handler
 async function sceneSignIn() {
+	removeChildDiv(["sign-in"]); // Ici parce-que sinon ça pue
+
 	globalVariables.currentScene = "sign-in";
 	hideElements("sign-in");
 	await createChildDiv(["sign-in"]);
@@ -101,6 +103,8 @@ async function sceneSignIn() {
 }
 
 async function sceneSignUp() {
+	removeChildDiv(["profil"]); // Ici parce-que sinon ça pue
+
 	globalVariables.currentScene = "sign-up";
 	hideElements("sign-up");
 	await createChildDiv(["sign-up"]);
@@ -128,6 +132,8 @@ async function sceneConversationList() {
 }
 
 async function sceneConversationDisplay(username) {
+	removeChildDiv(["conversation-display"]); // Ici parce-que sinon ça pue
+
 	globalVariables.currentScene = "conversation-display";
 	hideElements("conversation-display");
 	await createChildDiv(["conversation-display", "nav-bar"], username);
@@ -141,6 +147,8 @@ async function sceneConversationDisplay(username) {
 }
 
 async function sceneSearch(username) {
+	removeChildDiv(["search"]); // Ici parce-que sinon ça pue
+
 	globalVariables.currentScene = "search";
 	hideElements("search");
 	await createChildDiv(["search", "nav-bar"], username);
@@ -154,6 +162,8 @@ async function sceneSearch(username) {
 }
 
 async function sceneProfil(username) {
+	removeChildDiv(["profil"]); // Ici parce-que sinon ça pue
+
 	globalVariables.currentScene = "profil";
 	hideElements("profil");
 	await createChildDiv(["profil", "nav-bar"], username);
@@ -167,6 +177,8 @@ async function sceneProfil(username) {
 
 
 async function sceneSettings() {
+	removeChildDiv(["settings"]); // Ici parce-que sinon ça pue
+
 	globalVariables.currentScene = "settings";
 	hideElements("settings");
 	await createChildDiv(["settings", "nav-bar"]);
@@ -179,6 +191,8 @@ async function sceneSettings() {
 }
 
 async function sceneSettingsGameTheme() {
+	removeChildDiv(["settings-game-theme"]); // Ici parce-que sinon ça pue
+
 	globalVariables.currentScene = "settings-game-theme";
 	hideElements("settings-game-theme");
 	await createChildDiv(["settings-game-theme", "nav-bar"]);
@@ -191,6 +205,8 @@ async function sceneSettingsGameTheme() {
 }
 
 async function sceneSettingsProfilPicture() {
+	removeChildDiv(["settings-profil-picture"]); // Ici parce-que sinon ça pue
+
 	globalVariables.currentScene = "settings-profil-picture";
 	hideElements("settings-profil-picture");
 	await createChildDiv(["settings-profil-picture", "nav-bar"]);
@@ -203,6 +219,8 @@ async function sceneSettingsProfilPicture() {
 }
 
 async function sceneSettingsPassword() {
+	removeChildDiv(["settings-password"]); // Ici parce-que sinon ça pue
+
 	globalVariables.currentScene = "settings-password";
 	hideElements("settings-password");
 	await createChildDiv(["settings-password", "nav-bar"]);
@@ -215,6 +233,8 @@ async function sceneSettingsPassword() {
 }
 
 async function sceneSettingsEmail() {
+	removeChildDiv(["settings-email"]); // Ici parce-que sinon ça pue
+
 	globalVariables.currentScene = "settings-email";
 	hideElements("settings-email");
 	await createChildDiv(["settings-email", "nav-bar"]);
