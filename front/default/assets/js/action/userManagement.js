@@ -120,9 +120,12 @@ function modifyPassword() {
 	
 	fetchData("/api/dashboard?filter=password", 'POST', formData).then(
 	(data) => {
+		let type = Alerts.type.FAILED;
 		if (data.status === 200) {
 			history.pushState({}, '', '/settings');
+			type = Alerts.type.SUCCESS
 		}
+		Alerts.createAlert(type, data.data.message);
 		console.log(data.data);
 	})
 	.catch(error => {
@@ -141,9 +144,12 @@ function modifyEmail() {
 	
 	fetchData("/api/dashboard?filter=email", 'POST', formData).then(
 	(data) => {
+		let type = Alerts.type.FAILED;
 		if (data.status === 200) {
 			history.pushState({}, '', '/settings');
+			type = Alerts.type.SUCCESS
 		}
+		Alerts.createAlert(type, data.data.message);
 		console.log(data.data);
 	})
 	.catch(error => {
@@ -166,9 +172,12 @@ function modifyProfilPicture() {
 	formData.append("profilePicture", profilePicture);
 	fetchData("/api/dashboard?filter=profilePicture", 'POST', formData).then(
 	(data) => {
+		let type = Alerts.type.FAILED;
 		if (data.status === 200) {
 			history.pushState({}, '', '/settings');
+			type = Alerts.type.SUCCESS
 		}
+		Alerts.createAlert(type, data.data.message);
 		console.log(data.data);
 	})
 	.catch(error => {
