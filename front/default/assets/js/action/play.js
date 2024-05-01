@@ -26,12 +26,14 @@ function playRequestSent(from, to) {
 
 // in conversation display, user accept game request
 function acceptPlayRequest(from) {
+	// implement here your ws action to sent the request
 	console.log("acceptPlayRequest from: " + from);// to delete
 	//alert
 }
 
 // in conversation display, user refuse game request
 function refusePlayRequest(from) {
+	// implement here your ws action to sent the request
 	console.log("refusePlayRequest from: " + from);// to delete
 	//alert
 }
