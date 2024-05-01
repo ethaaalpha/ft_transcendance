@@ -54,6 +54,20 @@ class User {
 		}
 	}
 
+	isPendingFrom(username) {
+		if (this.pendingFriendsFrom.includes(username)) {
+			return true;
+		}
+		return false;
+	}
+	
+	isPendingTo(username) {
+		if (this.pendingFriendsTo.includes(username)) {
+			return true;
+		}
+		return false;
+	}
+
 	isBlocked(username) {
 		if (this.blocked.includes(username)) {
 			return true;
