@@ -123,9 +123,6 @@ async function createConversationDisplay(user) {
 		const isPendingGameFrom = globalVariables.currentUser.isPendingGameFrom(user);
 		const isPendingGameTo = globalVariables.currentUser.isPendingGameTo(user);
 
-		console.log("isPendingGameFrom: " + isPendingGameFrom);
-		console.log("isPendingGameTo: " + isPendingGameTo);
-
 		if (isPendingGameFrom || isPendingGameTo) {
 			const pendingMessage = document.createElement('div');
 			// pendingMessage.classList.add('pending-message');
