@@ -5,6 +5,7 @@ import { isConnected } from "../fetch/http.js";
 import Connect from "../class/Connect.js";
 import { fetchProfilPicture } from "../fetch/http.js";
 import { userExist } from "../fetch/http.js";
+import Alerts from "../class/Alerts.js";
 
 async function locationHandler() {
 	const connected = await isConnected();
@@ -69,9 +70,11 @@ const routeSearchRoute = async () => {
 		if (exist) {
 			await changeScene('search', username);
 			return ;
+		} else {
+			Alerts.createAlert(Alerts.type.FAILED, username + ' do not exist')
 		}
 	}
-	console.log("routeSearchRoute: error to replace with alert");
+	// console.log("routeSearchRoute: error to replace with alert");
 	history.pushState({}, '', '/')
 };
 
@@ -84,9 +87,11 @@ const routeProfilRoute = async () => {
 		if (exist) {
 			await changeScene('profil', username);
 			return ;
+		} else {
+			Alerts.createAlert(Alerts.type.FAILED, username + ' do not exist')
 		}
 	}
-	console.log("routeProfilRoute: error to replace with alert");
+	// console.log("routeProfilRoute: error to replace with alert");
 	history.pushState({}, '', '/');
 };
 
@@ -106,18 +111,23 @@ const routeSettingsRoute = async () => {
 		return ;
 	}
 	history.pushState({}, '', '/settings');
-	console.log("routeSettingsRoute: error to replace with alert item:" + item);
+	// console.log("routeSettingsRoute: error to replace with alert item:" + item);
 };
 
 const routeChatRoute = async () => {
 	const searchParams = new URLSearchParams(window.location.search);
 	const withUser = searchParams.get("with");
 
-	// if (globalVariables.currentUser.isFriend(withUser) == 'friend' || globalVariables.currentUser.isFriend(withUser) == 'pending') {
-		await changeScene('conversation-display', withUser);
-		return ;
-	// }
-	// history.pushState({}, '', '/');
+	if (withUser) {
+		if (globalVariables.currentUser.isFriend(withUser) == 'friend' || globalVariables.currentUser.isFriend(withUser) == 'pending') {
+			await changeScene('conversation-display', withUser);
+			return ;
+		} else {
+			Alerts.createAlert(Alerts.type.FAILED, withUser + " isn't your friend")
+		}
+	}
+	history.pushState({}, '', '/');
+
 	// console.log("routeChatRoute: error to replace with alert withUser:" + withUser);
 };
 
