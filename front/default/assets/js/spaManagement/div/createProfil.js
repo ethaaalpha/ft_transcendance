@@ -148,7 +148,7 @@ async function createProfil(username) {
 		profilDisplay.appendChild(persoScoresDiv);
 
 		// Display user statistics
-		persoScoresDiv.appendChild(createStatElement("matches mon", userStats.numberOfVictory, "The more the better.", "square"));
+		persoScoresDiv.appendChild(createStatElement("matches won", userStats.numberOfVictory, "The more the better.", "square"));
 		persoScoresDiv.appendChild(createStatElement("matches lost", userStats.numberOfLoses, "The less the better.", "square"));
 		persoScoresDiv.appendChild(createStatElement("soccer field ball distance", userStats.traveledDistance, "The distance the ball traveled on the soccer field while you played.", "rectangle"));
 		persoScoresDiv.appendChild(createStatElement("average duration", userStats.averagePong, "The shorter you are in game the better.", "square"));
@@ -159,6 +159,9 @@ async function createProfil(username) {
 		console.log(matchHistory);
 
 		const matchHistoryDiv = document.getElementById("match-history");
+
+		const matchListDiv = document.createElement('match-history-list');
+		matchListDiv.classList.add('match-history-list', 'block-scroll')
 
 		matchHistory.matchs.forEach(match => {
 			// Create container div for each match
@@ -171,10 +174,12 @@ async function createProfil(username) {
 
 			const durationDiv = document.createElement("div");
 			durationDiv.textContent = formatDuration(match.duration);
+			durationDiv.id = 'time'
 			leftColumnDiv.appendChild(durationDiv);
 
 			const idDiv = document.createElement("div");
 			idDiv.textContent = "#" + match.id;
+			idDiv.id = 'uuid';
 			leftColumnDiv.appendChild(idDiv);
 
 			// Right column: host vs invited and score
@@ -183,19 +188,22 @@ async function createProfil(username) {
 
 			const teamsDiv = document.createElement("div");
 			teamsDiv.textContent = match.host + " vs " + match.invited;
+			teamsDiv.id = 'team';
 			rightColumnDiv.appendChild(teamsDiv);
 
 			const scoreDiv = document.createElement("div");
 			scoreDiv.textContent = match.score.join(" - ");
+			scoreDiv.id = 'score'
 			rightColumnDiv.appendChild(scoreDiv);
 
 			// Append left and right columns to matchDiv
 			matchDiv.appendChild(leftColumnDiv);
 			matchDiv.appendChild(rightColumnDiv);
 
-			// Append matchDiv to matchHistoryDiv
-			matchHistoryDiv.appendChild(matchDiv);
+			matchListDiv.appendChild(matchDiv)
 		});
+		// Append matchDiv to matchHistoryDiv
+		matchHistoryDiv.appendChild(matchListDiv);
 
 	} catch (error) {
 		console.error("Error in createProfil: ", error);
