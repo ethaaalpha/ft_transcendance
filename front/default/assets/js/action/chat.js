@@ -15,21 +15,45 @@ async function fetchConversations() {
 }
 
 function sendMessage() {
-	const to = document.getElementById("send-message-contact-id").textContent;
-	const content = document.getElementById("send-message-input-id").value;
+    const to = document.getElementById("send-message-contact-id").textContent;
+    const contentInput = document.getElementById("send-message-input-id");
+    const content = contentInput.value.trim();
 
-	// console.log(to);
-	const data = {'to': to, 'content': content};
-	if (globalVariables.activity && globalVariables.activity.socket.readyState === WebSocket.OPEN) {
-		globalVariables.activity.socket.send(JSON.stringify({
-			'event': 'chat',
-			'data': data,
-		}));
-		globalVariables.userConversations.addMessageFromSocket(data);
-	} else {
-		console.error("Error sending message: Websocket not connected.");
-	}
+    if (content === "") {
+		let inputElement = document.getElementById("send-message-input-id");
+		inputElement.value = "";
+        console.error("Error sending message: Message is empty.");
+        return;
+    }
+
+    const data = {'to': to, 'content': content};
+    if (globalVariables.activity && globalVariables.activity.socket.readyState === WebSocket.OPEN) {
+        globalVariables.activity.socket.send(JSON.stringify({
+            'event': 'chat',
+            'data': data,
+        }));
+        globalVariables.userConversations.addMessageFromSocket(data);
+    } else {
+        console.error("Error sending message: Websocket not connected.");
+    }
 }
+
+
+// function sendMessage() {
+// 	const to = document.getElementById("send-message-contact-id").textContent;
+// 	const content = document.getElementById("send-message-input-id").value;
+
+// 	const data = {'to': to, 'content': content};
+// 	if (globalVariables.activity && globalVariables.activity.socket.readyState === WebSocket.OPEN) {
+// 		globalVariables.activity.socket.send(JSON.stringify({
+// 			'event': 'chat',
+// 			'data': data,
+// 		}));
+// 		globalVariables.userConversations.addMessageFromSocket(data);
+// 	} else {
+// 		console.error("Error sending message: Websocket not connected.");
+// 	}
+// }
 
 function scrollMessagesToBottom() {
 	const messagesElement = document.getElementById("conversation-display-messages-id");
