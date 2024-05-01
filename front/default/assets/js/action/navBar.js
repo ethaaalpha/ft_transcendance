@@ -22,7 +22,6 @@ function navBarActionHandler(action, username) {
 }
 
 function navBarSettings() {
-	console.log("scene in navbarhandler: " + globalVariables.currentScene + " " + "settings");
 	if (globalVariables.currentScene === "settings") {
 		history.pushState({}, '', '/');
 	} else {

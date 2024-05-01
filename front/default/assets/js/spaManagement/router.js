@@ -100,7 +100,7 @@ const routeSettingsRoute = async () => {
 	const item = searchParams.get("item");
 
 	const modify = ['game-theme', 'profil-picture', 'password', 'email'];
-	console.log('item :::' + item)
+	// console.log('item :::' + item)
 	if (item) {
 		if (modify.includes(item)) {
 			await changeScene('settings-' + item);

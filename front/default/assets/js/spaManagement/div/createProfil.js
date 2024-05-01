@@ -38,15 +38,28 @@ async function createProfil(username) {
 		profileImage.src = pictureUrl;
 		profileImage.alt = "Profile Picture";
 	
+
 		// Status
 		const connectionStatus = document.createElement('div');
-		connectionStatus.classList.add('perso-info-container-left-status')
-		connectionStatus.style.setProperty('--item-color', 'red');
-	
+		connectionStatus.classList.add('perso-info-container-left-status');
+		const friendStatus = globalVariables.currentUser.getFriendStatus(username);
+		
+		switch (friendStatus) {
+			case 'online':
+				connectionStatus.style.setProperty('--item-color', 'var(--alert-tx-valid)');
+				break;
+			case 'in-game':
+				connectionStatus.style.setProperty('--item-color', 'var(--alert-tx-game)');
+				break;
+			default:
+				connectionStatus.style.setProperty('--item-color', 'var(--alert-tx-fail)');
+				break;
+		}
+		
 		leftDiv.appendChild(profileImage);
 		persoInfoDiv.appendChild(leftDiv);
 		persoInfoDiv.appendChild(connectionStatus);
-	
+
 		// Right div block
 		const rightDiv = document.createElement('div');
 		rightDiv.classList.add('perso-info-container-right');
@@ -157,8 +170,6 @@ async function createProfil(username) {
 
 		// MATCH HISTORY
 		const matchHistory = await fetchMatchHistory(username);
-		console.log(matchHistory);
-
 		const matchHistoryDiv = document.getElementById("match-history");
 
 		matchHistory.matchs.forEach(match => {
