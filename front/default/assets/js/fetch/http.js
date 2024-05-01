@@ -84,7 +84,7 @@ function fetchUserStats(username) {
 
 function fetchMatchHistory(username) {
 	return new Promise((resolve, reject) => {
-		fetchData('/api/dashboard/match?since=2005-04-19T16:00:00.000Z')
+		fetchData('/api/dashboard/match?since=2005-04-19T16:00:00.000Z&user=' + username)
 		.then(data => {
 			resolve(data.data);
 		})

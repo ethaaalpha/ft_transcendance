@@ -156,14 +156,6 @@ async function createProfil(username) {
 		persoScoresDiv.appendChild(createStatElement("average duration", userStats.averagePong, "The shorter you are in game the better.", "square"));
 		persoScoresDiv.appendChild(createStatElement("hits per match", userStats.averagePong, "The less you touch the ball the better.", "square"));
 
-		// Function to convert duration to minutes and seconds format
-		function formatDuration(duration) {
-			const totalSeconds = Math.round(duration);
-			const minutes = Math.floor(totalSeconds / 60);
-			const seconds = totalSeconds % 60;
-			return `${minutes}"${seconds < 10 ? '0' : ''}${seconds}`;
-		}
-
 		// MATCH HISTORY
 		const matchHistory = await fetchMatchHistory(username);
 		console.log(matchHistory);
@@ -247,6 +239,12 @@ function createStatElement(title, data, description, shape) {
 	statElement.appendChild(descriptionElement);
 
 	return statElement;
+}
+
+function formatDuration(duration) {
+	const minutesPart = Math.floor(duration / 60);
+	const secondsPart = duration % 60;
+	return `${minutesPart}"${secondsPart < 10 ? '0' : ''}${secondsPart}`;
 }
 
 export { createProfil };
