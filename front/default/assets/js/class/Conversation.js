@@ -3,23 +3,22 @@ import { scrollMessagesToBottom } from '../action/chat.js';
 
 class Conversations {
 	constructor(myUsername, conversations = {}) {
-	this.conversations = conversations;
-	this.myUsername = myUsername;
+		this.conversations = conversations;
+		this.myUsername = myUsername;
 	}
 
 	addMessage(from, to, content, sendAt) {
-	const message = { sender: from, content, sendAt: sendAt };
-	let target = from === this.myUsername ? to : from;
+		const message = { sender: from, content, sendAt: sendAt };
+		let target = from === this.myUsername ? to : from;
 
-	if (!this.conversations[target]) {
-		this.conversations[target] = [];
-	}
+		if (!this.conversations[target]) {
+			this.conversations[target] = [];
+		}
 
-	this.conversations[target].push(message);
+		this.conversations[target].push(message);
 	}
 
 	addMessageFromSocket(messageData) {
-	
 		if (!messageData.hasOwnProperty('from') && !messageData.hasOwnProperty('sendAt')) {
 			messageData.from = this.myUsername;
 			messageData.sendAt = new Date();
@@ -58,12 +57,12 @@ class Conversations {
 	}
 
 	getConversation(withUser) {
-	if (this.conversations[withUser]) {
-		return this.conversations[withUser];
-	} else {
-		console.log(`La conversation avec ${withUser} n'existe pas.`);
-		return [];
-	}
+		if (this.conversations[withUser]) {
+			return this.conversations[withUser];
+		} else {
+			console.log(`La conversation avec ${withUser} n'existe pas.`);
+			return [];
+		}
 	}
 }
 
