@@ -80,7 +80,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-	overflow-y: scroll;
+	overflow-y: auto;
 	height: 68%;
 	-webkit-mask: 
     	linear-gradient(to top, black 95%, transparent 100%),

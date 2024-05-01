@@ -2,7 +2,7 @@
 
 body {
 	font-family: "Roboto Mono", monospace;
-}
+}  
 
 .wrapper {
 	display: flex;
@@ -89,7 +89,7 @@ body {
 .block-scroll {
 	width: 100%;
 	height: 100%;
-	overflow-y: scroll;
+	overflow-y: auto;
 	display: flex;
 	flex-direction: column;
 	padding-top: var(--top);
