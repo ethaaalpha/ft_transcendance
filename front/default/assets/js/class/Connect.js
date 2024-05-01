@@ -14,7 +14,7 @@ class Connect {
 			const data = eventData.data;
 		
 			if (event === 'state') {
-				console.log("Websocket: state message");
+				globalVariables.currentUser.setFriendStatus(data.user, data.state.toLowerCase());
 			} else if (event === 'chat') {
 				if (globalVariables.userConversations) {
 					globalVariables.userConversations.addMessageFromSocket(data);
