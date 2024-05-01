@@ -1,9 +1,6 @@
 import globalVariables from '../../init.js';
-import { fetchUserData } from '../../fetch/http.js';
-import { fetchProfilPicture } from '../../fetch/http.js';
-import { fetchUserStats } from '../../fetch/http.js';
+import { fetchUserData, fetchProfilPicture, fetchUserStats, fetchMatchHistory } from '../../fetch/http.js';
 import { manageFriend } from '../../action/userManagement.js';
-import { changeScene } from '../scene.js';
 
 async function createProfil(username) {
 
@@ -82,8 +79,6 @@ async function createProfil(username) {
 		if (!isMyProfil) {
 			// Check if user is not a friend
 			const status = await globalVariables.currentUser.isFriend(username);
-			// console.log("username here: " + username);
-			// console.log(status);
 			if (status === "notFriend") {
 				const button1 = document.createElement("button");
 				button1.classList.add("action-button");
@@ -153,9 +148,6 @@ async function createProfil(username) {
 		persoScoresDiv.id = "perso-scores-id";
 		persoScoresDiv.classList.add("perso-scores-div");
 		profilDisplay.appendChild(persoScoresDiv);
-		
-		// console.log(userStats);
-		// console.log(userStats.matchesWon);
 
 		// Display user statistics
 		persoScoresDiv.appendChild(createStatElement("matches mon", userStats.numberOfVictory, "The more the better.", "square"));
@@ -163,6 +155,57 @@ async function createProfil(username) {
 		persoScoresDiv.appendChild(createStatElement("soccer field ball distance", userStats.traveledDistance, "The distance the ball traveled on the soccer field while you played.", "rectangle"));
 		persoScoresDiv.appendChild(createStatElement("average duration", userStats.averagePong, "The shorter you are in game the better.", "square"));
 		persoScoresDiv.appendChild(createStatElement("hits per match", userStats.averagePong, "The less you touch the ball the better.", "square"));
+
+		// Function to convert duration to minutes and seconds format
+		function formatDuration(duration) {
+			const totalSeconds = Math.round(duration);
+			const minutes = Math.floor(totalSeconds / 60);
+			const seconds = totalSeconds % 60;
+			return `${minutes}"${seconds < 10 ? '0' : ''}${seconds}`;
+		}
+
+		// MATCH HISTORY
+		const matchHistory = await fetchMatchHistory(username);
+		console.log(matchHistory);
+
+		const matchHistoryDiv = document.getElementById("match-history");
+
+		matchHistory.matchs.forEach(match => {
+			// Create container div for each match
+			const matchDiv = document.createElement("div");
+			matchDiv.classList.add("match-div");
+
+			// Left column: duration and id
+			const leftColumnDiv = document.createElement("div");
+			leftColumnDiv.classList.add("left-column");
+
+			const durationDiv = document.createElement("div");
+			durationDiv.textContent = formatDuration(match.duration);
+			leftColumnDiv.appendChild(durationDiv);
+
+			const idDiv = document.createElement("div");
+			idDiv.textContent = "#" + match.id;
+			leftColumnDiv.appendChild(idDiv);
+
+			// Right column: host vs invited and score
+			const rightColumnDiv = document.createElement("div");
+			rightColumnDiv.classList.add("right-column");
+
+			const teamsDiv = document.createElement("div");
+			teamsDiv.textContent = match.host + " vs " + match.invited;
+			rightColumnDiv.appendChild(teamsDiv);
+
+			const scoreDiv = document.createElement("div");
+			scoreDiv.textContent = match.score.join(" - ");
+			rightColumnDiv.appendChild(scoreDiv);
+
+			// Append left and right columns to matchDiv
+			matchDiv.appendChild(leftColumnDiv);
+			matchDiv.appendChild(rightColumnDiv);
+
+			// Append matchDiv to matchHistoryDiv
+			matchHistoryDiv.appendChild(matchDiv);
+		});
 
 	} catch (error) {
 		console.error("Error in createProfil: ", error);
