@@ -113,12 +113,12 @@ const routeChatRoute = async () => {
 	const searchParams = new URLSearchParams(window.location.search);
 	const withUser = searchParams.get("with");
 
-	if (globalVariables.currentUser.isFriend(withUser) == 'friend') {
+	// if (globalVariables.currentUser.isFriend(withUser) == 'friend' || globalVariables.currentUser.isFriend(withUser) == 'pending') {
 		await changeScene('conversation-display', withUser);
 		return ;
-	}
-	history.pushState({}, '', '/');
-	console.log("routeChatRoute: error to replace with alert withUser:" + withUser);
+	// }
+	// history.pushState({}, '', '/');
+	// console.log("routeChatRoute: error to replace with alert withUser:" + withUser);
 };
 
 const routeInGameRoute = async () => {};

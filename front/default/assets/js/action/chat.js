@@ -15,27 +15,34 @@ async function fetchConversations() {
 }
 
 function sendMessage() {
-    const to = document.getElementById("send-message-contact-id").textContent;
-    const contentInput = document.getElementById("send-message-input-id");
-    const content = contentInput.value.trim();
+	const to = document.getElementById("send-message-contact-id").textContent;
+	const contentInput = document.getElementById("send-message-input-id");
+	const content = contentInput.value.trim();
 
-    if (content === "") {
+	if (content === "") {
 		let inputElement = document.getElementById("send-message-input-id");
 		inputElement.value = "";
-        console.error("Error sending message: Message is empty.");
-        return;
-    }
+		console.error("Error sending message: Message is empty.");
+		return;
+	}
 
-    const data = {'to': to, 'content': content};
-    if (globalVariables.activity && globalVariables.activity.socket.readyState === WebSocket.OPEN) {
-        globalVariables.activity.socket.send(JSON.stringify({
-            'event': 'chat',
-            'data': data,
-        }));
-        globalVariables.userConversations.addMessageFromSocket(data);
-    } else {
-        console.error("Error sending message: Websocket not connected.");
-    }
+	if (globalVariables.currentUser.isFriend(to) !== 'friend') {
+		let inputElement = document.getElementById("send-message-input-id");
+		inputElement.value = "";
+		console.error("Error sending message: You can only send messages to friends.");
+		return;
+	}
+
+	const data = {'to': to, 'content': content};
+	if (globalVariables.activity && globalVariables.activity.socket.readyState === WebSocket.OPEN) {
+		globalVariables.activity.socket.send(JSON.stringify({
+			'event': 'chat',
+			'data': data,
+		}));
+		globalVariables.userConversations.addMessageFromSocket(data);
+	} else {
+		console.error("Error sending message: Websocket not connected.");
+	}
 }
 
 
