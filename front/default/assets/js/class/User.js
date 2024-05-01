@@ -29,9 +29,7 @@ class User {
 
 	addPendingGameTo(username) {
 		if (!this.pendingGameTo.includes(username)) {
-			console.log("addPendingGameTo: " + username);
 			this.pendingGameTo.push(username);
-			console.log(this.pendingGameTo);
 		}
 	}
 
@@ -96,9 +94,6 @@ class User {
 	}
 
 	isPendingGameFrom(username) {
-		console.log("isPendingGameFrom username: " + username);
-		console.log("isPendingGameFrom pendingGameFrom: " + this.pendingGameFrom);
-		console.log("isPendingGameFrom friends: " + this.friends);
 		if (this.pendingGameFrom.includes(username)) {
 			return true;
 		}
@@ -106,9 +101,6 @@ class User {
 	}
 	
 	isPendingGameTo(username) {
-		console.log("isPendingGameTo username: " + username);
-		console.log("isPendingGameTo isPendingGameTo: " + this.pendingGameTo);
-		console.log("isPendingGameTo friends: " + this.friends);
 		if (this.pendingGameTo.includes(username)) {
 			return true;
 		}
