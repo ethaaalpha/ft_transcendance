@@ -123,19 +123,17 @@ async function createProfil(username) {
 			button2.classList.add("action-button");
 			
 			const imgButton = document.createElement('img');
-			imgButton.src = '/static/default/assets/images/icons/blocked.svg';
+			imgButton.src = '/static/default/assets/images/icons/block.svg';
 			button2.appendChild(imgButton)
 
 			if (isBlocked) {
 				button2.onclick = function() {
 					manageFriend(username, "unblock");
 				};
-				button2.style.backgroundColor = "#05FF00";
 			} else {
 				button2.onclick = function() {
 					manageFriend(username, "block");
 				};
-				button2.style.backgroundColor = "#ccc";
 			}
 			nameActionsDiv.appendChild(button2);
 		}
