@@ -192,8 +192,11 @@ function manageFriend(username, action) {
 	
 	fetchData("/api/dashboard/friends", 'POST', formData).then(
 	(data) => {
+		let type = Alerts.type.FAILED;
 		if (data.status === 200) {
+			type = Alerts.type.SUCCESS;
 		}
+		Alerts.createAlert(type, data.data.message);
 		console.log(data.data);
 	})
 	.catch(error => {
