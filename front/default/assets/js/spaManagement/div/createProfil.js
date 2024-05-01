@@ -150,7 +150,7 @@ async function createProfil(username) {
 		// Display user statistics
 		persoScoresDiv.appendChild(createStatElement("matches won", userStats.numberOfVictory, "The more the better.", "square"));
 		persoScoresDiv.appendChild(createStatElement("matches lost", userStats.numberOfLoses, "The less the better.", "square"));
-		persoScoresDiv.appendChild(createStatElement("soccer field ball distance", userStats.traveledDistance, "The distance the ball traveled on the soccer field while you played.", "rectangle"));
+		persoScoresDiv.appendChild(createStatElement("soccer field ball distance", userStats.traveledDistance + 'km', "The distance the ball traveled on the soccer field while you played.", "rectangle"));
 		persoScoresDiv.appendChild(createStatElement("average duration", userStats.averagePong, "The shorter you are in game the better.", "square"));
 		persoScoresDiv.appendChild(createStatElement("hits per match", userStats.averagePong, "The less you touch the ball the better.", "square"));
 
