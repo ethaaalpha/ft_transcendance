@@ -163,24 +163,41 @@ async function createProfil(username) {
 		matchListDiv.classList.add('match-history-list', 'block-scroll')
 
 		matchHistory.matchs.forEach(match => {
+			let winner = match.winner == username ? true : false;
+			console.log(match)
+
 			// Create container div for each match
 			const matchDiv = document.createElement("div");
 			matchDiv.classList.add("match-div");
 
+			const leftBigColumnDiv = document.createElement('div');
+			leftBigColumnDiv.classList.add('left-big-column')
+
+			const leftRowDiv = document.createElement('div');
+			leftRowDiv.classList.add('d-flex', 'left-row', 'justify-content-center', 'align-items-center');
+
+			const leftRowIcon = document.createElement('div');
+			leftRowDiv.classList.add('left-img-div');
+
+			const leftRowIconImg = document.createElement('img')
+			leftRowIconImg.src = winner ? '/static/default/assets/images/icons/win.svg' : '/static/default/assets/images/icons/lose.svg';
+			
+			leftRowIcon.appendChild(leftRowIconImg)
+			leftRowDiv.appendChild(leftRowIcon)
 			// Left column: duration and id
 			const leftColumnDiv = document.createElement("div");
 			leftColumnDiv.classList.add("left-column");
-
+			
 			const durationDiv = document.createElement("div");
 			durationDiv.textContent = formatDuration(match.duration);
 			durationDiv.id = 'time'
 			leftColumnDiv.appendChild(durationDiv);
-
+			
 			const idDiv = document.createElement("div");
 			idDiv.textContent = "#" + match.id;
 			idDiv.id = 'uuid';
 			leftColumnDiv.appendChild(idDiv);
-
+			
 			// Right column: host vs invited and score
 			const rightColumnDiv = document.createElement("div");
 			rightColumnDiv.classList.add("right-column");
@@ -192,11 +209,15 @@ async function createProfil(username) {
 
 			const scoreDiv = document.createElement("div");
 			scoreDiv.textContent = match.score.join(" - ");
+			if (match.score.includes(10))
+				scoreDiv.textContent = 'dnf'
 			scoreDiv.id = 'score'
 			rightColumnDiv.appendChild(scoreDiv);
 
 			// Append left and right columns to matchDiv
-			matchDiv.appendChild(leftColumnDiv);
+			leftBigColumnDiv.appendChild(leftRowDiv)
+			leftBigColumnDiv.appendChild(leftColumnDiv)
+			matchDiv.appendChild(leftBigColumnDiv);
 			matchDiv.appendChild(rightColumnDiv);
 
 			matchListDiv.appendChild(matchDiv)
