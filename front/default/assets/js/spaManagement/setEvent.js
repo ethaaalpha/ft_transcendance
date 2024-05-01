@@ -158,6 +158,7 @@ function setEventConversationList() {
 			history.pushState({}, '', '/search?username=' + searchInput.value);
 		}
 	});
+	
 }
 
 function setEventConversationDisplay() {

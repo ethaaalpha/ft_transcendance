@@ -92,6 +92,7 @@ body {
 	overflow-y: auto;
 	display: flex;
 	flex-direction: column;
+	scroll-behavior: smooth;
 	padding-top: var(--top);
 	padding-bottom: 2%;
 	-webkit-mask: 
