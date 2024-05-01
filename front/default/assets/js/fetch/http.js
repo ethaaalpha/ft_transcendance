@@ -82,4 +82,17 @@ function fetchUserStats(username) {
 	});
 }
 
-export { fetchProfilPicture, fetchUserStats, isConnected, fetchUserData, userExist };
+function fetchMatchHistory(username) {
+	return new Promise((resolve, reject) => {
+		fetchData('/api/dashboard/match?since=2005-04-19T16:00:00.000Z')
+		.then(data => {
+			resolve(data.data);
+		})
+		.catch(error => {
+			console.error('Error fetching user data:', error);
+			reject(error);
+		});
+	});
+}
+
+export { fetchProfilPicture, fetchUserStats, fetchUserData, fetchMatchHistory, userExist, isConnected };
