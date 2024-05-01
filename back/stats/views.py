@@ -4,6 +4,7 @@ from tools.responses import tResponses
 from tools.functions import isOtherKeysInList, areKeysFromList
 from datetime import datetime
 from game.models import Match
+from users.models import Profile
 	
 def isDateValid(date):
 	return 
@@ -22,15 +23,21 @@ def entryPoint(request: HttpRequest) -> HttpResponse:
 		"""
 		/dashboard/match?
 			since=date
+			user=username
 		"""
-		actualUser: User = request.user
-		keysList: list = ['since']
+		keysList: list = ['since', 'user']
 		if (areKeysFromList(keysList, request.GET) or isOtherKeysInList(keysList, request.GET)):
 			return tResponses.BAD_REQUEST.request("Invalid or missing parameter found !")
 
 		dateSince = request.GET['since']
+		targetUser = request.GET['user']
+
+		targetUser = Profile.getUserFromUsername(targetUser)
+		if not targetUser:
+			return tResponses.BAD_REQUEST.request("This user do not exist !")
 		if not dateSince:
 			return tResponses.BAD_REQUEST.request("Error in date format !")
-		return JsonResponse({'matchs': Match.historic(actualUser, dateSince)})
+		
+		return JsonResponse({'matchs': Match.historic(targetUser, dateSince)})
 	else:
 		tResponses.BAD_REQUEST.request("POST requests are not supported here !")
