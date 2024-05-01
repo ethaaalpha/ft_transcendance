@@ -17,15 +17,19 @@ class Alerts {
 		span.textContent = message;
 
 		const newAlert = document.createElement('div');
-    	newAlert.classList.add('alert', 'fade', 'show', 'alert-item');
+    	newAlert.classList.add('alert', 'alert-item');
 		newAlert.style.backgroundColor = `var(${type.background})`;
 		newAlert.style.color = `var(${type.textcolor})`;
 		newAlert.appendChild(icon);
 		newAlert.appendChild(span)
    		parent.appendChild(newAlert);
 
+
     	// Remove the alert after 5 seconds
-		await new Promise(resolve => setTimeout(resolve, 5000));
+		await new Promise(resolve => setTimeout(resolve, 4500));
+		newAlert.classList.add('alert-item-destroy')
+
+		await new Promise(resolve => setTimeout(resolve, 500));
 		newAlert.remove();
 	}
 }
