@@ -42,7 +42,7 @@ async function createSettingsProfilPicture() {
 			
 		const fileInput = document.createElement("input");
 		fileInput.type = "file";
-		fileInput.id = "settings-profil-picture";
+		fileInput.id = "settings-profil-picture-input";
 		fileInput.accept = "image/*";
 
 		const fileSpan = document.createElement('span');

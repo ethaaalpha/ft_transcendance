@@ -50,11 +50,9 @@ function signUp() {
 	fetchData("/api/auth/register", 'POST', formData).then(
 	(data) => {
 		if (data.status === 200) {
-			console.log("Register sucess");
 			history.pushState({}, '', '/');
-		} else {
-			console.log("Error conexion");
 		}
+		console.log(data.data);
 	})
 	.catch(error => {
 		console.error('Error:', error);
@@ -95,11 +93,9 @@ function forgotPassword() {
 	fetchData("/api/auth/reset-password", 'POST', formData).then(
 	(data) => {
 		if (data.status === 200) {
-			console.log("password sent!");
 			appendAlert('Your new password has been sent to you email!', 'warning');
-		} else {
-			console.log("Erreur de connexion");
 		}
+		console.log(data.data);
 	})
 	.catch(error => {
 		console.error('Error:', error);
@@ -118,11 +114,9 @@ function modifyPassword() {
 	fetchData("/api/dashboard?filter=password", 'POST', formData).then(
 	(data) => {
 		if (data.status === 200) {
-			console.log("Password changed");
 			history.pushState({}, '', '/settings');
-		} else {
-			console.log("Password do not match !");
 		}
+		console.log(data.data);
 	})
 	.catch(error => {
 		console.error('Error:', error);
@@ -141,11 +135,9 @@ function modifyEmail() {
 	fetchData("/api/dashboard?filter=email", 'POST', formData).then(
 	(data) => {
 		if (data.status === 200) {
-			console.log("Email changed");
 			history.pushState({}, '', '/settings');
-		} else {
-			console.log("Email do not match !");
 		}
+		console.log(data.data);
 	})
 	.catch(error => {
 		console.error('Error:', error);
@@ -153,20 +145,24 @@ function modifyEmail() {
 }
 
 function modifyProfilPicture() {
-	var profilePicture = document.getElementById("settings-profil-picture").files[0];
-
+	var profilePictureInput = document.getElementById("settings-profil-picture-input");
+    var files = profilePictureInput.files;
 	var formData = new FormData();
+
+    if (!files || !files[0]) {
+        console.log("No file selected");
+        return; 
+    }
 	
+	const profilePicture = files[0]; // Because just one file (first one)
+
 	formData.append("profilePicture", profilePicture);
-	
 	fetchData("/api/dashboard?filter=profilePicture", 'POST', formData).then(
 	(data) => {
 		if (data.status === 200) {
-			console.log("Profile picture changed");
 			history.pushState({}, '', '/settings');
-		} else {
-			console.log("Size problem !");
 		}
+		console.log(data.data);
 	})
 	.catch(error => {
 		console.error('Error:', error);
@@ -181,10 +177,8 @@ function manageFriend(username, action) {
 	fetchData("/api/dashboard/friends", 'POST', formData).then(
 	(data) => {
 		if (data.status === 200) {
-			console.log("manage friend action done!");
-		} else {
-			console.log("Login error");
 		}
+		console.log(data.data);
 	})
 	.catch(error => {
 		console.error('Error:', error);

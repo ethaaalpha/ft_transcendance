@@ -6,19 +6,11 @@ import Connect from "../class/Connect.js";
 import { fetchProfilPicture } from "../fetch/http.js";
 import { userExist } from "../fetch/http.js";
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 async function locationHandler() {
-	
-	await sleep(50);
-
-	const pathname = window.location.pathname;
-
-	console.log("pathname:" + pathname);
-
 	const connected = await isConnected();
+	const pathname = window.location.pathname; // Here to make small delay with isConnected
+		
+	console.log("pathname:" + pathname);
 	if (!connected) {
 		switch (pathname) {
 			case "/sign-up":

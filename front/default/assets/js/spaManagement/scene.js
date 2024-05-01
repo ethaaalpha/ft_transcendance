@@ -114,6 +114,8 @@ async function sceneSignUp() {
 }
 
 async function sceneConversationList() {
+	removeChildDiv(["conversation-list"]); // Ici parce-que sinon ça pue
+
 	globalVariables.currentScene = "conversation-list";
 	hideElements("conversation-list");
 	await createChildDiv(["conversation-list", "nav-bar"]);
