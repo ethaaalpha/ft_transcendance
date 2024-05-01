@@ -1,6 +1,20 @@
 :root {
+	/* defaults */
 	--default-radius: 1em;
 	--default-gray: #B4B4B4;
 	--default-baba: #DADADA;
 	--default-green: #05FF00;
+
+	/* alerts */
+	--alert-bg-game: rgba(0, 194, 255, 0.4);
+	--alert-tx-game: #00C2FF;
+
+	--alert-bg-valid: rgba(5, 255, 0, 0.4);
+	--alert-tx-valid: #05FF00;
+
+	--alert-bg-fail: rgba(255, 0, 0, 0.4);
+	--alert-tx-fail: #F00;
+
+	--alert-bg-message: rgba(180, 180, 180, 0.25);
+	--alert-tx-message: #B4B4B4;
 }
