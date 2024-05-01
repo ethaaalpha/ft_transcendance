@@ -85,7 +85,9 @@ const eventsToUnset = [
 	"conversation-list",
 	"conversation-display",
 	"search",
-	'settings-profil-picture'
+	"settings-profil-picture",
+	"settings-password",
+	"settings-email",
 ];
 
 // Handler
@@ -226,12 +228,13 @@ async function sceneSettingsPassword() {
 	globalVariables.currentScene = "settings-password";
 	hideElements("settings-password");
 	await createChildDiv(["settings-password", "nav-bar"]);
-	// setEventListener("settings-password");
+	setEventListener("settings-password");
 	
 	hideElements(...parentsToHide);
 	unhideElements("home", "nav-bar", "settings-password");
 	unsetEventListener(eventsToUnset, "settings-password");
 	removeChildDiv(parentsToremove, "settings-password", "nav-bar");
+	setFocus("settings-password");
 }
 
 async function sceneSettingsEmail() {
@@ -240,12 +243,13 @@ async function sceneSettingsEmail() {
 	globalVariables.currentScene = "settings-email";
 	hideElements("settings-email");
 	await createChildDiv(["settings-email", "nav-bar"]);
-	// setEventListener("settings-email");
+	setEventListener("settings-email");
 	
 	hideElements(...parentsToHide);
 	unhideElements("home", "nav-bar", "settings-email");
 	unsetEventListener(eventsToUnset, "settings-email");
 	removeChildDiv(parentsToremove, "settings-email", "nav-bar");
+	setFocus("settings-email");
 }
 
 // Utils
