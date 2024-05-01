@@ -29,18 +29,16 @@ async function fetchData(apiUrl, method, data = null) {
 		requestOptions.body = data;
 	}
 	
-	return fetch(apiUrl, requestOptions)
-		.then(response => {
-			const statusCode = response.status;
-			return response.json()
-				.then(data => {
-					return { status: statusCode, data: data };
-				});
-		})
-		.catch(error => {
-			console.error('Error:', error);
-			return { status: 500, data: null }; // Default status code for error
-		});
+	try {
+		var resultRaw = await fetch(apiUrl, requestOptions);
+		var status = resultRaw.status;
+		var result = await resultRaw.json();
+
+	} catch (error) {
+		console.log("Error: " + error)
+		return { status: 500, data: null };
+	}
+	return ({status: status, data: result});
 }
 
 export { getCookie, fetchData };
