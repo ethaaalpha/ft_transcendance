@@ -45,6 +45,7 @@
 	color: var(--default-gray);
 	font-size: 0.9em;
 	font-weight: 300;
+	font-style: normal;
 }
 
 
@@ -72,6 +73,7 @@
 	flex-direction: column;
 }
 
+/* messages types */
 .message {
 	display: inline-flex;
 	align-items: center;
@@ -91,7 +93,7 @@
 	justify-content: right;
 }
 
-.message-sent span {
+.message-sent span{
 	background: rgba(5, 255, 0, 0.25);
 }
 
@@ -102,7 +104,36 @@
 .message-received span {
 	background: rgba(0, 0, 0, 0.25);
 }
-  
+
+.message-pending span {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.message-choice {
+	display: flex;
+	justify-content: space-between;
+}
+
+.message-choice button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: 0px;
+	background-color: var(--message-choice-color);
+	aspect-ratio: 1;
+	width: 40%;
+	border-radius: 7px;
+}
+
+.message-choice img {
+	width: 100%;
+}
+
+
+/* top displayer */
 .conversation-display-top {
 	height: 12%;
 	width: 100%;
@@ -116,16 +147,18 @@
 	display: flex;
 	height: 90%;
 	padding: 0.2em;
-	margin-left: 1em;
 	flex-direction: row;
 	align-items: center;
 	justify-content: start;
-	margin-left: 2.5em;
 	border-radius: 10px;
 	width: 70%;
 	color: var(--default-gray);
 	font-style: italic;
 	background: rgba(180, 180, 180, 0.25);
+}
+
+.conversation-display-top-person:hover {
+	cursor: pointer;
 }
 
 .conversation-display-top-person img {
