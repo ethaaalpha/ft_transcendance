@@ -22,7 +22,8 @@ class Connect {
 					console.log("globalVariables.userConversations is undefined");
 				}
 			} else if (event === 'friends') {
-				console.log("Websocket: friends message");
+				// alert
+				console.log("Websocket: friends request received from:" + data.from);
 			}
 		};
 
