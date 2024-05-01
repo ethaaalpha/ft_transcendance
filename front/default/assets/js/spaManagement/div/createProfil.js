@@ -5,7 +5,6 @@ import { manageFriend } from '../../action/userManagement.js';
 async function createProfil(username) {
 
 	try {
-
 		await fetchUserData();
 
 		const profilDisplay = document.getElementById("profil");

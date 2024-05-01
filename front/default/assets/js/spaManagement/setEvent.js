@@ -1,7 +1,7 @@
 import globalVariables from '../init.js';
 import { changeScene } from './scene.js';
 import { sendMessage } from '../action/chat.js';
-import { signIn, signUp } from '../action/userManagement.js';
+import { signIn, signUp, modifyEmail, modifyPassword } from '../action/userManagement.js';
 
 function setEventListener(scene) {
 	switch (scene) {
@@ -21,7 +21,13 @@ function setEventListener(scene) {
 			setEventSearch();
 			break;
 		case 'settings-profil-picture':
-			setEventChangePicture();
+			setEventSettingsProfilPicture();
+			break;
+		case 'settings-password':
+			setEventSettingsPassword();
+			break;
+		case 'settings-email':
+			setEventSettingsEmail();
 			break;
 		default:
 			console.log("Invalid scene for setEventListener: ", scene);
@@ -178,11 +184,51 @@ function setEventSearch() {
 	});
 }
 
-function setEventChangePicture() {
+function setEventSettingsProfilPicture() {
 	addEventListener('change', "settings-profil-picture", function(e) {
 		const element = document.getElementById('custom-file-input-span');
 		element.textContent = e.target.files[0].name;
 	})
+}
+
+function setEventSettingsPassword() {
+	addEventListener("keypress", "settings-actual-password", function(event) {
+		if (event.key === "Enter") {
+			modifyPassword();
+		}
+	});
+
+	addEventListener("keypress", "settings-new-password", function(event) {
+		if (event.key === "Enter") {
+			modifyPassword();
+		}
+	});
+
+	addEventListener("keypress", "settings-confirm-password", function(event) {
+		if (event.key === "Enter") {
+			modifyPassword();
+		}
+	});
+}
+
+function setEventSettingsEmail() {
+	addEventListener("keypress", "settings-actual-email", function(event) {
+		if (event.key === "Enter") {
+			modifyEmail();
+		}
+	});
+
+	addEventListener("keypress", "settings-new-email", function(event) {
+		if (event.key === "Enter") {
+			modifyEmail();
+		}
+	});
+
+	addEventListener("keypress", "settings-confirm-email", function(event) {
+		if (event.key === "Enter") {
+			modifyEmail();
+		}
+	});
 }
 
 export { setEventListener }
