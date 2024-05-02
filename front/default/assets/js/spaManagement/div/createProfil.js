@@ -213,8 +213,8 @@ async function createProfil(username) {
 			scoreDiv.textContent = match.score.join(" - ");
 			if (match.score.includes(10)) {
 				scoreDiv.textContent = 'dnf'
-				leftRowIconImg.src = '/static/default/assets/images/icons/dnf.svg';
-			}
+				leftRowIconImg.src = winner ? '/static/default/assets/images/icons/dnf_win.svg' : '/static/default/assets/images/icons/dnf_lose.svg';
+			} 
 			scoreDiv.id = 'score'
 			rightColumnDiv.appendChild(scoreDiv);
 
