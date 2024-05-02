@@ -50,7 +50,7 @@ def add(user: User, target: User, targetProfile: Profile):
 
 	targetProfile.pendingFriendsFrom.add(user)
 	target.save()
-	ActivityNotifier.sendFriendRequest(user.username, target.username)
+	ActivityNotifier.sendFriendRequest(user.username, target.username, 'received')
 
 	# Re-active Conversation if desactived
 	conv = Conversation.getConversation([user, target])
@@ -68,6 +68,8 @@ def remove(user: User, target: User, targetProfile: Profile):
 	# Desactive Conversation if actived
 	conv = Conversation.getConversation([user, target])
 	if conv:
+		import sys
+		print(f'je suis passé ici', file=sys.stderr)
 		conv.setState(False)
 	return tResponses.OKAY.request(f'You are not longger friend with {target.username} !')
 
@@ -97,8 +99,10 @@ def accept(user: User, target: User, targetProfile: Profile):
 	user.Profile.friends.add(target)
 	user.Profile.pendingFriendsFrom.remove(target)
 	user.save()
+	ActivityNotifier.sendFriendRequest(user.username, target.username, 'accepted')
 	Status.warnFriend(user, target, 'Online')
 	Status.warnFriend(target, user, 'Online')
+
 	return tResponses.OKAY.request(f'You are now friend with {target.username}')
 
 def refuse(user: User, target: User, targetProfile: Profile):
@@ -107,4 +111,10 @@ def refuse(user: User, target: User, targetProfile: Profile):
 	
 	user.Profile.pendingFriendsFrom.remove(target)
 	user.save()
+	ActivityNotifier.sendFriendRequest(user.username, target.username, 'refused')
+
+	# Desactive Conversation if actived
+	conv = Conversation.getConversation([user, target])
+	if conv:
+		conv.setState(False)
 	return tResponses.OKAY.request(f'You refused a friend request from {target.username} !')

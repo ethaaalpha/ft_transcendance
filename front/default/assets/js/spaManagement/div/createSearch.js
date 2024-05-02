@@ -60,6 +60,7 @@ async function createSearch(username) {
 			console.error('Error fetching user data:', error);
 
 	} catch (error) {
+		Alerts.createAlert(Alerts.type.FAILED, 'Failed to retrieved data !');
 		console.error('Error in createSearch: ', error);
 		throw error;
 	}

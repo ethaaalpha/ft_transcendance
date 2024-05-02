@@ -1,4 +1,5 @@
 import globalVariables from '../init.js';
+import Alerts from './Alerts.js';
 
 class Connect {
 	constructor() {
@@ -17,12 +18,21 @@ class Connect {
 				globalVariables.currentUser.setFriendStatus(data.user, data.state.toLowerCase());
 			} else if (event === 'chat') {
 				if (globalVariables.userConversations) {
-					globalVariables.userConversations.addMessageFromSocket(data);
+					if (window.location.pathname + window.location.search != '/chat?with=' + data.from) {
+						Alerts.createAlert(Alerts.type.MESSAGE, "Message from " + data.from)
+						globalVariables.userConversations.addMessageFromSocket(data, false, true);
+					} else {
+						globalVariables.userConversations.addMessageFromSocket(data, true, true);
+					}
 				} else {
 					console.log("globalVariables.userConversations is undefined");
 				}
 			} else if (event === 'friends') {
 				// alert
+				Alerts.createAlert(Alerts.type.MESSAGE, 'Friends request ' + data.action + ' from ' + data.from);
+				if (data.action == 'accepted') {
+					globalVariables.currentUser.addFriend(data.from);
+				}
 				console.log("Websocket: friends request received from:" + data.from);
 			}
 		};

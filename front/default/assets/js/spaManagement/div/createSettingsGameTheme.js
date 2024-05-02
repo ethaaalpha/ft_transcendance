@@ -1,3 +1,4 @@
+import { modifyGameTheme } from '../../action/userManagement.js';
 import globalVariables from '../../init.js';
 import { changeScene } from '../scene.js';
 
@@ -53,7 +54,17 @@ async function createSettingsGameTheme() {
 		const overlayButton = document.createElement("button");
 		overlayButton.className = "modify-btn btn btn-block btn-light d-flex align-items-center justify-content-start bordered-button-expanded";
 		overlayButton.style.setProperty("--main_color", "#B4B4B4");
-		overlayButton.onclick = changeGameTheme; // to modify with Nico
+		overlayButton.onclick = function() {
+			let items = document.getElementsByClassName('selectable');
+
+			for (let i = 0; i < items.length; i++) {
+				if (items[i].classList.contains('selected')) {
+					modifyGameTheme(i + 1);
+					break;
+				}
+			}
+		}; // to modify with Nico
+
 		const overlayButtonText = document.createElement("span");
 		overlayButtonText.textContent = "Change game theme";
 		overlayButton.appendChild(overlayButtonText);
@@ -75,15 +86,6 @@ function selectGameTheme(id) {
 
 	const selected = document.querySelector(`.selectable:nth-child(${id})`);
 	selected.classList.add('selected');
-	globalVariables.gameTheme = id;
-}
-
-function changeGameTheme() { // to modify with Nico
-	if (globalVariables.gameTheme !== null) {
-	console.log(`La div sélectionnée est la ${globalVariables.gameTheme}`);
-	} else {
-	console.log('Aucune div sélectionnée');
-	}
 }
 
 export { createSettingsGameTheme };
