@@ -181,7 +181,7 @@ const eventsToUnset = [
 async function changeSceneHandler(sceneInfo, username) {
 	globalVariables.currentScene = sceneInfo.id;
 
-	// CLEAN NEW SCENE
+	// CLEAN NEW SCENE | IF SAME SCENE
 	await removeChildDiv(sceneInfo.removeNewSceneIds);
 	hideElements(sceneInfo.id);
 
