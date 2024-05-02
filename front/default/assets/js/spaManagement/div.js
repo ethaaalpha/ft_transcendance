@@ -11,7 +11,7 @@ import { createSettingsProfilPicture } from './div/createSettingsProfilPicture.j
 import { createSettingsPassword } from './div/createSettingsPassword.js';
 import { createSettingsEmail } from './div/createSettingsEmail.js';
 
-function removeChildDiv(parentIds, ...excludeIds) {
+async function removeChildDiv(parentIds, ...excludeIds) {
 	parentIds.forEach(parentId => {
 		if (excludeIds.includes(parentId)) return;
 
