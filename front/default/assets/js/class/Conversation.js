@@ -1,5 +1,6 @@
 import globalVariables from '../init.js';
 import { scrollMessagesToBottom } from '../action/chat.js';
+import { createConversationDisplay } from '../spaManagement/div/createConversationDisplay.js';
 
 class Conversations {
 	constructor(myUsername, conversations = {}) {
@@ -18,7 +19,7 @@ class Conversations {
 		this.conversations[target].push(message);
 	}
 
-	addMessageFromSocket(messageData) {
+	addMessageFromSocket(messageData, display, received = false) {
 		if (!messageData.hasOwnProperty('from') && !messageData.hasOwnProperty('sendAt')) {
 			messageData.from = this.myUsername;
 			messageData.sendAt = new Date();
@@ -36,24 +37,27 @@ class Conversations {
 		this.conversations[target].unshift(message);
 
 		// create div in conversation dynamically
-		const conversationDisplay = document.getElementById("conversation-display-messages-id");
-		const messageElement = document.createElement("div");
-		const messageText = document.createElement('span');
-		messageText.textContent = message.content;
-		messageElement.appendChild(messageText)
+		if (display) {
+			const conversationDisplay = document.getElementById("conversation-display-messages-id");
+			const messageElement = document.createElement("div");
+			const messageText = document.createElement('span');
+			messageText.textContent = message.content;
+			messageElement.appendChild(messageText)
 
-		if (message.sender === globalVariables.userConversations.myUsername) {
-			messageElement.classList.add("message-sent", "message");
-		} else {
-			messageElement.classList.add("message-received", "message");
+			if (message.sender === globalVariables.userConversations.myUsername) {
+				messageElement.classList.add("message-sent", "message");
+			} else {
+				messageElement.classList.add("message-received", "message");
+			}
+
+			conversationDisplay.appendChild(messageElement);
+			scrollMessagesToBottom();
 		}
-
-		conversationDisplay.appendChild(messageElement);
-		scrollMessagesToBottom();
 		
-		let inputElement = document.getElementById("send-message-input-id");
-		inputElement.value = "";
-
+		if (!received) {
+			let inputElement = document.getElementById("send-message-input-id");
+			inputElement.value = "";
+		}
 	}
 
 	getConversation(withUser) {

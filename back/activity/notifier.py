@@ -22,9 +22,10 @@ class ActivityNotifier():
 		return user
 	
 	@staticmethod
-	def sendFriendRequest(senderName: str, targetName: str):
+	def sendFriendRequest(senderName: str, targetName: str, action: str):
 		content = {
-			'from' : senderName
+			'from' : senderName,
+			'action' : action
 		}
 		async_to_sync (ActivityNotifier._notify)(getChannelName(targetName, 'activity'), content, 'friends', senderName, targetName)
 
