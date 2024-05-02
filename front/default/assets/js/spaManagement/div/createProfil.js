@@ -149,9 +149,6 @@ async function createProfil(username) {
 			}
 			nameActionsDiv.appendChild(button2);
 		}
-
-		// PERSONNAL SCORES
-		const userStats = await fetchUserStats(username);
 		
 		// Create parent div for statistics
 		const persoScoresDiv = document.createElement("div");
@@ -159,14 +156,8 @@ async function createProfil(username) {
 		persoScoresDiv.classList.add("perso-scores-div");
 		profilDisplay.appendChild(persoScoresDiv);
 
-		// Display user statistics
-		persoScoresDiv.appendChild(createStatElement("matches won", userStats.numberOfVictory, "The more the better.", "square"));
-		persoScoresDiv.appendChild(createStatElement("matches lost", userStats.numberOfLoses, "The less the better.", "square"));
-		persoScoresDiv.appendChild(createStatElement("soccer field ball distance", userStats.traveledDistance + 'km', "The distance the ball traveled on the soccer field while you played.", "rectangle"));
-		persoScoresDiv.appendChild(createStatElement("average duration", userStats.averagePong, "The shorter you are in game the better.", "square"));
-		persoScoresDiv.appendChild(createStatElement("hits per match", userStats.averagePong, "The less you touch the ball the better.", "square"));
-
 		// MATCH HISTORY
+		var dataMatch = [];
 		const matchHistory = await fetchMatchHistory(username);
 		const matchHistoryDiv = document.getElementById("match-history");
 
@@ -175,7 +166,7 @@ async function createProfil(username) {
 
 		matchHistory.matchs.forEach(match => {
 			let winner = match.winner == username ? true : false;
-			console.log(match)
+			dataMatch.push(match.distance);
 
 			// Create container div for each match
 			const matchDiv = document.createElement("div");
@@ -220,8 +211,10 @@ async function createProfil(username) {
 
 			const scoreDiv = document.createElement("div");
 			scoreDiv.textContent = match.score.join(" - ");
-			if (match.score.includes(10))
+			if (match.score.includes(10)) {
 				scoreDiv.textContent = 'dnf'
+				leftRowIconImg.src = '/static/default/assets/images/icons/dnf.svg';
+			}
 			scoreDiv.id = 'score'
 			rightColumnDiv.appendChild(scoreDiv);
 
@@ -236,13 +229,27 @@ async function createProfil(username) {
 		// Append matchDiv to matchHistoryDiv
 		matchHistoryDiv.appendChild(matchListDiv);
 
+		// PERSONNAL SCORES
+		const userStats = await fetchUserStats(username);
+
+		// Display user statistics
+		persoScoresDiv.appendChild(createStatElement(["matches won", 'won.svg'], userStats.numberOfVictory, "The more the better.", "square", false));
+		persoScoresDiv.appendChild(createStatElement(["matches lost", 'loses.svg'], userStats.numberOfLoses, "The less the better.", "square", false));
+		persoScoresDiv.appendChild(createStatElement(["soccer field ball distance", 'distance.svg', dataMatch], userStats.traveledDistance + 'km', "The distance the ball has traveled in all your games.", "rectangle", true));
+		persoScoresDiv.appendChild(createStatElement(["average duration", 'duration.svg'], userStats.averageDuration, "The average time in game.", "square", false));
+		persoScoresDiv.appendChild(createStatElement(["hits per match", 'hint.svg'], userStats.averagePong, "The average ball hint.", "square", false));
+
+
 	} catch (error) {
 		console.error("Error in createProfil: ", error);
 		throw error;
 	}
 }
 
-function createStatElement(title, data, description, shape) {
+function createStatElement(config, data, description, shape, canva) {
+	const title = config[0];
+	const icon = config[1];
+
 	// Create the statistics element
 	const statElement = document.createElement("div");
 	statElement.classList.add("perso-scores-stat-" + shape + "-div");
@@ -253,7 +260,7 @@ function createStatElement(title, data, description, shape) {
 
 	// Create the icon element
 	const iconElement = document.createElement('img');
-	iconElement.src = '/static/default/assets/images/icons/info.svg';
+	iconElement.src = '/static/default/assets/images/icons/bento/'+ icon;
 
 	// Create the title element
 	const titleElement = document.createElement("div");
@@ -264,10 +271,18 @@ function createStatElement(title, data, description, shape) {
 	statElement.appendChild(topElement);
 
 	// Create the data element
-	const dataElement = document.createElement("div");
-	dataElement.textContent = data;
-	dataElement.classList.add("perso-scores-stat-data");
-	statElement.appendChild(dataElement);
+	if (canva == false){
+		const dataElement = document.createElement("div");
+		dataElement.textContent = data;
+		dataElement.classList.add("perso-scores-stat-data");
+		statElement.appendChild(dataElement);
+	}
+	else{
+		const dataElement = document.createElement("canvas");
+		const data = config[2];
+		statElement.appendChild(dataElement);
+		createGraph(statElement, dataElement, data);
+	}
 
 	// Create the description element
 	const descriptionElement = document.createElement("div");
@@ -278,10 +293,50 @@ function createStatElement(title, data, description, shape) {
 	return statElement;
 }
 
+function createGraph (statElement, dataElement, data) {
+	setTimeout(function() {
+		if (statElement.clientWidth == 0)
+			return createGraph(statElement, dataElement, data)
+		console.log(statElement.clientWidth);
+		dataElement.width = statElement.clientWidth * 0.95;
+		dataElement.height = statElement.clientHeight * 0.4;
+		const ctx = dataElement.getContext('2d');
+		const barWidth = dataElement.width / 20;
+		const barMargin =  dataElement.width / 25;
+		const chartHeight = statElement.clientHeight * 0.4;
+		for (let i = 0; i < data.length; i++) {
+			const barHeight = (data[i] / Math.max(...data)) * chartHeight;
+			const x = i * (barWidth + barMargin);
+			const y = chartHeight - barHeight;
+			var radius = barWidth * 0.45
+			if (barHeight < 5)
+				radius = barWidth * 0.10
+			console.log(radius)
+			drawBars(x, y, barWidth, barHeight, 'rgba(255, 255, 255, 1)', radius, ctx);
+		}
+	}, 50);
+}
+
 function formatDuration(duration) {
 	const minutesPart = Math.floor(duration / 60);
 	const secondsPart = duration % 60;
 	return `${minutesPart}"${secondsPart < 10 ? '0' : ''}${secondsPart}`;
+}
+
+function drawBars(x, y, width, height, color, radius, ctx) {
+	ctx.beginPath();
+	ctx.moveTo(x + radius, y);
+	ctx.lineTo(x + width - radius, y);
+	ctx.arc(x + width - radius, y + radius, radius, Math.PI * 1.5, Math.PI * 2, false);
+	ctx.lineTo(x + width, y + height - radius);
+	ctx.arc(x + width - radius, y + height - radius, radius, 0, Math.PI * 0.5, false);
+	ctx.lineTo(x + radius, y + height);
+	ctx.arc(x + radius, y + height - radius, radius, Math.PI * 0.5, Math.PI, false);
+	ctx.lineTo(x, y + radius);
+	ctx.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 1.5, false);
+	ctx.closePath();
+	ctx.fillStyle = color;
+	ctx.fill();
 }
 
 export { createProfil };
