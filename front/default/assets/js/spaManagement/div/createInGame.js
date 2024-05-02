@@ -18,11 +18,11 @@ async function createInGame() {
 		const backButton = document.createElement("button");
 		backButton.classList.add("arrow-back", "d-flex", "justify-content-start", "align-items-center");
 		backButton.onclick = function() {
-			history.pushState({}, '', '/');
+			// history.pushState({}, '', '/');
 		};
 
 		const imgButton = document.createElement('img');
-		imgButton.src = '/static/default/assets/images/icons/arrow.svg';
+		// imgButton.src = '/static/default/assets/images/icons/arrow.svg';
 		backButton.appendChild(imgButton)
 		
 		// Create parents div
@@ -69,129 +69,6 @@ async function createInGame() {
 		conversationDisplay.appendChild(titleDiv);
 		conversationDisplay.appendChild(blockBottom);
 
-		// Messages
-		for (let i = conversation.length - 1; i >= 0; i--) {
-			const message = conversation[i];
-			const messageElement = document.createElement("div");
-			const messageText = document.createElement('span');
-			messageText.textContent = message.content;
-			messageElement.appendChild(messageText)
-			
-			if (message.sender === globalVariables.userConversations.myUsername) {
-				messageElement.classList.add("message-sent", "message");
-			} else {
-				messageElement.classList.add("message-received", "message");
-			}
-
-			messagesDiv.appendChild(messageElement);
-		}
-
-		// Handle pending friend requests
-		const isPendingFriendFrom = globalVariables.currentUser.isPendingFriendFrom(user);
-		const isPendingFriendTo = globalVariables.currentUser.isPendingFriendTo(user);
-
-		if (isPendingFriendFrom || isPendingFriendTo) {
-			const pendingMessage = document.createElement('div');
-			const text = document.createElement('span');
-
-			pendingMessage.appendChild(text);
-			if (isPendingFriendFrom) {
-				text.textContent = 'Wanna be friend?'
-
-				const choices = document.createElement('div');
-				choices.classList.add('message-choice');
-
-				const acceptButton = document.createElement('button');
-				const acceptImg = document.createElement('img');
-				acceptImg.src = '/static/default/assets/images/icons/valid.svg';
-
-				acceptButton.appendChild(acceptImg)
-				acceptButton.style.setProperty('--message-choice-color', 'rgba(5, 255, 0, 0.25)');
-				acceptButton.onclick = function() {
-					manageFriend(user, 'accept');
-				};
-
-				const declineButton = document.createElement('button');
-				const declineImg = document.createElement('img');
-				declineImg.src = '/static/default/assets/images/icons/refuse.svg';
-				
-				declineButton.appendChild(declineImg)
-				declineButton.style.setProperty('--message-choice-color', 'rgba(218, 218, 218, 0.25)');
-				declineButton.onclick = function() {
-					manageFriend(user, 'refuse');
-				};
-
-				pendingMessage.classList.add('message-received', 'message', 'message-pending');
-				choices.appendChild(acceptButton);
-				choices.appendChild(declineButton);
-				text.appendChild(choices);
-			} else {
-				text.textContent = 'Friend request sent!'
-				pendingMessage.classList.add('message-sent', 'message');
-			}
-			
-			messagesDiv.appendChild(pendingMessage);
-
-			if (isPendingFriendFrom) {
-				
-			} else if (isPendingFriendTo) {
-				pendingMessage.classList.add('message-sent', 'message');
-			}
-		}
-
-		const isPendingGameFrom = globalVariables.currentUser.isPendingGameFrom(user);
-		const isPendingGameTo = globalVariables.currentUser.isPendingGameTo(user);
-		
-		// Handle pending game requests
-		if (isPendingGameFrom || isPendingGameTo) {
-			const pendingMessage = document.createElement('div');
-			const text = document.createElement('span');
-
-			pendingMessage.appendChild(text);
-			if (isPendingFriendFrom) {
-				text.textContent = 'Wanna play?'
-
-				const choices = document.createElement('div');
-				choices.classList.add('message-choice');
-
-				const acceptButton = document.createElement('button');
-				const acceptImg = document.createElement('img');
-				acceptImg.src = '/static/default/assets/images/icons/valid.svg';
-
-				acceptButton.appendChild(acceptImg)
-				acceptButton.style.setProperty('--message-choice-color', 'rgba(5, 255, 0, 0.25)');
-				acceptButton.onclick = function() {
-					acceptPlayRequest(user);
-				};
-
-				const declineButton = document.createElement('button');
-				const declineImg = document.createElement('img');
-				declineImg.src = '/static/default/assets/images/icons/refuse.svg';
-				
-				declineButton.appendChild(declineImg)
-				declineButton.style.setProperty('--message-choice-color', 'rgba(218, 218, 218, 0.25)');
-				declineButton.onclick = function() {
-					refusePlayRequest(user);
-				};
-
-				pendingMessage.classList.add('message-received', 'message', 'message-pending');
-				choices.appendChild(acceptButton);
-				choices.appendChild(declineButton);
-				text.appendChild(choices);
-			} else {
-				text.textContent = 'Play request sent!'
-				pendingMessage.classList.add('message-sent', 'message');
-			}
-			
-			messagesDiv.appendChild(pendingMessage);
-
-			if (isPendingFriendFrom) {
-				
-			} else if (isPendingFriendTo) {
-				pendingMessage.classList.add('message-sent', 'message');
-			}
-		}
-
 		setTimeout(function() {
 			messagesDiv.scrollTop = messagesDiv.scrollHeight;
 		}, 1);
@@ -220,6 +97,30 @@ async function createInGame() {
 	}
 }
 
-function setNewOpponentUsername() {}
+async function setNewOpponentUsername(username) {
+	try {
+		// Mettre à jour le nom créé dans createInGame
+		const titleElement = document.getElementById("send-message-contact-id");
+		if (titleElement) {
+			titleElement.textContent = username;
+		}
+
+		// Mettre à jour la photo de profil créée dans createInGame
+		const profilePicture = document.querySelector('.conversation-display-top-person img');
+		if (profilePicture) {
+			profilePicture.src = await fetchProfilPicture(username);
+		}
+
+		// Supprimer toutes les div messages
+		const messagesDiv = document.getElementById("conversation-display-messages-id");
+		if (messagesDiv) {
+			messagesDiv.innerHTML = '';
+		}
+	} catch (error) {
+		console.error("Error in setNewOpponentUsername: ", error);
+		throw error;
+	}
+}
+
 
 export { createInGame, setNewOpponentUsername };
