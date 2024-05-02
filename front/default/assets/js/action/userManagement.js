@@ -65,17 +65,21 @@ function signUp() {
 	});
 }
 
-function signWith42() {
-	fetchData("/api/auth/login?mode=42")
-	.then((data) => {
-		data.json().then(
-			(dataJSON) => {
-				console.log(dataJSON)
-				window.location.href = dataJSON.url;
+async function signWith42() {
+	fetchData("/api/auth/login?mode=42", 'GET', ).then(
+		(data) => {
+			let type = Alerts.type.FAILED;
+			if (data.status === 200) {
+				window.location.href = data.data.url;
+				return;
 			}
-			)
-		})	
-	}
+			Alerts.createAlert(type, data.data.message);
+			console.log(data.data);
+		})
+		.catch(error => {
+			console.error('Error:', error);
+		});
+}
 	
 	
 function signOut() {

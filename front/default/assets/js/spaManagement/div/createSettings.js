@@ -1,7 +1,7 @@
 import { changeScene } from '../scene.js';
 import { signOut } from '../../action/userManagement.js';
 
-async function createSettings() {
+function createSettings() {
 
 	try {
 		const settingsDiv = document.getElementById("settings");

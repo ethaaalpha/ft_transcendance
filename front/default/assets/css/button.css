@@ -52,6 +52,23 @@
 	border: none;
 }
 
+.nav-bar-btn {
+	background-color: var(--background-nav);
+}
+
+.nav-bar-btn:hover {
+	background-color: transparent;
+	border-color: var(--default-green);
+	color: var(--default-green);
+}
+
+.play-btn {
+	background-color: #00C2FF40;
+	border-color: var(--default-blue);
+	color: var(--default-blue);
+}
+
+
 .modify-btn {
 	font-size: 1em;
 	padding: 1em !important;

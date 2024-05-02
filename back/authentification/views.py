@@ -103,7 +103,7 @@ def callback(request: HttpRequest):
 
 			if (Profile.login42(request, userInfo['login'], userInfo['email'], userInfo['image']['link'])):
 				return tResponses.FORBIDDEN.request("You can't log with this account !")
-			return redirect("/")
+			return redirect("/callback-42")
 		else:
 			return redirect("/authentification-error")
 	else:

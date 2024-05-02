@@ -76,6 +76,7 @@ function unsetEventConversationDisplay() {
 
 function unsetEventSearch() {
 	removeEventListener("input", "search-searchbar-input-id");
+	removeEventListener('keypress', "search-searchbar-input-id")
 }
 
 function unsetEventSettingsProfilPicture() {

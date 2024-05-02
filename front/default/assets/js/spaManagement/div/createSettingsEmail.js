@@ -1,7 +1,7 @@
 import { changeScene } from '../scene.js';
 import { modifyEmail } from '../../action/userManagement.js';
 
-async function createSettingsEmail() {
+function createSettingsEmail() {
 
 	try {
 		const settingsEmailDiv = document.getElementById("settings-email");
