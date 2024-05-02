@@ -17,6 +17,8 @@ async function locationHandler() {
 			case "/sign-up":
 				await routeSignUp();
 				break;
+			case '/authentification-error':
+				Alerts.createAlert(Alerts.type.FAILED, 'You failed to log with 42 beacon.')
 			default:
 				await routeSignIn();
 				break;
@@ -41,8 +43,12 @@ async function locationHandler() {
 			case "/in-game":
 				await routeInGameRoute();
 				break;
+			case '/callback-42':
+				await routeHome();
+				Alerts.createAlert(Alerts.type.SUCCESS, 'You logged with 42 beacon.')
+				break;
 			default:
-				routeHome();
+				await routeHome();
 				break;
 		}
 	}

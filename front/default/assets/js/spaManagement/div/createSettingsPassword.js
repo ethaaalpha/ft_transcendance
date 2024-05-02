@@ -1,7 +1,7 @@
 import { changeScene } from '../scene.js';
 import { modifyPassword } from '../../action/userManagement.js';
 
-async function createSettingsPassword() {
+function createSettingsPassword() {
 
 	try {
 		const settingsPasswordDiv = document.getElementById("settings-password");
