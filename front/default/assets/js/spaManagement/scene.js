@@ -92,6 +92,15 @@ const sceneInfos = {
 		createChildDivIds: ["profil", "nav-bar"],
 		unhideElementsIds: ["home", "nav-bar", "profil", "match-history"],
 	},
+	"in-game": {
+		id: "in-game",
+		removeNewSceneIds: ["in-game"],
+		removeOldScenesIds: ["in-game", "nav-bar"],
+		createChildDivIds: ["in-game", "nav-bar"],
+		unhideElementsIds: ["home", "nav-bar", "in-game"],
+		setEventListenerIds: "in-game",
+		setFocusId: "in-game"
+	},
 	"settings": {
 		id: "settings",
 		removeNewSceneIds: ["settings"],
@@ -182,7 +191,7 @@ async function changeSceneHandler(sceneInfo, username) {
 	globalVariables.currentScene = sceneInfo.id;
 
 	// CLEAN NEW SCENE | IF SAME SCENE
-	await removeChildDiv(sceneInfo.removeNewSceneIds);
+	removeChildDiv(sceneInfo.removeNewSceneIds);
 	hideElements(sceneInfo.id);
 
 	// CREATE NEW SCENE
