@@ -190,6 +190,7 @@ class Match(models.Model):
 				'invited': self.invited.username,
 				'score': self.getScore(),
 				'duration': self.duration.seconds,
+				'winner': self.getWinner().username
 				}
 		
 	

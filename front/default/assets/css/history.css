@@ -25,7 +25,6 @@
 
 .match-div {
 	width: 100%;
-	background-color: rebeccapurple;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -33,6 +32,28 @@
 	border-radius: 15px;
 	background: rgba(0, 0, 0, 0.25);
 	margin-bottom: 3%;
+}
+
+.match-div .left-big-column{
+	display: flex;
+	justify-content: start;
+	align-items: center;
+	gap: 4%;
+	width: 55%;
+	height: 100%;
+}
+
+.match-div .left-big-column .left-img-div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 2em;
+	height: 100%;
+}
+
+.match-div .left-big-column .left-img-div img{
+	width: 100%;
+	height: 100%;
 }
 
 .match-div .right-column, .left-column{
@@ -49,17 +70,18 @@
 }
 
 .match-div .right-column #score{
-	color: var(--default-blue);
+	color: var(--default-green);
 	font-size: 1.6em;
 	font-weight: bold;
 }
 
 .match-div .left-column {
+	text-wrap: nowrap;
 	text-align: left;
 }
 
 .match-div .left-column #time{
-	color: white;
+	color: var(--default-baba);
 	font-size: 1.2em;
 }
 
