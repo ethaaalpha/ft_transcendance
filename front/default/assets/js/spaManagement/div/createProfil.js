@@ -52,8 +52,11 @@ async function createProfil(username) {
 			case 'in-game':
 				connectionStatus.style.setProperty('--item-color', 'var(--alert-tx-game)');
 				break;
-			default:
+			case 'offline':
 				connectionStatus.style.setProperty('--item-color', 'var(--alert-tx-fail)');
+				break
+			default:
+				connectionStatus.style.setProperty('--item-color', 'transparent');
 				break;
 		}
 		
