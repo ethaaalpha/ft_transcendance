@@ -1,7 +1,7 @@
 import { signWith42, signIn } from '../../action/userManagement.js';
 import { forgotPassword } from '../../action/userManagement.js';
 
-async function createSignIn() {
+function createSignIn() {
 	try {
 
 		const signInContainer = document.getElementById("sign-in");

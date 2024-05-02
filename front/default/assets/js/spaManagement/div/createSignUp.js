@@ -1,6 +1,6 @@
 import { signUp } from '../../action/userManagement.js';
 
-async function createSignUp() {
+function createSignUp() {
 	try {
 		const signUpContainer = document.getElementById("sign-up");
 

@@ -1,7 +1,7 @@
 import { changeScene } from '../scene.js';
 import { modifyProfilPicture } from '../../action/userManagement.js';
 
-async function createSettingsProfilPicture() {
+function createSettingsProfilPicture() {
 
 	try {
 		const settingsProfilPictureDiv = document.getElementById("settings-profil-picture");

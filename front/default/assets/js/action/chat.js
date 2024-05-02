@@ -43,7 +43,7 @@ function sendMessage() {
 			'event': 'chat',
 			'data': data,
 		}));
-		globalVariables.userConversations.addMessageFromSocket(data);
+		globalVariables.userConversations.addMessageFromSocket(data, true);
 	} else {
 		Alerts.createAlert(Alerts.type.FAILED, "Websocket isn't connected.");
 		console.error("Error sending message: Websocket not connected.");
