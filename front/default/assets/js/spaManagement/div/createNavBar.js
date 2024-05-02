@@ -1,7 +1,7 @@
 import globalVariables from '../../init.js';
 import { navBarActionHandler } from '../../action/navBar.js';
 
-async function createNavBar(username) {
+function createNavBar(username) {
 	try {
 		const navBar = document.getElementById("nav-bar");
 

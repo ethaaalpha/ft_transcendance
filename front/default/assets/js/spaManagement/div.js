@@ -11,7 +11,7 @@ import { createSettingsProfilPicture } from './div/createSettingsProfilPicture.j
 import { createSettingsPassword } from './div/createSettingsPassword.js';
 import { createSettingsEmail } from './div/createSettingsEmail.js';
 
-async function removeChildDiv(parentIds, ...excludeIds) {
+function removeChildDiv(parentIds, ...excludeIds) {
 	parentIds.forEach(parentId => {
 		if (excludeIds.includes(parentId)) return;
 
@@ -32,13 +32,13 @@ async function createChildDiv(divIds, username) {
 		for (const divId of divIds) {
 			switch (divId) {
 				case "nav-bar":
-					await createNavBar(username);
+					createNavBar(username);
 					break;
 				case "sign-in":
-					await createSignIn();
+					createSignIn();
 					break;
 				case "sign-up":
-					await createSignUp();
+					createSignUp();
 					break;
 				case "conversation-list":
 					await createConversationList();
@@ -53,19 +53,19 @@ async function createChildDiv(divIds, username) {
 					await createProfil(username);
 					break;
 				case "settings":
-					await createSettings();
+					createSettings();
 					break;
 				case "settings-game-theme":
-					await createSettingsGameTheme();
+					createSettingsGameTheme();
 					break;
 				case "settings-profil-picture":
-					await createSettingsProfilPicture();
+					createSettingsProfilPicture();
 					break;
 				case "settings-password":
-					await createSettingsPassword();
+					createSettingsPassword();
 					break;
 				case "settings-email":
-					await createSettingsEmail();
+					createSettingsEmail();
 					break;
 				default:
 					console.log("Invalid divId: ", divId);
