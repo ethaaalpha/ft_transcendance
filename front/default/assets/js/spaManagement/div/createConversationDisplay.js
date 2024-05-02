@@ -184,12 +184,6 @@ async function createConversationDisplay(user) {
 			}
 			
 			messagesDiv.appendChild(pendingMessage);
-
-			if (isPendingFriendFrom) {
-				
-			} else if (isPendingFriendTo) {
-				pendingMessage.classList.add('message-sent', 'message');
-			}
 		}
 
 		setTimeout(function() {
