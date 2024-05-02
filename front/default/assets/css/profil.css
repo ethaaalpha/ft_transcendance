@@ -60,6 +60,10 @@
     cursor: pointer;
 }
 
+.blocked {
+	background-color: var(--alert-bg-fail);
+}
+
 
 .action-button img{
     width: 100%;
@@ -146,6 +150,7 @@
 	color: white;
 	font-family: "Roboto Mono", monospace;
 	font-size: 2.8em;
+	line-height: 1em;
 	font-style: normal;
 }
 

@@ -1,6 +1,7 @@
 import { fetchData } from './api.js';
 import globalVariables from '../init.js';
 import User from '../class/User.js';
+import Alerts from '../class/Alerts.js';
 
 // GETTER
 async function isConnected() {
@@ -51,6 +52,7 @@ async function fetchUserData(username = null) {
 		})
 		.catch(error => {
 			console.error('Error fetching user data:', error);
+			Alerts.createAlert(Alerts.type.FAILED, 'Failed to retrieved data !');
 			reject(error);
 		});
 	});
@@ -64,6 +66,7 @@ async function fetchProfilPicture(username) {
 		})
 		.catch(error => {
 			console.error('Error fetching user data:', error);
+			Alerts.createAlert(Alerts.type.FAILED, 'Failed to retrieved data !');
 			reject(error);
 		});
 	});
@@ -77,6 +80,7 @@ function fetchUserStats(username) {
 		})
 		.catch(error => {
 			console.error('Error fetching user data:', error);
+			Alerts.createAlert(Alerts.type.FAILED, 'Failed to retrieved data !');
 			reject(error);
 		});
 	});
@@ -90,6 +94,7 @@ function fetchMatchHistory(username) {
 		})
 		.catch(error => {
 			console.error('Error fetching user data:', error);
+			Alerts.createAlert(Alerts.type.FAILED, 'Failed to retrieved data !');
 			reject(error);
 		});
 	});
