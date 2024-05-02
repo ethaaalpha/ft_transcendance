@@ -26,6 +26,7 @@ class Connect {
 				}
 			} else if (event === 'friends') {
 				// alert
+				Alerts.createAlert(Alerts.type.MESSAGE, 'Friends request from ' + data.from);
 				console.log("Websocket: friends request received from:" + data.from);
 			}
 		};

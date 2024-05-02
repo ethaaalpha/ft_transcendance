@@ -60,6 +60,10 @@
     cursor: pointer;
 }
 
+.blocked {
+	background-color: var(--alert-bg-fail);
+}
+
 
 .action-button img{
     width: 100%;
