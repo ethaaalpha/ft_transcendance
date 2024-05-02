@@ -1,12 +1,18 @@
 import globalVariables from "../init.js";
+import { setNewOpponentUsername } from "../spaManagement/div/createInGame.js";
 
 // RECEIVE THINGS FROM WS
-function playRequestReceived(from, to) {
+function receivedNewOpponentUsername(username) {
+	// if new opponent after the first one, in tornament for exemple, do this
+	setNewOpponentUsername(username);// clear conv and change profil pic and name
+}
+
+function receivedPlayRequest(from, to) {
 	globalVariables.currentUser.addPendingGameFrom(from);
 	// alert
 }
 
-function playAnswerReceived(from, answer) {
+function receivedPlayAnswer(from, answer) {
 	if (answer === 'accept') {
 		// alert sucess
 		// launch game
@@ -25,7 +31,7 @@ function goToInGame() {//the only to go to in-game is to do this two steps
 
 // SEND THINGS TO WS
 // user click on navbar button 'play' in a friend profil scene
-function playRequestSent(from, to) {
+function sentPlayRequest(from, to) {
 	goToInGame();
 
 	// implement here your ws action to sent the play request
@@ -51,4 +57,4 @@ function refusePlayRequest(from) {
 	//alert sucess/fail
 }
 
-export { playRequestSent, playRequestReceived, acceptPlayRequest, refusePlayRequest };
+export { sentPlayRequest, receivedPlayRequest, acceptPlayRequest, refusePlayRequest };

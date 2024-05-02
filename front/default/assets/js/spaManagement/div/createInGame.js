@@ -8,33 +8,44 @@ import { acceptPlayRequest, refusePlayRequest } from '../../action/play.js';
 async function createInGame() {
 
 	try {
+		const user = 'admin';
 
-		await fetchConversations();
+		const conversation = globalVariables.userConversations.getConversation(user);
+		const conversationDisplay = document.getElementById("in-game");
+		conversationDisplay.innerHTML = "";
 
-		const conversation = globalVariables.userConversations.getConversation('marseille');
-		const inGame = document.getElementById("in-game");
-		inGame.innerHTML = "";
+		// Back button
+		const backButton = document.createElement("button");
+		backButton.classList.add("arrow-back", "d-flex", "justify-content-start", "align-items-center");
+		backButton.onclick = function() {
+			history.pushState({}, '', '/');
+		};
+
+		const imgButton = document.createElement('img');
+		imgButton.src = '/static/default/assets/images/icons/arrow.svg';
+		backButton.appendChild(imgButton)
 		
 		// Create parents div
 		const titleDiv = document.createElement("div");
-		titleDiv.id = "in-game-title-id";
-		titleDiv.classList.add("in-game-top");
+		titleDiv.id = "conversation-display-title-id";
+		titleDiv.classList.add("conversation-display-top");
+		titleDiv.appendChild(backButton);
 		
 		const blockBottom = document.createElement('div');
 		blockBottom.classList.add('conversation-block-bottom');
 	
 		const messagesDiv = document.createElement("div");
-		messagesDiv.id = "in-game-messages-id";
-		messagesDiv.classList.add("in-game-messages");
+		messagesDiv.id = "conversation-display-messages-id";
+		messagesDiv.classList.add("conversation-display-messages");
 
 		const inputDiv = document.createElement("div");
-		inputDiv.id = "in-game-input-id";
-		inputDiv.classList.add("in-game-input");
+		inputDiv.id = "conversation-display-input-id";
+		inputDiv.classList.add("conversation-display-input");
 
 		const titleRight = document.createElement('div');
-		titleRight.classList.add("in-game-top-person");
+		titleRight.classList.add("conversation-display-top-person");
 		titleRight.onclick = function () {
-			// history.pushState({}, '', '/profil?username=' + user);
+			history.pushState({}, '', '/profil?username=' + user);
 		}
 		
 		// Title
@@ -55,8 +66,8 @@ async function createInGame() {
 		blockBottom.appendChild(inputDiv)
 
 		// Adding to global div
-		inGame.appendChild(titleDiv);
-		inGame.appendChild(blockBottom);
+		conversationDisplay.appendChild(titleDiv);
+		conversationDisplay.appendChild(blockBottom);
 
 		// Messages
 		for (let i = conversation.length - 1; i >= 0; i--) {
@@ -209,4 +220,6 @@ async function createInGame() {
 	}
 }
 
-export { createInGame };
+function setNewOpponentUsername() {}
+
+export { createInGame, setNewOpponentUsername };
