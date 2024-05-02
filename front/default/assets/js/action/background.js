@@ -4,9 +4,9 @@ function backgroundRunner() {
 	var currentPosition = 0;
 	
 	function scrollBackground() {
-	currentPosition += speed / 60;
-	backgroundZ1.style.backgroundPositionX = currentPosition + 'px';
-	requestAnimationFrame(scrollBackground);
+		currentPosition += speed / 60;
+		backgroundZ1.style.backgroundPositionX = currentPosition + 'px';
+		requestAnimationFrame(scrollBackground);
 	}
 	requestAnimationFrame(scrollBackground);
 }
