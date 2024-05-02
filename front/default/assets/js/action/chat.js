@@ -6,11 +6,11 @@ import Connect from '../class/Connect.js';
 
 async function fetchConversations() {
 	try {
-	const username = globalVariables.currentUser.getUsername();
-	const data = await fetchData('/api/dashboard/conversations');
-	globalVariables.userConversations = new Conversations(username, data.data.conversations);
+		const username = globalVariables.currentUser.getUsername();
+		const data = await fetchData('/api/dashboard/conversations');
+		globalVariables.userConversations = new Conversations(username, data.data.conversations);
 	} catch (error) {
-	console.error('Error fetching user data:', error);
+		console.error('Error fetching user data:', error);
 	}
 }
 
