@@ -20,6 +20,9 @@ async function setEventListener(scene) {
 		case "search":
 			setEventSearch();
 			break;
+		case "in-game":
+			setEventInGame();
+			break;
 		case 'settings-profil-picture':
 			setEventSettingsProfilPicture();
 			break;
@@ -165,7 +168,6 @@ function setEventConversationList() {
 			history.pushState({}, '', '/search?username=' + searchInput.value);
 		}
 	});
-	
 }
 
 function setEventConversationDisplay() {
@@ -188,6 +190,15 @@ function setEventSearch() {
 		if (event.key === "Enter") {
 			const searchInput = document.getElementById("search-searchbar-input-id");
 			history.pushState({}, '', '/search?username=' + searchInput.value);
+		}
+	});
+}
+
+function setEventInGame() {
+	// console.log("here");
+	addEventListener("keypress", "send-message-input-id", function(event) {
+		if (event.key === "Enter") {
+			sendMessage();
 		}
 	});
 }

@@ -7,13 +7,13 @@ import { fetchProfilPicture } from "../fetch/http.js";
 import { userExist } from "../fetch/http.js";
 import Alerts from "../class/Alerts.js";
 
-async function locationHandler() {
+async function routeHandler() {
 	const connected = await isConnected();
 	const pathname = window.location.pathname;
 	
 	// console.log("BIG pathname:" + pathname + " globalVariables.isInGame:" + globalVariables.isInGame);
 	if (globalVariables.isInGame && pathname !== '/in-game') {
-		console.log("The user left the game by using back button");
+		console.log("The user left the game by using back button");//Nico do something here
 	}
 
 	console.log("pathname:" + pathname);
@@ -34,19 +34,19 @@ async function locationHandler() {
 		}
 		switch (pathname) {
 			case "/search":
-				await routeSearchRoute();
+				await routeSearch();
 				break;
 			case "/profil":
-				await routeProfilRoute();
+				await routeProfil();
 				break;
 			case "/settings":
-				await routeSettingsRoute();
+				await routeSettings();
 				break;
 			case "/chat":
-				await routeChatRoute();
+				await routeChat();
 				break;
 			case "/in-game":
-				await routeInGameRoute();
+				await routeInGame();
 				break;
 			case '/callback-42':
 				await routeHome();
@@ -72,7 +72,7 @@ async function routeSignUp() {
 	await changeScene('sign-up');
 };
 
-async function routeSearchRoute() {
+async function routeSearch() {
 	const searchParams = new URLSearchParams(window.location.search);
 	const username = searchParams.get("username");
 
@@ -85,11 +85,11 @@ async function routeSearchRoute() {
 			Alerts.createAlert(Alerts.type.FAILED, username + ' do not exist')
 		}
 	}
-	// console.log("routeSearchRoute: error to replace with alert");
+	// console.log("routeSearch: error to replace with alert");
 	history.pushState({}, '', '/')
 };
 
-async function routeProfilRoute() {
+async function routeProfil() {
 	const searchParams = new URLSearchParams(window.location.search);
 	const username = searchParams.get("username");
 
@@ -102,11 +102,11 @@ async function routeProfilRoute() {
 			Alerts.createAlert(Alerts.type.FAILED, username + ' do not exist')
 		}
 	}
-	// console.log("routeProfilRoute: error to replace with alert");
+	// console.log("routeProfil: error to replace with alert");
 	history.pushState({}, '', '/');
 };
 
-async function routeSettingsRoute() {
+async function routeSettings() {
 	const searchParams = new URLSearchParams(window.location.search);
 	const item = searchParams.get("item");
 
@@ -122,10 +122,10 @@ async function routeSettingsRoute() {
 		return ;
 	}
 	history.pushState({}, '', '/settings');
-	// console.log("routeSettingsRoute: error to replace with alert item:" + item);
+	// console.log("routeSettings: error to replace with alert item:" + item);
 };
 
-async function routeChatRoute() {
+async function routeChat() {
 	const searchParams = new URLSearchParams(window.location.search);
 	const withUser = searchParams.get("with");
 
@@ -139,10 +139,10 @@ async function routeChatRoute() {
 	}
 	history.pushState({}, '', '/');
 
-	// console.log("routeChatRoute: error to replace with alert withUser:" + withUser);
+	// console.log("routeChat: error to replace with alert withUser:" + withUser);
 };
 
-async function routeInGameRoute() {
+async function routeInGame() {
 	if (globalVariables.isInGame) {
 		changeScene('in-game');
 	} else {
@@ -150,4 +150,4 @@ async function routeInGameRoute() {
 	}
 };
 
-export { locationHandler };
+export { routeHandler };
