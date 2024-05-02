@@ -5,6 +5,7 @@ import { createConversationList } from './div/createConversationList.js';
 import { createConversationDisplay } from './div/createConversationDisplay.js';
 import { createSearch } from './div/createSearch.js';
 import { createProfil } from './div/createProfil.js';
+import { createInGame } from './div/createInGame.js';
 import { createSettings } from './div/createSettings.js';
 import { createSettingsGameTheme } from './div/createSettingsGameTheme.js';
 import { createSettingsProfilPicture } from './div/createSettingsProfilPicture.js';
@@ -51,6 +52,9 @@ async function createChildDiv(divIds, username) {
 					break;
 				case "profil":
 					await createProfil(username);
+					break;
+				case "in-game":
+					await createInGame(username);
 					break;
 				case "settings":
 					createSettings();

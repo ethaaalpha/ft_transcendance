@@ -1,6 +1,6 @@
 import globalVariables from '../init.js';
 import { changeScene } from '../spaManagement/scene.js';
-import { playRequestSent } from './play.js';
+import { sentPlayRequest } from './play.js';
 
 function navBarActionHandler(action, username) {
 	switch (action) {
@@ -40,7 +40,7 @@ function navBarProfil() {
 
 async function navBarPlay(username) {
 	if (globalVariables.currentUser.isFriend(username) === 'friend') {
-		playRequestSent(globalVariables.currentUser.getUsername(), username);
+		sentPlayRequest(globalVariables.currentUser.getUsername(), username);
 	} else {
 		// alert
 		console.log("You cannot play with " + username);
