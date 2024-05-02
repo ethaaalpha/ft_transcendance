@@ -34,7 +34,9 @@ function handleReloader(event) {
 		.then(data => {
 			pageElement.reload();
 		},
-		error => console.error('Error:', error))
+		error => {
+			console.error('Error:', error)
+		});
 }
 
 function updatePP(link){
