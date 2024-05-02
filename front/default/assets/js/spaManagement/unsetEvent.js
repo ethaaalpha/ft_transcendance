@@ -20,7 +20,13 @@ function unsetEventListener(eventToUnset, exception) {
 					unsetEventSearch();
 					break;
 				case "settings-profil-picture":
-					unsetEventChangePicture();
+					unsetEventSettingsProfilPicture();
+					break;
+				case "settings-password":
+					unsetEventSettingsPassword();
+					break;
+				case "settings-email":
+					unsetEventSettingsEmail();
 					break;
 				default:
 					console.log("Invalid event for unsetEventListener: ", event);
@@ -72,9 +78,22 @@ function unsetEventSearch() {
 	removeEventListener("input", "search-searchbar-input-id");
 }
 
-function unsetEventChangePicture() {
+function unsetEventSettingsProfilPicture() {
 	removeEventListener("change", "settings-profil-picture");
 }
+
+function unsetEventSettingsPassword() {
+    removeEventListener("keypress", "settings-actual-password");
+    removeEventListener("keypress", "settings-new-password");
+    removeEventListener("keypress", "settings-confirm-password");
+}
+
+function unsetEventSettingsEmail() {
+    removeEventListener("keypress", "settings-actual-email");
+    removeEventListener("keypress", "settings-new-email");
+    removeEventListener("keypress", "settings-confirm-email");
+}
+
 
 export { unsetEventListener }
 

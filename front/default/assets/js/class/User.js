@@ -2,13 +2,16 @@ class User {
 
 	constructor(data) {
 		this.friends = {};
-		this.update(data);
 		this.pendingGameFrom = [];
 		this.pendingGameTo = [];
+		data.friends.forEach(friend => {
+			this.friends[friend] = { status: 'offline' }; // Définir l'état par défaut à 'offline'
+		});
+		
+		this.update(data);
 	}
 	
 	update(data) {
-		this.friends = data.friends;
 		this.username = data['username'];
 		this.profilePicture = data['profilePicture'];
 		this.userStats = data['userStats'];
@@ -16,9 +19,9 @@ class User {
 		this.pendingFriendFrom = data['pendingFriendsFrom'];
 		this.pendingFriendTo = data['pendingFriendsTo'];
 		this.blocked = data['blockedUsers'];
-	}
+	}	
 
-	// add game pending
+	// setter
 	addPendingGameFrom(username) {
 		if (!this.pendingGameFrom.includes(username)) {
 			console.log("addPendingGameFrom: " + username);
@@ -33,42 +36,26 @@ class User {
 		}
 	}
 
-	// setters
-	setFriendState(username, state) {
-		this.friends[username] = state;
-	}
-
-	// getters
-	getFriendState(username) {
-		if (this.friends.includes(username)) {
-			return this.friends[username];
-		} else {
-			return undefined;
+	setFriendStatus(username, status) {
+		if (this.friends[username]) {
+			this.friends[username].status = status;
 		}
 	}
 
-	getPendingGameFrom() {
-		return this.pendingGameFrom;
-	}
-
-	getPendingGameTo() {
-		return this.pendingGameTo;
-	}
-
-	getUserStats() {
-		return this.userStats;
+	// getter
+	getFriendStatus(username) {
+		if (this.friends[username]) {
+			return this.friends[username].status;
+		}
+		return undefined;
 	}
 
 	getUsername() {
 		return this.username;
 	}
-
-	getProfilePicture() {
-		return this.profilePicture;
-	}
 	
 	isFriend(username) {
-		if (this.friends.includes(username)) {
+		if (this.friends.hasOwnProperty(username)) {
 			return 'friend';
 		} else if (this.pendingFriendFrom.includes(username)) {
 			return 'pending';
@@ -78,6 +65,7 @@ class User {
 			return 'notFriend';
 		}
 	}
+	
 
 	isPendingFriendFrom(username) {
 		if (this.pendingFriendFrom.includes(username)) {
@@ -115,26 +103,26 @@ class User {
 	}
 
 	// remover
-	removeFriend(username) {
-		const index = this.friends.indexOf(username);
-		if (index > -1) {
-			this.friends.splice(index, 1);
-		}
-	}
+	// removeFriend(username) {
+	// 	const index = this.friends.indexOf(username);
+	// 	if (index > -1) {
+	// 		this.friends.splice(index, 1);
+	// 	}
+	// }
 
-	removePendingGameFrom(username) {
-		const index = this.pendingGameFrom.indexOf(username);
-		if (index !== -1) {
-			this.pendingGameFrom.splice(index, 1);
-		}
-	}
+	// removePendingGameFrom(username) {
+	// 	const index = this.pendingGameFrom.indexOf(username);
+	// 	if (index !== -1) {
+	// 		this.pendingGameFrom.splice(index, 1);
+	// 	}
+	// }
 
-	removePendingGameTo(username) {
-		const index = this.pendingGameTo.indexOf(username);
-		if (index !== -1) {
-			this.pendingGameTo.splice(index, 1);
-		}
-	}
+	// removePendingGameTo(username) {
+	// 	const index = this.pendingGameTo.indexOf(username);
+	// 	if (index !== -1) {
+	// 		this.pendingGameTo.splice(index, 1);
+	// 	}
+	// }
 }
 
 export default User;
