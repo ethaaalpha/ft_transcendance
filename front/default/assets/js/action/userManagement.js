@@ -220,6 +220,45 @@ function manageFriend(username, action) {
 		let type = Alerts.type.FAILED;
 		if (data.status === 200) {
 			type = Alerts.type.SUCCESS;
+			const img = document.getElementById('friend-relation-state');
+			const button1 = document.getElementById('friend-relation-button1');
+			const button2 = document.getElementById('friend-relation-button2');
+
+			switch (action) {
+				// 'friend-relation-state'
+					case 'accept':
+						globalVariables.currentUser.addFriend(username);
+						break;
+					case 'remove':
+						globalVariables.currentUser.removeFriend(username);
+						img.src = '/static/default/assets/images/icons/notFriend.svg'
+						button1.onclick = function() {
+							manageFriend(username, "add");
+						};
+						break;
+					case 'add':
+						globalVariables.currentUser.addPendingFriendTo(username);
+						img.src = '/static/default/assets/images/icons/pending.svg'
+						button1.onclick = function() {
+							manageFriend(username, "remove");
+						};
+						break
+					case 'block':
+						globalVariables.currentUser.addBlockedUser(username);
+						button2.classList.add('blocked');
+						button2.onclick = function() {
+							manageFriend(username, "unblock");
+						};
+						break
+					case 'unblock':
+						globalVariables.currentUser.removeBlockedUser(username);
+						button2.classList.remove('blocked')
+						button2.onclick = function() {
+							manageFriend(username, "block");
+						};
+						break;
+	
+			}
 		}
 		Alerts.createAlert(type, data.data.message);
 		console.log(data.data);

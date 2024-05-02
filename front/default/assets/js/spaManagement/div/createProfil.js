@@ -1,6 +1,7 @@
 import globalVariables from '../../init.js';
 import { fetchUserData, fetchProfilPicture, fetchUserStats, fetchMatchHistory } from '../../fetch/http.js';
 import { manageFriend } from '../../action/userManagement.js';
+import Alerts from '../../class/Alerts.js';
 
 async function createProfil(username) {
 
@@ -91,42 +92,35 @@ async function createProfil(username) {
 		if (!isMyProfil) {
 			// Check if user is not a friend
 			const status = await globalVariables.currentUser.isFriend(username);
+
+
+			const button1 = document.createElement("button");
+			const imgButton1 = document.createElement('img');
+
+			imgButton1.id = 'friend-relation-state';
+			button1.classList.add("action-button");
+			button1.id = 'friend-relation-button1';
+			button1.appendChild(imgButton1)
+			nameActionsDiv.appendChild(button1);
+
 			if (status === "notFriend") {
-				const button1 = document.createElement("button");
-				button1.classList.add("action-button");
-
-				const imgButton = document.createElement('img');
-				imgButton.src = '/static/default/assets/images/icons/notFriend.svg';
-				button1.appendChild(imgButton)
-
+				imgButton1.src = '/static/default/assets/images/icons/notFriend.svg';
+				
 				button1.onclick = function() {
 					manageFriend(username, "add");
 				};
-				nameActionsDiv.appendChild(button1);
 			} else if (status === "pending") {
-				const button1 = document.createElement("button");
-				button1.classList.add("action-button");
-
-				const imgButton = document.createElement('img');
-				imgButton.src = '/static/default/assets/images/icons/pending.svg';
-				button1.appendChild(imgButton)
+				imgButton1.src = '/static/default/assets/images/icons/pending.svg';
 				
 				button1.onclick = function() {
-					// Do nothing for pending status
+					Alerts.createAlert(Alerts.type.FAILED, 'Friend request pending.')
 				};
-				nameActionsDiv.appendChild(button1);
 			} else if (status === "friend") {
-				const button1 = document.createElement("button");
-				button1.classList.add("action-button");
-				
-				const imgButton = document.createElement('img');
-				imgButton.src = '/static/default/assets/images/icons/friend.svg';
-				button1.appendChild(imgButton)
+				imgButton1.src = '/static/default/assets/images/icons/friend.svg';
 
 				button1.onclick = function() {
 					manageFriend(username, "remove");
 				};
-				nameActionsDiv.appendChild(button1);
 			}
 
 			// Check if user is blocked
@@ -137,6 +131,7 @@ async function createProfil(username) {
 			const imgButton = document.createElement('img');
 			imgButton.src = '/static/default/assets/images/icons/block.svg';
 			button2.appendChild(imgButton)
+			button2.id = 'friend-relation-button2';
 
 			if (isBlocked) {
 				button2.classList.add('blocked');

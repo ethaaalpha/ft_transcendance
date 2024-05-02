@@ -22,6 +22,26 @@ class User {
 	}	
 
 	// setter
+	addFriend(newfriend) {
+		this.friends[newfriend] = { status: 'offline' };
+	}
+
+	removeFriend(oldfriend) {
+		delete (this.friends[oldfriend])
+	}
+
+	addBlockedUser(block) {
+		this.blocked.push(block);
+	}
+
+	removeBlockedUser(block) {
+		removeElement(this.blocked, block)
+	}
+
+	addPendingFriendTo(newpendingto) {
+		this.pendingGameTo.push(newpendingto);
+	}
+
 	addPendingGameFrom(username) {
 		if (!this.pendingGameFrom.includes(username)) {
 			console.log("addPendingGameFrom: " + username);
@@ -126,3 +146,11 @@ class User {
 }
 
 export default User;
+
+
+function removeElement(array, value) {
+    const index = array.indexOf(value);
+    if (index !== -1) {
+        array.splice(index, 1);
+    }
+}
