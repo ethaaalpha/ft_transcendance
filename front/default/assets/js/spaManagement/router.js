@@ -41,8 +41,12 @@ async function locationHandler() {
 			case "/in-game":
 				await routeInGameRoute();
 				break;
+			case '/callback-42':
+				await routeHome();
+				Alerts.createAlert(Alerts.type.SUCCESS, 'You logged with 42 beacon.')
+				break;
 			default:
-				routeHome();
+				await routeHome();
 				break;
 		}
 	}
