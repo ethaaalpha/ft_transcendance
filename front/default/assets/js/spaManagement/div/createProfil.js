@@ -139,6 +139,7 @@ async function createProfil(username) {
 			button2.appendChild(imgButton)
 
 			if (isBlocked) {
+				button2.classList.add('blocked');
 				button2.onclick = function() {
 					manageFriend(username, "unblock");
 				};
