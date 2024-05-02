@@ -1,5 +1,6 @@
 import Alerts from '../class/Alerts.js';
 import { fetchData } from '../fetch/api.js';
+import globalVariables from '../init.js';
 import { changeScene } from '../spaManagement/scene.js';
 
 function signIn() {
@@ -185,6 +186,30 @@ function modifyProfilPicture() {
 	});	
 }
 
+function modifyGameTheme(id) { // to modify with nico
+	var themeList = ['d2', 'land', 'adibou', 'penDraw', 'epic', 'colors', 'd3'];
+	var formData = new FormData();
+	
+	console.log(themeList[id] + ' - ' + id);
+	formData.append("gameTheme", themeList[id]);
+	
+	fetchData("/api/dashboard?filter=gameTheme", 'POST', formData).then(
+	(data) => {
+		let type = Alerts.type.FAILED;
+		if (data.status === 200) {
+			globalVariables.gameTheme = id;
+			history.pushState({}, '', '/settings');
+			type = Alerts.type.SUCCESS
+		}
+		Alerts.createAlert(type, data.data.message);
+		console.log(data.data);
+	})
+	.catch(error => {
+		console.error('Error:', error);
+	});	
+}
+
+
 function manageFriend(username, action) {	
 	var formData = new FormData();
 	formData.append("action", action);
@@ -204,4 +229,4 @@ function manageFriend(username, action) {
 	});
 }
 
-export { signIn, signUp, signWith42, signOut, forgotPassword, modifyPassword, modifyEmail, modifyProfilPicture, manageFriend };
+export { signIn, signUp, signWith42, signOut, forgotPassword, modifyPassword, modifyEmail, modifyProfilPicture, manageFriend, modifyGameTheme };

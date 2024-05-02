@@ -297,7 +297,6 @@ function createGraph (statElement, dataElement, data) {
 	setTimeout(function() {
 		if (statElement.clientWidth == 0)
 			return createGraph(statElement, dataElement, data)
-		console.log(statElement.clientWidth);
 		dataElement.width = statElement.clientWidth * 0.95;
 		dataElement.height = statElement.clientHeight * 0.4;
 		const ctx = dataElement.getContext('2d');
@@ -311,7 +310,6 @@ function createGraph (statElement, dataElement, data) {
 			var radius = barWidth * 0.45
 			if (barHeight < 5)
 				radius = barWidth * 0.10
-			console.log(radius)
 			drawBars(x, y, barWidth, barHeight, 'rgba(255, 255, 255, 1)', radius, ctx);
 		}
 	}, 50);
