@@ -4,30 +4,26 @@ import { fetchProfilPicture } from '../../fetch/http.js';
 import { changeScene } from '../scene.js';
 import { manageFriend } from '../../action/userManagement.js';
 import { acceptPlayRequest, refusePlayRequest } from '../../action/play.js';
+import { sendMessageInGame } from '../../action/chat.js';
 
 async function createInGame() {
 
 	try {
-		const user = 'admin';
-
-		const conversation = globalVariables.userConversations.getConversation(user);
-		const conversationDisplay = document.getElementById("in-game");
-		conversationDisplay.innerHTML = "";
+		const user = 'admin'
+		const inGame = document.getElementById("in-game");
+		inGame.innerHTML = "";
 
 		// Back button
 		const backButton = document.createElement("button");
 		backButton.classList.add("arrow-back", "d-flex", "justify-content-start", "align-items-center");
-		backButton.onclick = function() {
-			// history.pushState({}, '', '/');
-		};
+		// backButton.onclick = function() {};
 
 		const imgButton = document.createElement('img');
-		// imgButton.src = '/static/default/assets/images/icons/arrow.svg';
 		backButton.appendChild(imgButton)
 		
 		// Create parents div
 		const titleDiv = document.createElement("div");
-		titleDiv.id = "conversation-display-title-id";
+		titleDiv.id = "in-game-title-id";
 		titleDiv.classList.add("conversation-display-top");
 		titleDiv.appendChild(backButton);
 		
@@ -35,24 +31,24 @@ async function createInGame() {
 		blockBottom.classList.add('conversation-block-bottom');
 	
 		const messagesDiv = document.createElement("div");
-		messagesDiv.id = "conversation-display-messages-id";
+		messagesDiv.id = "in-game-conversation-display-messages-id";
 		messagesDiv.classList.add("conversation-display-messages");
 
 		const inputDiv = document.createElement("div");
-		inputDiv.id = "conversation-display-input-id";
+		inputDiv.id = "in-game-input-id";
 		inputDiv.classList.add("conversation-display-input");
 
 		const titleRight = document.createElement('div');
 		titleRight.classList.add("conversation-display-top-person");
-		titleRight.onclick = function () {
-			history.pushState({}, '', '/profil?username=' + user);
-		}
+		// titleRight.onclick = function () {
+			// history.pushState({}, '', '/profil?username=' + user);
+		// }
 		
 		// Title
 		const titleElement = document.createElement("span");
 		titleElement.textContent = user;
 		titleElement.classList.add("title-3");
-		titleElement.setAttribute("id", "send-message-contact-id");
+		titleElement.setAttribute("id", "in-game-send-message-contact-id");
 
 		const profilePicture = document.createElement('img');
 		profilePicture.src = await fetchProfilPicture(user);
@@ -66,8 +62,8 @@ async function createInGame() {
 		blockBottom.appendChild(inputDiv)
 
 		// Adding to global div
-		conversationDisplay.appendChild(titleDiv);
-		conversationDisplay.appendChild(blockBottom);
+		inGame.appendChild(titleDiv);
+		inGame.appendChild(blockBottom);
 
 		setTimeout(function() {
 			messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -77,7 +73,7 @@ async function createInGame() {
 		const messageInput = document.createElement("input");
 		messageInput.setAttribute("type", "text");
 		messageInput.setAttribute("placeholder", "Enter your message...");
-		messageInput.setAttribute("id", "send-message-input-id");
+		messageInput.setAttribute("id", "in-game-send-message-input-id");
 		inputDiv.appendChild(messageInput);
 
 		const imageInput = document.createElement('img');
@@ -86,8 +82,8 @@ async function createInGame() {
 		// Send button
 		const sendButton = document.createElement("button");
 		sendButton.classList.add("send-button");
-		sendButton.setAttribute("id", "send-message-button-id");
-		sendButton.onclick = sendMessage;
+		sendButton.setAttribute("id", "in-game-send-message-button-id");
+		sendButton.onclick = sendMessageInGame;
 		sendButton.appendChild(imageInput)
 		inputDiv.appendChild(sendButton);
 
@@ -100,7 +96,7 @@ async function createInGame() {
 async function setNewOpponentUsername(username) {
 	try {
 		// Mettre à jour le nom créé dans createInGame
-		const titleElement = document.getElementById("send-message-contact-id");
+		const titleElement = document.getElementById("in-game-send-message-contact-id");
 		if (titleElement) {
 			titleElement.textContent = username;
 		}
@@ -112,7 +108,7 @@ async function setNewOpponentUsername(username) {
 		}
 
 		// Supprimer toutes les div messages
-		const messagesDiv = document.getElementById("conversation-display-messages-id");
+		const messagesDiv = document.getElementById("in-game-conversation-display-messages-id");
 		if (messagesDiv) {
 			messagesDiv.innerHTML = '';
 		}

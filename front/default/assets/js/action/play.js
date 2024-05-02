@@ -2,6 +2,9 @@ import globalVariables from "../init.js";
 import { setNewOpponentUsername } from "../spaManagement/div/createInGame.js";
 
 // RECEIVE THINGS FROM WS
+
+// addMessageFromGameSocket()
+
 function receivedNewOpponentUsername(username) {
 	// if new opponent after the first one, in tornament for exemple, do this
 	setNewOpponentUsername(username);// clear conv and change profil pic and name
@@ -26,9 +29,9 @@ function goToInGame() {//the only to go to in-game is to do this two steps
 	globalVariables.isInGame = true;
 	history.pushState({}, '', '/in-game');
 
-    // setTimeout(function() {
-    //     receivedNewOpponentUsername("louane"); // Assurez-vous que cette fonction est définie correctement
-    // }, 10000);
+    setTimeout(function() {
+        receivedNewOpponentUsername("louane"); // Assurez-vous que cette fonction est définie correctement
+    }, 10000);
 }
 
 
