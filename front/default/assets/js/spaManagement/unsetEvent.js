@@ -19,6 +19,9 @@ function unsetEventListener(eventToUnset, exception) {
 				case "search":
 					unsetEventSearch();
 					break;
+				case "in-game":
+					unsetEventInGame();
+					break;
 				case "settings-profil-picture":
 					unsetEventSettingsProfilPicture();
 					break;
@@ -77,6 +80,10 @@ function unsetEventConversationDisplay() {
 function unsetEventSearch() {
 	removeEventListener("input", "search-searchbar-input-id");
 	removeEventListener('keypress', "search-searchbar-input-id")
+}
+
+function unsetEventInGame() {
+	removeEventListener("keypress", "send-message-input-id");
 }
 
 function unsetEventSettingsProfilPicture() {

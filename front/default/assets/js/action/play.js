@@ -25,6 +25,10 @@ function receivedPlayAnswer(from, answer) {
 function goToInGame() {//the only to go to in-game is to do this two steps
 	globalVariables.isInGame = true;
 	history.pushState({}, '', '/in-game');
+
+    // setTimeout(function() {
+    //     receivedNewOpponentUsername("louane"); // Assurez-vous que cette fonction est définie correctement
+    // }, 10000);
 }
 
 
