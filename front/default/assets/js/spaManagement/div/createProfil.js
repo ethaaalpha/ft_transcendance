@@ -93,7 +93,6 @@ async function createProfil(username) {
 			// Check if user is not a friend
 			const status = await globalVariables.currentUser.isFriend(username);
 
-
 			const button1 = document.createElement("button");
 			const imgButton1 = document.createElement('img');
 
