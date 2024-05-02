@@ -2,7 +2,7 @@ import { modifyGameTheme } from '../../action/userManagement.js';
 import globalVariables from '../../init.js';
 import { changeScene } from '../scene.js';
 
-async function createSettingsGameTheme() {
+function createSettingsGameTheme() {
 
 	try {
 		const settingsGameThemeDiv = document.getElementById("settings-game-theme");

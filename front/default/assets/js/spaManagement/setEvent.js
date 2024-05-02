@@ -160,6 +160,7 @@ function setEventConversationList() {
 	const searchInput = document.getElementById("conversation-list-searchbar-input-id");
 
 	addEventListener("keypress", "conversation-list-searchbar-input-id", function(event) {
+		console.log('adjiwodjiwaodjiwao');
 		if (event.key === "Enter") {
 			history.pushState({}, '', '/search?username=' + searchInput.value);
 		}
@@ -180,6 +181,13 @@ function setEventSearch() {
 		const inputValue = this.value.trim();
 		if (!inputValue) {
 			history.pushState({}, '', '/');
+		}
+	});
+
+	addEventListener("keypress", "search-searchbar-input-id", function(event) {
+		if (event.key === "Enter") {
+			const searchInput = document.getElementById("search-searchbar-input-id");
+			history.pushState({}, '', '/search?username=' + searchInput.value);
 		}
 	});
 }

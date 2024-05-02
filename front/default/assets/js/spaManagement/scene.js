@@ -179,12 +179,14 @@ const eventsToUnset = [
 ];
 
 async function changeSceneHandler(sceneInfo, username) {
-	globalVariables.currentScene = sceneInfo.id;
-
+	
 	// CLEAN NEW SCENE | IF SAME SCENE
-	await removeChildDiv(sceneInfo.removeNewSceneIds);
-	hideElements(sceneInfo.id);
-
+	if (sceneInfo.id == globalVariables.currentScene) {
+		removeChildDiv(sceneInfo.removeNewSceneIds);
+		hideElements(sceneInfo.id);
+	}
+	globalVariables.currentScene = sceneInfo.id;
+	
 	// CREATE NEW SCENE
 	await createChildDiv(sceneInfo.createChildDivIds, username);
 	if (sceneInfo.setEventListenerIds) {
@@ -201,7 +203,7 @@ async function changeSceneHandler(sceneInfo, username) {
 	// CLEAN OLD SCENES
 	unsetEventListener(eventsToUnset, sceneInfo.id);
 	const oldScenesToRemove = parentsToremove.filter(parentId => !sceneInfo.removeOldScenesIds.includes(parentId));
-	await removeChildDiv(oldScenesToRemove);
+	removeChildDiv(oldScenesToRemove);
 }
 
 // Utils
