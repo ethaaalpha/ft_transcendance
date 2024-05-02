@@ -50,26 +50,30 @@ function sendMessage() {
 	}
 }
 
+function sendMessageInGame() {
+	const to = document.getElementById("in-game-send-message-contact-id").textContent;
+	const contentInput = document.getElementById("in-game-send-message-input-id");
+	const content = contentInput.value.trim();
 
-// function sendMessage() {
-// 	const to = document.getElementById("send-message-contact-id").textContent;
-// 	const content = document.getElementById("send-message-input-id").value;
+	if (content === "") {
+		let inputElement = document.getElementById("in-game-send-message-input-id");
+		inputElement.value = "";
+		Alerts.createAlert(Alerts.type.FAILED, "Message is empty.");
+		console.error("Error sending message: Message is empty.");
+		return;
+	}
 
-// 	const data = {'to': to, 'content': content};
-// 	if (globalVariables.activity && globalVariables.activity.socket.readyState === WebSocket.OPEN) {
-// 		globalVariables.activity.socket.send(JSON.stringify({
-// 			'event': 'chat',
-// 			'data': data,
-// 		}));
-// 		globalVariables.userConversations.addMessageFromSocket(data);
-// 	} else {
-// 		console.error("Error sending message: Websocket not connected.");
-// 	}
-// }
-
-function scrollMessagesToBottom() {
-	const messagesElement = document.getElementById("conversation-display-messages-id");
-	messagesElement.scrollTop = messagesElement.scrollHeight;
+	const data = {'to': to, 'content': content};
+	if (globalVariables.activity && globalVariables.activity.socket.readyState === WebSocket.OPEN) {
+		globalVariables.activity.socket.send(JSON.stringify({
+			'event': 'chat',
+			'data': data,
+		}));
+		globalVariables.userConversations.addMessageFromGameSocket(data, true);
+	} else {
+		Alerts.createAlert(Alerts.type.FAILED, "Websocket isn't connected.");
+		console.error("Error sending message: Websocket not connected.");
+	}
 }
 
-export { fetchConversations, sendMessage, scrollMessagesToBottom };
+export { fetchConversations, sendMessage, sendMessageInGame };

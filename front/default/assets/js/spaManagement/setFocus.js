@@ -49,7 +49,7 @@ function focusSearch() {
 }
 
 function focusInGame() {
-	document.getElementById("send-message-input-id").focus();
+	document.getElementById("in-game-send-message-input-id").focus();
 }
 
 function focusSettingsPassword() {
