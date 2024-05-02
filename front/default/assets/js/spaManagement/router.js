@@ -15,10 +15,10 @@ async function locationHandler() {
 	if (!connected) {
 		switch (pathname) {
 			case "/sign-up":
-				routeSignUp();
+				await routeSignUp();
 				break;
 			default:
-				routeSignIn();
+				await routeSignIn();
 				break;
 		}
 	} else {
@@ -27,19 +27,19 @@ async function locationHandler() {
 		}
 		switch (pathname) {
 			case "/search":
-				routeSearchRoute();
+				await routeSearchRoute();
 				break;
 			case "/profil":
-				routeProfilRoute();
+				await routeProfilRoute();
 				break;
 			case "/settings":
-				routeSettingsRoute();
+				await routeSettingsRoute();
 				break;
 			case "/chat":
-				routeChatRoute();
+				await routeChatRoute();
 				break;
 			case "/in-game":
-				routeInGameRoute();
+				await routeInGameRoute();
 				break;
 			default:
 				routeHome();
@@ -53,15 +53,15 @@ async function routeHome() {
 	await changeScene('conversation-list');
 }
 
-const routeSignIn = async () => {
+async function routeSignIn() {
 	await changeScene('sign-in');
 };
 
-const routeSignUp = async () => {
+async function routeSignUp() {
 	await changeScene('sign-up');
 };
 
-const routeSearchRoute = async () => {
+async function routeSearchRoute() {
 	const searchParams = new URLSearchParams(window.location.search);
 	const username = searchParams.get("username");
 
@@ -78,7 +78,7 @@ const routeSearchRoute = async () => {
 	history.pushState({}, '', '/')
 };
 
-const routeProfilRoute = async () => {
+async function routeProfilRoute() {
 	const searchParams = new URLSearchParams(window.location.search);
 	const username = searchParams.get("username");
 
@@ -95,7 +95,7 @@ const routeProfilRoute = async () => {
 	history.pushState({}, '', '/');
 };
 
-const routeSettingsRoute = async () => {
+async function routeSettingsRoute() {
 	const searchParams = new URLSearchParams(window.location.search);
 	const item = searchParams.get("item");
 
@@ -114,7 +114,7 @@ const routeSettingsRoute = async () => {
 	// console.log("routeSettingsRoute: error to replace with alert item:" + item);
 };
 
-const routeChatRoute = async () => {
+async function routeChatRoute() {
 	const searchParams = new URLSearchParams(window.location.search);
 	const withUser = searchParams.get("with");
 
