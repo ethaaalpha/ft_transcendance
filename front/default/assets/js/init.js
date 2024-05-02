@@ -17,7 +17,8 @@ var globalVariables = {
 	userConversations: null,
 	activity: null,
 	eventListeners: {},
-	gameTheme: 1
+	gameTheme: 1,
+	isInGame: false,
 };
 
 export default globalVariables;

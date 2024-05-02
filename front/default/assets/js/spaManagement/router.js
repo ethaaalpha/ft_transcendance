@@ -9,8 +9,13 @@ import Alerts from "../class/Alerts.js";
 
 async function locationHandler() {
 	const connected = await isConnected();
-	const pathname = window.location.pathname; // Here to make small delay with isConnected
-		
+	const pathname = window.location.pathname;
+	
+	// console.log("BIG pathname:" + pathname + " globalVariables.isInGame:" + globalVariables.isInGame);
+	if (globalVariables.isInGame && pathname !== '/in-game') {
+		console.log("The user left the game by using back button");
+	}
+
 	console.log("pathname:" + pathname);
 	if (!connected) {
 		switch (pathname) {
@@ -137,6 +142,12 @@ async function routeChatRoute() {
 	// console.log("routeChatRoute: error to replace with alert withUser:" + withUser);
 };
 
-const routeInGameRoute = async () => {};
+async function routeInGameRoute() {
+	if (globalVariables.isInGame) {
+		changeScene('in-game');
+	} else {
+		history.pushState({}, '', '/');
+	}
+};
 
 export { locationHandler };
