@@ -1,4 +1,5 @@
 import globalVariables from '../init.js';
+import Alerts from './Alerts.js';
 
 class Connect {
 	constructor() {
@@ -17,6 +18,8 @@ class Connect {
 				globalVariables.currentUser.setFriendStatus(data.user, data.state.toLowerCase());
 			} else if (event === 'chat') {
 				if (globalVariables.userConversations) {
+					if (window.location.pathname + window.location.search != '/chat?with=' + data.from)
+						Alerts.createAlert(Alerts.type.MESSAGE, "Message from " + data.from)
 					globalVariables.userConversations.addMessageFromSocket(data);
 				} else {
 					console.log("globalVariables.userConversations is undefined");
