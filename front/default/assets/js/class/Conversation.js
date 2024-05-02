@@ -1,5 +1,4 @@
 import globalVariables from '../init.js';
-import { scrollMessagesToBottom } from '../action/chat.js';
 import { createConversationDisplay } from '../spaManagement/div/createConversationDisplay.js';
 
 class Conversations {
@@ -8,18 +7,18 @@ class Conversations {
 		this.myUsername = myUsername;
 	}
 
-	addMessage(from, to, content, sendAt) {
-		const message = { sender: from, content, sendAt: sendAt };
-		let target = from === this.myUsername ? to : from;
+	// addMessage(from, to, content, sendAt) {
+	// 	const message = { sender: from, content, sendAt: sendAt };
+	// 	let target = from === this.myUsername ? to : from;
 
-		if (!this.conversations[target]) {
-			this.conversations[target] = [];
-		}
+	// 	if (!this.conversations[target]) {
+	// 		this.conversations[target] = [];
+	// 	}
 
-		this.conversations[target].push(message);
-	}
+	// 	this.conversations[target].push(message);
+	// }
 
-	addMessageFromSocket(messageData, display, received = false) {
+	addMessageFromSocket(messageData, display, received = false) {		
 		if (!messageData.hasOwnProperty('from') && !messageData.hasOwnProperty('sendAt')) {
 			messageData.from = this.myUsername;
 			messageData.sendAt = new Date();
@@ -36,7 +35,6 @@ class Conversations {
 	
 		this.conversations[target].unshift(message);
 
-		// create div in conversation dynamically
 		if (display) {
 			const conversationDisplay = document.getElementById("conversation-display-messages-id");
 			const messageElement = document.createElement("div");
@@ -44,14 +42,14 @@ class Conversations {
 			messageText.textContent = message.content;
 			messageElement.appendChild(messageText)
 
-			if (message.sender === globalVariables.userConversations.myUsername) {
+			if (message.sender === this.myUsername) {
 				messageElement.classList.add("message-sent", "message");
 			} else {
 				messageElement.classList.add("message-received", "message");
 			}
 
 			conversationDisplay.appendChild(messageElement);
-			scrollMessagesToBottom();
+			this.scrollMessagesToBottom(false);
 		}
 		
 		if (!received) {
@@ -60,6 +58,49 @@ class Conversations {
 		}
 	}
 
+	addMessageFromGameSocket(messageData, received = false) {	
+		if (!messageData.hasOwnProperty('from') && !messageData.hasOwnProperty('sendAt')) {
+			messageData.from = this.myUsername;
+			messageData.sendAt = new Date();
+		}
+	
+		const { from, content, sendAt } = messageData;
+		const message = { sender: from, content, sendAt };
+	
+		const conversationDisplay = document.getElementById("in-game-conversation-display-messages-id");
+		const messageElement = document.createElement("div");
+		const messageText = document.createElement('span');
+		messageText.textContent = message.content;
+		messageElement.appendChild(messageText)
+	
+		if (message.sender === this.myUsername) {
+			messageElement.classList.add("message-sent", "message");
+		} else {
+			messageElement.classList.add("message-received", "message");
+		}
+	
+		conversationDisplay.appendChild(messageElement);
+		this.scrollMessagesToBottom(true);
+		
+		if (!received) {
+			console.log("here man");
+			let inputElement = document.getElementById("in-game-send-message-input-id");
+			inputElement.value = "";
+		}
+	}
+
+	scrollMessagesToBottom(inGame) {
+		let messagesElement = null;
+
+		if (inGame) {
+			messagesElement = document.getElementById("in-game-conversation-display-messages-id");
+		} else {
+			messagesElement = document.getElementById("conversation-display-messages-id");
+		}
+		messagesElement.scrollTop = messagesElement.scrollHeight;
+	}
+
+	//getter
 	getConversation(withUser) {
 		if (this.conversations[withUser]) {
 			return this.conversations[withUser];
