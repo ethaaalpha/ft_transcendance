@@ -83,7 +83,7 @@ function unsetEventSearch() {
 }
 
 function unsetEventInGame() {
-	removeEventListener("keypress", "send-message-input-id");
+	removeEventListener("keypress", "in-game-send-message-input-id");
 }
 
 function unsetEventSettingsProfilPicture() {

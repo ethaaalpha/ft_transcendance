@@ -2,6 +2,7 @@ import globalVariables from '../init.js';
 import { changeScene } from './scene.js';
 import { sendMessage } from '../action/chat.js';
 import { signIn, signUp, modifyEmail, modifyPassword } from '../action/userManagement.js';
+import { sendMessageInGame } from '../action/chat.js';
 
 async function setEventListener(scene) {
 	switch (scene) {
@@ -195,10 +196,9 @@ function setEventSearch() {
 }
 
 function setEventInGame() {
-	// console.log("here");
-	addEventListener("keypress", "send-message-input-id", function(event) {
+	addEventListener("keypress", "in-game-send-message-input-id", function(event) {
 		if (event.key === "Enter") {
-			sendMessage();
+			sendMessageInGame();
 		}
 	});
 }
