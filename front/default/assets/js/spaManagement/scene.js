@@ -4,48 +4,136 @@ import { setEventListener } from './setEvent.js';
 import { unsetEventListener } from './unsetEvent.js';
 import { setFocus } from './setFocus.js';
 
+let sceneChangeLock = false;
+
 async function changeScene(newScene, username) {
-	switch (newScene) {
-		case "sign-in":
-			await sceneSignIn();
-			break;
-		case "sign-up":
-			await sceneSignUp();
-			break;
-		case "conversation-list":
-			await sceneConversationList();
-			break;
-		case "conversation-display":
-			await sceneConversationDisplay(username);
-			break;
-		case "search":
-			await sceneSearch(username);
-			break;
-		case "profil":
-			await sceneProfil(username);
-			break;
-		case "settings":
-			await sceneSettings();
-			break;
-		case "settings-game-theme":
-			await sceneSettingsGameTheme();
-			break;
-		case "settings-profil-picture":
-			await sceneSettingsProfilPicture();
-			break;
-		case "settings-password":
-			await sceneSettingsPassword();
-			break;
-		case "settings-email":
-			await sceneSettingsEmail();
-			break;
-		default:
-			console.log("Invalid scene in changeScene: ", globalVariables.currentScene);
+	if (sceneChangeLock) {
+		addToSceneQueue(newScene, username);
+		return;
 	}
-	console.log("Scene:", globalVariables.currentScene);
+
+	sceneChangeLock = true;
+
+	try {
+		const sceneInfo = sceneInfos[newScene];
+		await changeSceneHandler(sceneInfo, username);
+	} catch (error) {
+		console.error("Error during scene change :", error);
+	} finally {
+		sceneChangeLock = false;
+		const nextScene = dequeueNextScene();
+		if (nextScene) {
+			const { scene, username } = nextScene;
+			await changeScene(scene, username);
+		}
+	}
 }
 
-// Variables
+let sceneQueue = [];
+
+function addToSceneQueue(newScene, username) {
+	sceneQueue = [{ scene: newScene, username: username }];
+}
+
+function dequeueNextScene() {
+	const nextScene = sceneQueue.shift();
+	return nextScene;
+}
+
+const sceneInfos = {
+	"sign-in": {
+		id: "sign-in",
+		removeNewSceneIds: ["sign-in"],
+		removeOldScenesIds: ["sign-in"],
+		createChildDivIds: ["sign-in"],
+		unhideElementsIds: ["sign-in"],
+		setEventListenerIds: "sign-in",
+		setFocusId: "sign-in"
+	},
+	"sign-up": {
+		id: "sign-up",
+		removeNewSceneIds: ["sign-up"],
+		removeOldScenesIds: ["sign-up"],
+		createChildDivIds: ["sign-up"],
+		unhideElementsIds: ["sign-up"],
+		setEventListenerIds: "sign-up",
+		setFocusId: "sign-up"
+	},
+	"conversation-list": {
+		id: "conversation-list",
+		removeNewSceneIds: ["conversation-list"],
+		removeOldScenesIds: ["conversation-list", "nav-bar"],
+		createChildDivIds: ["conversation-list", "nav-bar"],
+		unhideElementsIds: ["home", "nav-bar", "conversation-list"],
+		setEventListenerIds: "conversation-list"
+	},
+	"conversation-display": {
+		id: "conversation-display",
+		removeNewSceneIds: ["conversation-display"],
+		removeOldScenesIds: ["conversation-display", "nav-bar"],
+		createChildDivIds: ["conversation-display", "nav-bar"],
+		unhideElementsIds: ["home", "nav-bar", "conversation-display"],
+		setEventListenerIds: "conversation-display",
+		setFocusId: "conversation-display"
+	},
+	"search": {
+		id: "search",
+		removeNewSceneIds: ["search"],
+		removeOldScenesIds: ["search", "nav-bar"],
+		createChildDivIds: ["search", "nav-bar"],
+		unhideElementsIds: ["home", "nav-bar", "search"],
+		setEventListenerIds: "search",
+		setFocusId: "search"
+	},
+	"profil": {
+		id: "profil",
+		removeNewSceneIds: ["profil", "match-history"],
+		removeOldScenesIds: ["profil", "match-history", "nav-bar"],
+		createChildDivIds: ["profil", "nav-bar"],
+		unhideElementsIds: ["home", "nav-bar", "profil", "match-history"],
+	},
+	"settings": {
+		id: "settings",
+		removeNewSceneIds: ["settings"],
+		removeOldScenesIds: ["settings", "nav-bar"],
+		createChildDivIds: ["settings", "nav-bar"],
+		unhideElementsIds: ["home", "nav-bar", "settings"],
+	},
+	"settings-game-theme": {
+		id: "settings-game-theme",
+		removeNewSceneIds: ["settings-game-theme"],
+		removeOldScenesIds: ["settings-game-theme", "nav-bar"],
+		createChildDivIds: ["settings-game-theme", "nav-bar"],
+		unhideElementsIds: ["home", "nav-bar", "settings-game-theme"],
+	},
+	"settings-profil-picture": {
+		id: "settings-profil-picture",
+		removeNewSceneIds: ["settings-profil-picture"],
+		removeOldScenesIds: ["settings-profil-picture", "nav-bar"],
+		createChildDivIds: ["settings-profil-picture", "nav-bar"],
+		unhideElementsIds: ["home", "nav-bar", "settings-profil-picture"],
+		setEventListenerIds: "settings-profil-picture",
+	},
+	"settings-password": {
+		id: "settings-password",
+		removeNewSceneIds: ["settings-password"],
+		removeOldScenesIds: ["settings-password", "nav-bar"],
+		createChildDivIds: ["settings-password", "nav-bar"],
+		unhideElementsIds: ["home", "nav-bar", "settings-password"],
+		setEventListenerIds: "settings-password",
+		setFocusId: "settings-password"
+	},
+	"settings-email": {
+		id: "settings-email",
+		removeNewSceneIds: ["settings-email"],
+		removeOldScenesIds: ["settings-email", "nav-bar"],
+		createChildDivIds: ["settings-email", "nav-bar"],
+		unhideElementsIds: ["home", "nav-bar", "settings-email"],
+		setEventListenerIds: "settings-email",
+		setFocusId: "settings-email"
+	}
+};
+
 const parentsToHide = [
 	"sign-in",
 	"sign-up",
@@ -90,166 +178,30 @@ const eventsToUnset = [
 	"settings-email",
 ];
 
-// Handler
-async function sceneSignIn() {
-	removeChildDiv(["sign-in"]); // Ici parce-que sinon ça pue
+async function changeSceneHandler(sceneInfo, username) {
+	globalVariables.currentScene = sceneInfo.id;
 
-	globalVariables.currentScene = "sign-in";
-	hideElements("sign-in");
-	await createChildDiv(["sign-in"]);
-	setEventListener("sign-in");
-	
+	// CLEAN NEW SCENE
+	await removeChildDiv(sceneInfo.removeNewSceneIds);
+	hideElements(sceneInfo.id);
+
+	// CREATE NEW SCENE
+	await createChildDiv(sceneInfo.createChildDivIds, username);
+	if (sceneInfo.setEventListenerIds) {
+		setEventListener(sceneInfo.setEventListenerIds);
+	}
+
+	// TRANSITION TO NEW SCENE
 	hideElements(...parentsToHide);
-	unhideElements("sign-in");
-	unsetEventListener(eventsToUnset, "sign-in");
-	removeChildDiv(parentsToremove, "sign-in");
-	setFocus("sign-in");
-}
+	unhideElements(...sceneInfo.unhideElementsIds);
+	if (sceneInfo.setFocusId) {
+		setFocus(sceneInfo.setFocusId);
+	}
 
-async function sceneSignUp() {
-	removeChildDiv(["profil"]); // Ici parce-que sinon ça pue
-
-	globalVariables.currentScene = "sign-up";
-	hideElements("sign-up");
-	await createChildDiv(["sign-up"]);
-	setEventListener("sign-up");
-	
-	hideElements(...parentsToHide);
-	unhideElements("sign-up");
-	unsetEventListener(eventsToUnset, "sign-up");
-	removeChildDiv(parentsToremove, "sign-up");
-	setFocus("sign-up");
-}
-
-async function sceneConversationList() {
-	removeChildDiv(["conversation-list"]); // Ici parce-que sinon ça pue
-
-	globalVariables.currentScene = "conversation-list";
-	hideElements("conversation-list");
-	await createChildDiv(["conversation-list", "nav-bar"]);
-	setEventListener("conversation-list");
-	
-	hideElements(...parentsToHide);
-	unhideElements("home", "nav-bar", "conversation-list");
-	unsetEventListener(eventsToUnset, "conversation-list");
-	removeChildDiv(parentsToremove, "conversation-list", "nav-bar");
-}
-
-async function sceneConversationDisplay(username) {
-	removeChildDiv(["conversation-display"]); // Ici parce-que sinon ça pue
-
-	globalVariables.currentScene = "conversation-display";
-	hideElements("conversation-display");
-	await createChildDiv(["conversation-display", "nav-bar"], username);
-	setEventListener("conversation-display");
-	
-	hideElements(...parentsToHide);
-	unhideElements("home", "nav-bar", "conversation-display");
-	unsetEventListener(eventsToUnset, "conversation-display");
-	removeChildDiv(parentsToremove, "conversation-display", "nav-bar");
-	setFocus("conversation-display");
-}
-
-async function sceneSearch(username) {
-	removeChildDiv(["search"]); // Ici parce-que sinon ça pue
-
-	globalVariables.currentScene = "search";
-	hideElements("search");
-	await createChildDiv(["search", "nav-bar"], username);
-	setEventListener("search");
-	
-	hideElements(...parentsToHide);
-	unhideElements("home", "nav-bar", "search");
-	unsetEventListener(eventsToUnset, "search");
-	removeChildDiv(parentsToremove, "search", "nav-bar");
-	setFocus("search");
-}
-
-async function sceneProfil(username) {
-	removeChildDiv(["profil", "match-history"]); // Ici parce-que sinon ça pue
-
-	globalVariables.currentScene = "profil";
-	hideElements("profil", "match-history");
-	await createChildDiv(["profil", "nav-bar"], username);
-	// setEventListener("profil");
-	
-	hideElements(...parentsToHide);
-	unhideElements("home", "nav-bar", "profil", "match-history");
-	unsetEventListener(eventsToUnset, "profil");
-	removeChildDiv(parentsToremove, "profil", "match-history", "nav-bar");
-}
-
-
-async function sceneSettings() {
-	removeChildDiv(["settings"]); // Ici parce-que sinon ça pue
-
-	globalVariables.currentScene = "settings";
-	hideElements("settings");
-	await createChildDiv(["settings", "nav-bar"]);
-	// setEventListener("settings");
-	
-	hideElements(...parentsToHide);
-	unhideElements("home", "nav-bar", "settings");
-	unsetEventListener(eventsToUnset, "settings");
-	removeChildDiv(parentsToremove, "settings", "nav-bar");
-}
-
-async function sceneSettingsGameTheme() {
-	removeChildDiv(["settings-game-theme"]); // Ici parce-que sinon ça pue
-
-	globalVariables.currentScene = "settings-game-theme";
-	hideElements("settings-game-theme");
-	await createChildDiv(["settings-game-theme", "nav-bar"]);
-	// setEventListener("settings-game-theme");
-	
-	hideElements(...parentsToHide);
-	unhideElements("home", "nav-bar", "settings-game-theme");
-	unsetEventListener(eventsToUnset, "settings-game-theme");
-	removeChildDiv(parentsToremove, "settings-game-theme", "nav-bar");
-}
-
-async function sceneSettingsProfilPicture() {
-	removeChildDiv(["settings-profil-picture"]); // Ici parce-que sinon ça pue
-
-	globalVariables.currentScene = "settings-profil-picture";
-	hideElements("settings-profil-picture");
-	await createChildDiv(["settings-profil-picture", "nav-bar"]);
-	setEventListener("settings-profil-picture");
-	
-	hideElements(...parentsToHide);
-	unhideElements("home", "nav-bar", "settings-profil-picture");
-	unsetEventListener(eventsToUnset, "settings-profil-picture");
-	removeChildDiv(parentsToremove, "settings-profil-picture", "nav-bar");
-}
-
-async function sceneSettingsPassword() {
-	removeChildDiv(["settings-password"]); // Ici parce-que sinon ça pue
-
-	globalVariables.currentScene = "settings-password";
-	hideElements("settings-password");
-	await createChildDiv(["settings-password", "nav-bar"]);
-	setEventListener("settings-password");
-	
-	hideElements(...parentsToHide);
-	unhideElements("home", "nav-bar", "settings-password");
-	unsetEventListener(eventsToUnset, "settings-password");
-	removeChildDiv(parentsToremove, "settings-password", "nav-bar");
-	setFocus("settings-password");
-}
-
-async function sceneSettingsEmail() {
-	removeChildDiv(["settings-email"]); // Ici parce-que sinon ça pue
-
-	globalVariables.currentScene = "settings-email";
-	hideElements("settings-email");
-	await createChildDiv(["settings-email", "nav-bar"]);
-	setEventListener("settings-email");
-	
-	hideElements(...parentsToHide);
-	unhideElements("home", "nav-bar", "settings-email");
-	unsetEventListener(eventsToUnset, "settings-email");
-	removeChildDiv(parentsToremove, "settings-email", "nav-bar");
-	setFocus("settings-email");
+	// CLEAN OLD SCENES
+	unsetEventListener(eventsToUnset, sceneInfo.id);
+	const oldScenesToRemove = parentsToremove.filter(parentId => !sceneInfo.removeOldScenesIds.includes(parentId));
+	await removeChildDiv(oldScenesToRemove);
 }
 
 // Utils

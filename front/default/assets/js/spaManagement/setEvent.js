@@ -3,7 +3,7 @@ import { changeScene } from './scene.js';
 import { sendMessage } from '../action/chat.js';
 import { signIn, signUp, modifyEmail, modifyPassword } from '../action/userManagement.js';
 
-function setEventListener(scene) {
+async function setEventListener(scene) {
 	switch (scene) {
 		case "sign-in":
 			setEventSignIn();
