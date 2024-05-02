@@ -57,17 +57,10 @@
 }
 
 .nav-bar-btn:hover {
-	background-color: transparent;
-	border-color: var(--default-green);
-	color: var(--default-green);
+	background-color: var(--background-nav);
+	border-color: var(--default_hover);
+	color: var(--default_hover);
 }
-
-.play-btn {
-	background-color: #00C2FF40;
-	border-color: var(--default-blue);
-	color: var(--default-blue);
-}
-
 
 .modify-btn {
 	font-size: 1em;

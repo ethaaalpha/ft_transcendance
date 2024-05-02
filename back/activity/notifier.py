@@ -36,6 +36,8 @@ class ActivityNotifier():
 		"""
 		if all(item is None for item in [_from, _to, _content]):
 			return
+		print('je send', file=sys.stderr)
+		
 		await ActivityNotifier._notify(getChannelName(_to, 'activity'), {'from': _from, 'to': _to, 'content': _content, 'sendAt': str(timezone.now())}, 'chat', _from, _to, friendMandatory=True)
 
 	@staticmethod
@@ -45,6 +47,7 @@ class ActivityNotifier():
 		"""
 		fromUser: Profile = await ActivityNotifier._getProfileFromUsername(_from)
 		target: Profile = await ActivityNotifier._getProfileFromUsername(_to)
+
 
 		if not fromUser or not target:
 			return
