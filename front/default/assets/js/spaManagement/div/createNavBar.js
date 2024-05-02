@@ -43,6 +43,7 @@ function createNavBar(username) {
 		} else {
 			if (buttonLeft.innerHTML !== `<img src="/static/default/assets/images/icons/${leftLabel.toLowerCase() + leftExtension}.svg" class="icon-button"></img> ${leftLabel}` || buttonLeft.style.getPropertyValue("--main_color") !== leftColor) {
 				buttonLeft.innerHTML = `<img src="/static/default/assets/images/icons/${leftLabel.toLowerCase() + leftExtension}.svg" class="icon-button"></img> ${leftLabel}`;
+				console.log('ici la je fais le left ' + hoverLeftColor);
 				buttonLeft.style.setProperty("--main_color", leftColor);
 				buttonLeft.style.setProperty("--default_hover", hoverLeftColor);
 				buttonLeft.style.setProperty('--background-nav', leftBackgroundColor);
@@ -59,7 +60,6 @@ function createNavBar(username) {
 			if (buttonRight.innerHTML !== `<img src="/static/default/assets/images/icons/${rightLabel.toLowerCase() + rightExtension}.svg" class="icon-button"></img> ${rightLabel}` || buttonRight.style.getPropertyValue("--main_color") !== rightColor) {
 				buttonRight.innerHTML = `<img src="/static/default/assets/images/icons/${rightLabel.toLowerCase() + rightExtension}.svg" class="icon-button"></img> ${rightLabel}`;
 				buttonRight.style.setProperty("--main_color", rightColor);
-				buttonLeft.style.setProperty("--default_hover", hoverRightColor);
 				buttonRight.style.setProperty('--background-nav', rightBackgroundColor);
 				buttonRight.onclick = function() {
 					navBarActionHandler(rightLabel, username);
