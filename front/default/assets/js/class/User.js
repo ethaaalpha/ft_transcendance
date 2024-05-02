@@ -31,7 +31,8 @@ class User {
 	}
 
 	addBlockedUser(block) {
-		this.blocked.push(block);
+		if (!this.blocked.includes(block))
+			this.blocked.push(block);
 	}
 
 	removeBlockedUser(block) {
@@ -39,7 +40,8 @@ class User {
 	}
 
 	addPendingFriendTo(newpendingto) {
-		this.pendingGameTo.push(newpendingto);
+		if (!this.pendingFriendTo.includes(newpendingto))
+			this.pendingFriendTo.push(newpendingto);
 	}
 
 	addPendingGameFrom(username) {

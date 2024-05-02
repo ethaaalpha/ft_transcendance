@@ -18,15 +18,21 @@ class Connect {
 				globalVariables.currentUser.setFriendStatus(data.user, data.state.toLowerCase());
 			} else if (event === 'chat') {
 				if (globalVariables.userConversations) {
-					if (window.location.pathname + window.location.search != '/chat?with=' + data.from)
+					if (window.location.pathname + window.location.search != '/chat?with=' + data.from) {
 						Alerts.createAlert(Alerts.type.MESSAGE, "Message from " + data.from)
-					globalVariables.userConversations.addMessageFromSocket(data);
+						globalVariables.userConversations.addMessageFromSocket(data, false, true);
+					} else {
+						globalVariables.userConversations.addMessageFromSocket(data, true, true);
+					}
 				} else {
 					console.log("globalVariables.userConversations is undefined");
 				}
 			} else if (event === 'friends') {
 				// alert
-				Alerts.createAlert(Alerts.type.MESSAGE, 'Friends request from ' + data.from);
+				Alerts.createAlert(Alerts.type.MESSAGE, 'Friends request ' + data.action + ' from ' + data.from);
+				if (data.action == 'accepted') {
+					globalVariables.currentUser.addFriend(data.from);
+				}
 				console.log("Websocket: friends request received from:" + data.from);
 			}
 		};
