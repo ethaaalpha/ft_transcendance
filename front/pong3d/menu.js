@@ -17,6 +17,7 @@ class Menu {
 		this.raycaster = gameData.raycaster;
 		this.clock = gameData.clock;
 		this.appli = gameData.appli
+		this.parent = gameData.appliParent
 		this.button = [];
 		this.animMixer = null;
 		this.load3D();
@@ -220,9 +221,9 @@ class Menu {
 		};
 	}
 	onWindowResize() {
-		this.camera.aspect = window.innerWidth / window.innerHeight;
+		this.camera.aspect = this.parent.clientWidth / this.parent.clientHeight;
 		this.camera.updateProjectionMatrix();
-		this.renderer.setSize(window.innerWidth, window.innerHeight);
+		this.renderer.setSize(this.parent.clientWidth, this.parent.clientHeight);
 	}
 	getStatus(){
 		return this.status

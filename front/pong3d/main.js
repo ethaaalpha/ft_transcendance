@@ -15,14 +15,11 @@ var view;
 var i = 0;
 var ft = new FormTournament(sendTournament)
 var appli = document.querySelector('#app');
-if (!appli) {
-	console.log("querySelector error");
-}
-
+var appliParent = document.querySelector('#gameContainer')
+console.log(appliParent.clientWidth);
 function sendTournament(data){
 	socketTmp.send(JSON.stringify(data))
 }
-
 function waitForNextMatch(code){
     console.log(data);
     return new Promise((resolve) => {
@@ -70,7 +67,7 @@ var gameData = {
     sceneMenu : new THREE.Scene(),
     rendererMenu : new THREE.WebGLRenderer(),
     rendererGameLocal : new THREE.WebGLRenderer(),
-    camera : new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000),
+    camera : new THREE.PerspectiveCamera(75, appliParent.clientWidth / appliParent.clientHeight, 0.1, 1000),
     directionalLight : new THREE.DirectionalLight(0xC6FF89, 16),
     directionalLight2 : new THREE.DirectionalLight(0xC6FF89, 16),
     directionalLight3 : new THREE.DirectionalLight(0xC6FF89, 20),
@@ -78,13 +75,14 @@ var gameData = {
     clock : new THREE.Clock(),
     raycaster : new THREE.Raycaster(),
     appli : appli,
+    appliParent : appliParent,
     controlsMenu : null,
     controlsGameLocal : null,
     loaded : {instance:0}
 
 }
-gameData.rendererMenu.setSize(window.innerWidth , window.innerHeight);
-gameData.rendererGameLocal.setSize(window.innerWidth , window.innerHeight);
+gameData.rendererMenu.setSize(appliParent.clientWidth , appliParent.clientHeight);
+gameData.rendererGameLocal.setSize(appliParent.clientWidth , appliParent.clientHeight);
 
 // var status = {
 // 	status:-1,
@@ -93,6 +91,7 @@ function updateStatus(newStatus) {
     status.status= newStatus.status;
 }
 async function initialize() {
+    initLoading();
 	try {
 		while(1){
             if (status.status != 5)
@@ -219,11 +218,6 @@ function waitForData(time) {
         }, time);
     });
 }
-
-
-initLoading();
-initialize();
-//waitstatus(500);
 
 
 export { initialize }

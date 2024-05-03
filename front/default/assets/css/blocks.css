@@ -43,8 +43,12 @@ body {
 }
 
 .game-div {
+	overflow: hidden;
 	height: 100%;
 	width: 65%;
+	display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .social-display-div {
