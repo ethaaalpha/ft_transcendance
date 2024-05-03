@@ -12,6 +12,7 @@ async function createConversationDisplay(user) {
 
 		const conversation = globalVariables.userConversations.getConversation(user);
 		const conversationDisplay = document.getElementById("conversation-display");
+		conversationDisplay.classList.add('conversation-display');
 		conversationDisplay.innerHTML = "";
 
 		// Back button
