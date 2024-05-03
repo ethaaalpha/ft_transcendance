@@ -11,12 +11,11 @@ import GameInv from './gameInv.js';
 import { hideLoadingAnimation, showLoadingAnimation, status } from './utilsPong.js';
 
 var data = null;
-var view;
-var i = 0;
+var view = null;
 var ft = new FormTournament(sendTournament)
 var appli = document.querySelector('#app');
 var appliParent = document.querySelector('#game-container')
-console.log(appliParent.clientWidth);
+
 function sendTournament(data){
 	socketTmp.send(JSON.stringify(data))
 }
@@ -57,6 +56,8 @@ socketTmp.onmessage = (event) => {
 	else if (tmp.event == "count")
 		ft.eventPlayer(tmp.data.updater, tmp.data.count, tmp.data.max)
 }
+
+
 var loadingManager = new THREE.LoadingManager();
 var gameData = {
     gltfLoader: new GLTFLoader(loadingManager).setPath( '/static/pong3d/assets/' ),
@@ -78,11 +79,20 @@ var gameData = {
     appliParent : appliParent,
     controlsMenu : null,
     controlsGameLocal : null,
-    loaded : {instance:0}
-
+    loaded : {instance:0},
 }
 gameData.rendererMenu.setSize(appliParent.clientWidth , appliParent.clientHeight);
 gameData.rendererGameLocal.setSize(appliParent.clientWidth , appliParent.clientHeight);
+appli.addEventListener('focus', () => onFocus());
+appli.addEventListener('blur',() => notOnFocus());
+
+function onFocus(){
+    console.log("focus")
+    status.action = true;
+}
+function notOnFocus(){
+    status.action = false;
+}
 
 // var status = {
 // 	status:-1,
@@ -218,6 +228,5 @@ function waitForData(time) {
         }, time);
     });
 }
-
 
 export { initialize }

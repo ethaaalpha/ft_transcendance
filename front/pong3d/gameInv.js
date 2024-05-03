@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { TessellateModifier } from 'three/module/modifiers/TessellateModifier.js';
 import { TextGeometry } from 'three/module/geometries/TextGeometry.js';
-import { sleep, loadShader } from './utilsPong.js'
+import { sleep, loadShader, status } from './utilsPong.js'
 
 class GameInv {
 	constructor(status, resolve,statusCallback, gameData, returnValue) {
@@ -330,40 +330,44 @@ class GameInv {
 			requestAnimationFrame(() => this.update())
 	}
 	onKeyDown(event) {
-		switch (event.code) {
-			case 'KeyW':
-			case 'KeyZ':
-				this.moveUp = true;
-				break;
-			case 'KeyS':
-				this.moveDown = true;
-				break;
-			case 'KeyA':
-			case 'KeyQ':
-				this.moveLeft = true;
-				break;
-			case 'KeyD':
-				this.moveRight = true;
-				break;
+		if (status.action == true){
+			switch (event.code) {
+				case 'KeyW':
+				case 'KeyZ':
+					this.moveUp = true;
+					break;
+				case 'KeyS':
+					this.moveDown = true;
+					break;
+				case 'KeyA':
+				case 'KeyQ':
+					this.moveLeft = true;
+					break;
+				case 'KeyD':
+					this.moveRight = true;
+					break;
+			}
 		}
 	}
 
 	onKeyUp(event) {
-		switch (event.code) {
-			case 'KeyW':
-			case 'KeyZ':
-				this.moveUp = false;
-				break;
-			case 'KeyS':
-				this.moveDown = false;
-				break;
-			case 'KeyA':
-			case 'KeyQ':
-				this.moveLeft = false;
-				break;
-			case 'KeyD':
-				this.moveRight = false;
-				break;
+		if (status.action == true){
+			switch (event.code) {
+				case 'KeyW':
+				case 'KeyZ':
+					this.moveUp = false;
+					break;
+				case 'KeyS':
+					this.moveDown = false;
+					break;
+				case 'KeyA':
+				case 'KeyQ':
+					this.moveLeft = false;
+					break;
+				case 'KeyD':
+					this.moveRight = false;
+					break;
+			}
 		}
 	}
 
