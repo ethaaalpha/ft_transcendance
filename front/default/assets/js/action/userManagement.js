@@ -30,6 +30,7 @@ function signIn() {
 				history.pushState({}, '', '/');
 				Alerts.createAlert(Alerts.type.SUCCESS, data.data.message);
 			} else {
+				Alerts.createAlert(Alerts.type.FAILED, data.data.message);
 				console.log("Connexion error");
 			}
 		}
@@ -94,7 +95,7 @@ function signOut() {
 }
 
 function forgotPassword() {
-	var username = document.getElementById("username").value;
+	var username = document.getElementById("sign-in-username").value;
 	
 	var formData = new FormData();
 	
@@ -102,11 +103,11 @@ function forgotPassword() {
 	
 	fetchData("/api/auth/reset-password", 'POST', formData).then(
 	(data) => {
-		let type = Alerts.type.FAILED;
 		if (data.status === 200) {
-			type = Alerts.type.SUCCESS;
+			Alerts.createAlert(Alerts.type.SUCCESS, 'Password sent to your email.');
+		} else {
+			Alerts.createAlert(Alerts.type.FAILED, data.data.message);
 		}
-		Alerts.createAlert(type, data.data.message);
 		console.log(data.data);
 	})
 	.catch(error => {
@@ -130,7 +131,7 @@ function modifyPassword() {
 			history.pushState({}, '', '/settings');
 			type = Alerts.type.SUCCESS
 		}
-		Alerts.createAlert(type, data.data.message);
+		Alerts.createAlert(Alerts.type.FAILED, data.data.message);
 		console.log(data.data);
 	})
 	.catch(error => {
