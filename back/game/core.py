@@ -25,6 +25,7 @@ class Game:
         self.nbTap = 0
         self.distance = 0
         self.update_thread = False
+        self.last_update_time = time.time()
         self.start_updates()
 
     def start_updates(self):
@@ -35,16 +36,17 @@ class Game:
         self.update_thread = None
 
     def update_loop(self):
-        tmpball = self.ballPos[1]
         while self.update_thread is not None:
-            asyncio.run(self.send_updates(tmpball))
-            time.sleep(0.04)
+            current_time = time.time()
+            delta_time = current_time - self.last_update_time
+            self.last_update_time = current_time
+            asyncio.run(self.send_updates(delta_time * 100))
 
     async def addVec(self, vec1, vec2):
         for i in range(len(vec1)):
             vec1[i] += (vec2[i])
-        if self.speedBall < 0.6:
-            self.speedBall += 0.0002
+        if self.speedBall < 0.45:
+            self.speedBall += 0.00009
 
     async def makeReady(self, name):
         if (name == self.p1):
@@ -65,8 +67,13 @@ class Game:
             self.score[1] = 0
             await self.sendResult()
     
-    async def send_updates(self, tmpball):
+    async def send_updates(self, delta_time):
         if self.ready[0] and self.ready[1]:
+            await self.addVec(self.ballPos, [v * self.speedBall * delta_time for v in self.ballVec])
+            if (self.ballPos[1] > 13.5):
+                await self.goal(0)
+            if (self.ballPos[1] < -13.5):
+                await self.goal(1)
             await C.GameConsumer.sendMessageToConsumer(self.matchId, self.toJson(), 'move')
 
     async def updateBall(self, data: dict):
@@ -80,12 +87,6 @@ class Game:
                     self.nbTap += 1
                 self.ballVec = data['ballVec']
                 self.distance += sqrt(self.ballVec[0] ** 2 + self.ballVec[1] ** 2 + self.ballVec[2] ** 2)
-            if (data['p1Pos']):
-                await self.addVec(self.ballPos, self.ballVec)
-            if (self.ballPos[1] > 12.5):
-                await self.goal(0)
-            if (self.ballPos[1] < -12.5):
-                await self.goal(1)
         else:
             await C.GameConsumer.sendMessageToConsumer(self.matchId, self.toJson(), 'move')
         if self.score[0] >= 5 or self.score[1] >= 5:
