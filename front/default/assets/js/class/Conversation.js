@@ -83,7 +83,6 @@ class Conversations {
 		this.scrollMessagesToBottom(true);
 		
 		if (!received) {
-			console.log("here man");
 			let inputElement = document.getElementById("in-game-send-message-input-id");
 			inputElement.value = "";
 		}
