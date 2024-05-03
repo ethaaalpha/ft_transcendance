@@ -62,11 +62,9 @@ async function routeHandler() {
 // Mouse Loading
 async function loadRoute(routeFunction) {
 	try {
-		console.log("je change le cursor");
         document.body.style.cursor = 'wait';
         await routeFunction();
     } finally {
-        console.log('je remet le curseur');
         document.body.style.cursor = 'default';
     }
 }
