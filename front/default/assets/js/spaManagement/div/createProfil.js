@@ -163,8 +163,8 @@ async function createProfil(username) {
 		matchListDiv.classList.add('match-history-list', 'block-scroll')
 
 		matchHistory.matchs.forEach(match => {
-			let winner = match.winner == username ? true : false;
 			dataMatch.push(match.distance);
+			const winner = match.winner == username ? true : false;
 
 			// Create container div for each match
 			const matchDiv = document.createElement("div");
