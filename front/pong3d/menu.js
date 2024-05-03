@@ -1,7 +1,8 @@
 import * as THREE from 'three';
+import { status } from './utilsPong.js';
 
 class Menu {
-	constructor(status, resolve, statusCallback, gameData) {
+	constructor(status ,resolve, statusCallback, gameData) {
 		this.status = status
 		this.loader = gameData.fontLoader;
 		this.loaded = gameData.loaded;
@@ -53,12 +54,14 @@ class Menu {
 		this.mainButton = this.button[0];
 		this.onResize = () => this.onWindowResize();
 		this.keyD = (event) => this.onKeyDown(event);
+		this.focus = () => this.onFocus();
+		this.nfocus = () => this.notOnFocus()
 		document.addEventListener('keydown', this.keyD);
 		window.addEventListener('resize', this.onResize);
 		this.waitForSocketNLoad()
 	}
 
-	createTxt (font) {
+	createTxt(font){
 		let i = 0;
 		const color = [0x05FF00, 0x05FF00, 0xDADADA];
 		const message = ["☢Matchmaking☢", "☢Tournament☢", "☢Training☢"]
@@ -159,27 +162,29 @@ class Menu {
 	}
 
 	onKeyDown(event) {
-		console.log(event.keyCode);
-		switch (event.keyCode) {
-			case 83:
-				if (this.selected == 2){
-					this.mainButton = this.button[0];
-					this.selected = 0;
-				}
-				else
-					this.mainButton = this.button[++this.selected];
-				break;
-			case 87:
-				if (this.selected == 0){
-					this.selected = 2;
-					this.mainButton = this.button[2];
-				}
-				else
-					this.mainButton = this.button[--this.selected];
-				break;
-			case 13:
-				this.stop()
-				break;
+		console.log(event.keyCode)
+		if (status.action == true){
+			switch (event.keyCode) {
+				case 83:
+					if (this.selected == 2){
+						this.mainButton = this.button[0];
+						this.selected = 0;
+					}
+					else
+						this.mainButton = this.button[++this.selected];
+					break;
+				case 87:
+					if (this.selected == 0){
+						this.selected = 2;
+						this.mainButton = this.button[2];
+					}
+					else
+						this.mainButton = this.button[--this.selected];
+					break;
+				case 13:
+					this.stop()
+					break;
+			}
 		}
 	}
 	destroy() {
