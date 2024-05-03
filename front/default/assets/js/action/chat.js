@@ -69,7 +69,7 @@ function sendMessageInGame() {
 			'event': 'chat',
 			'data': data,
 		}));
-		globalVariables.userConversations.addMessageFromGameSocket(data, true);
+		globalVariables.userConversations.addMessageFromGameSocket(data, false);
 	} else {
 		Alerts.createAlert(Alerts.type.FAILED, "Websocket isn't connected.");
 		console.error("Error sending message: Websocket not connected.");
