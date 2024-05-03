@@ -28,21 +28,23 @@ async function loadShader(url) {
 
 function showLoadingAnimation() {
     var loadingAnimation = document.getElementById("loader");
-    loadingAnimation.style.display = "block";
+	console.log("je montre l'animation");
+	loadingAnimation.classList.remove('d-none');
 }
 
 function hideLoadingAnimation() {
     var loadingAnimation = document.getElementById("loader");
-    loadingAnimation.style.display = "none";
+	loadingAnimation.classList.add('d-none');
+	console.log("j'enleve l'animation");
 }
 
 function showTournamentCode() {
-    var loadingAnimation = document.getElementById("codeForm");
-    loadingAnimation.style.display = "block";
+    var tournamentForm = document.getElementById("codeForm");
+	tournamentForm.classList.remove('d-none');
 }
 
 function hideTournamentCode() {
-    var loadingAnimation = document.getElementById("codeForm");
-    loadingAnimation.style.display = "none";
+    var tournamentForm = document.getElementById("codeForm");
+	tournamentForm.classList.add('d-none');
 }
 export { sleep, waitForData, loadShader, hideLoadingAnimation, showLoadingAnimation, hideTournamentCode, showTournamentCode, status}

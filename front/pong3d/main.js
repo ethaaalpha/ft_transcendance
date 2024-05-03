@@ -15,7 +15,7 @@ var view;
 var i = 0;
 var ft = new FormTournament(sendTournament)
 var appli = document.querySelector('#app');
-var appliParent = document.querySelector('#gameContainer')
+var appliParent = document.querySelector('#game-container')
 console.log(appliParent.clientWidth);
 function sendTournament(data){
 	socketTmp.send(JSON.stringify(data))
@@ -136,7 +136,7 @@ async function initialize() {
 
 function initLoading(){
     loadingManager.onStart = function(url, item, total){
-        if (gameData.loaded.instance = 0)
+        if (gameData.loaded.instance == 0)
             showLoadingAnimation();
         gameData.loaded.instance += 1
         console.log("coucou");
@@ -148,7 +148,7 @@ function initLoading(){
     loadingManager.onLoad = function(){
         console.log("coucou2");
         gameData.loaded.instance -= 1
-        if (gameData.loaded.instance = 0)
+        if (gameData.loaded.instance == 0)
             hideLoadingAnimation();
     }
 }

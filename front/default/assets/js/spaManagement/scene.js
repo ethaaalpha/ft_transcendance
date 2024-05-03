@@ -46,7 +46,7 @@ const sceneInfos = {
 		removeNewSceneIds: ["sign-in"],
 		removeOldScenesIds: ["sign-in"],
 		createChildDivIds: ["sign-in"],
-		unhideElementsIds: ["sign-in"],
+		unhideElementsIds: ["sign-in", "app"],
 		setEventListenerIds: "sign-in",
 		setFocusId: "sign-in"
 	},
@@ -55,7 +55,7 @@ const sceneInfos = {
 		removeNewSceneIds: ["sign-up"],
 		removeOldScenesIds: ["sign-up"],
 		createChildDivIds: ["sign-up"],
-		unhideElementsIds: ["sign-up"],
+		unhideElementsIds: ["sign-up", "app"],
 		setEventListenerIds: "sign-up",
 		setFocusId: "sign-up"
 	},
@@ -64,7 +64,7 @@ const sceneInfos = {
 		removeNewSceneIds: ["conversation-list"],
 		removeOldScenesIds: ["conversation-list", "nav-bar"],
 		createChildDivIds: ["conversation-list", "nav-bar"],
-		unhideElementsIds: ["home", "nav-bar", "conversation-list"],
+		unhideElementsIds: ["home", "nav-bar", "conversation-list", "app"],
 		setEventListenerIds: "conversation-list"
 	},
 	"conversation-display": {
@@ -72,7 +72,7 @@ const sceneInfos = {
 		removeNewSceneIds: ["conversation-display"],
 		removeOldScenesIds: ["conversation-display", "nav-bar"],
 		createChildDivIds: ["conversation-display", "nav-bar"],
-		unhideElementsIds: ["home", "nav-bar", "conversation-display"],
+		unhideElementsIds: ["home", "nav-bar", "conversation-display", "app"],
 		setEventListenerIds: "conversation-display",
 		setFocusId: "conversation-display"
 	},
@@ -81,7 +81,7 @@ const sceneInfos = {
 		removeNewSceneIds: ["search"],
 		removeOldScenesIds: ["search", "nav-bar"],
 		createChildDivIds: ["search", "nav-bar"],
-		unhideElementsIds: ["home", "nav-bar", "search"],
+		unhideElementsIds: ["home", "nav-bar", "search", "app"],
 		setEventListenerIds: "search",
 		setFocusId: "search"
 	},
@@ -97,7 +97,7 @@ const sceneInfos = {
 		removeNewSceneIds: ["in-game"],
 		removeOldScenesIds: ["in-game", "nav-bar"],
 		createChildDivIds: ["in-game", "nav-bar"],
-		unhideElementsIds: ["home", "nav-bar", "in-game"],
+		unhideElementsIds: ["home", "nav-bar", "in-game", "app"],
 		setEventListenerIds: "in-game",
 		setFocusId: "in-game"
 	},
@@ -106,21 +106,21 @@ const sceneInfos = {
 		removeNewSceneIds: ["settings"],
 		removeOldScenesIds: ["settings", "nav-bar"],
 		createChildDivIds: ["settings", "nav-bar"],
-		unhideElementsIds: ["home", "nav-bar", "settings"],
+		unhideElementsIds: ["home", "nav-bar", "settings", "app"],
 	},
 	"settings-game-theme": {
 		id: "settings-game-theme",
 		removeNewSceneIds: ["settings-game-theme"],
 		removeOldScenesIds: ["settings-game-theme", "nav-bar"],
 		createChildDivIds: ["settings-game-theme", "nav-bar"],
-		unhideElementsIds: ["home", "nav-bar", "settings-game-theme"],
+		unhideElementsIds: ["home", "nav-bar", "settings-game-theme", "app"],
 	},
 	"settings-profil-picture": {
 		id: "settings-profil-picture",
 		removeNewSceneIds: ["settings-profil-picture"],
 		removeOldScenesIds: ["settings-profil-picture", "nav-bar"],
 		createChildDivIds: ["settings-profil-picture", "nav-bar"],
-		unhideElementsIds: ["home", "nav-bar", "settings-profil-picture"],
+		unhideElementsIds: ["home", "nav-bar", "settings-profil-picture", "app"],
 		setEventListenerIds: "settings-profil-picture",
 	},
 	"settings-password": {
@@ -128,7 +128,7 @@ const sceneInfos = {
 		removeNewSceneIds: ["settings-password"],
 		removeOldScenesIds: ["settings-password", "nav-bar"],
 		createChildDivIds: ["settings-password", "nav-bar"],
-		unhideElementsIds: ["home", "nav-bar", "settings-password"],
+		unhideElementsIds: ["home", "nav-bar", "settings-password", "app"],
 		setEventListenerIds: "settings-password",
 		setFocusId: "settings-password"
 	},
@@ -137,7 +137,7 @@ const sceneInfos = {
 		removeNewSceneIds: ["settings-email"],
 		removeOldScenesIds: ["settings-email", "nav-bar"],
 		createChildDivIds: ["settings-email", "nav-bar"],
-		unhideElementsIds: ["home", "nav-bar", "settings-email"],
+		unhideElementsIds: ["home", "nav-bar", "settings-email", "app"],
 		setEventListenerIds: "settings-email",
 		setFocusId: "settings-email"
 	}
@@ -159,6 +159,7 @@ const parentsToHide = [
 	"settings-email",
 	"nav-bar",
 	"home",
+	'app',
 ];
 
 const parentsToremove = [
@@ -191,7 +192,6 @@ const eventsToUnset = [
 ];
 
 async function changeSceneHandler(sceneInfo, username) {
-	
 	// CLEAN NEW SCENE | IF SAME SCENE
 	if (sceneInfo.id == globalVariables.currentScene) {
 		removeChildDiv(sceneInfo.removeNewSceneIds);
