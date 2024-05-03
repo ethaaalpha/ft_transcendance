@@ -11,6 +11,7 @@ async function createInGame() {
 	try {
 		const user = 'admin'
 		const inGame = document.getElementById("in-game");
+		inGame.classList.add('conversation-display')
 		inGame.innerHTML = "";
 
 		// Back button

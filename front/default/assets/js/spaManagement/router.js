@@ -34,30 +34,42 @@ async function routeHandler() {
 		}
 		switch (pathname) {
 			case "/search":
-				await routeSearch();
+				await loadRoute(routeSearch);
 				break;
 			case "/profil":
-				await routeProfil();
+				await loadRoute(routeProfil);
 				break;
 			case "/settings":
-				await routeSettings();
+				await loadRoute(routeSettings);
 				break;
 			case "/chat":
-				await routeChat();
+				await loadRoute(routeChat);
 				break;
 			case "/in-game":
-				await routeInGame();
+				await loadRoute(routeInGame);
 				break;
 			case '/callback-42':
-				await routeHome();
+				await loadRoute(routeHome);
 				Alerts.createAlert(Alerts.type.SUCCESS, 'You logged with 42 beacon.')
 				break;
 			default:
-				await routeHome();
+				await loadRoute(routeHome);
 				break;
 		}
 	}
 };
+
+// Mouse Loading
+async function loadRoute(routeFunction) {
+	try {
+		console.log("je change le cursor");
+        document.body.style.cursor = 'wait';
+        await routeFunction();
+    } finally {
+        console.log('je remet le curseur');
+        document.body.style.cursor = 'default';
+    }
+}
 
 // HANDLER
 async function routeHome() {

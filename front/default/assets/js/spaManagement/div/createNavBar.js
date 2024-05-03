@@ -43,7 +43,6 @@ function createNavBar(username) {
 		} else {
 			if (buttonLeft.innerHTML !== `<img src="/static/default/assets/images/icons/${leftLabel.toLowerCase() + leftExtension}.svg" class="icon-button"></img> ${leftLabel}` || buttonLeft.style.getPropertyValue("--main_color") !== leftColor) {
 				buttonLeft.innerHTML = `<img src="/static/default/assets/images/icons/${leftLabel.toLowerCase() + leftExtension}.svg" class="icon-button"></img> ${leftLabel}`;
-				console.log('ici la je fais le left ' + hoverLeftColor);
 				buttonLeft.style.setProperty("--main_color", leftColor);
 				buttonLeft.style.setProperty("--default_hover", hoverLeftColor);
 				buttonLeft.style.setProperty('--background-nav', leftBackgroundColor);

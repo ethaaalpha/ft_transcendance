@@ -79,7 +79,7 @@ class Match(models.Model):
 		if sender != self.host and sender != self.invited:
 			return
 		target = self.host if sender == self.invited else self.invited
-		self.room().send(target, 'chat', {"from": sender.username, "content": content})
+		self.room().send(target, 'chat', {"from": sender.username, "content": content, 'sendAt': str(timezone.now())})
 	
 	def send(self, user: User, event: str, data: str, delay = 0):
 		from coordination.consumers import CoordinationConsumer
