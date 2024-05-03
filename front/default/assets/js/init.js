@@ -21,7 +21,7 @@ var globalVariables = {
 	gameTheme: 1,
 	isInGame: false,
 };
-var appliParent = document.querySelector('#gameContainer')
+var appliParent = document.querySelector('#game-container')
 waitParentSize();
 
 function waitParentSize(){
