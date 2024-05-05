@@ -59,6 +59,7 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 		})
 	
 	async def receive_json(self, content: dict, **kwargs):
+		print('icy', file=sys.stderr)
 		if 'event' in content and 'data' in content:
 			data = content['data']
 			user = await self.getUser()

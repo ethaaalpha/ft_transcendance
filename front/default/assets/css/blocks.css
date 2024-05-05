@@ -32,7 +32,7 @@ body {
 	height: 100%;
 }
 
-@media only screen and (min-width: 2000px) {
+@media only screen and (min-width: 1500px) {
 	.home-div {
 		width: 65%;
 	}
