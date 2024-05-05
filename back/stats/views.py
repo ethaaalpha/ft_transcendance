@@ -1,21 +1,20 @@
 from django.http import HttpRequest, HttpResponse, JsonResponse
-from django.contrib.auth.models import User
 from tools.responses import tResponses
 from tools.functions import isOtherKeysInList, areKeysFromList
 from datetime import datetime
 from game.models import Match
+from django.core.exceptions import ValidationError
+from django.utils.dateparse import parse_datetime
 from users.models import Profile
+import sys
 	
-def isDateValid(date):
-	return 
-
 def strToDate(date: str):
-	format = "%Y-%m-%dT%H:%M:%S.%fZ"
-
 	try:
-		return (datetime.strptime(date, format))
-	except:
-		return None
+		if not parse_datetime(date):
+			return False
+	except ValidationError:
+		return False
+	return True
 
 # Entrypoint to interact with the historic match | stats part !
 def entryPoint(request: HttpRequest) -> HttpResponse:
@@ -32,6 +31,8 @@ def entryPoint(request: HttpRequest) -> HttpResponse:
 		dateSince = request.GET['since']
 		targetUser = request.GET['user']
 
+		if not (strToDate(dateSince)):
+			return tResponses.BAD_REQUEST.request("Bad date format !")
 		targetUser = Profile.getUserFromUsername(targetUser)
 		if not targetUser:
 			return tResponses.BAD_REQUEST.request("This user do not exist !")
