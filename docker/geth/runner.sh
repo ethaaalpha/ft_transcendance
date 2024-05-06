@@ -1,4 +1,3 @@
-
 if [ -d 'node1/geth/' ]; then
 	echo 'Config already here, running !'
 else

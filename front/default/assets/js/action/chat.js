@@ -1,8 +1,6 @@
 import globalVariables from '../init.js';
 import Conversations from '../class/Conversation.js';
 import { fetchData } from '../fetch/api.js';;
-import User from '../class/User.js';
-import Connect from '../class/Connect.js';
 import Alerts from '../class/Alerts.js';
 
 async function fetchConversations() {
@@ -64,16 +62,10 @@ function sendMessageInGame() {
 	}
 
 	const data = {'to': to, 'content': content};
-	if (globalVariables.activity && globalVariables.activity.socket.readyState === WebSocket.OPEN) {
-		globalVariables.activity.socket.send(JSON.stringify({
-			'event': 'chat',
-			'data': data,
-		}));
-		globalVariables.userConversations.addMessageFromGameSocket(data, false);
-	} else {
-		Alerts.createAlert(Alerts.type.FAILED, "Websocket isn't connected.");
-		console.error("Error sending message: Websocket not connected.");
-	}
+	sendCoordination({
+		'event': 'chat',
+		'data': data,
+	})
 }
 
 export { fetchConversations, sendMessage, sendMessageInGame };

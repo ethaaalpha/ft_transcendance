@@ -9,7 +9,7 @@ import { sendMessageInGame } from '../../action/chat.js';
 async function createInGame() {
 
 	try {
-		const user = 'admin'
+		const user = 'admin';
 		const inGame = document.getElementById("in-game");
 		inGame.classList.add('conversation-display')
 		inGame.innerHTML = "";

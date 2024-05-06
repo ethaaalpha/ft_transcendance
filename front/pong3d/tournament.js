@@ -1,3 +1,5 @@
+import { coordination } from "/static/default/assets/js/class/Coordination.js";
+
 var opacity_low = 0.4;
 var opacity_medium = 0.6;
 var opacity_high = 0.8;
@@ -71,9 +73,8 @@ class FormTournamentEvent {
 
 class FormTournament {
 
-	constructor (callback) {
+	constructor () {
 		this.changeToInactive();
-		this.callback = callback
 		this.historic = []
 	}
 
@@ -133,7 +134,7 @@ class FormTournament {
 
 	registerEventsRoom() {
 		document.getElementById('tournament-form-top-right').addEventListener("click", (event) => {
-			this.callback({'event': 'tournament', 'data': {
+			coordination.send({'event': 'tournament', 'data': {
 				'action': 'quit',
 				'room-id': this.roomCode,
 				},
@@ -149,7 +150,7 @@ class FormTournament {
 	askToJoin() {
 		let value = document.getElementById('tournament-js-code').value;
 		this.roomCode = value
-		this.callback({'event': 'tournament', 'data': {
+		coordination.send({'event': 'tournament', 'data': {
 			'room-id': value,
 			'action': 'join',
 			},
@@ -160,7 +161,7 @@ class FormTournament {
 	registerEventsWait() {
 		document.getElementById('tournament-js-create').addEventListener("click", (event) => {
 			let value = document.getElementById('tournament-js-select').value;
-			this.callback({'event': 'create', 'data': {
+			coordination.send({'event': 'create', 'data': {
 				'mode': `tournament${value}`
 				},
 			})
@@ -176,7 +177,7 @@ class FormTournament {
 		});
 
 		document.getElementById('tournament-escape-button').addEventListener('click', (event) => {
-			this.callback({'event': 'end', 'data': {
+			coordination.send({'event': 'end', 'data': {
 				'message': 'Forced by player',
 				},
 			})
@@ -198,6 +199,7 @@ class FormTournament {
 	}
 
 	changeToWait() {
+		this.defaultValues();
 		unhideElement('game');
 		hideElement('tournament-b')
 		unhideElement('tournament-a')
@@ -206,7 +208,6 @@ class FormTournament {
 	}
 
 	changeToInactive() {
-		this.defaultValues();
 		var content = document.getElementById('tournament-form-content');
 		while (content.firstChild)
 			content.removeChild(content.firstChild)
