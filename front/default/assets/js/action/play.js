@@ -25,15 +25,22 @@ function receivedPlayAnswer(from, answer) {
 	}
 }
 
-function goToInGame() {//the only to go to in-game is to do this two steps
+function goToInGame(opponentName) {//the only to go to in-game is to do this two steps
 	globalVariables.isInGame = true;
+
+	console.log('je passe en mode jeu !')
+	// if (window.location.href != '/in-game')
 	history.pushState({}, '', '/in-game');
 
     setTimeout(function() {
-        receivedNewOpponentUsername("louane"); // Assurez-vous que cette fonction est définie correctement
+        receivedNewOpponentUsername(opponentName);
     }, 10000);
 }
 
+function goToHome() {
+	globalVariables.isInGame = false;
+	history.pushState({}, '', '/');
+}
 
 
 // SEND THINGS TO WS
@@ -64,4 +71,4 @@ function refusePlayRequest(from) {
 	//alert sucess/fail
 }
 
-export { sentPlayRequest, receivedPlayRequest, acceptPlayRequest, refusePlayRequest };
+export { sentPlayRequest, receivedPlayRequest, acceptPlayRequest, refusePlayRequest, goToInGame, goToHome};
