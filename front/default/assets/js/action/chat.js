@@ -62,10 +62,10 @@ function sendMessageInGame() {
 	}
 
 	const data = {'to': to, 'content': content};
-	// sendCoordination({
-		// 'event': 'chat',
-		// 'data': data,
-	// })
+	sendCoordination({
+		'event': 'chat',
+		'data': data,
+	})
 }
 
 export { fetchConversations, sendMessage, sendMessageInGame };

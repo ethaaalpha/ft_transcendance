@@ -1,3 +1,5 @@
+import FormTournament from "/static/pong3d/tournament.js";
+
 let sleepSetTimeout_ctrl;
 
 var status = {
@@ -46,4 +48,6 @@ function hideTournamentCode() {
     var tournamentForm = document.getElementById("codeForm");
 	tournamentForm.classList.add('d-none');
 }
-export { sleep, waitForData, loadShader, hideLoadingAnimation, showLoadingAnimation, hideTournamentCode, showTournamentCode, status}
+
+var ft = new FormTournament();
+export { sleep, waitForData, loadShader, hideLoadingAnimation, showLoadingAnimation, hideTournamentCode, showTournamentCode, status, ft}
