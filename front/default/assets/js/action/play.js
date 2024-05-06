@@ -8,6 +8,12 @@ import { setNewOpponentUsername } from "../spaManagement/div/createInGame.js";
 function receivedNewOpponentUsername(username) {
 	// if new opponent after the first one, in tornament for exemple, do this
 	setNewOpponentUsername(username);// clear conv and change profil pic and name
+
+	let item = document.getElementById('in-game-title-id'); // active input
+	item.classList.remove('d-none')
+
+	item = document.getElementById('in-game-bottom-id')
+	item.classList.remove('d-none');
 }
 
 function receivedPlayRequest(from, to) {
