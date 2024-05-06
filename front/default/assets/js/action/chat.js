@@ -1,10 +1,7 @@
 import globalVariables from '../init.js';
 import Conversations from '../class/Conversation.js';
 import { fetchData } from '../fetch/api.js';;
-import User from '../class/User.js';
-import Connect from '../class/Connect.js';
 import Alerts from '../class/Alerts.js';
-import { sendCoordination } from '../../../../pong3d/main.js';
 
 async function fetchConversations() {
 	try {
@@ -65,10 +62,10 @@ function sendMessageInGame() {
 	}
 
 	const data = {'to': to, 'content': content};
-	sendCoordination({
-		'event': 'chat',
-		'data': data,
-	})
+	// sendCoordination({
+		// 'event': 'chat',
+		// 'data': data,
+	// })
 }
 
 export { fetchConversations, sendMessage, sendMessageInGame };

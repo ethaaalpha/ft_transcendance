@@ -21,6 +21,7 @@ var appliParent = document.querySelector('#game-container')
 function sendCoordination(data){
 	socketTmp.send(JSON.stringify(data))
 }
+
 function waitForNextMatch(code){
     console.log(data);
     return new Promise((resolve) => {
@@ -70,7 +71,7 @@ socketTmp.onmessage = (event) => {
 		ft.eventPlayer(tmp.data.updater, tmp.data.count, tmp.data.max)
 	else if (tmp.event == 'matchmaking' && tmp.data.status == false) {
 		// si le gars essaie de lancer 2 matchmaking en même temps
-		// ici remettre sur la page par défaut 
+		// ici remettre sur la page par défaut
 		// faire une alerte
 	}
 	else if (tmp.event == 'create' && tmp.data.status == false) {
