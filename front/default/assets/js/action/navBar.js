@@ -3,6 +3,9 @@ import { changeScene } from '../spaManagement/scene.js';
 import { sentPlayRequest } from './play.js';
 
 function navBarActionHandler(action, username) {
+	if (globalVariables.isInGame)
+		return
+
 	switch (action) {
 		case "Settings":
 			navBarSettings();
