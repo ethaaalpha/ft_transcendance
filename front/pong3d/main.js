@@ -9,6 +9,7 @@ import Menu from './menu.js';
 import GameLocal from './gameLocal.js';
 import GameInv from './gameInv.js';
 import { hideLoadingAnimation, showLoadingAnimation, status } from './utilsPong.js';
+import { goToHome, goToInGame } from '../default/assets/js/action/play.js';
 
 var data = null;
 var view = null;
@@ -28,8 +29,9 @@ function waitForNextMatch(code){
             if (data) {
                 if (data.event == "end" || data.event == "win")
                     status.status = 0
-                if (data.event == "next")
+                if (data.event == "next") {
                     status.status = 5
+				}
                 clearInterval(intervalId);
                 hideLoadingAnimation();
                 resolve();
@@ -43,8 +45,18 @@ const socketTmp = new WebSocket("wss://" + window.location.host + "/api/coordina
 socketTmp.onmessage = (event) => {
     console.log(JSON.parse(event.data))
     const tmp = JSON.parse(event.data)
-    if (tmp.event == "next" || tmp.event == "win" || tmp.event == "end")
-        data = tmp;
+    if (tmp.event == "next" || tmp.event == "win" || tmp.event == "end") {
+		data = tmp;	
+		switch (tmp.event) {
+			case 'next':
+				let usernameOpponent = tmp.data.statusHost ? tmp.data.invited : tmp.data.host; 
+				goToInGame(usernameOpponent)
+				break;
+			default:
+				// goToHome();
+				break;
+		}
+	}
 	else if (tmp.event == "create" && tmp.data.status == true){
 		ft.changeToRoom(tmp.data.message)
 		waitForNextMatch(tmp.data.message)
@@ -66,10 +78,11 @@ socketTmp.onmessage = (event) => {
 		// ft.changeToInactive();
 	}
 	else if (tmp.event == 'tournament' && tmp.data.status == false) {
-
+		// si le gars essaie de jouer à deux endroits en même (ex: matchmaking + je créer une room)
+		// pareil qu'en haut
+		// ft.changeToInactive();
 	}
 }
-
 
 var loadingManager = new THREE.LoadingManager();
 var gameData = {
@@ -124,7 +137,7 @@ async function initialize() {
 				await loadTexture();
 			else if (status.status === 0)
 				await createMenu();
-			else if (status.status === 1){
+			else if (status.status === 1){ // Matchmaking
                 socketTmp.send(JSON.stringify({'event': 'matchmaking', 'data': {'action' : 'join'}}))
                 showLoadingAnimation();
                 await waitForData();
@@ -141,14 +154,17 @@ async function initialize() {
 					showLoadingAnimation();
 
             }
-            else if (status.status === 3)
+            else if (status.status === 3){ // Training mode
+				console.log('le mode 3')
                 await createGame();
+			}
             else if (status.status === 4){
                     showLoadingAnimation();
                     console.log(status)
                     await waitForNextMatch("");
                 }
             else if (status.status === 5){
+				console.log("le mode 5")
                 await createGame(4);
             } 
 		}
