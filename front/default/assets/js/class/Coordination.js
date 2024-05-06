@@ -9,9 +9,11 @@ class Coordination{
 		this.data = null;
 		this.inGame = false
 	}
+
 	destroy(){
 		this.socketCo.close();
 	}
+
 	connect(){
 		this.socketCo = new WebSocket("wss://" + window.location.host + "/api/coordination/");
 		this.socketCo.onmessage = (event) => {
@@ -25,7 +27,8 @@ class Coordination{
 						goToInGame(usernameOpponent)
 						break;
 					default:
-						// goToHome();
+						console.log('je suis sensé quitter')
+						goToHome();
 						break;
 				}
 			}
@@ -55,7 +58,7 @@ class Coordination{
 				// ft.changeToInactive();
 			}
 			else if (tmp.event == 'chat') {
-				globalVariables.userConversations.addMessageFromGameSocket(tmp, true);
+				globalVariables.userConversations.addMessageFromGameSocket(tmp.data, true);
 			}
 		}
 
@@ -67,6 +70,7 @@ class Coordination{
 		else
 			console.log("Error socket Coordiantion State");
 	}
+
 	async waitForNextMatch(code){
 		console.log(this.data);
 		return new Promise((resolve) => {
@@ -89,6 +93,7 @@ class Coordination{
 			}, 500);
 		});
 	};
+
 	async waitForData(time) {
 		return new Promise((resolve) => {
 			const intervalId = setInterval(() => {
@@ -101,6 +106,7 @@ class Coordination{
 			}, time);
 		});
 	}
+
 	async waitForTournament(time) {
 		return new Promise((resolve) => {
 			const intervalId = setInterval(() => {
