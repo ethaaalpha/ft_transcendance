@@ -6,7 +6,7 @@ services:
     build:
       context: docker/geth
       dockerfile: geth.dockerfile
-    env_file:
+    env_file: 
       - .env
     volumes:
       - geth:/ethereum/
