@@ -1,7 +1,7 @@
 import Alerts from '../class/Alerts.js';
+import { coordination } from '../class/Coordination.js';
 import { fetchData } from '../fetch/api.js';
 import globalVariables from '../init.js';
-import { changeScene } from '../spaManagement/scene.js';
 
 function signIn() {
 	var username = document.getElementById("sign-in-username").value;
@@ -87,6 +87,8 @@ function signOut() {
 	fetchData("/api/auth/logout", 'POST')
 	.then(() => {
 		console.log("Sign out sucess");
+		globalVariables.activity.close();
+		coordination.destroy();
 		history.pushState({}, '', '/sign-in');
 	})
 	.catch(error => {
