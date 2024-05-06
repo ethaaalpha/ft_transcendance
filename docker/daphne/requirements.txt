@@ -4,7 +4,8 @@ requests
 daphne
 pillow
 shortuuid
+eth-typing==4.1.0
+web3==6.14.0
 psycopg2-binary
-web3
 channels-redis
 py-solc-x
