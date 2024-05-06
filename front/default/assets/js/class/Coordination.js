@@ -4,7 +4,7 @@ import { goToHome, goToInGame } from '/static/default/assets/js/action/play.js';
 import globalVariables from '/static/default/assets/js/init.js';
 import { receivedNewOpponentUsername } from "/static/default/assets/js/action/play.js";
 
-class Coordination{
+class Coordination {
 	constructor() {
 		this.connect()
 		this.data = null;
@@ -15,7 +15,7 @@ class Coordination{
 		this.socketCo.close();
 	}
 
-	connect(){
+	connect() {
 		this.socketCo = new WebSocket("wss://" + window.location.host + "/api/coordination/");
 
 		this.socketCo.onmessage = (event) => {
@@ -72,6 +72,7 @@ class Coordination{
 			history.pushState({}, '', '/error')
 		}
 	}
+
 	send(data){
 		if (this.socketCo.readyState === WebSocket.OPEN){
 			this.socketCo.send(JSON.stringify(data));
