@@ -55,6 +55,19 @@ socketTmp.onmessage = (event) => {
 	}
 	else if (tmp.event == "count")
 		ft.eventPlayer(tmp.data.updater, tmp.data.count, tmp.data.max)
+	else if (tmp.event == 'matchmaking' && tmp.data.status == false) {
+		// si le gars essaie de lancer 2 matchmaking en même temps
+		// ici remettre sur la page par défaut 
+		// faire une alerte
+	}
+	else if (tmp.event == 'create' && tmp.data.status == false) {
+		// si le gars essaie de jouer à deux endroits en même (ex: matchmaking + je créer une room)
+		// pareil qu'en haut
+		// ft.changeToInactive();
+	}
+	else if (tmp.event == 'tournament' && tmp.data.status == false) {
+
+	}
 }
 
 

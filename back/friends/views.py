@@ -69,7 +69,6 @@ def remove(user: User, target: User, targetProfile: Profile):
 	conv = Conversation.getConversation([user, target])
 	if conv:
 		import sys
-		print(f'je suis passé ici', file=sys.stderr)
 		conv.setState(False)
 	return tResponses.OKAY.request(f'You are not longger friend with {target.username} !')
 
