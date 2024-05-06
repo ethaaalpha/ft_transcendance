@@ -2,7 +2,6 @@ import sys
 from web3 import Web3
 from web3.middleware import geth_poa_middleware
 
-
 def	extract_address(content):
 	"""
 	Should be in this format

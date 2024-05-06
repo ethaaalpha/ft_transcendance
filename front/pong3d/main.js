@@ -8,68 +8,15 @@ import Game from './game.js';
 import Menu from './menu.js';
 import GameLocal from './gameLocal.js';
 import GameInv from './gameInv.js';
-import { hideLoadingAnimation, showLoadingAnimation, status } from './utilsPong.js';
+import { hideLoadingAnimation, showLoadingAnimation, status, ft } from './utilsPong.js';
+import { coordination } from '../default/assets/js/class/Coordination.js';
+
 
 var data = null;
 var view = null;
-var ft = new FormTournament(sendTournament)
 var appli = document.querySelector('#app');
 var appliParent = document.querySelector('#game-container')
-
-function sendTournament(data){
-	socketTmp.send(JSON.stringify(data))
-}
-function waitForNextMatch(code){
-    console.log(data);
-    return new Promise((resolve) => {
-        const intervalId = setInterval(() => {
-            socketTmp.send(JSON.stringify({'event': 'next', 'data': {'room-id' : code}}))
-            console.log(status);
-            if (data) {
-                if (data.event == "end" || data.event == "win")
-                    status.status = 0
-                if (data.event == "next")
-                    status.status = 5
-                clearInterval(intervalId);
-                hideLoadingAnimation();
-                resolve();
-            }
-        }, 500);
-    });
-
-};
-
-const socketTmp = new WebSocket("wss://" + window.location.host + "/api/coordination/")
-socketTmp.onmessage = (event) => {
-    console.log(JSON.parse(event.data))
-    const tmp = JSON.parse(event.data)
-    if (tmp.event == "next" || tmp.event == "win" || tmp.event == "end")
-        data = tmp;
-	else if (tmp.event == "create" && tmp.data.status == true){
-		ft.changeToRoom(tmp.data.message)
-		waitForNextMatch(tmp.data.message)
-	}
-	else if (tmp.event == "tournament" && tmp.data.status == true){
-		ft.changeToRoom(null)
-		waitForNextMatch(ft.roomCode)
-	}
-	else if (tmp.event == "count")
-		ft.eventPlayer(tmp.data.updater, tmp.data.count, tmp.data.max)
-	else if (tmp.event == 'matchmaking' && tmp.data.status == false) {
-		// si le gars essaie de lancer 2 matchmaking en même temps
-		// ici remettre sur la page par défaut 
-		// faire une alerte
-	}
-	else if (tmp.event == 'create' && tmp.data.status == false) {
-		// si le gars essaie de jouer à deux endroits en même (ex: matchmaking + je créer une room)
-		// pareil qu'en haut
-		// ft.changeToInactive();
-	}
-	else if (tmp.event == 'tournament' && tmp.data.status == false) {
-
-	}
-}
-
+console.log(appliParent.clientHeight);
 
 var loadingManager = new THREE.LoadingManager();
 var gameData = {
@@ -106,10 +53,6 @@ function onFocus(){
 function notOnFocus(){
     status.action = false;
 }
-
-// var status = {
-// 	status:-1,
-// };
 function updateStatus(newStatus) {
     status.status= newStatus.status;
 }
@@ -118,37 +61,41 @@ async function initialize() {
 	try {
 		while(1){
             if (status.status != 5)
-                data = null;
+				coordination.data = null;
             console.log(status)
 			if (status.status === -1)
 				await loadTexture();
 			else if (status.status === 0)
 				await createMenu();
-			else if (status.status === 1){
-                socketTmp.send(JSON.stringify({'event': 'matchmaking', 'data': {'action' : 'join'}}))
+			else if (status.status === 1){ // Matchmaking
+                coordination.send({'event': 'matchmaking', 'data': {'action' : 'join'}})
                 showLoadingAnimation();
-                await waitForData();
+                await coordination.waitForData(50);
     		    await createGame(0);
             }
             else if (status.status === 2){
                 ft.changeToWait();
                 hideLoadingAnimation();
-                await waitForNextMatch("")
+                await coordination.waitForTournament(50)
 				ft.changeToInactive();
+				console.log()
 				if (status.status == 5)
 					await createGame(4)
 				if (status.status == 0)
 					showLoadingAnimation();
 
             }
-            else if (status.status === 3)
+            else if (status.status === 3){ // Training mode
+				console.log('le mode 3')
                 await createGame();
+			}
             else if (status.status === 4){
                     showLoadingAnimation();
                     console.log(status)
-                    await waitForNextMatch("");
+                    await coordination.waitForNextMatch(ft.roomCode);
                 }
             else if (status.status === 5){
+				console.log("le mode 5")
                 await createGame(4);
             } 
 		}
@@ -159,7 +106,8 @@ async function initialize() {
 
 function initLoading(){
     loadingManager.onStart = function(url, item, total){
-        if (gameData.loaded.instance == 0)
+		console.log(window.location.pathname);
+        if (gameData.loaded.instance == 0 && window.location.pathname != "/profil")
             showLoadingAnimation();
         gameData.loaded.instance += 1
         console.log("coucou");
@@ -212,11 +160,11 @@ async function createMenu() {
 async function createGame(returnValue) {
     return new Promise((resolve) => {
         view = null;
-        if (data.data.statusHost == true)
+        if (coordination.data.data.statusHost == true)
             view = new Game(status, resolve, updateStatus, gameData, returnValue);
         else
             view = new GameInv(status, resolve, updateStatus, gameData, returnValue);
-		data = null;
+		coordination.data = null;
     });
 }
 
@@ -225,20 +173,6 @@ async function createGameLocal() {
     return new Promise((resolve) => {
 		view = null;
         view = new GameLocal(status, resolve, updateStatus, gameData);
-    });
-}
-
-function waitForData(time) {
-    
-    return new Promise((resolve) => {
-        const intervalId = setInterval(() => {
-            if (data) {
-                console.log("cou");
-                clearInterval(intervalId);
-                hideLoadingAnimation();
-                resolve();
-            }
-        }, time);
     });
 }
 

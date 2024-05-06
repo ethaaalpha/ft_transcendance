@@ -2,7 +2,7 @@ from django.db import models
 from web3 import Web3
 from .interactions import Web3Interactions
 from threading import Thread
-import solcx
+import solcx, sys
 
 class ContractBuilder():
 	@staticmethod
@@ -36,6 +36,7 @@ class ContractBuilder():
 
 		# Require transaction for the contract and wait for the receipt (validation)
 		contract = w3.eth.contract(abi=abi, bytecode=bytecode)
+		print("je commence un smart contrat !", file=sys.stderr)
 		tx_hash = contract.constructor(score[0] & 0xFF, score[1] & 0xFF).transact()  # Parameters required by the Contract (constructor method)
 
 		try:
@@ -51,6 +52,7 @@ class ContractBuilder():
 		contract_m = Contract(abi=abi, address=tx_receipt['contractAddress'])
 		contract_m.save()
 		match_instance.setScore(contract_m)
+		print("j'ai fini le smart contart", file=sys.stderr)
 	
 	@staticmethod
 	def threaded(score, match_instance):

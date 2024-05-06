@@ -1,3 +1,5 @@
+import FormTournament from "/static/pong3d/tournament.js";
+
 let sleepSetTimeout_ctrl;
 
 var status = {
@@ -29,14 +31,12 @@ async function loadShader(url) {
 
 function showLoadingAnimation() {
     var loadingAnimation = document.getElementById("loader");
-	console.log("je montre l'animation");
 	loadingAnimation.classList.remove('d-none');
 }
 
 function hideLoadingAnimation() {
     var loadingAnimation = document.getElementById("loader");
 	loadingAnimation.classList.add('d-none');
-	console.log("j'enleve l'animation");
 }
 
 function showTournamentCode() {
@@ -48,4 +48,6 @@ function hideTournamentCode() {
     var tournamentForm = document.getElementById("codeForm");
 	tournamentForm.classList.add('d-none');
 }
-export { sleep, waitForData, loadShader, hideLoadingAnimation, showLoadingAnimation, hideTournamentCode, showTournamentCode, status}
+
+var ft = new FormTournament();
+export { sleep, waitForData, loadShader, hideLoadingAnimation, showLoadingAnimation, hideTournamentCode, showTournamentCode, status, ft}

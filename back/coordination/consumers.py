@@ -29,12 +29,13 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 
 	async def connect(self):
 		self.user = self.scope['user']
-		username = await self.getUsername()
-
-		if username in connected_list:
-			await self.close()
 
 		if self.user.is_authenticated:
+			username = await self.getUsername()
+
+			if username in connected_list:
+				await self.close()
+
 			await self.accept()
 			await self.channel_layer.group_add(getChannelName(username, 'coord'), self.channel_name)
 			connected_list.append(username)
@@ -73,7 +74,7 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 	async def receive_json(self, content: dict, **kwargs):
 		print(f'reçu: {content}', file=sys.stderr)
 		if 'event' in content and 'data' in content:
-			data = content['data']
+			data = content.get('data')
 			user = await self.getUser()
 			target = data.get('target')
 			match content['event']:
