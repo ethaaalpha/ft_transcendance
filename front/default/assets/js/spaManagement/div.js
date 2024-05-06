@@ -11,6 +11,7 @@ import { createSettingsGameTheme } from './div/createSettingsGameTheme.js';
 import { createSettingsProfilPicture } from './div/createSettingsProfilPicture.js';
 import { createSettingsPassword } from './div/createSettingsPassword.js';
 import { createSettingsEmail } from './div/createSettingsEmail.js';
+import { createError } from './div/createError.js';
 
 function removeChildDiv(parentIds, ...excludeIds) {
 	parentIds.forEach(parentId => {
@@ -70,6 +71,9 @@ async function createChildDiv(divIds, username) {
 					break;
 				case "settings-email":
 					createSettingsEmail();
+					break;
+				case 'error':
+					createError();
 					break;
 				default:
 					console.log("Invalid divId: ", divId);

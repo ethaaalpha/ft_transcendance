@@ -17,6 +17,7 @@ class Coordination{
 
 	connect(){
 		this.socketCo = new WebSocket("wss://" + window.location.host + "/api/coordination/");
+
 		this.socketCo.onmessage = (event) => {
 			console.log(JSON.parse(event.data))
 			const tmp = JSON.parse(event.data)
@@ -63,6 +64,13 @@ class Coordination{
 			}
 		}
 
+		this.socketCo.onerror = (event) => {
+			history.pushState({}, '', '/error')
+		}
+
+		this.socketCo.onclose = (event) => {
+			history.pushState({}, '', '/error')
+		}
 	}
 	send(data){
 		if (this.socketCo.readyState === WebSocket.OPEN){
@@ -119,6 +127,10 @@ class Coordination{
 				}
 			}, time);
 		});
+	}
+
+	isConnected() {
+		return this.socketCo.readyState != WebSocket.OPEN ? false : true
 	}
 }
 var coordination = new Coordination()
