@@ -49,6 +49,7 @@ function goToHome() {
 // SEND THINGS TO WS
 // user click on navbar button 'play' in a friend profil scene
 function sentPlayRequest(from, to) {
+	
 	goToInGame();
 
 	// implement here your ws action to sent the play request
