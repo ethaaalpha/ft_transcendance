@@ -32,8 +32,9 @@ function goToInGame(opponentName) {//the only to go to in-game is to do this two
 	history.pushState({}, '', '/in-game');
 
     setTimeout(function() {
-        receivedNewOpponentUsername(opponentName);
-    }, 100);
+		receivedNewOpponentUsername(opponentName);
+		console.log("le nom de l'adversaire "+ opponentName)
+    }, 1000);
 }
 
 function goToHome() {

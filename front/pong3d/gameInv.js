@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { TessellateModifier } from 'three/module/modifiers/TessellateModifier.js';
 import { TextGeometry } from 'three/module/geometries/TextGeometry.js';
 import { sleep, loadShader, status } from './utilsPong.js'
+import { goToHome } from '/static/default/assets/js/action/play.js';
 
 class GameInv {
 	constructor(status, resolve,statusCallback, gameData, returnValue) {
@@ -189,6 +190,7 @@ class GameInv {
 			if (response.event == 'end'){
 				console.log(response.event);
 				this.status.status = this.returnValue;
+				goToHome();
 			}
 			else 
 				this.data = response.data;
