@@ -29,12 +29,11 @@ function goToInGame(opponentName) {//the only to go to in-game is to do this two
 	globalVariables.isInGame = true;
 
 	console.log('je passe en mode jeu !')
-	// if (window.location.href != '/in-game')
 	history.pushState({}, '', '/in-game');
 
     setTimeout(function() {
         receivedNewOpponentUsername(opponentName);
-    }, 10000);
+    }, 100);
 }
 
 function goToHome() {

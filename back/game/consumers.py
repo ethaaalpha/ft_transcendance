@@ -40,6 +40,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 		if self.game:
 			await self.game.disconnect(await self.getUsername())
 			GameMap.removeGame(self.matchId)
+		self.inactivity_check_task.cancel()
 		await self.channel_layer.group_discard(self.matchId, self.channel_name)
 		return await super().disconnect(code)
 	
