@@ -25,21 +25,18 @@ function receivedPlayAnswer(from, answer) {
 	}
 }
 
-function goToInGame(opponentName) {//the only to go to in-game is to do this two steps
-	globalVariables.isInGame = true;
-
-	console.log('je passe en mode jeu !')
-	history.pushState({}, '', '/in-game');
-
-    setTimeout(function() {
-		receivedNewOpponentUsername(opponentName);
-		console.log("le nom de l'adversaire "+ opponentName)
-    }, 1000);
+function goToInGame() {//the only to go to in-game is to do this two steps
+	if (window.location.pathname != '/in-game' && !globalVariables.isInGame) {
+		globalVariables.isInGame = true;
+		history.pushState({}, '', '/in-game');
+	}
 }
 
 function goToHome() {
-	globalVariables.isInGame = false;
-	history.pushState({}, '', '/');
+	if (window.location.pathname == '/in-game' && globalVariables.isInGame) {
+		globalVariables.isInGame = false;
+		history.pushState({}, '', '/');
+	}
 }
 
 
@@ -71,4 +68,4 @@ function refusePlayRequest(from) {
 	//alert sucess/fail
 }
 
-export { sentPlayRequest, receivedPlayRequest, acceptPlayRequest, refusePlayRequest, goToInGame, goToHome};
+export { sentPlayRequest, receivedPlayRequest, acceptPlayRequest, refusePlayRequest, goToInGame, goToHome, receivedNewOpponentUsername};
