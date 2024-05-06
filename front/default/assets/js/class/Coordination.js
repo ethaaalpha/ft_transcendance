@@ -2,9 +2,10 @@ import { status, hideLoadingAnimation, showLoadingAnimation, ft } from "/static/
 import FormTournament from "/static/pong3d/tournament.js";
 import { goToHome, goToInGame } from '/static/default/assets/js/action/play.js';
 import globalVariables from '/static/default/assets/js/init.js';
+import { receivedNewOpponentUsername } from "/static/default/assets/js/action/play.js";
 
 class Coordination{
-	constructor(){
+	constructor() {
 		this.connect()
 		this.data = null;
 		this.inGame = false
@@ -24,7 +25,7 @@ class Coordination{
 				switch (tmp.event) {
 					case 'next':
 						let usernameOpponent = tmp.data.statusHost ? tmp.data.invited : tmp.data.host; 
-						goToInGame(usernameOpponent)
+						receivedNewOpponentUsername(usernameOpponent)
 						break;
 					default:
 						console.log('je suis sensé quitter')
