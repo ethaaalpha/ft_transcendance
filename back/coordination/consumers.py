@@ -10,6 +10,8 @@ from channels.layers import get_channel_layer
 from game.models import Room, Mode, Match
 import time, sys, threading
 
+connected_list = []
+
 class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 		
 	@database_sync_to_async
@@ -27,13 +29,22 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 
 	async def connect(self):
 		self.user = self.scope['user']
+		username = await self.getUsername()
+
+		if username in connected_list:
+			await self.close()
+
 		if self.user.is_authenticated:
 			await self.accept()
-			await self.channel_layer.group_add(getChannelName(await self.getUsername(), 'coord'), self.channel_name)
+			await self.channel_layer.group_add(getChannelName(username, 'coord'), self.channel_name)
+			connected_list.append(username)
 
 	async def disconnect(self, code):
 		if not self.user.is_authenticated:
 			return
+
+		username = await self.getUsername()
+
 		# need to leave the matchmaking queue
 		await sync_to_async(Matchmaking.removePlayerToQueue)(self.user)
 
@@ -41,7 +52,8 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 		await database_sync_to_async(Room.disconnectAPlayer)(self.user)
 		await self.desactivePlaying()
 
-		await self.channel_layer.group_discard(getChannelName(await self.getUsername(), 'coord'), self.channel_name)
+		await self.channel_layer.group_discard(getChannelName(username, 'coord'), self.channel_name)
+		connected_list.remove(username)
 		return await super().disconnect(code)
 	
 	async def messageResponse(self, event: str, values: tuple):
@@ -59,7 +71,7 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 		})
 	
 	async def receive_json(self, content: dict, **kwargs):
-		print('icy', file=sys.stderr)
+		print(f'reçu: {content}', file=sys.stderr)
 		if 'event' in content and 'data' in content:
 			data = content['data']
 			user = await self.getUser()
