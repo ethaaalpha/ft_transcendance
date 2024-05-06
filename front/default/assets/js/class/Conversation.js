@@ -58,7 +58,9 @@ class Conversations {
 		}
 	}
 
-	addMessageFromGameSocket(messageData, received = false) {	
+	addMessageFromGameSocket(messageData, received = false) {
+		if (!globalVariables.isInGame)
+			return
 		if (!messageData.hasOwnProperty('from') && !messageData.hasOwnProperty('sendAt')) {
 			messageData.from = this.myUsername;
 			messageData.sendAt = new Date();

@@ -10,14 +10,15 @@ import GameLocal from './gameLocal.js';
 import GameInv from './gameInv.js';
 import { hideLoadingAnimation, showLoadingAnimation, status } from './utilsPong.js';
 import { goToHome, goToInGame } from '../default/assets/js/action/play.js';
+import globalVariables from '../default/assets/js/init.js';
 
 var data = null;
 var view = null;
-var ft = new FormTournament(sendTournament)
+var ft = new FormTournament(sendCoordination)
 var appli = document.querySelector('#app');
 var appliParent = document.querySelector('#game-container')
 
-function sendTournament(data){
+function sendCoordination(data){
 	socketTmp.send(JSON.stringify(data))
 }
 function waitForNextMatch(code){
@@ -53,7 +54,7 @@ socketTmp.onmessage = (event) => {
 				goToInGame(usernameOpponent)
 				break;
 			default:
-				// goToHome();
+				goToHome();
 				break;
 		}
 	}
@@ -81,6 +82,9 @@ socketTmp.onmessage = (event) => {
 		// si le gars essaie de jouer à deux endroits en même (ex: matchmaking + je créer une room)
 		// pareil qu'en haut
 		// ft.changeToInactive();
+	}
+	else if (tmp.event == 'chat') {
+		globalVariables.userConversations.addMessageFromGameSocket(tmp, true);
 	}
 }
 
@@ -258,4 +262,4 @@ function waitForData(time) {
     });
 }
 
-export { initialize }
+export { initialize, sendCoordination }
