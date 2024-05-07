@@ -1,6 +1,5 @@
 import { status, hideLoadingAnimation, showLoadingAnimation, ft, sleep } from "/static/pong3d/utilsPong.js";
-import FormTournament from "/static/pong3d/tournament.js";
-import { goToHome, goToInGame } from '/static/default/assets/js/action/play.js';
+import { goToHome } from '/static/default/assets/js/action/play.js';
 import globalVariables from '/static/default/assets/js/init.js';
 import { receivedNewOpponentUsername } from "/static/default/assets/js/action/play.js";
 
@@ -13,10 +12,14 @@ class Coordination {
 
 	destroy(){
 		this.socketCo.close();
+		console.log("Coordination socket closed")
 	}
 
 	connect() {
 		this.socketCo = new WebSocket("wss://" + window.location.host + "/api/coordination/");
+		this.socketCo.onopen = (event) => {
+			console.log("Coordination socket connected")
+		}
 
 		this.socketCo.onmessage = (event) => {
 			console.log(JSON.parse(event.data))
@@ -135,6 +138,5 @@ class Coordination {
 		return this.socketCo.readyState != WebSocket.OPEN ? false : true
 	}
 }
-var coordination = new Coordination()
 
-export { coordination }
+export default Coordination

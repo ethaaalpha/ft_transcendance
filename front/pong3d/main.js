@@ -9,7 +9,6 @@ import Menu from './menu.js';
 import GameLocal from './gameLocal.js';
 import GameInv from './gameInv.js';
 import { hideLoadingAnimation, showLoadingAnimation, status, ft } from './utilsPong.js';
-import { coordination } from '/static/default/assets/js/class/Coordination.js';
 import { goToInGame } from '/static/default/assets/js/action/play.js';
 import { goToHome } from '/static/default/assets/js/action/play.js';
 import globalVariables from '/static/default/assets/js/init.js';
@@ -64,7 +63,7 @@ async function initialize() {
 	try {
 		while(1){
             if (status.status != 5)
-				coordination.data = null;
+				globalVariables.coordination.data = null;
             console.log(status)
 			if (status.status === -1)
 				await loadTexture();
@@ -74,16 +73,16 @@ async function initialize() {
 			}
 			else if (status.status === 1){ // Matchmaking
 				goToInGame();
-                coordination.send({'event': 'matchmaking', 'data': {'action' : 'join'}})
+                globalVariables.coordination.send({'event': 'matchmaking', 'data': {'action' : 'join'}})
                 showLoadingAnimation();
-                await coordination.waitForData(50);
+                await globalVariables.coordination.waitForData(50);
     		    await createGame(0);
             }
             else if (status.status === 2){ // Tournament
 				goToInGame();
                 ft.changeToWait();
                 hideLoadingAnimation();
-                await coordination.waitForTournament(50)
+                await globalVariables.coordination.waitForTournament(50)
 				ft.changeToInactive();
 				if (status.status == 5)
 					await createGame(4)
@@ -97,7 +96,7 @@ async function initialize() {
             else if (status.status === 4){
                     showLoadingAnimation();
                     console.log(status)
-                    await coordination.waitForNextMatch(ft.roomCode);
+                    await globalVariables.coordination.waitForNextMatch(ft.roomCode);
                 }
             else if (status.status === 5){
 				console.log("le mode 5")
@@ -168,11 +167,11 @@ async function createMenu() {
 async function createGame(returnValue) {
     return new Promise((resolve) => {
         view = null;
-        if (coordination.data.data.statusHost == true)
+        if (globalVariables.coordination.data.data.statusHost == true)
             view = new Game(status, resolve, updateStatus, gameData, returnValue);
         else
             view = new GameInv(status, resolve, updateStatus, gameData, returnValue);
-		coordination.data = null;
+		globalVariables.coordination.data = null;
     });
 }
 

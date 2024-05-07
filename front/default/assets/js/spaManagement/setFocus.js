@@ -12,9 +12,6 @@ function setFocus(currentScene) {
 		case "search":
 			focusSearch();
 			break;
-		case "in-game":
-			focusInGame();
-			break;
 		case "settings-password":
 			focusSettingsPassword();
 			break;
@@ -46,10 +43,6 @@ function focusConversationDisplay() {
 
 function focusSearch() {
 	document.getElementById("search-searchbar-input-id").focus();
-}
-
-function focusInGame() {
-	document.getElementById("app").focus();
 }
 
 function focusSettingsPassword() {

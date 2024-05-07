@@ -2,7 +2,6 @@ import globalVariables from '../init.js';
 import Conversations from '../class/Conversation.js';
 import { fetchData } from '../fetch/api.js';;
 import Alerts from '../class/Alerts.js';
-import { coordination } from '../class/Coordination.js';
 
 async function fetchConversations() {
 	try {
@@ -63,7 +62,7 @@ function sendMessageInGame() {
 	inputElement.value = "";
 
 	const data = {'from': globalVariables.currentUser.username, 'content': content};
-	coordination.send({
+	globalVariables.coordination.send({
 		'event': 'chat',
 		'data': data,
 	})

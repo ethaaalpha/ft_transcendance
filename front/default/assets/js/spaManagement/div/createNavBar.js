@@ -73,7 +73,6 @@ function createNavBar(username) {
 }
 
 function createButton(label, color, backgroundColor, hoverColor, id, username, clickable = true) {
-	console.log('je recréer le bouton ' + label);
 	const button = document.createElement("button");
 	button.type = "button";
 	button.id = "nav-bar-button-" + id;
