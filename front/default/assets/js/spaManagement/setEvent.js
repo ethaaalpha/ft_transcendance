@@ -3,6 +3,7 @@ import { changeScene } from './scene.js';
 import { sendMessage } from '../action/chat.js';
 import { signIn, signUp, modifyEmail, modifyPassword } from '../action/userManagement.js';
 import { sendMessageInGame } from '../action/chat.js';
+import { checkSignInAllValues, checkSignUpAllValues, isValidEmail, isValidPassword, isValidUsername } from '../action/utils.js';
 
 async function setEventListener(scene) {
 	switch (scene) {
@@ -60,34 +61,31 @@ function addEventListener(eventName, elementId, eventHandler) {
 function setEventSignIn() {
 	addEventListener("input", "sign-in-username", function() {
 		var usernameInput = this.value;
-		var isValid = /^[A-Za-z0-9_+\-.@]+$/.test(usernameInput);
-		if (isValid && usernameInput.length >= 3 && usernameInput.length <= 32) {
+		if (isValidUsername(usernameInput))
 			this.classList.remove("is-invalid");
-		} else {
-			if (!this.classList.contains("is-invalid")) {
-				this.classList.add("is-invalid");
-			}
-		}
+		else
+			this.classList.add("is-invalid");
 	});
 
 	addEventListener("input", "sign-in-password", function() {
 		var passwordInput = this.value;
-		if (passwordInput.length >= 5 && passwordInput.length <= 42) {
+		if (isValidPassword(passwordInput))
 			this.classList.remove("is-invalid");
-		} else {
+		else
 			this.classList.add("is-invalid");
-		}
 	});
 
 	addEventListener("keypress", "sign-in-username", function(event) {
 		if (event.key === "Enter") {
-			signIn();
+			if (checkSignInAllValues())
+				signIn();
 		}
 	});
 
 	addEventListener("keypress", "sign-in-password", function(event) {
 		if (event.key === "Enter") {
-			signIn();
+			if (checkSignInAllValues())
+				signIn();
 		}
 	});
 }
@@ -95,28 +93,23 @@ function setEventSignIn() {
 function setEventSignUp() {
 	addEventListener("input", "sign-up-username", function() {
 		var usernameInput = this.value;
-		var isValid = /^[A-Za-z0-9_+\-.@]+$/.test(usernameInput);
-		if (isValid && usernameInput.length >= 3 && usernameInput.length <= 32) {
-			this.classList.remove("is-invalid");
-		} else {
-			if (!this.classList.contains("is-invalid")) {
-				this.classList.add("is-invalid");
-			}
-		}
+		if (isValidUsername(usernameInput))
+			this.classList.remove('is-invalid')
+		else
+			this.classList.add('is-invalid')
 	});
 
 	addEventListener("input", "sign-up-password", function() {
 		var passwordInput = this.value;
-		if (passwordInput.length >= 5 && passwordInput.length <= 42) {
-			this.classList.remove("is-invalid");
-		} else {
-			this.classList.add("is-invalid");
-		}
+		if (isValidPassword(passwordInput))
+			this.classList.remove('is-invalid')
+		else
+			this.classList.add('is-invalid')
 	});
 
 	addEventListener("input", "sign-up-password-confirm", function() {
 		var confirmPasswordInput = this.value;
-		var passwordInput = document.getElementById("password").value;
+		var passwordInput = document.getElementById("sign-up-password").value;
 		var isValid = confirmPasswordInput === passwordInput;
 		if (isValid) {
 			this.classList.remove("is-invalid");
@@ -127,8 +120,7 @@ function setEventSignUp() {
 	
 	addEventListener("input", "sign-up-email", function() {
 		var emailInput = this.value;
-		var isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+\w*$/.test(emailInput) && emailInput.length <= 254;
-		if (isValid) {
+		if (isValidEmail(emailInput)) {
 			this.classList.remove("is-invalid");
 		} else {
 			this.classList.add("is-invalid");
@@ -137,25 +129,29 @@ function setEventSignUp() {
 
 	addEventListener("keypress", "sign-up-username", function(event) {
 		if (event.key === "Enter") {
-			signUp();
+			if (checkSignUpAllValues())
+				signUp();
 		}
 	});
 
 	addEventListener("keypress", "sign-up-password", function(event) {
 		if (event.key === "Enter") {
-			signUp();
+			if (checkSignUpAllValues())
+				signUp();
 		}
 	});
 
 	addEventListener("keypress", "sign-up-password-confirm", function(event) {
 		if (event.key === "Enter") {
-			signUp();
+			if (checkSignUpAllValues())
+				signUp();;
 		}
 	});
 
 	addEventListener("keypress", "sign-up-email", function(event) {
 		if (event.key === "Enter") {
-			signUp();
+			if (checkSignUpAllValues())
+				signUp();
 		}
 	});
 }

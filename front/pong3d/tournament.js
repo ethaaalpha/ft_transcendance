@@ -1,4 +1,5 @@
 import { coordination } from "/static/default/assets/js/class/Coordination.js";
+import { status } from "/static/pong3d/utilsPong.js";
 
 var opacity_low = 0.4;
 var opacity_medium = 0.6;
@@ -177,6 +178,8 @@ class FormTournament {
 		});
 
 		document.getElementById('tournament-escape-button').addEventListener('click', (event) => {
+			status.status = 0
+			coordination.inGame = true;
 			coordination.send({'event': 'end', 'data': {
 				'message': 'Forced by player',
 				},

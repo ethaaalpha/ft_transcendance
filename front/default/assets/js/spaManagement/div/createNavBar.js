@@ -77,7 +77,7 @@ function createButton(label, color, backgroundColor, hoverColor, id, username, c
 	const button = document.createElement("button");
 	button.type = "button";
 	button.id = "nav-bar-button-" + id;
-	button.className = "btn col-6 btn-light bordered-button title-4 d-flex align-items-center justify-content-center nav-bar-btn";
+	button.className = "btn col-6 btn-light nav-bar-btn bordered-button title-4 d-flex align-items-center justify-content-center nav-bar-btn";
 	button.style.setProperty("--main_color", color);
 	button.style.setProperty("--default_hover", hoverColor);
 	button.style.setProperty('--background-nav', backgroundColor);

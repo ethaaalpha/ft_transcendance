@@ -2,6 +2,7 @@ import globalVariables from '../init.js';
 import Conversations from '../class/Conversation.js';
 import { fetchData } from '../fetch/api.js';;
 import Alerts from '../class/Alerts.js';
+import { coordination } from '../class/Coordination.js';
 
 async function fetchConversations() {
 	try {
@@ -18,9 +19,9 @@ function sendMessage() {
 	const to = document.getElementById("send-message-contact-id").textContent;
 	const contentInput = document.getElementById("send-message-input-id");
 	const content = contentInput.value.trim();
+	let inputElement = document.getElementById("send-message-input-id");
 
 	if (content === "") {
-		let inputElement = document.getElementById("send-message-input-id");
 		inputElement.value = "";
 		Alerts.createAlert(Alerts.type.FAILED, "Message is empty.");
 		console.error("Error sending message: Message is empty.");
@@ -28,10 +29,9 @@ function sendMessage() {
 	}
 
 	if (globalVariables.currentUser.isFriend(to) !== 'friend') {
-		let inputElement = document.getElementById("send-message-input-id");
-		inputElement.value = "";
 		Alerts.createAlert(Alerts.type.FAILED, "You can only send messages to friends.");
 		console.error("Error sending message: You can only send messages to friends.");
+		inputElement.value = "";
 		return;
 	}
 
@@ -52,20 +52,22 @@ function sendMessageInGame() {
 	const to = document.getElementById("in-game-send-message-contact-id").textContent;
 	const contentInput = document.getElementById("in-game-send-message-input-id");
 	const content = contentInput.value.trim();
+	let inputElement = document.getElementById("in-game-send-message-input-id");
 
 	if (content === "") {
-		let inputElement = document.getElementById("in-game-send-message-input-id");
 		inputElement.value = "";
 		Alerts.createAlert(Alerts.type.FAILED, "Message is empty.");
 		console.error("Error sending message: Message is empty.");
 		return;
 	}
+	inputElement.value = "";
 
-	const data = {'to': to, 'content': content};
-	sendCoordination({
+	const data = {'from': globalVariables.currentUser.username, 'content': content};
+	coordination.send({
 		'event': 'chat',
 		'data': data,
 	})
+	globalVariables.userConversations.addMessageFromGameSocket(data);
 }
 
 export { fetchConversations, sendMessage, sendMessageInGame };

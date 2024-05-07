@@ -140,6 +140,13 @@ const sceneInfos = {
 		unhideElementsIds: ["home", "nav-bar", "settings-email", "app"],
 		setEventListenerIds: "settings-email",
 		setFocusId: "settings-email"
+	},
+	"error": {
+		id: "error",
+		removeNewSceneIds: ["error"],
+		removeOldScenesIds: ["error"],
+		createChildDivIds: ["error"],
+		unhideElementsIds: ["error"],
 	}
 };
 

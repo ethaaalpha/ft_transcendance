@@ -8,6 +8,12 @@ import { setNewOpponentUsername } from "../spaManagement/div/createInGame.js";
 function receivedNewOpponentUsername(username) {
 	// if new opponent after the first one, in tornament for exemple, do this
 	setNewOpponentUsername(username);// clear conv and change profil pic and name
+
+	let item = document.getElementById('in-game-title-id'); // active input
+	item.classList.remove('d-none')
+
+	item = document.getElementById('in-game-bottom-id')
+	item.classList.remove('d-none');
 }
 
 function receivedPlayRequest(from, to) {
@@ -25,26 +31,25 @@ function receivedPlayAnswer(from, answer) {
 	}
 }
 
-function goToInGame(opponentName) {//the only to go to in-game is to do this two steps
-	globalVariables.isInGame = true;
-
-	console.log('je passe en mode jeu !')
-	history.pushState({}, '', '/in-game');
-
-    setTimeout(function() {
-        receivedNewOpponentUsername(opponentName);
-    }, 100);
+function goToInGame() {//the only to go to in-game is to do this two steps
+	if (window.location.pathname != '/in-game' && !globalVariables.isInGame) {
+		globalVariables.isInGame = true;
+		history.pushState({}, '', '/in-game');
+	}
 }
 
 function goToHome() {
-	globalVariables.isInGame = false;
-	history.pushState({}, '', '/');
+	if (window.location.pathname == '/in-game' && globalVariables.isInGame) {
+		globalVariables.isInGame = false;
+		history.pushState({}, '', '/');
+	}
 }
 
 
 // SEND THINGS TO WS
 // user click on navbar button 'play' in a friend profil scene
 function sentPlayRequest(from, to) {
+	
 	goToInGame();
 
 	// implement here your ws action to sent the play request
@@ -70,4 +75,4 @@ function refusePlayRequest(from) {
 	//alert sucess/fail
 }
 
-export { sentPlayRequest, receivedPlayRequest, acceptPlayRequest, refusePlayRequest, goToInGame, goToHome};
+export { sentPlayRequest, receivedPlayRequest, acceptPlayRequest, refusePlayRequest, goToInGame, goToHome, receivedNewOpponentUsername};

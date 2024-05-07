@@ -1,7 +1,7 @@
 import Alerts from '../class/Alerts.js';
+import { coordination } from '../class/Coordination.js';
 import { fetchData } from '../fetch/api.js';
 import globalVariables from '../init.js';
-import { changeScene } from '../spaManagement/scene.js';
 
 function signIn() {
 	var username = document.getElementById("sign-in-username").value;
@@ -87,6 +87,8 @@ function signOut() {
 	fetchData("/api/auth/logout", 'POST')
 	.then(() => {
 		console.log("Sign out sucess");
+		globalVariables.activity.close();
+		coordination.destroy();
 		history.pushState({}, '', '/sign-in');
 	})
 	.catch(error => {
@@ -169,11 +171,15 @@ function modifyProfilPicture() {
 	var formData = new FormData();
 
     if (!files || !files[0]) {
-        console.log("No file selected");
+		Alerts.createAlert(Alerts.type.FAILED, 'No file selected')
         return; 
     }
 	
 	const profilePicture = files[0]; // Because just one file (first one)
+	if (profilePicture.size > 1900000) {
+		Alerts.createAlert(Alerts.type.FAILED, 'File too large (<1.9M)')
+		return 
+	}
 
 	formData.append("profilePicture", profilePicture);
 	fetchData("/api/dashboard?filter=profilePicture", 'POST', formData).then(
