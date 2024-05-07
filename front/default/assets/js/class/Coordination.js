@@ -135,7 +135,7 @@ class Coordination {
 	}
 
 	isConnected() {
-		return this.socketCo.readyState != WebSocket.OPEN ? false : true
+		return this.socketCo.readyState != WebSocket.CLOSED ? true : false
 	}
 }
 

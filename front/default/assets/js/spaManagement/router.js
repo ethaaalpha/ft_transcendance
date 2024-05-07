@@ -160,7 +160,7 @@ async function routeChat() {
 };
 
 async function routeError() {
-	if (globalVariables.coordination.isConnected())
+	if (globalVariables.coordination && globalVariables.coordination.isConnected())
 		return (history.pushState({}, '', '/'))
 	else
 		await changeScene('error', 'none');

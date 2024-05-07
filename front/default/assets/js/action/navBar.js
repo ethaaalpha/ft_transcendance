@@ -1,10 +1,11 @@
+import Alerts from '../class/Alerts.js';
 import globalVariables from '../init.js';
 import { changeScene } from '../spaManagement/scene.js';
 import { sentPlayRequest } from './play.js';
 
 function navBarActionHandler(action, username) {
 	if (globalVariables.isInGame)
-		return
+		return Alerts.createAlert(Alerts.type.FAILED, "You're playing !");
 
 	switch (action) {
 		case "Settings":
