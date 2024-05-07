@@ -105,7 +105,7 @@ class Match(models.Model):
 		if (not match.ready[0] or not match.ready[1]):
 			# mettre les stats a des valeurs par defaut !
 			match.setStartTime(timezone.now())
-			match.finish((10, 10))
+			match.finish((10, 10), tap=0, duration=0, distance=0)
 		return
 
 	def start(self):
