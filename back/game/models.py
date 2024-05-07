@@ -198,9 +198,11 @@ class Match(models.Model):
 class Mode():
 	CLASSIC = '2', 'classic'
 	INVITATION = '2', 'invitation'
-	TOURNAMENT4 = '4', 'tournament'
-	TOURNAMENT8 = '8', 'tournament'
-	TOURNAMENT16 = '16', 'tournament'
+	TOURNAMENT4 = '4', 'tournament4'
+	TOURNAMENT8 = '8', 'tournament8'
+	TOURNAMENT16 = '16', 'tournament16'
+
+	labels = (CLASSIC[1], INVITATION[1], TOURNAMENT4[1], TOURNAMENT8[1], TOURNAMENT16[1])
 
 	@staticmethod
 	def fromText(modestr: str):
@@ -209,16 +211,6 @@ class Mode():
 			if mode.upper() == modestr:
 				return getattr(Mode, modestr)
 		return Mode.CLASSIC
-
-	@classmethod
-	def choices(cls):
-		return [
-            ('classic', 'Classic'),
-            ('invitation', 'Invitation'),
-            ('tournament-4', 'Tournament-4'),
-            ('tournament-8', 'Tournament-8'),
-            ('tournament-16', 'Tournament-16'),
-        ]
 
 class Room(models.Model):
 	# Mode class for the type of the room
@@ -235,7 +227,7 @@ class Room(models.Model):
 	id = models.CharField(primary_key=True, default=roomIdGenerator, blank=False, max_length=8)
 	matchs = models.ManyToManyField(Match, related_name='matchs')
 	winner = models.ForeignKey(User, null=True, default=None, on_delete=models.CASCADE)
-	mode = models.CharField(max_length=30, choices=Mode.choices, blank=False)
+	mode = ArrayField(models.CharField(max_length=30, blank=False), 2)
 
 	"""
 	function a coder
@@ -286,6 +278,8 @@ class Room(models.Model):
 	def addPlayer(self, player: User) -> str:
 		actual = self.opponents.count()
 
+
+		print(f'le liteeral {self.mode[0]}', file=sys.stderr)
 		if (player.Profile.isPlaying == True):
 			return ("You are already playing !", False)
 		if (actual >= int(self.mode[0])):
@@ -400,7 +394,7 @@ class Room(models.Model):
 		Owner will be the first player to join the room
 		Mode must be a value from Room.Mode
 		"""
-		room = Room.objects.create(mode=mode)
+		room = Room.objects.create(mode=[mode[0], mode[1]])
 		room.opponents.add(owner)
 		room.save()
 		room.updateCountsAll(owner)
