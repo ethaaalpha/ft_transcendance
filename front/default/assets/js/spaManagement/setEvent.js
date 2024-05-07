@@ -3,7 +3,7 @@ import { changeScene } from './scene.js';
 import { sendMessage } from '../action/chat.js';
 import { signIn, signUp, modifyEmail, modifyPassword } from '../action/userManagement.js';
 import { sendMessageInGame } from '../action/chat.js';
-import { checkSignUpAllValues, isValidEmail, isValidPassword, isValidUsername } from '../action/utils.js';
+import { checkSignInAllValues, checkSignUpAllValues, isValidEmail, isValidPassword, isValidUsername } from '../action/utils.js';
 
 async function setEventListener(scene) {
 	switch (scene) {
@@ -77,14 +77,14 @@ function setEventSignIn() {
 
 	addEventListener("keypress", "sign-in-username", function(event) {
 		if (event.key === "Enter") {
-			if (checkSignUpAllValues())
+			if (checkSignInAllValues())
 				signIn();
 		}
 	});
 
 	addEventListener("keypress", "sign-in-password", function(event) {
 		if (event.key === "Enter") {
-			if (checkSignUpAllValues())
+			if (checkSignInAllValues())
 				signIn();
 		}
 	});

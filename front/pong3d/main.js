@@ -84,7 +84,6 @@ async function initialize() {
                 hideLoadingAnimation();
                 await coordination.waitForTournament(50)
 				ft.changeToInactive();
-				console.log()
 				if (status.status == 5)
 					await createGame(4)
 				if (status.status == 0)
