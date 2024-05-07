@@ -149,7 +149,7 @@ async function createConversationDisplay(user) {
 			const text = document.createElement('span');
 
 			pendingMessage.appendChild(text);
-			if (isPendingFriendFrom) {
+			if (isPendingGameFrom) {
 				text.textContent = 'Wanna play?'
 
 				const choices = document.createElement('div');
