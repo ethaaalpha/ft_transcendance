@@ -106,7 +106,8 @@ class Profile(models.Model):
 				"friends": self.getManyToTab(self.friends),
 				"pendingFriendsFrom": self.getManyToTab(self.pendingFriendsFrom),
 				"pendingFriendsTo": self.getPendingFriendTo(),
-				"blockedUsers": self.getManyToTab(self.blockedUsers)
+				"blockedUsers": self.getManyToTab(self.blockedUsers),
+				'gameTheme': self.gameTheme
 				}
 			
 			return (public | private)
