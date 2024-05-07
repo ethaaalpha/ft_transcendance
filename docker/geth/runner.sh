@@ -56,7 +56,6 @@ else
 	echo 'Initializing nodes !'
 	geth --datadir node1 init genesis.json
 	geth --datadir node2 init genesis.json
-	geth --datadir node3 init genesis.json
 
 	bootnode -genkey bnode/boot.key
 fi
