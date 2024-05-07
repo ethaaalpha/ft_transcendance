@@ -1,5 +1,5 @@
-import { coordination } from "/static/default/assets/js/class/Coordination.js";
 import { status } from "/static/pong3d/utilsPong.js";
+import globalVariables from "/static/default/assets/js/init.js";
 
 var opacity_low = 0.4;
 var opacity_medium = 0.6;
@@ -135,7 +135,7 @@ class FormTournament {
 
 	registerEventsRoom() {
 		document.getElementById('tournament-form-top-right').addEventListener("click", (event) => {
-			coordination.send({'event': 'tournament', 'data': {
+			globalVariables.coordination.send({'event': 'tournament', 'data': {
 				'action': 'quit',
 				'room-id': this.roomCode,
 				},
@@ -151,7 +151,7 @@ class FormTournament {
 	askToJoin() {
 		let value = document.getElementById('tournament-js-code').value;
 		this.roomCode = value
-		coordination.send({'event': 'tournament', 'data': {
+		globalVariables.coordination.send({'event': 'tournament', 'data': {
 			'room-id': value,
 			'action': 'join',
 			},
@@ -162,7 +162,7 @@ class FormTournament {
 	registerEventsWait() {
 		document.getElementById('tournament-js-create').addEventListener("click", (event) => {
 			let value = document.getElementById('tournament-js-select').value;
-			coordination.send({'event': 'create', 'data': {
+			globalVariables.coordination.send({'event': 'create', 'data': {
 				'mode': `tournament${value}`
 				},
 			})
@@ -179,8 +179,8 @@ class FormTournament {
 
 		document.getElementById('tournament-escape-button').addEventListener('click', (event) => {
 			status.status = 0
-			coordination.inGame = true;
-			coordination.send({'event': 'end', 'data': {
+			globalVariables.coordination.inGame = true;
+			globalVariables.coordination.send({'event': 'end', 'data': {
 				'message': 'Forced by player',
 				},
 			})
