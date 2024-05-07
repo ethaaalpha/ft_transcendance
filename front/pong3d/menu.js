@@ -119,7 +119,6 @@ class Menu {
 	}
 
 	load3D () {
-		
 		//this.loadergl.load( '/cube/scene.gltf', (gltf) => {this.createobj(gltf)} );
 		this.loader.load( '/static/pong3d/fonts/default2.json', (font) => { this.createTxt(font);});
 	}
