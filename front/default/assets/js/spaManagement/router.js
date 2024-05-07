@@ -6,6 +6,7 @@ import Connect from "../class/Connect.js";
 import { fetchProfilPicture } from "../fetch/http.js";
 import { userExist } from "../fetch/http.js";
 import Alerts from "../class/Alerts.js";
+import { coordination } from "/static/default/assets/js/class/Coordination.js";
 
 async function routeHandler() {
 	const connected = await isConnected();
@@ -51,6 +52,9 @@ async function routeHandler() {
 			case '/callback-42':
 				await loadRoute(routeHome);
 				Alerts.createAlert(Alerts.type.SUCCESS, 'You logged with 42 beacon.')
+				break;
+			case '/error':
+				await loadRoute(routeError);
 				break;
 			default:
 				await loadRoute(routeHome);
@@ -151,6 +155,13 @@ async function routeChat() {
 
 	// console.log("routeChat: error to replace with alert withUser:" + withUser);
 };
+
+async function routeError() {
+	if (coordination.isConnected())
+		return (history.pushState({}, '', '/'))
+	else
+		await changeScene('error', 'none');
+}
 
 async function routeInGame() {
 	if (globalVariables.isInGame) {

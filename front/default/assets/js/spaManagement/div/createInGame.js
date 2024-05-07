@@ -25,11 +25,12 @@ async function createInGame() {
 		// Create parents div
 		const titleDiv = document.createElement("div");
 		titleDiv.id = "in-game-title-id";
-		titleDiv.classList.add("conversation-display-top");
+		titleDiv.classList.add("conversation-display-top", 'd-none');
 		titleDiv.appendChild(backButton);
 		
 		const blockBottom = document.createElement('div');
-		blockBottom.classList.add('conversation-block-bottom');
+		blockBottom.id = 'in-game-bottom-id';
+		blockBottom.classList.add('conversation-block-bottom', 'd-none');
 	
 		const messagesDiv = document.createElement("div");
 		messagesDiv.id = "in-game-conversation-display-messages-id";

@@ -59,6 +59,7 @@ class Conversations {
 	}
 
 	addMessageFromGameSocket(messageData, received = false) {
+		console.log(messageData)
 		if (!globalVariables.isInGame)
 			return
 		if (!messageData.hasOwnProperty('from') && !messageData.hasOwnProperty('sendAt')) {

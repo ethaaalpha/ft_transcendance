@@ -44,6 +44,10 @@ class Connect {
 			}, 1000);
 		};
 	}
+
+	close() {
+		this.socket.close();
+	}
 }
 
 export default Connect;

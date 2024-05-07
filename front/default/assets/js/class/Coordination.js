@@ -1,19 +1,23 @@
-import { status, hideLoadingAnimation, showLoadingAnimation, ft } from "/static/pong3d/utilsPong.js";
+import { status, hideLoadingAnimation, showLoadingAnimation, ft, sleep } from "/static/pong3d/utilsPong.js";
 import FormTournament from "/static/pong3d/tournament.js";
 import { goToHome, goToInGame } from '/static/default/assets/js/action/play.js';
 import globalVariables from '/static/default/assets/js/init.js';
+import { receivedNewOpponentUsername } from "/static/default/assets/js/action/play.js";
 
-class Coordination{
-	constructor(){
+class Coordination {
+	constructor() {
 		this.connect()
 		this.data = null;
 		this.inGame = false
 	}
+
 	destroy(){
 		this.socketCo.close();
 	}
-	connect(){
+
+	connect() {
 		this.socketCo = new WebSocket("wss://" + window.location.host + "/api/coordination/");
+
 		this.socketCo.onmessage = (event) => {
 			console.log(JSON.parse(event.data))
 			const tmp = JSON.parse(event.data)
@@ -22,10 +26,11 @@ class Coordination{
 				switch (tmp.event) {
 					case 'next':
 						let usernameOpponent = tmp.data.statusHost ? tmp.data.invited : tmp.data.host; 
-						goToInGame(usernameOpponent)
+						receivedNewOpponentUsername(usernameOpponent)
 						break;
 					default:
-						// goToHome();
+						console.log('je suis sensé quitter')
+						goToHome();
 						break;
 				}
 			}
@@ -55,11 +60,19 @@ class Coordination{
 				// ft.changeToInactive();
 			}
 			else if (tmp.event == 'chat') {
-				globalVariables.userConversations.addMessageFromGameSocket(tmp, true);
+				globalVariables.userConversations.addMessageFromGameSocket(tmp.data, true);
 			}
 		}
 
+		this.socketCo.onerror = (event) => {
+			history.pushState({}, '', '/error')
+		}
+
+		this.socketCo.onclose = (event) => {
+			history.pushState({}, '', '/error')
+		}
 	}
+
 	send(data){
 		if (this.socketCo.readyState === WebSocket.OPEN){
 			this.socketCo.send(JSON.stringify(data));
@@ -67,6 +80,7 @@ class Coordination{
 		else
 			console.log("Error socket Coordiantion State");
 	}
+
 	async waitForNextMatch(code){
 		console.log(this.data);
 		return new Promise((resolve) => {
@@ -76,7 +90,6 @@ class Coordination{
 				if (this.data) {
 					this.inGame = true;
 					if (this.data.event == "end" || this.data.event == "win"){
-						this.inGame = false
 						status.status = 0
 					}
 					if (this.data.event == "next") {
@@ -89,6 +102,7 @@ class Coordination{
 			}, 500);
 		});
 	};
+
 	async waitForData(time) {
 		return new Promise((resolve) => {
 			const intervalId = setInterval(() => {
@@ -101,17 +115,24 @@ class Coordination{
 			}, time);
 		});
 	}
+
 	async waitForTournament(time) {
 		return new Promise((resolve) => {
-			const intervalId = setInterval(() => {
+			const intervalId = setInterval(async () => {
 				if (this.inGame == true) {
 					console.log("cou");
 					clearInterval(intervalId);
 					hideLoadingAnimation();
+					await sleep(600);
+					this.inGame = false
 					resolve();
 				}
 			}, time);
 		});
+	}
+
+	isConnected() {
+		return this.socketCo.readyState != WebSocket.OPEN ? false : true
 	}
 }
 var coordination = new Coordination()

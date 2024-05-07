@@ -9,7 +9,9 @@ import Menu from './menu.js';
 import GameLocal from './gameLocal.js';
 import GameInv from './gameInv.js';
 import { hideLoadingAnimation, showLoadingAnimation, status, ft } from './utilsPong.js';
-import { coordination } from '../default/assets/js/class/Coordination.js';
+import { coordination } from '/static/default/assets/js/class/Coordination.js';
+import { goToInGame } from '/static/default/assets/js/action/play.js';
+import { goToHome } from '../default/assets/js/action/play.js';
 
 
 var data = null;
@@ -65,20 +67,23 @@ async function initialize() {
             console.log(status)
 			if (status.status === -1)
 				await loadTexture();
-			else if (status.status === 0)
+			else if (status.status === 0) {
+				goToHome(); // Here for matchmaking case
 				await createMenu();
+			}
 			else if (status.status === 1){ // Matchmaking
+				goToInGame();
                 coordination.send({'event': 'matchmaking', 'data': {'action' : 'join'}})
                 showLoadingAnimation();
                 await coordination.waitForData(50);
     		    await createGame(0);
             }
-            else if (status.status === 2){
+            else if (status.status === 2){ // Tournament
+				goToInGame();
                 ft.changeToWait();
                 hideLoadingAnimation();
                 await coordination.waitForTournament(50)
 				ft.changeToInactive();
-				console.log()
 				if (status.status == 5)
 					await createGame(4)
 				if (status.status == 0)
@@ -86,7 +91,6 @@ async function initialize() {
 
             }
             else if (status.status === 3){ // Training mode
-				console.log('le mode 3')
                 await createGame();
 			}
             else if (status.status === 4){
