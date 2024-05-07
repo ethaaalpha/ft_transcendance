@@ -2,6 +2,7 @@ import { status, hideLoadingAnimation, showLoadingAnimation, ft, sleep } from "/
 import { goToHome } from '/static/default/assets/js/action/play.js';
 import globalVariables from '/static/default/assets/js/init.js';
 import { receivedNewOpponentUsername } from "/static/default/assets/js/action/play.js";
+import Alerts from "./Alerts.js";
 
 class Coordination {
 	constructor() {
@@ -62,6 +63,37 @@ class Coordination {
 				// pareil qu'en haut
 				// ft.changeToInactive();
 			}
+			else if (tmp.event == 'invite' || tmp.event == 'refuse' || tmp.event == 'accept' || tmp.event == 'invited') { // Invitation
+				let type = tmp.data.status ? Alerts.type.SUCCESS : Alerts.type.MESSAGE
+				switch (tmp.event) {
+					case 'invite':
+						if (tmp.data.status)
+							globalVariables.currentUser.addPendingGameTo(tmp.data.message[1]);
+						break;
+					case 'invited':
+							if (tmp.data.status)
+								globalVariables.currentUser.addPendingGameFrom(tmp.data.message[1]);
+							break;
+					case 'refuse':
+						if (tmp.data.status) {
+							globalVariables.currentUser.removePendingGameFrom(tmp.data.message[1])
+							globalVariables.currentUser.removePendingGameTo(tmp.data.message[1])
+						}
+						break;
+					case 'accept':
+						if (tmp.data.status) {
+							// ici faire quelque chose!
+						}
+						console.log('icilala ' + tmp.data.message[1])
+						globalVariables.currentUser.removePendingGameFrom(tmp.data.message[1])
+						globalVariables.currentUser.removePendingGameTo(tmp.data.message[1])
+						break;
+				}
+				if (tmp.data.message) {
+					Alerts.createAlert(type, tmp.data.message)
+				}
+			}
+
 			else if (tmp.event == 'chat') {
 				globalVariables.userConversations.addMessageFromGameSocket(tmp.data, true);
 			}

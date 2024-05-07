@@ -53,10 +53,18 @@ class User {
 		}
 	}
 
+	removePendingGameFrom(username) {
+		removeElement(this.pendingGameFrom, username);
+	}
+
 	addPendingGameTo(username) {
 		if (!this.pendingGameTo.includes(username)) {
 			this.pendingGameTo.push(username);
 		}
+	}
+
+	removePendingGameTo(username) {
+		removeElement(this.pendingGameTo, username)
 	}
 
 	setFriendStatus(username, status) {

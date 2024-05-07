@@ -12,15 +12,15 @@ class Invitation:
 		self.target = target
 		return
 
-	def notify(self, who: str, event: str, content: str):
+	def notify(self, who: str, event: str, content: str, status: bool):
 		match who:
 			case 'initier':
-				CC.CoordinationConsumer.sendMessageToConsumer(self.initier.username, content, event)
+				CC.CoordinationConsumer.sendMessageToConsumer(self.initier.username, {'message':content, 'status': status}, event)
 			case 'target':
-				CC.CoordinationConsumer.sendMessageToConsumer(self.target.username, content, event)
+				CC.CoordinationConsumer.sendMessageToConsumer(self.target.username, {'message':content, 'status': status}, event)
 			case 'all':
-				CC.CoordinationConsumer.sendMessageToConsumer(self.initier.username, content, event)
-				CC.CoordinationConsumer.sendMessageToConsumer(self.target.username, content, event)
+				CC.CoordinationConsumer.sendMessageToConsumer(self.initier.username, {'message':content, 'status': status}, event)
+				CC.CoordinationConsumer.sendMessageToConsumer(self.target.username, {'message':content, 'status': status}, event)
 			
 	def expired(self, now) -> bool:
 		delta: timedelta = now - self.timestamp
@@ -53,8 +53,8 @@ class InvitationStack:
 		
 		newInvitation = Invitation(initier, target)
 		InvitationStack.stack.append(newInvitation)
-		newInvitation.notify('target', 'invite', f"You are invited to play with {initier.username}")
-		return (f"Match invitation succefully send to {target.username} !", True)
+		newInvitation.notify('target', 'invited', ["You are invited to play with ", initier.username], True)
+		return (["Match invitation succefully send to ", target.username], True)
 	
 	@staticmethod
 	def refuse(initier: User, target: User) -> tuple:
@@ -64,9 +64,9 @@ class InvitationStack:
 		"""
 		inv: Invitation = InvitationStack.find(initier, target)
 		if inv:
-			inv.notify('initier', 'refuse', f"{target.username} has refused your invitation to play !")
+			inv.notify('initier', 'refuse', ["Invitation refused by ", target.username], True)
 			InvitationStack.stack.remove(inv)
-			return ("You refused this invitation !", True)				
+			return (["You refused the invitation from ", initier.username], True)				
 		return ("This invitation do not exist anymore !", False)
 	
 	@staticmethod
@@ -83,16 +83,15 @@ class InvitationStack:
 			targetCheck = isAvailableToPlay(target)
 
 			if not initierCheck[1] or not targetCheck[1]: # Here to avoid multi-playing
-				inv.notify('all', 'refuse', "Something bad happend you can't play together !")
+				inv.notify('all', 'refuse', "Something bad happend you can't play together !", False)
 				return
 			
-			inv.notify('initier', 'accept', f"{target.username} has accepted your invitation !")
-			inv.notify('target', 'accept', f"You accepted an invitation from {initier.username} !")
+			inv.notify('initier', 'accept', ["Invitation accepted!", target.username] , True)
 
 			# create match here !!
 			room: Room = Room.createRoom(initier, Mode.INVITATION)
 			room.addPlayer(target)
-			return ("You successfully accepted an invitation !", True)
+			return (["Invitation successfully accepted", initier.username], True)
 		return ("This invitation do not exist !", False)
 	
 	@staticmethod

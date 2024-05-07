@@ -1,6 +1,7 @@
 import globalVariables from "../init.js";
 import { setNewOpponentUsername } from "../spaManagement/div/createInGame.js";
 
+
 // RECEIVE THINGS FROM WS
 
 // addMessageFromGameSocket()
@@ -48,11 +49,9 @@ function goToHome() {
 
 // SEND THINGS TO WS
 // user click on navbar button 'play' in a friend profil scene
-function sentPlayRequest(from, to) {
-	
-	goToInGame();
+function sentPlayRequest(from, to) {	
 	// implement here your ws action to sent the play request
-	
+	globalVariables.coordination.send({'event':  'invite', 'data': {'target': to}});
 	// if sucess
 		// globalVariables.currentUser.addPendingGameTo(to);
 		// alert sucess
@@ -63,14 +62,14 @@ function sentPlayRequest(from, to) {
 // in conversation display, user accept game request
 function acceptPlayRequest(from) {
 	// implement here your ws action to sent the accept request
-	console.log("acceptPlayRequest from: " + from);// to delete
+	globalVariables.coordination.send({'event':  'accept', 'data': {'target': from}});
 	//alert sucess/fail
 }
 
 // in conversation display, user refuse game request
 function refusePlayRequest(from) {
 	// implement here your ws action to sent the refuse request
-	console.log("refusePlayRequest from: " + from);// to delete
+	globalVariables.coordination.send({'event':  'refuse', 'data': {'target': from}});
 	//alert sucess/fail
 }
 
