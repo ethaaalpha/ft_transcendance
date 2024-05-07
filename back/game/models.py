@@ -195,12 +195,12 @@ class Match(models.Model):
 				}
 		
 	
-class Mode(models.TextChoices):
-	CLASSIC = '2'
-	TOURNAMENT4 = '4'
-	TOURNAMENT8 = '8'
-	TOURNAMENT16 = '16'
-	TOURNAMENT32 = '32'
+class Mode():
+	CLASSIC = '2', 'classic'
+	INVITATION = '2', 'invitation'
+	TOURNAMENT4 = '4', 'tournament'
+	TOURNAMENT8 = '8', 'tournament'
+	TOURNAMENT16 = '16', 'tournament'
 
 	@staticmethod
 	def fromText(modestr: str):
@@ -209,6 +209,16 @@ class Mode(models.TextChoices):
 			if mode.upper() == modestr:
 				return getattr(Mode, modestr)
 		return Mode.CLASSIC
+
+	@classmethod
+	def choices(cls):
+		return [
+            ('classic', 'Classic'),
+            ('invitation', 'Invitation'),
+            ('tournament-4', 'Tournament-4'),
+            ('tournament-8', 'Tournament-8'),
+            ('tournament-16', 'Tournament-16'),
+        ]
 
 class Room(models.Model):
 	# Mode class for the type of the room
@@ -237,7 +247,7 @@ class Room(models.Model):
 	"""
 	
 	def _runRoom(self):
-		if (self.opponents.count() != int(self.mode)): #mean that there isn't enought of players
+		if (self.opponents.count() != int(self.mode[0])): #mean that there isn't enought of players
 			return
 		# print(f"la room doit commencer \nVoici les adversaires : {self.opponents.all()}", file=sys.stderr)
 		self.state = 1
@@ -245,7 +255,7 @@ class Room(models.Model):
 
 		for player in self.opponents.all():
 			setInMatch(player)
-			if self.mode != Mode.CLASSIC:
+			if self.mode[1] != Mode.CLASSIC[1]:
 				player.stats.addTournament()
 
 		self.next_server(True)
@@ -278,7 +288,7 @@ class Room(models.Model):
 
 		if (player.Profile.isPlaying == True):
 			return ("You are already playing !", False)
-		if (actual >= int(self.mode)):
+		if (actual >= int(self.mode[0])):
 			return ("There is too much player in the room !", False)
 		if (player in self.opponents.all()):
 			return ("You already joined this room !", False)
@@ -319,7 +329,8 @@ class Room(models.Model):
 		self.numberMatchsLastRound = len(matchs)
 		self.matchs.add(*matchs)
 		self.save()
-		if self.mode == Mode.CLASSIC:
+
+		if self.mode[1] == Mode.CLASSIC[1]:
 			# This is the matchmaking to skip wait
 			from .core import GameMap
 			classic = matchs[0]
@@ -331,6 +342,7 @@ class Room(models.Model):
 			classic.start()
 		else:
 			# Runner the thread to wait the game (to players to be ready !)
+			print('la room est prete demander vos next \n', file=sys.stderr)
 			for m in matchs:
 				thread = Thread(target=m.wait, args=(m.id, m.host.username, m.invited.username))
 				thread.start()
@@ -362,7 +374,7 @@ class Room(models.Model):
 		count = self.opponents.count()
 
 		for p in self.opponents.all():
-			data = {'room-id': self.id, 'count': count, 'updater': updater.username, 'max': int(self.mode)}
+			data = {'room-id': self.id, 'count': count, 'updater': updater.username, 'max': int(self.mode[0])}
 			CoordinationConsumer.sendMessageToConsumer(p.username, data, 'count')
 		return
 	
@@ -388,7 +400,7 @@ class Room(models.Model):
 		Owner will be the first player to join the room
 		Mode must be a value from Room.Mode
 		"""
-		room = Room.objects.create(mode=mode.value)
+		room = Room.objects.create(mode=mode)
 		room.opponents.add(owner)
 		room.save()
 		room.updateCountsAll(owner)
