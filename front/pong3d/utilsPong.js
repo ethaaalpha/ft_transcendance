@@ -4,7 +4,7 @@ let sleepSetTimeout_ctrl;
 
 var status = {
 	status: -1,
-    action: false
+    action: true
 };
 
 function sleep(ms) {

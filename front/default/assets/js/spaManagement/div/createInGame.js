@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 import globalVariables from '../../init.js';
 import { sendMessage, fetchConversations } from '../../action/chat.js';
 import { fetchProfilPicture } from '../../fetch/http.js';
@@ -120,5 +121,36 @@ async function setNewOpponentUsername(username) {
 	}
 }
 
+function createGame(){
+	var appliParent = document.querySelector('#game-container')
+	setTimeout(function() {
+		console.log(globalVariables)
+		if (appliParent.clientHeight == 0 || appliParent.clientHeight == 0 || globalVariables.currentUser == null)
+			return(createGame());
+		import('/static/pong3d/main.js')
+    	.then((module) => {
+			globalVariables.gameData = module.gameData
+    		module.initialize();
+    	})
+		.catch((error) => {
+    	console.error('Failed to import module: ', error);
+    	})
+	}, 100);
+}
 
-export { createInGame, setNewOpponentUsername };
+function updateGameTheme(){
+	globalVariables.gameData.RGBELoader.load(globalVariables.currentUser.getGameTheme() + '.hdr', (texture) => {
+		texture.mapping = THREE.EquirectangularReflectionMapping;
+		var textureRev = texture.clone()
+		textureRev.flipY = false;
+		globalVariables.gameData.sceneMenu.background = texture;
+		globalVariables.gameData.sceneMenu.environment = texture;
+		globalVariables.gameData.sceneGameLocal.background = texture;
+		globalVariables.gameData.sceneGameLocal.environment = texture;
+		globalVariables.gameData.sceneGameInv.background = textureRev;
+		globalVariables.gameData.sceneGameInv.environment = textureRev;
+	});
+}
+
+
+export { createInGame, setNewOpponentUsername, createGame, updateGameTheme };

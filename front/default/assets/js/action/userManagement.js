@@ -2,6 +2,8 @@ import Alerts from '../class/Alerts.js';
 import { coordination } from '../class/Coordination.js';
 import { fetchData } from '../fetch/api.js';
 import globalVariables from '../init.js';
+import { updateGameTheme } from '/static/default/assets/js/spaManagement/div/createInGame.js';
+import { fetchUserData } from '/static/default/assets/js/fetch/http.js';
 
 function signIn() {
 	var username = document.getElementById("sign-in-username").value;
@@ -201,8 +203,8 @@ function modifyGameTheme(id) { // to modify with nico
 	var themeList = ['d2', 'land', 'adibou', 'penDraw', 'epic', 'colors', 'd3'];
 	var formData = new FormData();
 	
-	console.log(themeList[id] + ' - ' + id);
-	formData.append("gameTheme", themeList[id]);
+	console.log(themeList[id - 1] + ' - ' + id);
+	formData.append("gameTheme", themeList[id - 1]);
 	
 	fetchData("/api/dashboard?filter=gameTheme", 'POST', formData).then(
 	(data) => {
@@ -211,6 +213,11 @@ function modifyGameTheme(id) { // to modify with nico
 			globalVariables.gameTheme = id;
 			history.pushState({}, '', '/settings');
 			type = Alerts.type.SUCCESS
+			fetchUserData().then(
+				function (){
+					updateGameTheme();
+				}
+			)
 		}
 		Alerts.createAlert(type, data.data.message);
 		console.log(data.data);

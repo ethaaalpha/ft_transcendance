@@ -19,6 +19,7 @@ class User {
 		this.pendingFriendFrom = data['pendingFriendsFrom'];
 		this.pendingFriendTo = data['pendingFriendsTo'];
 		this.blocked = data['blockedUsers'];
+		this.gameTheme = data['gameTheme'];
 	}	
 
 	// setter
@@ -74,6 +75,14 @@ class User {
 
 	getUsername() {
 		return this.username;
+	}
+
+	getGameTheme(){
+		console.log(this.gameTheme)
+		if (this.gameTheme != null && this.gameTheme != "")
+			return this.gameTheme;
+		else
+			return "d2";
 	}
 	
 	isFriend(username) {

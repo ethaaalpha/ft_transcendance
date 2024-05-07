@@ -20,23 +20,8 @@ var globalVariables = {
 	eventListeners: {},
 	gameTheme: 1,
 	isInGame: false,
+	gameInstance : null,
+	gameData: null,
 };
-var appliParent = document.querySelector('#game-container')
-waitParentSize();
-
-function waitParentSize(){
-	setTimeout(function(i) {
-		if (appliParent.clientHeight == 0 || appliParent.clientHeight == 0)
-			return(waitParentSize());
-		import('/static/pong3d/main.js')
-    	.then((module) => {
-    	module.initialize();
-    	})
-		.catch((error) => {
-    	console.error('Failed to import module: ', error);
-    	})
-	}, 50);
-}
-
 
 export default globalVariables;
