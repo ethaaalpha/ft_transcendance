@@ -1,4 +1,4 @@
-import { status, hideLoadingAnimation, showLoadingAnimation, ft } from "/static/pong3d/utilsPong.js";
+import { status, hideLoadingAnimation, showLoadingAnimation, ft, sleep } from "/static/pong3d/utilsPong.js";
 import FormTournament from "/static/pong3d/tournament.js";
 import { goToHome, goToInGame } from '/static/default/assets/js/action/play.js';
 import globalVariables from '/static/default/assets/js/init.js';
@@ -90,7 +90,6 @@ class Coordination {
 				if (this.data) {
 					this.inGame = true;
 					if (this.data.event == "end" || this.data.event == "win"){
-						this.inGame = false
 						status.status = 0
 					}
 					if (this.data.event == "next") {
@@ -119,11 +118,13 @@ class Coordination {
 
 	async waitForTournament(time) {
 		return new Promise((resolve) => {
-			const intervalId = setInterval(() => {
+			const intervalId = setInterval(async () => {
 				if (this.inGame == true) {
 					console.log("cou");
 					clearInterval(intervalId);
 					hideLoadingAnimation();
+					await sleep(600);
+					this.inGame = false
 					resolve();
 				}
 			}, time);
