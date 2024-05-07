@@ -7,6 +7,7 @@ import { fetchProfilPicture } from "../fetch/http.js";
 import { userExist } from "../fetch/http.js";
 import Alerts from "../class/Alerts.js";
 import { coordination } from "/static/default/assets/js/class/Coordination.js";
+import { createGame } from "/static/default/assets/js/spaManagement/div/createInGame.js";
 
 async function routeHandler() {
 	const connected = await isConnected();
@@ -32,6 +33,7 @@ async function routeHandler() {
 	} else {
 		if (!globalVariables.activity || globalVariables.activity.readyState === WebSocket.CLOSED) {
 			globalVariables.activity =  new Connect();
+			createGame()
 		}
 		switch (pathname) {
 			case "/search":

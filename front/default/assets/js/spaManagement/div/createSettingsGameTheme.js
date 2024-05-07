@@ -69,8 +69,11 @@ function createSettingsGameTheme() {
 		overlayButtonText.textContent = "Change game theme";
 		overlayButton.appendChild(overlayButtonText);
 		settingsGameThemeDiv.appendChild(overlayButton);
-
-		selectGameTheme(globalVariables.gameTheme);
+		var themeList = ['d2', 'land', 'adibou', 'penDraw', 'epic', 'colors', 'd3'];
+		var id = themeList.indexOf(globalVariables.currentUser.getGameTheme()) + 1;
+		if (id < 1 || id > 6)
+			id = 1;
+		selectGameTheme(id);
 
 	} catch (error) {
 		console.error("Error in createSettingsGameTheme: ", error);

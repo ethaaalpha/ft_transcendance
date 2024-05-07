@@ -51,7 +51,6 @@ function goToHome() {
 function sentPlayRequest(from, to) {
 	
 	goToInGame();
-
 	// implement here your ws action to sent the play request
 	
 	// if sucess
