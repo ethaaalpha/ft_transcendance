@@ -1,8 +1,9 @@
 import coordination.consumers as CC
 from datetime import datetime, timedelta
 from django.contrib.auth.models import User
-from game.models import Room
+from game.models import Room, Mode
 from .tools import isAvailableToPlay
+import sys
 
 class Invitation:
 	def __init__(self, initier: User, target: User):
@@ -14,12 +15,12 @@ class Invitation:
 	def notify(self, who: str, event: str, content: str):
 		match who:
 			case 'initier':
-				CC.CoordinationConsumer.sendMessageToConsumer(self.initier.username, event, content)
+				CC.CoordinationConsumer.sendMessageToConsumer(self.initier.username, content, event)
 			case 'target':
-				CC.CoordinationConsumer.sendMessageToConsumer(self.target.username, event, content)
+				CC.CoordinationConsumer.sendMessageToConsumer(self.target.username, content, event)
 			case 'all':
-				CC.CoordinationConsumer.sendMessageToConsumer(self.initier.username, event, content)
-				CC.CoordinationConsumer.sendMessageToConsumer(self.target.username, event, content)
+				CC.CoordinationConsumer.sendMessageToConsumer(self.initier.username, content, event)
+				CC.CoordinationConsumer.sendMessageToConsumer(self.target.username, content, event)
 			
 	def expired(self, now) -> bool:
 		delta: timedelta = now - self.timestamp
@@ -39,6 +40,9 @@ class InvitationStack:
 	@staticmethod
 	def invite(initier: User, target: User) -> tuple:
 		InvitationStack.update()
+		
+		if (initier.username == target.username):
+			return ("Can't play with your self", False)
 		# check doublon
 		for invitation in InvitationStack.stack:
 			if (invitation.initier == initier):
@@ -73,18 +77,20 @@ class InvitationStack:
 		"""
 		inv: Invitation = InvitationStack.find(initier, target)
 		if inv:
-			inv.notify('initier', 'accept', f"{target.username} has accepted your invitation !")
-			inv.notify('target', 'accept', f"{initier.username} has accepted your invitation !")
 			InvitationStack.stack.remove(inv)
 
 			initierCheck = isAvailableToPlay(initier)
 			targetCheck = isAvailableToPlay(target)
 
-			if initierCheck[1] or targetCheck[1]:
+			if not initierCheck[1] or not targetCheck[1]: # Here to avoid multi-playing
 				inv.notify('all', 'refuse', "Something bad happend you can't play together !")
+				return
 			
+			inv.notify('initier', 'accept', f"{target.username} has accepted your invitation !")
+			inv.notify('target', 'accept', f"You accepted an invitation from {initier.username} !")
+
 			# create match here !!
-			room: Room = Room.createRoom(initier)
+			room: Room = Room.createRoom(initier, Mode.INVITATION)
 			room.addPlayer(target)
 			return ("You successfully accepted an invitation !", True)
 		return ("This invitation do not exist !", False)
