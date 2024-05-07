@@ -114,7 +114,7 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 						await self.messageResponse('invite', await sync_to_async(InvitationStack.invite)(await self.getUser(), await self.getUser(username=target)))
 				case 'accept':
 					if target:
-						await self.messageResponse('accept', await sync_to_async(InvitationStack.accept)(await self.getUser(username=target), await self.getUser()))
+						await sync_to_async(InvitationStack.accept)(await self.getUser(username=target), await self.getUser())
 				case 'refuse':
 					if target:
 						await self.messageResponse('refuse', await sync_to_async(InvitationStack.refuse)(await self.getUser(username=target), await self.getUser()))
