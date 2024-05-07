@@ -3,7 +3,6 @@ import { RGBELoader } from 'three/module/loaders/RGBELoader.js';
 import { GLTFLoader } from 'three/module/loaders/GLTFLoader.js';
 import { FontLoader } from 'three/module/loaders/FontLoader.js';
 import { OrbitControls } from 'three/module/controls/OrbitControls.js';
-import FormTournament from './tournament.js';
 import Game from './game.js';
 import Menu from './menu.js';
 import GameLocal from './gameLocal.js';
@@ -53,6 +52,7 @@ function onFocus(){
     status.action = true;
 }
 function notOnFocus(){
+	console.log('unfocus')
     status.action = false;
 }
 function updateStatus(newStatus) {
@@ -63,7 +63,8 @@ async function initialize() {
 	try {
 		while(1){
             if (status.status != 5)
-				globalVariables.coordination.data = null;
+				if (globalVariables.coordination) // if delay due to slow loading
+					globalVariables.coordination.data = null;
             console.log(status)
 			if (status.status === -1)
 				await loadTexture();
@@ -73,7 +74,8 @@ async function initialize() {
 			}
 			else if (status.status === 1){ // Matchmaking
 				goToInGame();
-                globalVariables.coordination.send({'event': 'matchmaking', 'data': {'action' : 'join'}})
+				if (globalVariables.coordination) // if delay due to slow loading
+                	globalVariables.coordination.send({'event': 'matchmaking', 'data': {'action' : 'join'}})
                 showLoadingAnimation();
                 await globalVariables.coordination.waitForData(50);
     		    await createGame(0);
@@ -131,16 +133,16 @@ function initLoading(){
 async function loadTexture() {
     return new Promise((resolve, reject) => {
         
-        gameData.RGBELoader.load(globalVariables.currentUser.getGameTheme() + '.hdr', (texture) => {
-            texture.mapping = THREE.EquirectangularReflectionMapping;
-            var textureRev = texture.clone()
-            textureRev.flipY = false;
-			gameData.sceneMenu.background = texture;
-			gameData.sceneMenu.environment = texture;
-            gameData.sceneGameLocal.background = texture;
-			gameData.sceneGameLocal.environment = texture;
-            gameData.sceneGameInv.background = textureRev;
-			gameData.sceneGameInv.environment = textureRev;
+        // gameData.RGBELoader.load(globalVariables.currentUser.getGameTheme() + '.hdr', (texture) => {
+        //     texture.mapping = THREE.EquirectangularReflectionMapping;
+        //     var textureRev = texture.clone()
+        //     textureRev.flipY = false;
+		// 	gameData.sceneMenu.background = texture;
+		// 	gameData.sceneMenu.environment = texture;
+        //     gameData.sceneGameLocal.background = texture;
+		// 	gameData.sceneGameLocal.environment = texture;
+        //     gameData.sceneGameInv.background = textureRev;
+		// 	gameData.sceneGameInv.environment = textureRev;
             gameData.controlsMenu = new OrbitControls(gameData.camera, gameData.rendererMenu.domElement);
             gameData.controlsGameLocal = new OrbitControls(gameData.camera, gameData.rendererGameLocal.domElement);
 			gameData.controlsMenu.enableZoom = false;
@@ -150,7 +152,7 @@ async function loadTexture() {
 			status.status = 0;
             resolve();
         });
-    });
+    // });
 }
 
 function updateGameTheme(){

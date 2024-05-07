@@ -1,10 +1,6 @@
 import * as THREE from 'three';
 import globalVariables from '../../init.js';
-import { sendMessage, fetchConversations } from '../../action/chat.js';
 import { fetchProfilPicture } from '../../fetch/http.js';
-import { changeScene } from '../scene.js';
-import { manageFriend } from '../../action/userManagement.js';
-import { acceptPlayRequest, refusePlayRequest } from '../../action/play.js';
 import { sendMessageInGame } from '../../action/chat.js';
 
 async function createInGame() {
@@ -124,7 +120,7 @@ async function setNewOpponentUsername(username) {
 function createGame(){
 	var appliParent = document.querySelector('#game-container')
 	setTimeout(function() {
-		console.log(globalVariables)
+		// console.log(globalVariables)
 		if (appliParent.clientHeight == 0 || appliParent.clientHeight == 0 || globalVariables.currentUser == null)
 			return(createGame());
 		import('/static/pong3d/main.js')
