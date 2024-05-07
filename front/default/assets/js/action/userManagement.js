@@ -171,11 +171,15 @@ function modifyProfilPicture() {
 	var formData = new FormData();
 
     if (!files || !files[0]) {
-        console.log("No file selected");
+		Alerts.createAlert(Alerts.type.FAILED, 'No file selected')
         return; 
     }
 	
 	const profilePicture = files[0]; // Because just one file (first one)
+	if (profilePicture.size > 1900000) {
+		Alerts.createAlert(Alerts.type.FAILED, 'File too large (<1.9M)')
+		return 
+	}
 
 	formData.append("profilePicture", profilePicture);
 	fetchData("/api/dashboard?filter=profilePicture", 'POST', formData).then(
