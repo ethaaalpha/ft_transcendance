@@ -11,19 +11,20 @@ import GameInv from './gameInv.js';
 import { hideLoadingAnimation, showLoadingAnimation, status, ft } from './utilsPong.js';
 import { coordination } from '/static/default/assets/js/class/Coordination.js';
 import { goToInGame } from '/static/default/assets/js/action/play.js';
-import { goToHome } from '../default/assets/js/action/play.js';
+import { goToHome } from '/static/default/assets/js/action/play.js';
+import globalVariables from '/static/default/assets/js/init.js';
 
 
 var data = null;
 var view = null;
 var appli = document.querySelector('#app');
 var appliParent = document.querySelector('#game-container')
-console.log(appliParent.clientHeight);
 
 var loadingManager = new THREE.LoadingManager();
 var gameData = {
     gltfLoader: new GLTFLoader(loadingManager).setPath( '/static/pong3d/assets/' ),
     textureLoader : new THREE.TextureLoader(loadingManager),
+    RGBELoader : new RGBELoader(loadingManager).setPath('/static/pong3d/assets/hdr/'),
     fontLoader : new FontLoader(loadingManager),
     sceneGameLocal : new THREE.Scene(),
     sceneGameInv : new THREE.Scene(),
@@ -131,17 +132,16 @@ function initLoading(){
 async function loadTexture() {
     return new Promise((resolve, reject) => {
         
-        // var RGBELoad = new RGBELoader(loadingManager).setPath('/static/pong3d/assets/hdr/');
-        // RGBELoad.load('d2.hdr', (texture) => {
-        //     texture.mapping = THREE.EquirectangularReflectionMapping;
-        //     var textureRev = texture.clone()
-        //     textureRev.flipY = false;
-		// 	gameData.sceneMenu.background = texture;
-		// 	gameData.sceneMenu.environment = texture;
-        //     gameData.sceneGameLocal.background = texture;
-		// 	gameData.sceneGameLocal.environment = texture;
-        //     gameData.sceneGameInv.background = textureRev;
-		// 	gameData.sceneGameInv.environment = textureRev;
+        gameData.RGBELoader.load(globalVariables.currentUser.getGameTheme() + '.hdr', (texture) => {
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+            var textureRev = texture.clone()
+            textureRev.flipY = false;
+			gameData.sceneMenu.background = texture;
+			gameData.sceneMenu.environment = texture;
+            gameData.sceneGameLocal.background = texture;
+			gameData.sceneGameLocal.environment = texture;
+            gameData.sceneGameInv.background = textureRev;
+			gameData.sceneGameInv.environment = textureRev;
             gameData.controlsMenu = new OrbitControls(gameData.camera, gameData.rendererMenu.domElement);
             gameData.controlsGameLocal = new OrbitControls(gameData.camera, gameData.rendererGameLocal.domElement);
 			gameData.controlsMenu.enableZoom = false;
@@ -150,8 +150,12 @@ async function loadTexture() {
             gameData.controlsMenu.mouseButtons.RIGHT='';
 			status.status = 0;
             resolve();
-        // });
+        });
     });
+}
+
+function updateGameTheme(){
+    return;
 }
 
 async function createMenu() {
@@ -180,4 +184,4 @@ async function createGameLocal() {
     });
 }
 
-export { initialize }
+export { initialize, gameData }
