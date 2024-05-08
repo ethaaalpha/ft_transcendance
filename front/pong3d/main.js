@@ -98,12 +98,17 @@ async function initialize() {
             else if (status.status === 4){
                     showLoadingAnimation();
                     console.log(status)
-                    await globalVariables.coordination.waitForNextMatch(ft.roomCode);
+                    await globalVariables.coordination.waitForNextMatch(ft.roomCode, 5);
                 }
             else if (status.status === 5){
 				console.log("le mode 5")
                 await createGame(4);
-            } 
+            }
+            else if (status.status === 6){
+                showLoadingAnimation();
+                await globalVariables.coordination.waitForNextMatch("", 6);
+                await createGame(0)
+            }
 		}
     } catch (error) {
         console.error("Error during initialization:", error);

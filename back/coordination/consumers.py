@@ -62,6 +62,7 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 		values[0] is the message
 		values[1] is code -> success (True), failure (False)
 		"""
+		print(f'voici le message a envoyer {values}', file=sys.stderr)
 		await self.send_json({'event': event, 'data': {'message': values[0], 'status': values[1]}})
 
 
