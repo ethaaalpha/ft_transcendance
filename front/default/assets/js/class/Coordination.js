@@ -11,8 +11,18 @@ class Coordination {
 		this.roomCode = null;
 		this.data = null;
 		this.inGame = false
+		this.returnMenu = false
+		this.backInGame = (event) => this.cancel(event)
+		document.addEventListener('keydown', this.backInGame);
 	}
 
+	cancel(event){
+		console.log(status.status)
+		if (event.code == 'Escape' && status.status == 1){
+			this.returnMenu = true
+			this.send({"event": 'matchmaking', 'data': {'action': 'quit'}})
+		}
+	}
 	destroy(){
 		this.socketCo.close();
 		console.log("Coordination socket closed")
@@ -153,10 +163,15 @@ class Coordination {
 	async waitForData(time) {
 		return new Promise((resolve) => {
 			const intervalId = setInterval(() => {
+				console.log(this.returnMenu)
 				if (this.data) {
 					console.log("cou");
 					clearInterval(intervalId);
 					hideLoadingAnimation();
+					resolve();
+				}
+				else if (this.returnMenu == true){
+					status.status = 0;
 					resolve();
 				}
 			}, time);
