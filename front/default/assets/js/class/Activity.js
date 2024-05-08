@@ -1,12 +1,12 @@
 import globalVariables from '../init.js';
 import Alerts from './Alerts.js';
 
-class Connect {
+class Activity {
 	constructor() {
 		this.socket = new WebSocket('wss://' + window.location.host + '/api/activity/');
 
 		this.socket.onopen = (e) => {
-			console.log("Websocket: 'activity' is connected");
+			console.log("Activity webcosket connected !");
 		};
 
 		this.socket.onmessage = (e) => {
@@ -36,18 +36,12 @@ class Connect {
 				console.log("Websocket: friends request received from:" + data.from);
 			}
 		};
-
-		this.socket.onclose = (e) => {
-			console.error('Websocket: Chat socket closed unexpectedly. Retrying to connect.');
-			setTimeout(() => {
-				this.connect();
-			}, 1000);
-		};
 	}
 
 	close() {
 		this.socket.close();
+		console.log("Activity socket closed");
 	}
 }
 
-export default Connect;
+export default Activity;

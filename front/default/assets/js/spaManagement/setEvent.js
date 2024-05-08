@@ -3,7 +3,7 @@ import { changeScene } from './scene.js';
 import { sendMessage } from '../action/chat.js';
 import { signIn, signUp, modifyEmail, modifyPassword } from '../action/userManagement.js';
 import { sendMessageInGame } from '../action/chat.js';
-import { checkSignInAllValues, checkSignUpAllValues, isValidEmail, isValidPassword, isValidUsername } from '../action/utils.js';
+import { checkAllSignIn, checkAllSignUp, checkAllSettingsPassword, checkAllSettingsEmail } from '../action/utils.js';
 
 async function setEventListener(scene) {
 	switch (scene) {
@@ -59,98 +59,58 @@ function addEventListener(eventName, elementId, eventHandler) {
 
 // HANDLER
 function setEventSignIn() {
-	addEventListener("input", "sign-in-username", function() {
-		var usernameInput = this.value;
-		if (isValidUsername(usernameInput))
-			this.classList.remove("is-invalid");
-		else
-			this.classList.add("is-invalid");
-	});
+	addEventListener("input", "sign-in-username", checkAllSignIn);
 
-	addEventListener("input", "sign-in-password", function() {
-		var passwordInput = this.value;
-		if (isValidPassword(passwordInput))
-			this.classList.remove("is-invalid");
-		else
-			this.classList.add("is-invalid");
-	});
+	addEventListener("input", "sign-in-password", checkAllSignIn);
 
 	addEventListener("keypress", "sign-in-username", function(event) {
 		if (event.key === "Enter") {
-			if (checkSignInAllValues())
+			if (checkAllSignIn(event, true))
 				signIn();
 		}
 	});
 
 	addEventListener("keypress", "sign-in-password", function(event) {
 		if (event.key === "Enter") {
-			if (checkSignInAllValues())
+			if (checkAllSignIn(event, true))
 				signIn();
 		}
 	});
 }
 
 function setEventSignUp() {
-	addEventListener("input", "sign-up-username", function() {
-		var usernameInput = this.value;
-		if (isValidUsername(usernameInput))
-			this.classList.remove('is-invalid')
-		else
-			this.classList.add('is-invalid')
-	});
+	addEventListener("input", "sign-up-username", checkAllSignUp);
 
-	addEventListener("input", "sign-up-password", function() {
-		var passwordInput = this.value;
-		if (isValidPassword(passwordInput))
-			this.classList.remove('is-invalid')
-		else
-			this.classList.add('is-invalid')
-	});
+	addEventListener("input", "sign-up-password", checkAllSignUp);
 
-	addEventListener("input", "sign-up-password-confirm", function() {
-		var confirmPasswordInput = this.value;
-		var passwordInput = document.getElementById("sign-up-password").value;
-		var isValid = confirmPasswordInput === passwordInput;
-		if (isValid) {
-			this.classList.remove("is-invalid");
-		} else {
-			this.classList.add("is-invalid");
-		}
-	});
+	addEventListener("input", "sign-up-password-confirm", checkAllSignUp);
 	
-	addEventListener("input", "sign-up-email", function() {
-		var emailInput = this.value;
-		if (isValidEmail(emailInput)) {
-			this.classList.remove("is-invalid");
-		} else {
-			this.classList.add("is-invalid");
-		}
-	});
+	addEventListener("input", "sign-up-email", checkAllSignUp);
 
 	addEventListener("keypress", "sign-up-username", function(event) {
 		if (event.key === "Enter") {
-			if (checkSignUpAllValues())
+			if (checkAllSignUp(event, true))
 				signUp();
 		}
 	});
 
 	addEventListener("keypress", "sign-up-password", function(event) {
 		if (event.key === "Enter") {
-			if (checkSignUpAllValues())
+			if (checkAllSignUp(event, true))
 				signUp();
 		}
 	});
 
 	addEventListener("keypress", "sign-up-password-confirm", function(event) {
 		if (event.key === "Enter") {
-			if (checkSignUpAllValues())
-				signUp();;
+			if (checkAllSignUp(event, true))
+				signUp();
 		}
 	});
 
 	addEventListener("keypress", "sign-up-email", function(event) {
 		if (event.key === "Enter") {
-			if (checkSignUpAllValues())
+			if (checkAllSignUp(event, true))
 				signUp();
 		}
 	});
@@ -207,41 +167,57 @@ function setEventSettingsProfilPicture() {
 }
 
 function setEventSettingsPassword() {
+	addEventListener("input", "settings-actual-password", checkAllSettingsPassword);
+
+	addEventListener("input", "settings-new-password", checkAllSettingsPassword)
+	
+	addEventListener("input", "settings-confirm-password", checkAllSettingsPassword);
+
 	addEventListener("keypress", "settings-actual-password", function(event) {
 		if (event.key === "Enter") {
-			modifyPassword();
+			if (checkAllSettingsPassword(event, true))
+				modifyPassword();
 		}
 	});
 
 	addEventListener("keypress", "settings-new-password", function(event) {
 		if (event.key === "Enter") {
-			modifyPassword();
+			if (checkAllSettingsPassword(event, true))
+				modifyPassword();
 		}
 	});
 
 	addEventListener("keypress", "settings-confirm-password", function(event) {
 		if (event.key === "Enter") {
-			modifyPassword();
+			if (checkAllSettingsPassword(event, true))
+				modifyPassword();
 		}
 	});
 }
 
 function setEventSettingsEmail() {
+	addEventListener('input', 'settings-actual-email', checkAllSettingsEmail);
+	addEventListener('input', 'settings-new-email', checkAllSettingsEmail);
+	addEventListener('input', 'settings-confirm-email', checkAllSettingsEmail);
+
 	addEventListener("keypress", "settings-actual-email", function(event) {
 		if (event.key === "Enter") {
-			modifyEmail();
+			if (checkAllSettingsEmail(event, true))
+				modifyEmail();
 		}
 	});
 
 	addEventListener("keypress", "settings-new-email", function(event) {
 		if (event.key === "Enter") {
-			modifyEmail();
+			if (checkAllSettingsEmail(event, true))
+				modifyEmail();
 		}
 	});
 
 	addEventListener("keypress", "settings-confirm-email", function(event) {
 		if (event.key === "Enter") {
-			modifyEmail();
+			if (checkAllSettingsEmail(event, true))
+				modifyEmail();
 		}
 	});
 }

@@ -277,9 +277,6 @@ class Room(models.Model):
 
 	def addPlayer(self, player: User) -> str:
 		actual = self.opponents.count()
-
-
-		print(f'le liteeral {self.mode[0]}', file=sys.stderr)
 		if (player.Profile.isPlaying == True):
 			return ("You are already playing !", False)
 		if (actual >= int(self.mode[0])):
@@ -313,6 +310,10 @@ class Room(models.Model):
 				setOutMatch(lastMatch.getWinner())
 				self.winner = lastMatch.getWinner()
 				self.save()
+
+				if (int(self.mode[0]) == 2):
+					self.addClosed(lastMatch.getLoser())
+					self.addClosed(lastMatch.getWinner())
 				return
 			# il y a d'autres matchs à faire +_+
 			lastMatchs = list(self.matchs.all().order_by('-creation_date')[:self.numberMatchsLastRound])
@@ -336,7 +337,7 @@ class Room(models.Model):
 			classic.start()
 		else:
 			# Runner the thread to wait the game (to players to be ready !)
-			print('la room est prete demander vos next \n', file=sys.stderr)
+			# print('la room est prete demander vos next \n', file=sys.stderr)
 			for m in matchs:
 				thread = Thread(target=m.wait, args=(m.id, m.host.username, m.invited.username))
 				thread.start()

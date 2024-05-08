@@ -1,13 +1,11 @@
 import { changeScene } from "./scene.js";
 import globalVariables from "../init.js";
-import { fetchUserData } from "../fetch/http.js";
 import { isConnected } from "../fetch/http.js";
-import Connect from "../class/Connect.js";
-import { fetchProfilPicture } from "../fetch/http.js";
+import Activity from "../class/Activity.js";
 import { userExist } from "../fetch/http.js";
 import Alerts from "../class/Alerts.js";
-import { coordination } from "/static/default/assets/js/class/Coordination.js";
 import { createGame } from "/static/default/assets/js/spaManagement/div/createInGame.js";
+import Coordination from "../class/Coordination.js";
 
 async function routeHandler() {
 	const connected = await isConnected();
@@ -32,8 +30,11 @@ async function routeHandler() {
 		}
 	} else {
 		if (!globalVariables.activity || globalVariables.activity.readyState === WebSocket.CLOSED) {
-			globalVariables.activity =  new Connect();
+			globalVariables.activity = new Activity();
 			createGame()
+		}
+		if (!globalVariables.coordination || globalVariables.coordination.socketC === WebSocket.CLOSED) {
+			globalVariables.coordination = new Coordination();
 		}
 		switch (pathname) {
 			case "/search":
@@ -159,7 +160,7 @@ async function routeChat() {
 };
 
 async function routeError() {
-	if (coordination.isConnected())
+	if (globalVariables.coordination && globalVariables.coordination.isConnected())
 		return (history.pushState({}, '', '/'))
 	else
 		await changeScene('error', 'none');

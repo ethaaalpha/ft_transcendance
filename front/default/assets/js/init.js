@@ -1,10 +1,5 @@
-import User from './class/User.js';
-import Connect from './class/Connect.js';
-import { fetchData } from './fetch/api.js';
 import { backgroundRunner } from './action/background.js';
 import { routeHandler } from './spaManagement/router.js';
-import { isConnected } from './fetch/http.js';
-import { status } from '/static/pong3d/utilsPong.js';
 
 backgroundRunner();
 window.onload = routeHandler;
@@ -17,6 +12,7 @@ var globalVariables = {
 	currentUser: null,
 	userConversations: null,
 	activity: null,
+	coordinatio: null,
 	eventListeners: {},
 	gameTheme: 1,
 	isInGame: false,
