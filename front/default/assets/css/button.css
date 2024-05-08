@@ -86,7 +86,7 @@
 .btn-title {
 	flex-grow: 1; /* Titre occupe tout l'espace restant */
 	text-align: left;
-	font-family: "Roboto Mono", monospace;
+	font-family: "monospace;
 }
 
 .btn-settings {
