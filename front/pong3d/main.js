@@ -11,6 +11,7 @@ import { hideLoadingAnimation, showLoadingAnimation, status, ft } from './utilsP
 import { goToInGame } from '/static/default/assets/js/action/play.js';
 import { goToHome } from '/static/default/assets/js/action/play.js';
 import globalVariables from '/static/default/assets/js/init.js';
+import Alerts from '/static/default/assets/js/class/Alerts.js';
 
 
 var data = null;
@@ -74,6 +75,7 @@ async function initialize() {
 			}
 			else if (status.status === 1){ // Matchmaking
 				goToInGame();
+                Alerts.createAlert(Alerts.type.GAME, 'Press escape to go back to the menu');
 				if (globalVariables.coordination) // if delay due to slow loading
                 	globalVariables.coordination.send({'event': 'matchmaking', 'data': {'action' : 'join'}})
                 showLoadingAnimation();
@@ -174,7 +176,11 @@ async function createMenu() {
 async function createGame(returnValue) {
     return new Promise((resolve) => {
         view = null;
-        if (globalVariables.coordination.data.data.statusHost == true)
+        if (status.status == 0 || globalVariables.coordination.data == null){
+            globalVariables.coordination.returnMenu = false
+            resolve()
+        }
+        else if (globalVariables.coordination.data.data.statusHost == true)
             view = new Game(status, resolve, updateStatus, gameData, returnValue);
         else
             view = new GameInv(status, resolve, updateStatus, gameData, returnValue);
