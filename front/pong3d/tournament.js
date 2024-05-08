@@ -1,9 +1,9 @@
 import { status } from "/static/pong3d/utilsPong.js";
 import globalVariables from "/static/default/assets/js/init.js";
 
-var opacity_low = 0.4;
-var opacity_medium = 0.6;
-var opacity_high = 0.8;
+var opacity_low = 0.1;
+var opacity_medium = 0.2;
+var opacity_high = 0.4;
 
 function unhideElement(id) {
 	let element = document.getElementById(id);
@@ -193,7 +193,7 @@ class FormTournament {
 			this.roomCode = roomCode;
 		this.state = 1;
 		this.max = 0;
-		unhideElement('game');
+		unhideElement('tournament');
 		hideElement('tournament-a');
 		unhideElement('tournament-b');
 		this.updateCount();
@@ -203,7 +203,7 @@ class FormTournament {
 
 	changeToWait() {
 		this.defaultValues();
-		unhideElement('game');
+		unhideElement('tournament');
 		hideElement('tournament-b')
 		unhideElement('tournament-a')
 		this.defaultValues();
@@ -218,7 +218,7 @@ class FormTournament {
 		element.value = "";
 		hideElement('tournament-b');
 		hideElement('tournament-a');
-		hideElement('game');
+		hideElement('tournament');
 	}
 }
 
