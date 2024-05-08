@@ -28,14 +28,14 @@ function receivedPlayAnswer(from) {
 }
 
 function goToInGame() {//the only to go to in-game is to do this two steps
-	if (window.location.pathname != '/in-game' && !globalVariables.isInGame) {
+	if (window.location.pathname != '/in-game' || !globalVariables.isInGame) {
 		globalVariables.isInGame = true;
 		history.pushState({}, '', '/in-game');
 	}
 }
 
 function goToHome() {
-	if (window.location.pathname == '/in-game' && globalVariables.isInGame) {
+	if (window.location.pathname == '/in-game' || globalVariables.isInGame) {
 		globalVariables.isInGame = false;
 		history.pushState({}, '', '/');
 	}
