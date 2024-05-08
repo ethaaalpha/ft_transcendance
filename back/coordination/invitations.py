@@ -53,8 +53,8 @@ class InvitationStack:
 		
 		newInvitation = Invitation(initier, target)
 		InvitationStack.stack.append(newInvitation)
-		newInvitation.notify('target', 'invited', ["You are invited to play with ", initier.username], True)
-		return (["Match invitation succefully send to ", target.username], True)
+		newInvitation.notify('target', 'invited', ["You received an invitation from " + initier.username, initier.username], True)
+		return (["Match invitation succefully send !", target.username], True)
 	
 	@staticmethod
 	def refuse(initier: User, target: User) -> tuple:
@@ -64,9 +64,9 @@ class InvitationStack:
 		"""
 		inv: Invitation = InvitationStack.find(initier, target)
 		if inv:
-			inv.notify('initier', 'refuse', ["Invitation refused by ", target.username], True)
+			inv.notify('initier', 'refuse', ["Invitation refused !", target.username], True)
 			InvitationStack.stack.remove(inv)
-			return (["You refused the invitation from ", initier.username], True)				
+			return (["You refused an invitation !", initier.username], True)				
 		return ("This invitation do not exist anymore !", False)
 	
 	@staticmethod
@@ -86,7 +86,7 @@ class InvitationStack:
 				inv.notify('all', 'refuse', "Something bad happend you can't play together !", False)
 				return
 			
-			inv.notify('initier', 'accept', ["Invitation accepted!", target.username] , True)
+			inv.notify('initier', 'accept', ["Invitation accepted !", target.username] , True)
 
 			# create match here !!
 			room: Room = Room.createRoom(initier, Mode.INVITATION)
