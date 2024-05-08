@@ -1,5 +1,6 @@
 import globalVariables from "../init.js";
 import { setNewOpponentUsername } from "../spaManagement/div/createInGame.js";
+import { status } from "/static/pong3d/utilsPong.js"
 
 
 // RECEIVE THINGS FROM WS
@@ -22,8 +23,10 @@ function receivedPlayRequest(from, to) {
 	// alert
 }
 
-function receivedPlayAnswer(from) {
+function receivedPlayAnswer(from, code) {
 	goToInGame();
+	status.status = 6;
+	console.log("hello")
 	// ici faire le go in game avec le status !
 }
 

@@ -83,15 +83,15 @@ class InvitationStack:
 			targetCheck = isAvailableToPlay(target)
 
 			if not initierCheck[1] or not targetCheck[1]: # Here to avoid multi-playing
-				inv.notify('all', 'refuse', "Something bad happend you can't play together !", False)
-				return
+				inv.notify('target', 'refuse', "Something bad happend you can't play together !", False)
+				return (["Something bad happend you can't play together"], False)
 			
-			inv.notify('initier', 'accept', ["Invitation accepted !", target.username] , True)
 
 			# create match here !!
 			room: Room = Room.createRoom(initier, Mode.INVITATION)
 			room.addPlayer(target)
-			return (["Invitation successfully accepted", initier.username], True)
+			inv.notify('initier', 'accept', ["Invitation accepted !", target.username, room.id] , True)
+			return (["Invitation successfully accepted", initier.username, room.id], True)
 		return ("This invitation do not exist !", False)
 	
 	@staticmethod

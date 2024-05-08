@@ -8,6 +8,7 @@ import { receivedPlayAnswer } from "../action/play.js";
 class Coordination {
 	constructor() {
 		this.connect()
+		this.roomCode = null;
 		this.data = null;
 		this.inGame = false
 	}
@@ -41,11 +42,11 @@ class Coordination {
 			}
 			else if (tmp.event == "create" && tmp.data.status == true){
 				ft.changeToRoom(tmp.data.message)
-				this.waitForNextMatch(tmp.data.message)
+				this.waitForNextMatch(tmp.data.message, 5)
 			}
 			else if (tmp.event == "tournament" && tmp.data.status == true){
 				ft.changeToRoom(null)
-				this.waitForNextMatch(ft.roomCode)
+				this.waitForNextMatch(ft.roomCode, 5)
 			}
 			else if (tmp.event == "count")
 				ft.eventPlayer(tmp.data.updater, tmp.data.count, tmp.data.max)
@@ -83,7 +84,8 @@ class Coordination {
 						break;
 					case 'accept':
 						if (tmp.data.status) {
-							receivedPlayAnswer(tmp.data.message[1]);
+							this.roomCode = tmp.data.message[2];
+							receivedPlayAnswer(tmp.data.message[1], tmp.data.message[2]);
 						}
 						console.log('icilala ' + tmp.data.message[1])
 						globalVariables.currentUser.removePendingGameFrom(tmp.data.message[1])
@@ -120,9 +122,15 @@ class Coordination {
 			console.log("Error socket Coordiantion State");
 	}
 
-	async waitForNextMatch(code){
+	async waitForNextMatch(code, nextStatus){
 		console.log(this.data);
 		return new Promise((resolve) => {
+			if (code == "" || code == null){
+				if (this.roomCode != null){
+					code = this.roomCode;
+					this.roomCode = null;
+				}
+			}
 			const intervalId = setInterval(() => {
 				this.socketCo.send(JSON.stringify({'event': 'next', 'data': {'room-id' : code}}))
 				console.log(status);
@@ -132,7 +140,7 @@ class Coordination {
 						status.status = 0
 					}
 					if (this.data.event == "next") {
-						status.status = 5
+						status.status = nextStatus
 					}
 					clearInterval(intervalId);
 					hideLoadingAnimation();
