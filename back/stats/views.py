@@ -39,6 +39,6 @@ def entryPoint(request: HttpRequest) -> HttpResponse:
 		if not dateSince:
 			return tResponses.BAD_REQUEST.request("Error in date format !")
 		
-		return JsonResponse({'matchs': Match.historic(targetUser, dateSince)})
+		return JsonResponse({'matchs': Match.historic(targetUser, dateSince, 10)})
 	else:
 		tResponses.BAD_REQUEST.request("POST requests are not supported here !")

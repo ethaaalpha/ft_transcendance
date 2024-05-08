@@ -3,6 +3,7 @@ import { goToHome } from '/static/default/assets/js/action/play.js';
 import globalVariables from '/static/default/assets/js/init.js';
 import { receivedNewOpponentUsername } from "/static/default/assets/js/action/play.js";
 import Alerts from "./Alerts.js";
+import { receivedPlayAnswer } from "../action/play.js";
 
 class Coordination {
 	constructor() {
@@ -82,7 +83,7 @@ class Coordination {
 						break;
 					case 'accept':
 						if (tmp.data.status) {
-							// ici faire quelque chose!
+							receivedPlayAnswer(tmp.data.message[1]);
 						}
 						console.log('icilala ' + tmp.data.message[1])
 						globalVariables.currentUser.removePendingGameFrom(tmp.data.message[1])
@@ -90,7 +91,10 @@ class Coordination {
 						break;
 				}
 				if (tmp.data.message) {
-					Alerts.createAlert(type, tmp.data.message)
+					if (typeof(tmp.data.message) == 'string')
+						Alerts.createAlert(type, tmp.data.message)
+					else
+						Alerts.createAlert(type, tmp.data.message[0])
 				}
 			}
 

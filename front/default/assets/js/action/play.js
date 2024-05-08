@@ -22,14 +22,9 @@ function receivedPlayRequest(from, to) {
 	// alert
 }
 
-function receivedPlayAnswer(from, answer) {
-	if (answer === 'accept') {
-		// alert sucess
-		// launch game
-		goToInGame();//change scene to in-game
-	} else {
-		//alert fail
-	}
+function receivedPlayAnswer(from) {
+	goToInGame();
+	// ici faire le go in game avec le status !
 }
 
 function goToInGame() {//the only to go to in-game is to do this two steps
@@ -73,4 +68,4 @@ function refusePlayRequest(from) {
 	//alert sucess/fail
 }
 
-export { sentPlayRequest, receivedPlayRequest, acceptPlayRequest, refusePlayRequest, goToInGame, goToHome, receivedNewOpponentUsername};
+export { sentPlayRequest, receivedPlayRequest, acceptPlayRequest, refusePlayRequest, goToInGame, goToHome, receivedNewOpponentUsername, receivedPlayAnswer};
