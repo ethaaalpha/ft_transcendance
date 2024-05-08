@@ -1,5 +1,4 @@
 import Alerts from '../class/Alerts.js';
-import { coordination } from '../class/Coordination.js';
 import { fetchData } from '../fetch/api.js';
 import globalVariables from '../init.js';
 import { updateGameTheme } from '/static/default/assets/js/spaManagement/div/createInGame.js';
@@ -8,6 +7,9 @@ import { fetchUserData } from '/static/default/assets/js/fetch/http.js';
 function signIn() {
 	var username = document.getElementById("sign-in-username").value;
 	var password = document.getElementById("sign-in-password").value;
+
+	if (!username.trim() || !password.trim())
+		return Alerts.createAlert(Alerts.type.FAILED, 'Value empty !')
 	
 	var formData = new FormData();
 	
@@ -22,12 +24,11 @@ function signIn() {
 				// notif mdp mauvais ?
 				// effacer champ mdp
 			}
-			if (data.status === 404) {
+			else if (data.status === 404) {
 				console.log("You need to create an account");
 				history.pushState({}, '', '/sign-up');
-				document.getElementById("sign-up-password-confirm").focus();
 			}
-			if (data.status === 200) {
+			else if (data.status === 200) {
 				console.log("Successful connection");
 				history.pushState({}, '', '/');
 				Alerts.createAlert(Alerts.type.SUCCESS, data.data.message);
@@ -47,6 +48,9 @@ function signUp() {
 	var password = document.getElementById("sign-up-password").value;
 	var email = document.getElementById("sign-up-email").value;
 	
+	if (!username.trim() || !password.trim() || !email.trim())
+		return Alerts.createAlert(Alerts.type.FAILED, 'Value empty !')
+
 	var formData = new FormData();
 	
 	formData.append("username", username);
@@ -90,7 +94,9 @@ function signOut() {
 	.then(() => {
 		console.log("Sign out sucess");
 		globalVariables.activity.close();
-		coordination.destroy();
+		globalVariables.coordination.destroy();
+		globalVariables.activity = null;
+		globalVariables.coordination = null;
 		history.pushState({}, '', '/sign-in');
 	})
 	.catch(error => {
@@ -101,8 +107,10 @@ function signOut() {
 function forgotPassword() {
 	var username = document.getElementById("sign-in-username").value;
 	
+	if (!username.trim())
+		return Alerts.createAlert(Alerts.type.FAILED, 'Value empty !')
+
 	var formData = new FormData();
-	
 	formData.append("username", username);
 	
 	fetchData("/api/auth/reset-password", 'POST', formData).then(
@@ -123,6 +131,9 @@ function modifyPassword() {
 	var actualPassword = document.getElementById("settings-actual-password").value;
 	var newPassword = document.getElementById("settings-new-password").value;
 	
+	if (!newPassword.trim() || !actualPassword.trim())
+		return Alerts.createAlert(Alerts.type.FAILED, 'Value empty !')
+
 	var formData = new FormData();
 	
 	formData.append("actualPassword", actualPassword);
@@ -147,6 +158,9 @@ function modifyEmail() {
 	var actualEmail = document.getElementById("settings-actual-email").value;
 	var newEmail = document.getElementById("settings-new-email").value;
 	
+	if (!actualEmail.trim() || !newEmail.trim())
+		return Alerts.createAlert(Alerts.type.FAILED, 'Value empty !')
+
 	var formData = new FormData();
 	
 	formData.append("actualEmail", actualEmail);
@@ -230,6 +244,10 @@ function modifyGameTheme(id) { // to modify with nico
 
 function manageFriend(username, action) {	
 	var formData = new FormData();
+
+	if (!username.trim() || !action.trim())
+		return
+
 	formData.append("action", action);
 	formData.append("username", username);
 	

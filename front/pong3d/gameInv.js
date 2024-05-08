@@ -264,7 +264,8 @@ class GameInv {
 		this.controls.update();
 		this.camera.rotation.z += Math.PI;
 		this.renderer.render(this.scene, this.camera);
-		if (this.status['status'] === 1 || this.status['status'] === 2 || this.status['status'] === 5)
+		if (this.status['status'] === 1 || this.status['status'] === 2 || this.status['status'] === 5 ||
+			this.status['status'] === 6)
 			requestAnimationFrame(() => this.animate());
 		else
 			this.destroy()
@@ -326,7 +327,8 @@ class GameInv {
 		else
 			await this.checkPoint();
 		await sleep(18);
-		if (this.status['status'] === 1 || this.status['status'] === 2 || this.status['status'] === 5)
+		if (this.status['status'] === 1 || this.status['status'] === 2 || this.status['status'] === 5 || 
+			this.status['status'] === 6)
 			requestAnimationFrame(() => this.update())
 	}
 	onKeyDown(event) {

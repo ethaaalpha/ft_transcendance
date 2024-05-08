@@ -62,6 +62,7 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 		values[0] is the message
 		values[1] is code -> success (True), failure (False)
 		"""
+		print(f'voici le message a envoyer {values}', file=sys.stderr)
 		await self.send_json({'event': event, 'data': {'message': values[0], 'status': values[1]}})
 
 
@@ -114,7 +115,7 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 						await self.messageResponse('invite', await sync_to_async(InvitationStack.invite)(await self.getUser(), await self.getUser(username=target)))
 				case 'accept':
 					if target:
-						await sync_to_async(InvitationStack.accept)(await self.getUser(username=target), await self.getUser())
+						await self.messageResponse('accept', await sync_to_async(InvitationStack.accept)(await self.getUser(username=target), await self.getUser()))
 				case 'refuse':
 					if target:
 						await self.messageResponse('refuse', await sync_to_async(InvitationStack.refuse)(await self.getUser(username=target), await self.getUser()))

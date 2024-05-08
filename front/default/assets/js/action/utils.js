@@ -18,35 +18,142 @@ function isValidEmail(email) {
 
 	if (!emailRegex.test(email))
 		return false
-	if (email.length < 5 || email > 254)
+	if (email.length < 5 || email.length > 254)
 		return false
 	return true
 }
 
-function checkSignUpAllValues() {
-	let username = document.getElementById('sign-up-username');
-	let password = document.getElementById('sign-up-password');
-	let passwordMatch = document.getElementById('sign-up-password-confirm');
-	let email = document.getElementById('sign-up-email');
-
-	if (username.classList.contains('is-invalid')
-		|| password.classList.contains('is-invalid')
-		|| passwordMatch.classList.contains('is-invalid')
-		|| email.classList.contains('is-invalid')){
-			return false
+function emptyValues(elements) {
+	for (let i = 0; i < elements.length; i++) {
+		if (!elements[i].value.trim()) {
+            return true; 
+        }
 	}
-	return true
+	return false;
 }
 
-function checkSignInAllValues() {
-	let username = document.getElementById('sign-in-username');
-	let password = document.getElementById('sign-in-password');
+function checkAllSignUp(event, enter = false) {
+	var _username = document.getElementById('sign-up-username');
+	var _password = document.getElementById('sign-up-password');
+	var _passwordMatch = document.getElementById('sign-up-password-confirm');
+	var _email = document.getElementById('sign-up-email');
 
-	if (username.classList.contains('is-invalid')
-		|| password.classList.contains('is-invalid')){
-		return false
+	var items = [_username, _password, _passwordMatch, _email];
+
+	console.log('je rentre ici')
+	if (enter) {
+		if (emptyValues(items))
+			return false;
+		for (var i = 0; i < items.length; i++) {
+            if (items[i].classList.contains('is-invalid')) {
+                return false;
+            }
+        }
+		return true;
+
+	} else {
+		isValidUsername(_username.value) ? _username.classList.remove('is-invalid') : _username.classList.add('is-invalid');
+		isValidPassword(_password.value) ? _password.classList.remove('is-invalid') : _password.classList.add('is-invalid');
+		isValidPassword(_passwordMatch.value) ? _passwordMatch.classList.remove('is-invalid') : _passwordMatch.classList.add('is-invalid');
+		isValidEmail(_email.value) ? _email.classList.remove('is-invalid') : _email.classList.add('is-invalid')
+		if (_password.value != _passwordMatch.value) {
+			_password.classList.add('is-invalid');
+			_passwordMatch.classList.add('is-invalid');
+		}
 	}
-	return true
 }
 
-export { isValidUsername, isValidPassword, isValidEmail, checkSignUpAllValues, checkSignInAllValues };
+function checkAllSignIn(event, enter = false) {
+	var _username = document.getElementById('sign-in-username');
+	var _password = document.getElementById('sign-in-password');
+
+	var items = [_username, _password];
+
+	if (enter) {
+		if (emptyValues(items))
+			return false;
+		for (var i = 0; i < items.length; i++) {
+            if (items[i].classList.contains('is-invalid')) {
+                return false;
+            }
+        }
+		return true;
+
+	} else {
+		if (isValidUsername(_username.value))
+			_username.classList.remove('is-invalid')
+		else
+			_username.classList.add('is-invalid');
+		if (isValidPassword(_password.value))
+			_password.classList.remove('is-invalid')
+		else
+			_password.classList.add('is-invalid');
+	}
+}
+
+
+function checkAllSettingsPassword(event, enter = false) {
+	var _actual = document.getElementById('settings-actual-password');
+	var _new = document.getElementById('settings-new-password');
+	var _confirm = document.getElementById('settings-confirm-password');
+
+	var items = [_actual, _new, _confirm];
+
+	if (enter) {
+		if (emptyValues(items))
+			return false;
+		for (var i = 0; i < items.length; i++) {
+            if (items[i].classList.contains('is-invalid')) {
+                return false;
+            }
+        }
+		return true;
+
+	} else {
+		items.forEach((i) => {
+			if (isValidPassword(i.value))
+				i.classList.remove('is-invalid');
+			else
+				i.classList.add('is-invalid');
+		});
+	
+		if (_new.value != _confirm.value || _actual.value === _new.value) {
+			_new.classList.add('is-invalid');
+			_confirm.classList.add('is-invalid');
+		}
+	}
+}
+
+function checkAllSettingsEmail(event, enter = false) {
+	var _actual = document.getElementById('settings-actual-email');
+	var _new = document.getElementById('settings-new-email');
+	var _confirm = document.getElementById('settings-confirm-email');
+
+	var items = [_actual, _new, _confirm];
+
+	if (enter) {
+		if (emptyValues(items))
+			return false;
+		for (var i = 0; i < items.length; i++) {
+            if (items[i].classList.contains('is-invalid')) {
+                return false;
+            }
+        }
+		return true;
+
+	} else {
+		items.forEach((i) => {
+			if (isValidEmail(i.value))
+				i.classList.remove('is-invalid');
+			else
+				i.classList.add('is-invalid');
+		});
+	
+		if (_new.value != _confirm.value || _actual.value === _new.value) {
+			_new.classList.add('is-invalid');
+			_confirm.classList.add('is-invalid');
+		}
+	}
+}
+
+export { checkAllSignIn, checkAllSignUp, checkAllSettingsPassword, checkAllSettingsEmail };

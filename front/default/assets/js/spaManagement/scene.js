@@ -99,7 +99,6 @@ const sceneInfos = {
 		createChildDivIds: ["in-game", "nav-bar"],
 		unhideElementsIds: ["home", "nav-bar", "in-game", "app"],
 		setEventListenerIds: "in-game",
-		setFocusId: "in-game"
 	},
 	"settings": {
 		id: "settings",

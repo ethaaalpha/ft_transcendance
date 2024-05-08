@@ -3,16 +3,15 @@ import { RGBELoader } from 'three/module/loaders/RGBELoader.js';
 import { GLTFLoader } from 'three/module/loaders/GLTFLoader.js';
 import { FontLoader } from 'three/module/loaders/FontLoader.js';
 import { OrbitControls } from 'three/module/controls/OrbitControls.js';
-import FormTournament from './tournament.js';
 import Game from './game.js';
 import Menu from './menu.js';
 import GameLocal from './gameLocal.js';
 import GameInv from './gameInv.js';
 import { hideLoadingAnimation, showLoadingAnimation, status, ft } from './utilsPong.js';
-import { coordination } from '/static/default/assets/js/class/Coordination.js';
 import { goToInGame } from '/static/default/assets/js/action/play.js';
 import { goToHome } from '/static/default/assets/js/action/play.js';
 import globalVariables from '/static/default/assets/js/init.js';
+import Alerts from '/static/default/assets/js/class/Alerts.js';
 
 
 var data = null;
@@ -54,6 +53,7 @@ function onFocus(){
     status.action = true;
 }
 function notOnFocus(){
+	console.log('unfocus')
     status.action = false;
 }
 function updateStatus(newStatus) {
@@ -64,7 +64,8 @@ async function initialize() {
 	try {
 		while(1){
             if (status.status != 5)
-				coordination.data = null;
+				if (globalVariables.coordination) // if delay due to slow loading
+					globalVariables.coordination.data = null;
             console.log(status)
 			if (status.status === -1)
 				await loadTexture();
@@ -74,16 +75,18 @@ async function initialize() {
 			}
 			else if (status.status === 1){ // Matchmaking
 				goToInGame();
-                coordination.send({'event': 'matchmaking', 'data': {'action' : 'join'}})
+                Alerts.createAlert(Alerts.type.GAME, 'Press escape to go back to the menu');
+				if (globalVariables.coordination) // if delay due to slow loading
+                	globalVariables.coordination.send({'event': 'matchmaking', 'data': {'action' : 'join'}})
                 showLoadingAnimation();
-                await coordination.waitForData(50);
+                await globalVariables.coordination.waitForData(50);
     		    await createGame(0);
             }
             else if (status.status === 2){ // Tournament
 				goToInGame();
                 ft.changeToWait();
                 hideLoadingAnimation();
-                await coordination.waitForTournament(50)
+                await globalVariables.coordination.waitForTournament(50)
 				ft.changeToInactive();
 				if (status.status == 5)
 					await createGame(4)
@@ -97,12 +100,17 @@ async function initialize() {
             else if (status.status === 4){
                     showLoadingAnimation();
                     console.log(status)
-                    await coordination.waitForNextMatch(ft.roomCode);
+                    await globalVariables.coordination.waitForNextMatch(ft.roomCode, 5);
                 }
             else if (status.status === 5){
 				console.log("le mode 5")
                 await createGame(4);
-            } 
+            }
+            else if (status.status === 6){
+                showLoadingAnimation();
+                await globalVariables.coordination.waitForNextMatch("", 6);
+                await createGame(0)
+            }
 		}
     } catch (error) {
         console.error("Error during initialization:", error);
@@ -132,16 +140,16 @@ function initLoading(){
 async function loadTexture() {
     return new Promise((resolve, reject) => {
         
-        gameData.RGBELoader.load(globalVariables.currentUser.getGameTheme() + '.hdr', (texture) => {
-            texture.mapping = THREE.EquirectangularReflectionMapping;
-            var textureRev = texture.clone()
-            textureRev.flipY = false;
-			gameData.sceneMenu.background = texture;
-			gameData.sceneMenu.environment = texture;
-            gameData.sceneGameLocal.background = texture;
-			gameData.sceneGameLocal.environment = texture;
-            gameData.sceneGameInv.background = textureRev;
-			gameData.sceneGameInv.environment = textureRev;
+        // gameData.RGBELoader.load(globalVariables.currentUser.getGameTheme() + '.hdr', (texture) => {
+        //     texture.mapping = THREE.EquirectangularReflectionMapping;
+        //     var textureRev = texture.clone()
+        //     textureRev.flipY = false;
+		// 	gameData.sceneMenu.background = texture;
+		// 	gameData.sceneMenu.environment = texture;
+        //     gameData.sceneGameLocal.background = texture;
+		// 	gameData.sceneGameLocal.environment = texture;
+        //     gameData.sceneGameInv.background = textureRev;
+		// 	gameData.sceneGameInv.environment = textureRev;
             gameData.controlsMenu = new OrbitControls(gameData.camera, gameData.rendererMenu.domElement);
             gameData.controlsGameLocal = new OrbitControls(gameData.camera, gameData.rendererGameLocal.domElement);
 			gameData.controlsMenu.enableZoom = false;
@@ -151,7 +159,7 @@ async function loadTexture() {
 			status.status = 0;
             resolve();
         });
-    });
+    // });
 }
 
 function updateGameTheme(){
@@ -168,11 +176,15 @@ async function createMenu() {
 async function createGame(returnValue) {
     return new Promise((resolve) => {
         view = null;
-        if (coordination.data.data.statusHost == true)
+        if (status.status == 0 || globalVariables.coordination.data == null){
+            globalVariables.coordination.returnMenu = false
+            resolve()
+        }
+        else if (globalVariables.coordination.data.data.statusHost == true)
             view = new Game(status, resolve, updateStatus, gameData, returnValue);
         else
             view = new GameInv(status, resolve, updateStatus, gameData, returnValue);
-		coordination.data = null;
+		globalVariables.coordination.data = null;
     });
 }
 

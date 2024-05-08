@@ -161,7 +161,7 @@ class Menu {
 	}
 
 	onKeyDown(event) {
-		console.log(event.keyCode)
+		// console.log(event.keyCode)
 		if (status.action == true){
 			switch (event.keyCode) {
 				case 83:
