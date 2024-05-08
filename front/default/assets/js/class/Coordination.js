@@ -25,6 +25,7 @@ class Coordination {
 	}
 	destroy(){
 		this.socketCo.close();
+		document.removeEventListener('keydown', this.backInGame);
 		console.log("Coordination socket closed")
 	}
 
