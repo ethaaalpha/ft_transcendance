@@ -65,7 +65,8 @@
 
 #tournament-form-top-left {
 	display: flex;
-	width: 60%;
+	width: 45%;
+	white-space: nowrap;
 	justify-content: space-between
 }
 
