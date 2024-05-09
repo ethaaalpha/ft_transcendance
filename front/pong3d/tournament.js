@@ -1,4 +1,5 @@
 import { status } from "/static/pong3d/utilsPong.js";
+import Alerts from "/static/default/assets/js/class/Alerts.js"
 import globalVariables from "/static/default/assets/js/init.js";
 
 var opacity_low = 0.1;
@@ -145,6 +146,7 @@ class FormTournament {
 
 		document.getElementById('tournament-js-code-display').addEventListener("click", (event) => {
 			navigator.clipboard.writeText(this.roomCode)
+			Alerts.createAlert(Alerts.type.GAME, "Code copied to clipboard !")
 		});
 	}
 
