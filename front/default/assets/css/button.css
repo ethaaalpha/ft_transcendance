@@ -84,7 +84,7 @@
 }
 
 .btn-title {
-	flex-grow: 1; /* Titre occupe tout l'espace restant */
+	flex-grow: 1;
 	text-align: left;
 	font-family: "monospace;
 }
