@@ -47,8 +47,6 @@ class Coordination {
 						Alerts.createAlert(Alerts.type.GAME, 'Next opponent : ' + usernameOpponent)
 						break;
 					default:
-						Alerts.createAlert(Alerts.type.GAME, tmp.data.message)
-						console.log('je suis sensé quitter')
 						goToHome();
 						break;
 				}
