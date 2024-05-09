@@ -44,8 +44,10 @@ class Coordination {
 					case 'next':
 						let usernameOpponent = tmp.data.statusHost ? tmp.data.invited : tmp.data.host; 
 						receivedNewOpponentUsername(usernameOpponent)
+						Alerts.createAlert(Alerts.type.GAME, 'Next opponent : ' + usernameOpponent)
 						break;
 					default:
+						Alerts.createAlert(Alerts.type.GAME, tmp.data.message)
 						console.log('je suis sensé quitter')
 						goToHome();
 						break;
