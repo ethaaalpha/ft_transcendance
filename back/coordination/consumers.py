@@ -8,6 +8,7 @@ from .matchmaking import Matchmaking
 from .invitations import InvitationStack
 from channels.layers import get_channel_layer
 from game.models import Room, Mode, Match
+import json
 import time, sys, threading
 
 connected_list = []
@@ -26,6 +27,13 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 	@database_sync_to_async
 	def desactivePlaying(self):
 		self.user.Profile.setPlaying(False)
+
+	@classmethod
+	async def decode_json(cls, text_data):
+		try:
+			return json.loads(text_data)
+		except:
+			return {}
 
 	async def connect(self):
 		self.user = self.scope['user']
