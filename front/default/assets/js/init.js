@@ -12,11 +12,10 @@ var globalVariables = {
 	currentUser: null,
 	userConversations: null,
 	activity: null,
-	coordinatio: null,
+	coordination: null,
 	eventListeners: {},
 	gameTheme: 1,
 	isInGame: false,
-	gameInstance : null,
 	gameData: null,
 };
 
