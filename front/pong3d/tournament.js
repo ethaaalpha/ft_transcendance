@@ -73,11 +73,64 @@ class FormTournamentEvent {
 	}
 }
 
+
+// Events
+function eventQuit(e) {
+	globalVariables.coordination.send({'event': 'tournament', 'data': {
+		'action': 'quit',
+		'room-id': this.roomCode,
+		},
+	})
+	this.changeToInactive();
+}
+
+function eventCopy(e) {
+	navigator.clipboard.writeText(this.roomCode)
+	Alerts.createAlert(Alerts.type.GAME, "Code copied to clipboard !")
+}
+
+
+function eventCreate(e) {
+	let value = document.getElementById('tournament-js-select').value;
+	globalVariables.coordination.send({'event': 'create', 'data': {
+		'mode': `tournament${value}`
+		},
+	})
+}
+	
+function eventJoin(e) {
+	this.askToJoin();
+}
+	
+function eventJoinPress(e) {
+	if (e.key === "Enter")
+		this.askToJoin();
+}
+	
+function eventEscape(e) {
+	status.status = 0
+	globalVariables.coordination.inGame = true;
+	globalVariables.coordination.send({'event': 'end', 'data': {
+		'message': 'Forced by player',
+		},
+	})
+	this.changeToInactive();
+}
+
+
 class FormTournament {
 
 	constructor () {
 		this.changeToInactive();
 		this.historic = []
+
+		this.eventCreate = eventCreate.bind(this);
+        this.eventJoin = eventJoin.bind(this);
+        this.eventJoinPress = eventJoinPress.bind(this);
+        this.eventEscape = eventEscape.bind(this);
+        this.eventQuit = eventQuit.bind(this);
+        this.eventCopy = eventCopy.bind(this);
+
 	}
 
 	defaultValues(){
@@ -86,6 +139,14 @@ class FormTournament {
 		this.historic = [];
 		this.count = 0;
 		this.max = 0;
+
+
+		document.getElementById('tournament-js-create').removeEventListener("click", this.eventCreate);
+		document.getElementById('tournament-js-join').removeEventListener("click", this.eventJoin);
+		document.getElementById('tournament-js-code').removeEventListener("keydown", this.eventJoinPress);
+		document.getElementById('tournament-escape-button').removeEventListener('click', this.eventEscape)
+		document.getElementById('tournament-form-top-right').removeEventListener("click", this.eventQuit);
+		document.getElementById('tournament-js-code-display').removeEventListener("click", this.eventCopy);
 	}
 
 	updateCount() {
@@ -134,22 +195,6 @@ class FormTournament {
 		this.updateOpacity();
 	}
 
-	registerEventsRoom() {
-		document.getElementById('tournament-form-top-right').addEventListener("click", (event) => {
-			globalVariables.coordination.send({'event': 'tournament', 'data': {
-				'action': 'quit',
-				'room-id': this.roomCode,
-				},
-			})
-			this.changeToInactive()
-		});
-
-		document.getElementById('tournament-js-code-display').addEventListener("click", (event) => {
-			navigator.clipboard.writeText(this.roomCode)
-			Alerts.createAlert(Alerts.type.GAME, "Code copied to clipboard !")
-		});
-	}
-
 	askToJoin() {
 		let value = document.getElementById('tournament-js-code').value;
 		this.roomCode = value
@@ -160,36 +205,8 @@ class FormTournament {
 		})
 
 	}
-	
-	registerEventsWait() {
-		document.getElementById('tournament-js-create').addEventListener("click", (event) => {
-			let value = document.getElementById('tournament-js-select').value;
-			globalVariables.coordination.send({'event': 'create', 'data': {
-				'mode': `tournament${value}`
-				},
-			})
-		});
 
-		document.getElementById('tournament-js-join').addEventListener("click", (event) => {
-			this.askToJoin();
-		});
-
-		document.getElementById('tournament-js-code').addEventListener("keydown", (event) => {
-			if (event.key === 'Enter') 
-				this.askToJoin();
-		});
-
-		document.getElementById('tournament-escape-button').addEventListener('click', (event) => {
-			status.status = 0
-			globalVariables.coordination.inGame = true;
-			globalVariables.coordination.send({'event': 'end', 'data': {
-				'message': 'Forced by player',
-				},
-			})
-			this.changeToInactive();
-		})
-	}
-
+	// Extern entry
 	changeToRoom(roomCode) {
 		if (roomCode != null)
 			this.roomCode = roomCode;
@@ -221,6 +238,18 @@ class FormTournament {
 		hideElement('tournament-b');
 		hideElement('tournament-a');
 		hideElement('tournament');
+	}
+
+	registerEventsWait() {
+		document.getElementById('tournament-js-create').addEventListener("click", this.eventCreate);
+		document.getElementById('tournament-js-join').addEventListener("click", this.eventJoin);
+		document.getElementById('tournament-js-code').addEventListener("keydown", this.eventJoinPress);
+		document.getElementById('tournament-escape-button').addEventListener('click', this.eventEscape)
+	}
+
+	registerEventsRoom() {
+		document.getElementById('tournament-form-top-right').addEventListener("click", this.eventQuit);
+		document.getElementById('tournament-js-code-display').addEventListener("click", this.eventCopy);
 	}
 }
 
