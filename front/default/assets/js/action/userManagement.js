@@ -92,11 +92,14 @@ async function signWith42() {
 function signOut() {
 	fetchData("/api/auth/logout", 'POST')
 	.then(() => {
-		console.log("Sign out sucess");
+		console.log("Sign out success");
+		globalVariables.currentUser = null;
+		globalVariables.userConversations = null;
+		globalVariables.isInGame = false;
 		globalVariables.activity.close();
 		globalVariables.coordination.destroy();
-		globalVariables.activity = null;
 		globalVariables.coordination = null;
+		globalVariables.activity = null;
 		history.pushState({}, '', '/sign-in');
 	})
 	.catch(error => {

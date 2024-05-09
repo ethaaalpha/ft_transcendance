@@ -117,11 +117,13 @@ class Coordination {
 		}
 
 		this.socketCo.onerror = (event) => {
-			history.pushState({}, '', '/error')
+			if (globalVariables.currentUser != null)
+				history.pushState({}, '', '/error')
 		}
 
 		this.socketCo.onclose = (event) => {
-			history.pushState({}, '', '/error')
+			if (globalVariables.currentUser != null)
+				history.pushState({}, '', '/error')
 		}
 	}
 
