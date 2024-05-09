@@ -84,7 +84,7 @@ async function initialize() {
             }
             else if (status.status === 2){ // Tournament
 				goToInGame();
-                ft.changeToWait();
+				ft.changeToWait()
                 hideLoadingAnimation();
                 await globalVariables.coordination.waitForTournament(50)
 				ft.changeToInactive();

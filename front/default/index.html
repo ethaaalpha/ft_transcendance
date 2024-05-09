@@ -54,55 +54,52 @@
 					<div id="app" tabindex="0"></div>
 					<div id="loader" class="d-none"></div>
 					<div id="tournament" class="d-none">
-						<div id='tournament-a' class="tournament-form" style="--height: 25%; --direction: column">
+						<div id='tournament-a' class="tournament-form">
+							<div class="tournament-top">
+								<div></div>
+								<div class="tournament-leave">
+									<img id='tournament-escape-button' src="/static/default/assets/images/icons/logout.svg">
+								</div>
+							</div>
 							<div class='tournament-row'>
 								<div class="tournament-form-child">
-									<div id="tournament-form-child--mode" class="tournament-form-child-child">
-										<select id='tournament-js-select'class="form-select" aria-label="Default select example">
+									<div id="tournament-form-child--mode" class="tournament-form-child-child tournament-input">
+										<select id='tournament-js-select' class="form-select" aria-label="Default select example">
 											<option value="4" selected>4 Players</option>
 											<option value="8">8 Players</option>
 											<option value="16">16 Players</option>
 											<option value="32">32 Players</option>
 										</select>
-										<div id="tournament-form-child-child-create">
-											<button id="tournament-js-create" type="button" class="btn btn-success">
-												<i class="bi bi-plus"></i> Create
+										<div id="tournament-form-child-child-create" style="width: 100%;">
+											<button id="tournament-js-create" type="button" class="btn bordered-button" style="--main_color: #B4B4B4;">
+												<i class="bi bi-plus"></i>
+												<span>Create</span>
 											</button>
 										</div>
 									</div>
 								</div>
-								<div id="tournament-form-middle"></div>
 								<div class="tournament-form-child">
-									<div id="tournament-form-child--code" class="tournament-form-child-child">
-										<input type="text" class="form-control" id="tournament-js-code" placeholder="Room code">
-										<div id="tournament-form-child-child-code">
-											<button id='tournament-js-join' type="button" class="btn btn-success">
-												<i class="bi bi-controller"></i> Join
+									<div id="tournament-form-child--code" class="tournament-form-child-child tournament-input">
+										<input type="text" class="form-control" id="tournament-js-code" placeholder="room code..">
+										<div id="tournament-form-child-child-code" style="width: 100%;">
+											<button id='tournament-js-join' type="button" class="btn bordered-button" style="--main_color: #B4B4B4;">
+												<i class="bi bi-controller"></i>
+												<span>Join</span>
 											</button>
 										</div>
 									</div>
 								</div>
-							</div>
-							<div id="tournament-escape">
-								<button type="button" id='tournament-escape-button' class="btn btn-warning">Back to game</button>
 							</div>
 						</div>
 					
 						<div id='tournament-b' class="tournament-form" style="--height: 40%; --direction: column;">
-							<div id="tournament-form-top">
-								<div id="tournament-form-top-left">
-									<div class="tournament-form-top-left-child">
-										<span><span id="tournament-js-count">2/4</span><i class="bi bi-person"></i></span>
-									</div>
-									<div class="tournament-form-top-left-child">
-										<span>-</span>
-									</div>
-									<div class="tournament-form-top-left-child">
-										<span id='tournament-js-code-display'></span>
-									</div>
+							<div class="tournament-top">
+								<div class="tournament-top-text">
+									<span id='tournament-js-code-display'></span>
+									<span id="tournamnent-js-count-display"><i class="bi bi-person"></i> <span id="tournament-js-count">2/4</span></span>
 								</div>
-								<div id="tournament-form-top-right">
-									<i class="bi bi-box-arrow-right"></i>
+								<div class="tournament-leave">
+									<img id='tournament-form-top-right' src="/static/default/assets/images/icons/logout.svg">
 								</div>
 							</div>
 							<div id="tournament-form-content"></div>

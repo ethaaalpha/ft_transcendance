@@ -7,6 +7,7 @@ from .tools import getChannelName
 from users.models import Profile
 from .status import Status
 from conversations.models import Conversation
+import json
 
 class ActivityConsumer(AsyncJsonWebsocketConsumer):
 		
@@ -19,6 +20,13 @@ class ActivityConsumer(AsyncJsonWebsocketConsumer):
 		tUser = self.user.username if not username else username
 		return (Profile.getUserFromUsername(tUser))
 
+	@classmethod
+	async def decode_json(cls, text_data):
+		try:
+			return json.loads(text_data)
+		except:
+			return {}
+		
 	async def connect(self):
 		self.user = self.scope['user']
 		if self.user.is_authenticated:

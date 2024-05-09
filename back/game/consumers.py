@@ -24,6 +24,13 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 	def getUsername(self):
 		return (self.user.username)
 
+	@classmethod
+	async def decode_json(cls, text_data):
+		try:
+			return json.loads(text_data)
+		except:
+			return {}
+
 	async def connect(self):
 		self.user = self.scope['user']
 		if self.user.is_authenticated:
