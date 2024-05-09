@@ -1,31 +1,39 @@
+: '
+- key.txt contains the password provided by .env
+- geth generate private key accounts and key decryptable with key.txt to obtain private key
+- retrieve public account key to use it in the nodes
+
+- Bootnode -> for new nodes connection
+'
+
 if [ -d 'node1/geth/' ]; then
 	echo 'Config already here, running !'
 else
 	echo 'Empty config, initing !'
 
 	## Accounts generations for the nodes !
-	# Wroting passwords to files
-	echo $NODE1_ACCOUNT_PASSWORD > node1/password.txt
-	echo $NODE2_ACCOUNT_PASSWORD > node2/password.txt
+	# Wroting keys to files (choose by user)
+	echo $NODE1_ACCOUNT_PASSWORD > node1/key.txt
+	echo $NODE2_ACCOUNT_PASSWORD > node2/key.txt
 
 	for i in $(seq 1 6); do
-		printf "$NODE2_ACCOUNT_PASSWORD\n" >> password.config
+		printf "$NODE2_ACCOUNT_PASSWORD\n" >> key.config
 	done
 
 	echo 'Generating nodes accounts'
 	# Generating account for the node 1 (signer)
-	geth account new --datadir node1 --password node1/password.txt 2> temp | grep "Public address of the key" > keys_acc/node1.key
+	geth account new --datadir node1 --password node1/key.txt 2> temp | grep "Public address of the key" > keys_acc/node1.key
 
 	# Generating account for the node 2
-	geth account new --datadir node2 --password node2/password.txt 2> temp| grep "Public address of the key" > keys_acc/node2.key
+	geth account new --datadir node2 --password node2/key.txt 2> temp| grep "Public address of the key" > keys_acc/node2.key
 
 	# Tests accounts !
 	echo 'Generating tests accounts'
-	geth account new --datadir node2 --password node2/password.txt 2> temp | grep "Public address of the key" > keys_acc/test1.key
-	geth account new --datadir node2 --password node2/password.txt 2> temp | grep "Public address of the key" > keys_acc/test2.key
-	geth account new --datadir node2 --password node2/password.txt 2> temp | grep "Public address of the key" > keys_acc/test3.key
-	geth account new --datadir node2 --password node2/password.txt 2> temp | grep "Public address of the key" > keys_acc/test4.key
-	geth account new --datadir node2 --password node2/password.txt 2> temp | grep "Public address of the key" > keys_acc/test5.key
+	geth account new --datadir node2 --password node2/key.txt 2> temp | grep "Public address of the key" > keys_acc/test1.key
+	geth account new --datadir node2 --password node2/key.txt 2> temp | grep "Public address of the key" > keys_acc/test2.key
+	geth account new --datadir node2 --password node2/key.txt 2> temp | grep "Public address of the key" > keys_acc/test3.key
+	geth account new --datadir node2 --password node2/key.txt 2> temp | grep "Public address of the key" > keys_acc/test4.key
+	geth account new --datadir node2 --password node2/key.txt 2> temp | grep "Public address of the key" > keys_acc/test5.key
 
 
 	## Genesis.json & Accounts
@@ -67,9 +75,9 @@ NODE1_PUBLIC__ADDR=$(cat n1.config)
 echo 'Running bootnode and nodes !'
 ENODE=$(bootnode -nodekeyhex $(cat bnode/boot.key) -writeaddress)
 RUNNER_BN="bootnode -nodekey bnode/boot.key -addr :30305"
-RUNNER_1="geth --verbosity 3 --cache 128 --datadir node1 --port 30306 --bootnodes enode://${ENODE}@127.0.0.1:0?discport=30305 --networkid ${NETWORK_ID} --unlock ${NODE1_PUBLIC__ADDR} --password node1/password.txt --authrpc.port 8546 --mine --miner.etherbase ${NODE1_PUBLIC__ADDR}"
+RUNNER_1="geth --verbosity 3 --cache 128 --datadir node1 --port 30306 --bootnodes enode://${ENODE}@127.0.0.1:0?discport=30305 --networkid ${NETWORK_ID} --unlock ${NODE1_PUBLIC__ADDR} --password node1/key.txt --authrpc.port 8546 --mine --miner.etherbase ${NODE1_PUBLIC__ADDR}"
 RUNNER_2="geth --verbosity 3 --cache 128 --datadir node2 --port 30307 --bootnodes enode://${ENODE}@127.0.0.1:0?discport=30305 --networkid ${NETWORK_ID} \
---unlock ${ALL_ACCOUNTS_N2} --password password.config \
+--unlock ${ALL_ACCOUNTS_N2} --password key.config \
 --http --allow-insecure-unlock --http.corsdomain '*' --http.port 8545 --http.addr 0.0.0.0"
 
 ${RUNNER_BN} 2>/dev/null & ${RUNNER_1} 2>/dev/null & ${RUNNER_2} 2>/dev/null
