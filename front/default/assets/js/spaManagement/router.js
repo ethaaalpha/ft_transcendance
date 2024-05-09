@@ -6,6 +6,7 @@ import { userExist } from "../fetch/http.js";
 import Alerts from "../class/Alerts.js";
 import { createGame } from "/static/default/assets/js/spaManagement/div/createInGame.js";
 import Coordination from "../class/Coordination.js";
+import { backgroundRunner } from "/static/default/assets/js/action/background.js";
 
 async function routeHandler() {
 	const connected = await isConnected();
@@ -18,6 +19,7 @@ async function routeHandler() {
 
 	console.log("pathname:" + pathname);
 	if (!connected) {
+		backgroundRunner();
 		switch (pathname) {
 			case "/sign-up":
 				await routeSignUp();
@@ -29,6 +31,7 @@ async function routeHandler() {
 				break;
 		}
 	} else {
+		backgroundRunner(false);
 		if (!globalVariables.activity || globalVariables.activity.readyState === WebSocket.CLOSED) {
 			globalVariables.activity = new Activity();
 			createGame()

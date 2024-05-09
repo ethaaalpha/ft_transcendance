@@ -1,7 +1,5 @@
-import { backgroundRunner } from './action/background.js';
 import { routeHandler } from './spaManagement/router.js';
 
-backgroundRunner();
 window.onload = routeHandler;
 window.navigation.addEventListener("navigate", async (event) => {
 	await routeHandler();
@@ -17,6 +15,7 @@ var globalVariables = {
 	gameTheme: 1,
 	isInGame: false,
 	gameData: null,
+	backgroundRunner: false
 };
 
 export default globalVariables;
