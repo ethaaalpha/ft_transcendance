@@ -217,7 +217,7 @@ class FormTournament {
 		unhideElement('tournament-b');
 		this.updateCount();
 		this.registerEventsRoom();
-		changeValue('tournament-js-code-display', this.roomCode);
+		changeValue('tournament-js-code-display', '#' + this.roomCode);
 	}
 
 	changeToWait() {
