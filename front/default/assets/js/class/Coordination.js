@@ -24,7 +24,8 @@ class Coordination {
 		}
 	}
 	destroy(){
-		this.socketCo.close();
+		if (this.socketCo.readyState === WebSocket.OPEN)
+			this.socketCo.close();
 		document.removeEventListener('keydown', this.backInGame);
 		console.log("Coordination socket closed")
 	}

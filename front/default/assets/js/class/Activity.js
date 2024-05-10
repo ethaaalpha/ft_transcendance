@@ -39,7 +39,8 @@ class Activity {
 	}
 
 	close() {
-		this.socket.close();
+		if (this.socket.readyState === WebSocket.OPEN)
+			this.socket.close();
 		console.log("Activity socket closed");
 	}
 }

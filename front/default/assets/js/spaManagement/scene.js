@@ -48,7 +48,8 @@ const sceneInfos = {
 		createChildDivIds: ["sign-in"],
 		unhideElementsIds: ["sign-in", "app"],
 		setEventListenerIds: "sign-in",
-		setFocusId: "sign-in"
+		setFocusId: "sign-in",
+		tabName: 'Sign-in',
 	},
 	"sign-up": {
 		id: "sign-up",
@@ -57,7 +58,8 @@ const sceneInfos = {
 		createChildDivIds: ["sign-up"],
 		unhideElementsIds: ["sign-up", "app"],
 		setEventListenerIds: "sign-up",
-		setFocusId: "sign-up"
+		setFocusId: "sign-up",
+		tabName: 'Sign-up',
 	},
 	"conversation-list": {
 		id: "conversation-list",
@@ -65,7 +67,8 @@ const sceneInfos = {
 		removeOldScenesIds: ["conversation-list", "nav-bar"],
 		createChildDivIds: ["conversation-list", "nav-bar"],
 		unhideElementsIds: ["home", "nav-bar", "conversation-list", "app"],
-		setEventListenerIds: "conversation-list"
+		setEventListenerIds: "conversation-list",
+		tabName: 'Home',
 	},
 	"conversation-display": {
 		id: "conversation-display",
@@ -74,7 +77,8 @@ const sceneInfos = {
 		createChildDivIds: ["conversation-display", "nav-bar"],
 		unhideElementsIds: ["home", "nav-bar", "conversation-display", "app"],
 		setEventListenerIds: "conversation-display",
-		setFocusId: "conversation-display"
+		setFocusId: "conversation-display",
+		tabName: 'Home',
 	},
 	"search": {
 		id: "search",
@@ -83,7 +87,8 @@ const sceneInfos = {
 		createChildDivIds: ["search", "nav-bar"],
 		unhideElementsIds: ["home", "nav-bar", "search", "app"],
 		setEventListenerIds: "search",
-		setFocusId: "search"
+		setFocusId: "search",
+		tabName: 'Home',
 	},
 	"profil": {
 		id: "profil",
@@ -91,6 +96,7 @@ const sceneInfos = {
 		removeOldScenesIds: ["profil", "match-history", "nav-bar"],
 		createChildDivIds: ["profil", "nav-bar"],
 		unhideElementsIds: ["home", "nav-bar", "profil", "match-history"],
+		tabName: 'Profil',
 	},
 	"in-game": {
 		id: "in-game",
@@ -99,6 +105,7 @@ const sceneInfos = {
 		createChildDivIds: ["in-game", "nav-bar"],
 		unhideElementsIds: ["home", "nav-bar", "in-game", "app"],
 		setEventListenerIds: "in-game",
+		tabName: 'Game',
 	},
 	"settings": {
 		id: "settings",
@@ -106,6 +113,7 @@ const sceneInfos = {
 		removeOldScenesIds: ["settings", "nav-bar"],
 		createChildDivIds: ["settings", "nav-bar"],
 		unhideElementsIds: ["home", "nav-bar", "settings", "app"],
+		tabName: 'Settings',
 	},
 	"settings-game-theme": {
 		id: "settings-game-theme",
@@ -113,6 +121,7 @@ const sceneInfos = {
 		removeOldScenesIds: ["settings-game-theme", "nav-bar"],
 		createChildDivIds: ["settings-game-theme", "nav-bar"],
 		unhideElementsIds: ["home", "nav-bar", "settings-game-theme", "app"],
+		tabName: 'Settings',
 	},
 	"settings-profil-picture": {
 		id: "settings-profil-picture",
@@ -121,6 +130,7 @@ const sceneInfos = {
 		createChildDivIds: ["settings-profil-picture", "nav-bar"],
 		unhideElementsIds: ["home", "nav-bar", "settings-profil-picture", "app"],
 		setEventListenerIds: "settings-profil-picture",
+		tabName: 'Settings',
 	},
 	"settings-password": {
 		id: "settings-password",
@@ -129,7 +139,8 @@ const sceneInfos = {
 		createChildDivIds: ["settings-password", "nav-bar"],
 		unhideElementsIds: ["home", "nav-bar", "settings-password", "app"],
 		setEventListenerIds: "settings-password",
-		setFocusId: "settings-password"
+		setFocusId: "settings-password",
+		tabName: 'Settings',
 	},
 	"settings-email": {
 		id: "settings-email",
@@ -138,7 +149,8 @@ const sceneInfos = {
 		createChildDivIds: ["settings-email", "nav-bar"],
 		unhideElementsIds: ["home", "nav-bar", "settings-email", "app"],
 		setEventListenerIds: "settings-email",
-		setFocusId: "settings-email"
+		setFocusId: "settings-email",
+		tabName: 'Settings',
 	},
 	"error": {
 		id: "error",
@@ -146,6 +158,7 @@ const sceneInfos = {
 		removeOldScenesIds: ["error"],
 		createChildDivIds: ["error"],
 		unhideElementsIds: ["error"],
+		tabName: 'Error',
 	}
 };
 
@@ -217,6 +230,7 @@ async function changeSceneHandler(sceneInfo, username) {
 	if (sceneInfo.setFocusId) {
 		setFocus(sceneInfo.setFocusId);
 	}
+	document.title = sceneInfo.tabName;
 
 	// CLEAN OLD SCENES
 	unsetEventListener(eventsToUnset, sceneInfo.id);
