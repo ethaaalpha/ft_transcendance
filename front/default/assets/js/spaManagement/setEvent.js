@@ -1,5 +1,6 @@
 import globalVariables from '../init.js';
 import { changeScene } from './scene.js';
+import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
 import { sendMessage } from '../action/chat.js';
 import { signIn, signUp, modifyEmail, modifyPassword } from '../action/userManagement.js';
 import { sendMessageInGame } from '../action/chat.js';
@@ -122,7 +123,7 @@ function setEventConversationList() {
 	addEventListener("keypress", "conversation-list-searchbar-input-id", function(event) {
 		console.log('adjiwodjiwaodjiwao');
 		if (event.key === "Enter") {
-			history.pushState({}, '', '/search?username=' + searchInput.value);
+			pushUrl('/search?username=' + searchInput.value);
 		}
 	});
 }
@@ -139,14 +140,14 @@ function setEventSearch() {
 	addEventListener("input", "search-searchbar-input-id", function() {
 		const inputValue = this.value.trim();
 		if (!inputValue) {
-			history.pushState({}, '', '/');
+			pushUrl('/');
 		}
 	});
 
 	addEventListener("keypress", "search-searchbar-input-id", function(event) {
 		if (event.key === "Enter") {
 			const searchInput = document.getElementById("search-searchbar-input-id");
-			history.pushState({}, '', '/search?username=' + searchInput.value);
+			pushUrl('/search?username=' + searchInput.value);
 		}
 	});
 }

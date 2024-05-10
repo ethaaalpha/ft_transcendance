@@ -2,6 +2,8 @@ import globalVariables from '../../init.js';
 import { fetchUserData, fetchProfilPicture, fetchUserStats, fetchMatchHistory } from '../../fetch/http.js';
 import { manageFriend } from '../../action/userManagement.js';
 import Alerts from '../../class/Alerts.js';
+import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
+
 
 async function createProfil(username) {
 
@@ -14,7 +16,7 @@ async function createProfil(username) {
 		const backButton = document.createElement("button");
 		backButton.classList.add("arrow-back", "d-flex", "justify-content-start", "align-items-center");
 		backButton.onclick = function() {
-			history.pushState({}, '', '/');
+			pushUrl('/');
 		};
 
 		const imgButton = document.createElement('img');

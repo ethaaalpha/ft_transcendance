@@ -1,5 +1,6 @@
 import globalVariables from "../init.js";
 import { setNewOpponentUsername } from "../spaManagement/div/createInGame.js";
+import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
 import { status } from "/static/pong3d/utilsPong.js"
 
 
@@ -33,14 +34,14 @@ function receivedPlayAnswer(from, code) {
 function goToInGame() {//the only to go to in-game is to do this two steps
 	if (window.location.pathname != '/in-game' || !globalVariables.isInGame) {
 		globalVariables.isInGame = true;
-		history.pushState({}, '', '/in-game');
+		pushUrl('/in-game');
 	}
 }
 
 function goToHome() {
 	if (window.location.pathname == '/in-game' || globalVariables.isInGame) {
 		globalVariables.isInGame = false;
-		history.pushState({}, '', '/');
+		pushUrl('/');
 	}
 }
 

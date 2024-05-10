@@ -1,6 +1,6 @@
 import Alerts from '../class/Alerts.js';
 import globalVariables from '../init.js';
-import { changeScene } from '../spaManagement/scene.js';
+import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
 import { sentPlayRequest } from './play.js';
 
 function navBarActionHandler(action, username) {
@@ -27,18 +27,18 @@ function navBarActionHandler(action, username) {
 
 function navBarSettings() {
 	if (globalVariables.currentScene === "settings") {
-		history.pushState({}, '', '/');
+		pushUrl('/');
 	} else {
-		history.pushState({}, '', '/settings');
+		pushUrl('/settings');
 	}
 }
 
 function navBarProfil() {
 	if (globalVariables.currentScene == "profil") {
-		history.pushState({}, '', '/');
+		pushUrl('/');
 	} else {
 		const username = globalVariables.currentUser.getUsername();
-		history.pushState({}, '', '/profil?username=' + username);
+		pushUrl('/profil?username=' + username);
 	}
 }
 
@@ -52,7 +52,7 @@ async function navBarPlay(username) {
 }
 
 async function navBarChat(username) {
-	history.pushState({}, '', '/chat?with=' + username);
+	pushUrl('/chat?with=' + username);
 }
 
 export { navBarActionHandler };

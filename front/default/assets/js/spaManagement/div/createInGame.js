@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import globalVariables from '../../init.js';
 import { fetchProfilPicture } from '../../fetch/http.js';
 import { sendMessageInGame } from '../../action/chat.js';
+import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
+
 
 async function createInGame() {
 
@@ -40,7 +42,7 @@ async function createInGame() {
 		const titleRight = document.createElement('div');
 		titleRight.classList.add("conversation-display-top-person");
 		// titleRight.onclick = function () {
-			// history.pushState({}, '', '/profil?username=' + user);
+			// pushUrl('/profil?username=' + user);
 		// }
 		
 		// Title

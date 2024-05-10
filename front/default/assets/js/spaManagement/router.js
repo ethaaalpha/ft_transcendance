@@ -106,7 +106,7 @@ async function routeSearch() {
 		}
 	}
 	// console.log("routeSearch: error to replace with alert");
-	history.pushState({}, '', '/')
+	pushUrl('/')
 };
 
 async function routeProfil() {
@@ -123,7 +123,7 @@ async function routeProfil() {
 		}
 	}
 	// console.log("routeProfil: error to replace with alert");
-	history.pushState({}, '', '/');
+	pushUrl('/');
 };
 
 async function routeSettings() {
@@ -141,7 +141,7 @@ async function routeSettings() {
 		await changeScene('settings');
 		return ;
 	}
-	history.pushState({}, '', '/settings');
+	pushUrl('/settings');
 	// console.log("routeSettings: error to replace with alert item:" + item);
 };
 
@@ -157,14 +157,14 @@ async function routeChat() {
 			Alerts.createAlert(Alerts.type.FAILED, withUser + " isn't your friend")
 		}
 	}
-	history.pushState({}, '', '/');
+	pushUrl('/');
 
 	// console.log("routeChat: error to replace with alert withUser:" + withUser);
 };
 
 async function routeError() {
 	if (globalVariables.coordination && globalVariables.coordination.isConnected())
-		return (history.pushState({}, '', '/'))
+		return (pushUrl('/'))
 	else
 		await changeScene('error', 'none');
 }
@@ -173,8 +173,13 @@ async function routeInGame() {
 	if (globalVariables.isInGame) {
 		changeScene('in-game');
 	} else {
-		history.pushState({}, '', '/');
+		pushUrl('/');
 	}
 };
 
-export { routeHandler };
+function pushUrl(newUrl) {
+	history.pushState({}, '', newUrl);
+	routeHandler();
+}
+
+export { routeHandler, pushUrl };

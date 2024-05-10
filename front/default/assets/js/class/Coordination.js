@@ -3,6 +3,7 @@ import { goToHome } from '/static/default/assets/js/action/play.js';
 import globalVariables from '/static/default/assets/js/init.js';
 import { receivedNewOpponentUsername } from "/static/default/assets/js/action/play.js";
 import Alerts from "./Alerts.js";
+import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
 import { receivedPlayAnswer } from "../action/play.js";
 
 class Coordination {
@@ -119,12 +120,12 @@ class Coordination {
 
 		this.socketCo.onerror = (event) => {
 			if (globalVariables.currentUser != null)
-				history.pushState({}, '', '/error')
+				pushUrl('/error')
 		}
 
 		this.socketCo.onclose = (event) => {
 			if (globalVariables.currentUser != null)
-				history.pushState({}, '', '/error')
+				pushUrl('/error')
 		}
 	}
 

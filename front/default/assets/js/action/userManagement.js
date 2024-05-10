@@ -3,6 +3,7 @@ import { fetchData } from '../fetch/api.js';
 import globalVariables from '../init.js';
 import { updateGameTheme } from '/static/default/assets/js/spaManagement/div/createInGame.js';
 import { fetchUserData } from '/static/default/assets/js/fetch/http.js';
+import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
 
 function signIn() {
 	var username = document.getElementById("sign-in-username").value;
@@ -26,11 +27,11 @@ function signIn() {
 			}
 			else if (data.status === 404) {
 				console.log("You need to create an account");
-				history.pushState({}, '', '/sign-up');
+				pushUrl('/sign-up');
 			}
 			else if (data.status === 200) {
 				console.log("Successful connection");
-				history.pushState({}, '', '/');
+				pushUrl('/');
 				Alerts.createAlert(Alerts.type.SUCCESS, data.data.message);
 			} else {
 				Alerts.createAlert(Alerts.type.FAILED, data.data.message);
@@ -61,7 +62,7 @@ function signUp() {
 	(data) => {
 		let type = Alerts.type.FAILED;
 		if (data.status === 200) {
-			history.pushState({}, '', '/');
+			pushUrl('/');
 			type = Alerts.type.SUCCESS;
 		}
 		Alerts.createAlert(type, data.data.message);
@@ -100,7 +101,7 @@ function signOut() {
 		globalVariables.coordination.destroy();
 		globalVariables.coordination = null;
 		globalVariables.activity = null;
-		history.pushState({}, '', '/sign-in');
+		pushUrl('/sign-in');
 	})
 	.catch(error => {
 		console.error('Error:', error);
@@ -146,7 +147,7 @@ function modifyPassword() {
 	(data) => {
 		let type = Alerts.type.FAILED;
 		if (data.status === 200) {
-			history.pushState({}, '', '/settings');
+			pushUrl('/settings');
 			type = Alerts.type.SUCCESS
 		}
 		Alerts.createAlert(Alerts.type.FAILED, data.data.message);
@@ -173,7 +174,7 @@ function modifyEmail() {
 	(data) => {
 		let type = Alerts.type.FAILED;
 		if (data.status === 200) {
-			history.pushState({}, '', '/settings');
+			pushUrl('/settings');
 			type = Alerts.type.SUCCESS
 		}
 		Alerts.createAlert(type, data.data.message);
@@ -205,7 +206,7 @@ function modifyProfilPicture() {
 	(data) => {
 		let type = Alerts.type.FAILED;
 		if (data.status === 200) {
-			history.pushState({}, '', '/settings');
+			pushUrl('/settings');
 			type = Alerts.type.SUCCESS
 		}
 		Alerts.createAlert(type, data.data.message);
@@ -228,7 +229,7 @@ function modifyGameTheme(id) { // to modify with nico
 		let type = Alerts.type.FAILED;
 		if (data.status === 200) {
 			globalVariables.gameTheme = id;
-			history.pushState({}, '', '/settings');
+			pushUrl('/settings');
 			type = Alerts.type.SUCCESS
 			fetchUserData().then(
 				function (){
