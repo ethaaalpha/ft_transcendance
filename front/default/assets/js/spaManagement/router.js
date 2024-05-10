@@ -1,11 +1,11 @@
-import { changeScene } from "./scene.js";
-import globalVariables from "../init.js";
-import { isConnected } from "../fetch/http.js";
-import Activity from "../class/Activity.js";
-import { userExist } from "../fetch/http.js";
-import Alerts from "../class/Alerts.js";
+import { changeScene } from "/static/default/assets/js/spaManagement/scene.js";
+import globalVariables from "/static/default/assets/js/init.js";
+import { isConnected } from "/static/default/assets/js/fetch/http.js";
+import Activity from "/static/default/assets/js/class/Activity.js";
+import { userExist } from "/static/default/assets/js/fetch/http.js";
+import Alerts from "/static/default/assets/js/class/Alerts.js";
 import { createGame } from "/static/default/assets/js/spaManagement/div/createInGame.js";
-import Coordination from "../class/Coordination.js";
+import Coordination from "/static/default/assets/js/class/Coordination.js";
 import { backgroundRunner } from "/static/default/assets/js/action/background.js";
 
 async function routeHandler() {

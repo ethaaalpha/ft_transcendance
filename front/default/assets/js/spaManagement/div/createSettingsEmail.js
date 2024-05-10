@@ -1,5 +1,5 @@
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
-import { modifyEmail } from '../../action/userManagement.js';
+import { modifyEmail } from '/static/default/assets/js/action/userManagement.js';
 
 function createSettingsEmail() {
 

@@ -1,7 +1,7 @@
-import globalVariables from '../init.js';
-import Conversations from '../class/Conversation.js';
-import { fetchData } from '../fetch/api.js';;
-import Alerts from '../class/Alerts.js';
+import globalVariables from '/static/default/assets/js/init.js';
+import Conversations from '/static/default/assets/js/class/Conversation.js';
+import { fetchData } from '/static/default/assets/js/fetch/api.js';;
+import Alerts from '/static/default/assets/js/class/Alerts.js';
 
 async function fetchConversations() {
 	try {

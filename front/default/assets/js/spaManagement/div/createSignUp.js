@@ -1,4 +1,4 @@
-import { signUp } from '../../action/userManagement.js';
+import { signUp } from '/static/default/assets/js/action/userManagement.js';
 
 function createSignUp() {
 	try {

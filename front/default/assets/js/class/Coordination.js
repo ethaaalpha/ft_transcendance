@@ -1,10 +1,10 @@
-import { status, hideLoadingAnimation, showLoadingAnimation, ft, sleep } from "/static/pong3d/utilsPong.js";
+import { status, hideLoadingAnimation, ft, sleep } from "/static/pong3d/utilsPong.js";
 import { goToHome } from '/static/default/assets/js/action/play.js';
 import globalVariables from '/static/default/assets/js/init.js';
 import { receivedNewOpponentUsername } from "/static/default/assets/js/action/play.js";
-import Alerts from "./Alerts.js";
+import Alerts from "/static/default/assets/js/class/Alerts.js";
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
-import { receivedPlayAnswer } from "../action/play.js";
+import { receivedPlayAnswer } from "/static/default/assets/js/action/play.js";
 
 class Coordination {
 	constructor() {

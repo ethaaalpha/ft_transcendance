@@ -1,5 +1,5 @@
-import globalVariables from '../init.js';
-import Alerts from './Alerts.js';
+import globalVariables from '/static/default/assets/js/init.js';
+import Alerts from '/static/default/assets/js/class/Alerts.js';
 
 class Activity {
 	constructor() {

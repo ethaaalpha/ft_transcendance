@@ -1,6 +1,6 @@
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
 
-import { signOut } from '../../action/userManagement.js';
+import { signOut } from '/static/default/assets/js/action/userManagement.js';
 
 function createSettings() {
 

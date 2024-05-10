@@ -1,7 +1,7 @@
-import { fetchData } from './api.js';
-import globalVariables from '../init.js';
-import User from '../class/User.js';
-import Alerts from '../class/Alerts.js';
+import { fetchData } from '/static/default/assets/js/fetch/api.js';
+import globalVariables from '/static/default/assets/js/init.js';
+import User from '/static/default/assets/js/class/User.js';
+import Alerts from '/static/default/assets/js/class/Alerts.js';
 
 // GETTER
 async function isConnected() {

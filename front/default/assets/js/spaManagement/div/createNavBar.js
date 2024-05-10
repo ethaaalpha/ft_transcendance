@@ -1,5 +1,5 @@
-import globalVariables from '../../init.js';
-import { navBarActionHandler } from '../../action/navBar.js';
+import globalVariables from '/static/default/assets/js/init.js';
+import { navBarActionHandler } from '/static/default/assets/js/action/navBar.js';
 
 function createNavBar(username) {
 	try {

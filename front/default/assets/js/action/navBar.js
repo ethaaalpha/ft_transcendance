@@ -1,7 +1,7 @@
-import Alerts from '../class/Alerts.js';
-import globalVariables from '../init.js';
+import Alerts from '/static/default/assets/js/class/Alerts.js';
+import globalVariables from '/static/default/assets/js/init.js';
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
-import { sentPlayRequest } from './play.js';
+import { sentPlayRequest } from '/static/default/assets/js/action/play.js';
 
 function navBarActionHandler(action, username) {
 	if (globalVariables.isInGame)

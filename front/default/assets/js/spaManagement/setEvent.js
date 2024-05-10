@@ -1,10 +1,9 @@
-import globalVariables from '../init.js';
-import { changeScene } from './scene.js';
+import globalVariables from '/static/default/assets/js/init.js';
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
-import { sendMessage } from '../action/chat.js';
-import { signIn, signUp, modifyEmail, modifyPassword } from '../action/userManagement.js';
-import { sendMessageInGame } from '../action/chat.js';
-import { checkAllSignIn, checkAllSignUp, checkAllSettingsPassword, checkAllSettingsEmail } from '../action/utils.js';
+import { sendMessage } from '/static/default/assets/js/action/chat.js';
+import { signIn, signUp, modifyEmail, modifyPassword } from '/static/default/assets/js/action/userManagement.js';
+import { sendMessageInGame } from '/static/default/assets/js/action/chat.js';
+import { checkAllSignIn, checkAllSignUp, checkAllSettingsPassword, checkAllSettingsEmail } from '/static/default/assets/js/action/utils.js';
 
 async function setEventListener(scene) {
 	switch (scene) {

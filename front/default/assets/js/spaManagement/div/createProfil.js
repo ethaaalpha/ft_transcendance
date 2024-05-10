@@ -1,7 +1,7 @@
-import globalVariables from '../../init.js';
-import { fetchUserData, fetchProfilPicture, fetchUserStats, fetchMatchHistory } from '../../fetch/http.js';
-import { manageFriend } from '../../action/userManagement.js';
-import Alerts from '../../class/Alerts.js';
+import globalVariables from '/static/default/assets/js/init.js';
+import { fetchUserData, fetchProfilPicture, fetchUserStats, fetchMatchHistory } from '/static/default/assets/js/fetch/http.js';
+import { manageFriend } from '/static/default/assets/js/action/userManagement.js';
+import Alerts from '/static/default/assets/js/class/Alerts.js';
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
 
 
