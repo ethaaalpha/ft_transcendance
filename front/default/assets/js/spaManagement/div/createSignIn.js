@@ -1,5 +1,5 @@
-import { signWith42, signIn } from '../../action/userManagement.js';
-import { forgotPassword } from '../../action/userManagement.js';
+import { signWith42, signIn } from '/static/default/assets/js/action/userManagement.js';
+import { forgotPassword } from '/static/default/assets/js/action/userManagement.js';
 
 function createSignIn() {
 	try {

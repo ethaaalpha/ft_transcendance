@@ -1,8 +1,8 @@
-import globalVariables from '../init.js';
-import { removeChildDiv, createChildDiv } from './div.js';
-import { setEventListener } from './setEvent.js';
-import { unsetEventListener } from './unsetEvent.js';
-import { setFocus } from './setFocus.js';
+import globalVariables from '/static/default/assets/js/init.js';
+import { removeChildDiv, createChildDiv } from '/static/default/assets/js/spaManagement/div.js';
+import { setEventListener } from '/static/default/assets/js/spaManagement/setEvent.js';
+import { unsetEventListener } from '/static/default/assets/js/spaManagement/unsetEvent.js';
+import { setFocus } from '/static/default/assets/js/spaManagement/setFocus.js';
 
 let sceneChangeLock = false;
 

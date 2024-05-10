@@ -1,4 +1,4 @@
-import globalVariables from '../init.js';
+import globalVariables from '/static/default/assets/js/init.js';
 
 function unsetEventListener(eventToUnset, exception) {
 	eventToUnset.forEach(event => {

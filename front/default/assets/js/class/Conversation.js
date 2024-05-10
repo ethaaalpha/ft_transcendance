@@ -1,5 +1,4 @@
-import globalVariables from '../init.js';
-import { createConversationDisplay } from '../spaManagement/div/createConversationDisplay.js';
+import globalVariables from '/static/default/assets/js/init.js';
 
 class Conversations {
 	constructor(myUsername, conversations = {}) {

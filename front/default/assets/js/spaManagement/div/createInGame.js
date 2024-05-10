@@ -1,9 +1,7 @@
 import * as THREE from 'three';
-import globalVariables from '../../init.js';
-import { fetchProfilPicture } from '../../fetch/http.js';
-import { sendMessageInGame } from '../../action/chat.js';
-import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
-
+import globalVariables from '/static/default/assets/js/init.js';
+import { fetchProfilPicture } from '/static/default/assets/js/fetch/http.js';
+import { sendMessageInGame } from '/static/default/assets/js/action/chat.js';
 
 async function createInGame() {
 

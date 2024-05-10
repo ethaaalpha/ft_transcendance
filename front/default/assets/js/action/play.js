@@ -1,5 +1,5 @@
-import globalVariables from "../init.js";
-import { setNewOpponentUsername } from "../spaManagement/div/createInGame.js";
+import globalVariables from "/static/default/assets/js/init.js";
+import { setNewOpponentUsername } from "/static/default/assets/js/spaManagement/div/createInGame.js";
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
 import { status } from "/static/pong3d/utilsPong.js"
 

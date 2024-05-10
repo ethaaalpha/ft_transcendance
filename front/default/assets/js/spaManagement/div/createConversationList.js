@@ -1,7 +1,7 @@
-import globalVariables from '../../init.js';
-import { fetchUserData } from '../../fetch/http.js';
-import { fetchConversations } from '../../action/chat.js';
-import { fetchProfilPicture } from '../../fetch/http.js';
+import globalVariables from '/static/default/assets/js/init.js';
+import { fetchUserData } from '/static/default/assets/js/fetch/http.js';
+import { fetchConversations } from '/static/default/assets/js/action/chat.js';
+import { fetchProfilPicture } from '/static/default/assets/js/fetch/http.js';
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
 
 async function createConversationList() {

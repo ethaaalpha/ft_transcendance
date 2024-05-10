@@ -1,5 +1,5 @@
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
-import { modifyPassword } from '../../action/userManagement.js';
+import { modifyPassword } from '/static/default/assets/js/action/userManagement.js';
 
 function createSettingsPassword() {
 

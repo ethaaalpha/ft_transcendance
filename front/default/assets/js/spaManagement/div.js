@@ -1,17 +1,17 @@
-import { createNavBar } from './div/createNavBar.js';
-import { createSignIn } from './div/createSignIn.js';
-import { createSignUp } from './div/createSignUp.js';
-import { createConversationList } from './div/createConversationList.js';
-import { createConversationDisplay } from './div/createConversationDisplay.js';
-import { createSearch } from './div/createSearch.js';
-import { createProfil } from './div/createProfil.js';
-import { createInGame } from './div/createInGame.js';
-import { createSettings } from './div/createSettings.js';
-import { createSettingsGameTheme } from './div/createSettingsGameTheme.js';
-import { createSettingsProfilPicture } from './div/createSettingsProfilPicture.js';
-import { createSettingsPassword } from './div/createSettingsPassword.js';
-import { createSettingsEmail } from './div/createSettingsEmail.js';
-import { createError } from './div/createError.js';
+import { createNavBar } from '/static/default/assets/js/spaManagement/div/createNavBar.js';
+import { createSignIn } from '/static/default/assets/js/spaManagement/div/createSignIn.js';
+import { createSignUp } from '/static/default/assets/js/spaManagement/div/createSignUp.js';
+import { createConversationList } from '/static/default/assets/js/spaManagement/div/createConversationList.js';
+import { createConversationDisplay } from '/static/default/assets/js/spaManagement/div/createConversationDisplay.js';
+import { createSearch } from '/static/default/assets/js/spaManagement/div/createSearch.js';
+import { createProfil } from '/static/default/assets/js/spaManagement/div/createProfil.js';
+import { createInGame } from '/static/default/assets/js/spaManagement/div/createInGame.js';
+import { createSettings } from '/static/default/assets/js/spaManagement/div/createSettings.js';
+import { createSettingsGameTheme } from '/static/default/assets/js/spaManagement/div/createSettingsGameTheme.js';
+import { createSettingsProfilPicture } from '/static/default/assets/js/spaManagement/div/createSettingsProfilPicture.js';
+import { createSettingsPassword } from '/static/default/assets/js/spaManagement/div/createSettingsPassword.js';
+import { createSettingsEmail } from '/static/default/assets/js/spaManagement/div/createSettingsEmail.js';
+import { createError } from '/static/default/assets/js/spaManagement/div/createError.js';
 
 function removeChildDiv(parentIds, ...excludeIds) {
 	parentIds.forEach(parentId => {

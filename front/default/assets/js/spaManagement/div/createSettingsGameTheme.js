@@ -1,5 +1,5 @@
-import { modifyGameTheme } from '../../action/userManagement.js';
-import globalVariables from '../../init.js';
+import { modifyGameTheme } from '/static/default/assets/js/action/userManagement.js';
+import globalVariables from '/static/default/assets/js/init.js';
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
 
 

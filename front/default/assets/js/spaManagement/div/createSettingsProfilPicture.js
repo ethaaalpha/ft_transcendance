@@ -1,5 +1,5 @@
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
-import { modifyProfilPicture } from '../../action/userManagement.js';
+import { modifyProfilPicture } from '/static/default/assets/js/action/userManagement.js';
 
 function createSettingsProfilPicture() {
 

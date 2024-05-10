@@ -1,9 +1,9 @@
-import globalVariables from '../../init.js';
-import { sendMessage, fetchConversations } from '../../action/chat.js';
-import { fetchProfilPicture } from '../../fetch/http.js';
+import globalVariables from '/static/default/assets/js/init.js';
+import { sendMessage, fetchConversations } from '/static/default/assets/js/action/chat.js';
+import { fetchProfilPicture } from '/static/default/assets/js/fetch/http.js';
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
-import { manageFriend } from '../../action/userManagement.js';
-import { acceptPlayRequest, refusePlayRequest } from '../../action/play.js';
+import { manageFriend } from '/static/default/assets/js/action/userManagement.js';
+import { acceptPlayRequest, refusePlayRequest } from '/static/default/assets/js/action/play.js';
 
 async function createConversationDisplay(user) {
 

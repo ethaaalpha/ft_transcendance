@@ -1,4 +1,4 @@
-import { routeHandler } from './spaManagement/router.js';
+import { routeHandler } from '/static/default/assets/js/spaManagement/router.js';
 
 window.onload = routeHandler;
 

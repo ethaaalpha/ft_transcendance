@@ -1,4 +1,4 @@
-import { fetchProfilPicture } from '../../fetch/http.js';
+import { fetchProfilPicture } from '/static/default/assets/js/fetch/http.js';
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
 
 async function createSearch(username) {
