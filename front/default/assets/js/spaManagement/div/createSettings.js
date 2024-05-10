@@ -1,4 +1,5 @@
-import { changeScene } from '../scene.js';
+import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
+
 import { signOut } from '../../action/userManagement.js';
 
 function createSettings() {
@@ -10,7 +11,7 @@ function createSettings() {
 		const backButton = document.createElement("button");
 		backButton.className = "arrow-back d-flex justify-content-start align-items-center";
 		backButton.onclick = function() {
-			history.pushState({}, '', '/');
+			pushUrl('/');
 		};
 		const backButtonImage = document.createElement("img");
 		backButtonImage.src = "/static/default/assets/images/icons/arrow.svg";
@@ -46,7 +47,7 @@ function createSettings() {
 			const buttonElement = document.createElement("button");
 			buttonElement.className = "modify-btn btn btn-block btn-light d-flex align-items-center justify-content-start bordered-button-expanded";
 			buttonElement.style.setProperty("--main_color", "#DADADA");
-			buttonElement.onclick = button.scene ? function() { history.pushState({}, '', '/settings?item=' + button.scene);	} : button.action;
+			buttonElement.onclick = button.scene ? function() { pushUrl('/settings?item=' + button.scene);	} : button.action;
 			const iconImage = document.createElement("img");
 			iconImage.src = `/static/default/assets/images/icons/${button.icon}`;
 			iconImage.className = "icon-button";

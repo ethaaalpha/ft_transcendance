@@ -1,9 +1,15 @@
 import { routeHandler } from './spaManagement/router.js';
 
 window.onload = routeHandler;
-window.navigation.addEventListener("navigate", async (event) => {
+
+window.onpopstate = async function() {
 	await routeHandler();
-});
+}
+
+// Experimental !
+// window.navigation.addEventListener("navigate", async (event) => {
+	// await routeHandler();
+// });
 
 var globalVariables = {
 	currentScene: 'start',

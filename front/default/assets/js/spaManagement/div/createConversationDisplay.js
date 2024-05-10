@@ -1,7 +1,7 @@
 import globalVariables from '../../init.js';
 import { sendMessage, fetchConversations } from '../../action/chat.js';
 import { fetchProfilPicture } from '../../fetch/http.js';
-import { changeScene } from '../scene.js';
+import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
 import { manageFriend } from '../../action/userManagement.js';
 import { acceptPlayRequest, refusePlayRequest } from '../../action/play.js';
 
@@ -19,7 +19,7 @@ async function createConversationDisplay(user) {
 		const backButton = document.createElement("button");
 		backButton.classList.add("arrow-back", "d-flex", "justify-content-start", "align-items-center");
 		backButton.onclick = function() {
-			history.pushState({}, '', '/');
+			pushUrl('/');
 		};
 
 		const imgButton = document.createElement('img');
@@ -46,7 +46,7 @@ async function createConversationDisplay(user) {
 		const titleRight = document.createElement('div');
 		titleRight.classList.add("conversation-display-top-person");
 		titleRight.onclick = function () {
-			history.pushState({}, '', '/profil?username=' + user);
+			pushUrl('/profil?username=' + user);
 		}
 		
 		// Title

@@ -1,5 +1,5 @@
 import { fetchProfilPicture } from '../../fetch/http.js';
-import { changeScene } from '../scene.js';
+import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
 
 async function createSearch(username) {
 	try {
@@ -50,7 +50,7 @@ async function createSearch(username) {
 			conversationButton.appendChild(userInfo);
 
 			conversationButton.addEventListener("click", function() {
-				history.pushState({}, '', '/profil?username=' + searchInput);	
+				pushUrl('/profil?username=' + searchInput);	
 			});
 
 			blockDiv.appendChild(conversationButton)

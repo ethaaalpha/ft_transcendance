@@ -1,4 +1,4 @@
-import { changeScene } from '../scene.js';
+import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
 import { modifyPassword } from '../../action/userManagement.js';
 
 function createSettingsPassword() {
@@ -10,7 +10,7 @@ function createSettingsPassword() {
 		const backButton = document.createElement("button");
 		backButton.className = "arrow-back d-flex justify-content-start align-items-center";
 		backButton.onclick = function() {
-			history.pushState({}, '', '/settings');
+			pushUrl('/settings');
 		};
 		const backButtonImage = document.createElement("img");
 		backButtonImage.src = "/static/default/assets/images/icons/arrow.svg";

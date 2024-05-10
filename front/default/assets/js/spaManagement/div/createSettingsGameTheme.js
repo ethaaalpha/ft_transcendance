@@ -1,6 +1,7 @@
 import { modifyGameTheme } from '../../action/userManagement.js';
 import globalVariables from '../../init.js';
-import { changeScene } from '../scene.js';
+import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
+
 
 function createSettingsGameTheme() {
 
@@ -11,7 +12,7 @@ function createSettingsGameTheme() {
 		const backButton = document.createElement("button");
 		backButton.className = "arrow-back d-flex justify-content-start align-items-center";
 		backButton.onclick = function() {
-			history.pushState({}, '', '/settings');
+			pushUrl('/settings');
 		};
 		const backButtonImage = document.createElement("img");
 		backButtonImage.src = "/static/default/assets/images/icons/arrow.svg";
