@@ -38,6 +38,16 @@ body {
 	}
 
 	.social-div {
+		width: 28%;
+	}
+}
+
+@media only screen and (min-width: 1800px) {
+	.home-div {
+		width: 65%;
+	}
+
+	.social-div {
 		width: 25%;
 	}
 }
