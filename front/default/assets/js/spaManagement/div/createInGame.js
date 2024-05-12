@@ -6,7 +6,7 @@ import { sendMessageInGame } from '/static/default/assets/js/action/chat.js';
 async function createInGame() {
 
 	try {
-		const user = 'admin';
+		const user = globalVariables.currentUser.username;
 		const inGame = document.getElementById("in-game");
 		inGame.classList.add('conversation-display')
 		inGame.innerHTML = "";
