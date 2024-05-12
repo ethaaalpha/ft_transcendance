@@ -45,11 +45,15 @@ class User {
 			this.pendingFriendTo.push(newpendingto);
 	}
 
+	addPendingFriendFrom(username) {
+		if (!this.pendingFriendFrom.includes(username)) {
+			this.pendingFriendFrom.push(username);
+		}
+	}
+
 	addPendingGameFrom(username) {
 		if (!this.pendingGameFrom.includes(username)) {
-			console.log("addPendingGameFrom: " + username);
 			this.pendingGameFrom.push(username);
-			console.log(this.pendingGameFrom);
 		}
 	}
 

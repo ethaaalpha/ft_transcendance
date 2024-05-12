@@ -88,7 +88,8 @@ class Coordination {
 					case 'invited':
 						if (tmp.data.status) {
 							globalVariables.currentUser.addPendingGameFrom(tmp.data.message[1]);
-							globalVariables.userConversations.addGameInviteFromSocket(tmp.data.message[1], true);
+							if (globalVariables.userConversations)
+								globalVariables.userConversations.addGameInviteFromSocket(tmp.data.message[1], true);
 						}
 						break;
 					case 'refuse':

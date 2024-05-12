@@ -29,12 +29,20 @@ class Activity {
 				}
 			} else if (event === 'friends') {
 				// alert
-				Alerts.createAlert(Alerts.type.MESSAGE, 'Friends request ' + data.action + ' from ' + data.from);
-				if (data.action == 'received') {
-					globalVariables.currentUser.addPendingGameFrom(data.from);
-					globalVariables.userConversations.addNewConversationFromSocket(data.from);
-				} else if (data.action == 'accepted')
-					globalVariables.currentUser.addFriend(data.from);
+				Alerts.createAlert(Alerts.type.MESSAGE, 'Friends relation ' + data.action + ' from ' + data.from);
+				switch (data.action) {
+					case 'received':
+						globalVariables.currentUser.addPendingFriendFrom(data.from);
+						if (globalVariables.userConversations)
+							globalVariables.userConversations.addNewConversationFromSocket(data.from);
+						break;
+					case 'accepted':
+						globalVariables.currentUser.addFriend(data.from);
+						break;
+					case 'ended':
+						globalVariables.currentUser.removeFriend(data.from);
+						break;
+				}
 				console.log("Websocket: friends request received from:" + data.from);
 			}
 		};
