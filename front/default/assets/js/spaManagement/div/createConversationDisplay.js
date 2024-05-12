@@ -10,7 +10,6 @@ function createFriendRequestDiv(user, parent, received) {
 	const text = document.createElement('span');
 	
 	if (received) {
-		console.log('ici');
 		text.textContent = 'Wanna be friend?'
 		
 		const choices = document.createElement('div');
@@ -185,8 +184,9 @@ async function createConversationDisplay(user) {
 		const isPendingGameFrom = globalVariables.currentUser.isPendingGameFrom(user);
 		const isPendingGameTo = globalVariables.currentUser.isPendingGameTo(user);
 		
-		if (isPendingGameFrom || isPendingGameTo)
+		if (isPendingGameFrom || isPendingGameTo) {
 			createGameRequestDiv(user, messagesDiv, isPendingGameFrom ? true : false);
+		}
 
 		setTimeout(function() {
 			messagesDiv.scrollTop = messagesDiv.scrollHeight;

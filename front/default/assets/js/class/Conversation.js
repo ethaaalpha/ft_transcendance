@@ -1,5 +1,7 @@
 import { createGameRequestDiv } from '/static/default/assets/js/spaManagement/div/createConversationDisplay.js';
+import { fetchConversations } from '/static/default/assets/js/action/chat.js';
 import globalVariables from '/static/default/assets/js/init.js';
+import { createConversationItem } from '/static/default/assets/js/spaManagement/div/createConversationList.js';
 
 class Conversations {
 	constructor(myUsername, conversations = {}) {
@@ -57,6 +59,17 @@ class Conversations {
 		if (!received) {
 			let inputElement = document.getElementById("send-message-input-id");
 			inputElement.value = "";
+		}
+	}
+
+	async addNewConversationFromSocket(from) {
+		const conversationList = document.getElementById("conversation-list");
+
+		console.log('genant')
+		if (window.location.pathname + window.location.search === '/') {
+			console.log('trres malasie')
+			await fetchConversations();
+			await createConversationItem(conversationList, from)
 		}
 	}
 
