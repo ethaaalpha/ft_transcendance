@@ -68,8 +68,8 @@ def remove(user: User, target: User, targetProfile: Profile):
 	# Desactive Conversation if actived
 	conv = Conversation.getConversation([user, target])
 	if conv:
-		import sys
 		conv.setState(False)
+	ActivityNotifier.sendFriendRequest(user.username, target.username, 'ended')
 	return tResponses.OKAY.request(f'You are not longger friend with {target.username} !')
 
 def block(user: User, target: User, targetProfile: Profile):
