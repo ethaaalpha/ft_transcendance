@@ -32,10 +32,9 @@ class Activity {
 				Alerts.createAlert(Alerts.type.MESSAGE, 'Friends request ' + data.action + ' from ' + data.from);
 				if (data.action == 'received') {
 					globalVariables.currentUser.addPendingGameFrom(data.from);
-					// globalVariables.userConversations.addMessageFromSocket(data, true, true, 1);
-				} else if (data.action == 'accepted') {
+					globalVariables.userConversations.addNewConversationFromSocket(data.from);
+				} else if (data.action == 'accepted')
 					globalVariables.currentUser.addFriend(data.from);
-				}
 				console.log("Websocket: friends request received from:" + data.from);
 			}
 		};
