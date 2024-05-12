@@ -86,21 +86,20 @@ class Coordination {
 							globalVariables.currentUser.addPendingGameTo(tmp.data.message[1]);
 						break;
 					case 'invited':
-							if (tmp.data.status)
-								globalVariables.currentUser.addPendingGameFrom(tmp.data.message[1]);
-							break;
-					case 'refuse':
 						if (tmp.data.status) {
-							globalVariables.currentUser.removePendingGameFrom(tmp.data.message[1])
-							globalVariables.currentUser.removePendingGameTo(tmp.data.message[1])
+							globalVariables.currentUser.addPendingGameFrom(tmp.data.message[1]);
+							globalVariables.userConversations.addGameInviteFromSocket(tmp.data.message[1], true);
 						}
+						break;
+					case 'refuse':
+						globalVariables.currentUser.removePendingGameFrom(tmp.data.message[1])
+						globalVariables.currentUser.removePendingGameTo(tmp.data.message[1])
 						break;
 					case 'accept':
 						if (tmp.data.status) {
 							this.roomCode = tmp.data.message[2];
 							receivedPlayAnswer(tmp.data.message[1], tmp.data.message[2]);
 						}
-						console.log('icilala ' + tmp.data.message[1])
 						globalVariables.currentUser.removePendingGameFrom(tmp.data.message[1])
 						globalVariables.currentUser.removePendingGameTo(tmp.data.message[1])
 						break;

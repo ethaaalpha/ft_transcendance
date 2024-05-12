@@ -4,6 +4,43 @@ import { fetchConversations } from '/static/default/assets/js/action/chat.js';
 import { fetchProfilPicture } from '/static/default/assets/js/fetch/http.js';
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
 
+async function createConversationItem(parent, user) {
+
+	if (globalVariables.userConversations.conversations.hasOwnProperty(user)) {
+		const conversationButton = document.createElement("button");
+		conversationButton.classList.add("conversation-list-contact-button");
+		const img = document.createElement("img");
+		try {
+			const imgUrl = await fetchProfilPicture(user);
+			img.src = imgUrl;
+		} catch (error) {
+			console.error("Error in getting profil picture of:", error);
+		}
+		img.alt = "Profile Picture";
+		conversationButton.appendChild(img);
+
+		const rightBlock = document.createElement("div");
+		rightBlock.classList.add('conversation-list-contact-button-right')
+
+		const userInfo = document.createElement("div");
+		userInfo.textContent = user;
+
+		const lastMessage = document.createElement('span');
+		lastMessage.textContent = 'Nothing yet :(';
+		if (globalVariables.userConversations.conversations[user][0])
+			lastMessage.textContent = globalVariables.userConversations.conversations[user][0].content;
+
+		rightBlock.appendChild(userInfo);
+		rightBlock.appendChild(lastMessage);
+		conversationButton.appendChild(rightBlock);
+
+		conversationButton.onclick = function() {
+			pushUrl('/chat?with=' + user);
+		}
+		parent.appendChild(conversationButton);
+	}
+}
+
 async function createConversationList() {
 	try {
 		await fetchUserData();
@@ -32,41 +69,8 @@ async function createConversationList() {
 		searchbarDiv.appendChild(messageInput);
 
 		// Create conversation button
-		for (let user in globalVariables.userConversations.conversations) {
-			if (globalVariables.userConversations.conversations.hasOwnProperty(user)) {
-				const conversationButton = document.createElement("button");
-				conversationButton.classList.add("conversation-list-contact-button");
-				const img = document.createElement("img");
-				try {
-					const imgUrl = await fetchProfilPicture(user);
-					img.src = imgUrl;
-				} catch (error) {
-					console.error("Error in getting profil picture of:", error);
-				}
-				img.alt = "Profile Picture";
-				conversationButton.appendChild(img);
-
-				const rightBlock = document.createElement("div");
-				rightBlock.classList.add('conversation-list-contact-button-right')
-
-				const userInfo = document.createElement("div");
-				userInfo.textContent = user;
-
-				const lastMessage = document.createElement('span');
-				lastMessage.textContent = 'Nothing yet :(';
-				if (globalVariables.userConversations.conversations[user][0])
-					lastMessage.textContent = globalVariables.userConversations.conversations[user][0].content;
-
-				rightBlock.appendChild(userInfo);
-				rightBlock.appendChild(lastMessage);
-				conversationButton.appendChild(rightBlock);
-
-				conversationButton.onclick = function() {
-					pushUrl('/chat?with=' + user);
-				}
-				conversationDiv.appendChild(conversationButton);
-			}
-		}
+		for (let user in globalVariables.userConversations.conversations)
+			await createConversationItem(conversationDiv, user);
 
 	} catch (error) {
 		console.error("Error in createConversationList: ", error);
@@ -74,4 +78,4 @@ async function createConversationList() {
 	}
 }
 
-export { createConversationList };
+export { createConversationList, createConversationItem};

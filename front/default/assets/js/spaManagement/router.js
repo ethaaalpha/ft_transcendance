@@ -17,7 +17,7 @@ async function routeHandler() {
 		console.log("The user left the game by using back button");//Nico do something here
 	}
 
-	console.log("pathname:" + pathname);
+	// console.log("pathname:" + pathname);
 	if (!connected) {
 		backgroundRunner();
 		switch (pathname) {

@@ -104,7 +104,6 @@ class User {
 			return 'notFriend';
 		}
 	}
-	
 
 	isPendingFriendFrom(username) {
 		if (this.pendingFriendFrom.includes(username)) {

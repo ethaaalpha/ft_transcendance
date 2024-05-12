@@ -30,9 +30,11 @@ class Activity {
 			} else if (event === 'friends') {
 				// alert
 				Alerts.createAlert(Alerts.type.MESSAGE, 'Friends request ' + data.action + ' from ' + data.from);
-				if (data.action == 'accepted') {
+				if (data.action == 'received') {
+					globalVariables.currentUser.addPendingGameFrom(data.from);
+					globalVariables.userConversations.addNewConversationFromSocket(data.from);
+				} else if (data.action == 'accepted')
 					globalVariables.currentUser.addFriend(data.from);
-				}
 				console.log("Websocket: friends request received from:" + data.from);
 			}
 		};
