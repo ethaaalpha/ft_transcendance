@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { TessellateModifier } from 'three/module/modifiers/TessellateModifier.js';
 import { TextGeometry } from 'three/module/geometries/TextGeometry.js';
-import { sleep, loadShader, status } from './utilsPong.js'
+import { sleep, loadShader, status } from '/static/pong3d/utilsPong.js'
 
 class GameLocal {
 	constructor(status, resolve,statusCallback, gameData) {

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { status } from './utilsPong.js';
+import { status } from '/static/pong3d/utilsPong.js';
 
 class Menu {
 	constructor(status ,resolve, statusCallback, gameData) {
