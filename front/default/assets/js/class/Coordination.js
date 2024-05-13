@@ -18,7 +18,6 @@ class Coordination {
 	}
 
 	cancel(event){
-		console.log(status.status)
 		if (event.code == 'Escape' && status.status == 1){
 			this.returnMenu = true
 			this.send({"event": 'matchmaking', 'data': {'action': 'quit'}})
