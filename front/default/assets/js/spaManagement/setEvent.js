@@ -120,7 +120,6 @@ function setEventConversationList() {
 	const searchInput = document.getElementById("conversation-list-searchbar-input-id");
 
 	addEventListener("keypress", "conversation-list-searchbar-input-id", function(event) {
-		console.log('adjiwodjiwaodjiwao');
 		if (event.key === "Enter") {
 			pushUrl('/search?username=' + searchInput.value);
 		}

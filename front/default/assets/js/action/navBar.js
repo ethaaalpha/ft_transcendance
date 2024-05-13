@@ -21,7 +21,7 @@ function navBarActionHandler(action, username) {
 			navBarChat(username);
 			break;
 		default:
-			console.log("Invalid button: ", action);
+			// console.log("Invalid button: ", action);
 	}
 }
 
