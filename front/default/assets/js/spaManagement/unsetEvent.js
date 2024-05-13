@@ -32,7 +32,7 @@ function unsetEventListener(eventToUnset, exception) {
 					unsetEventSettingsEmail();
 					break;
 				default:
-					console.log("Invalid event for unsetEventListener: ", event);
+					// console.log("Invalid event for unsetEventListener: ", event);
 			}
 		}
 	});

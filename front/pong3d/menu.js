@@ -6,7 +6,7 @@ class Menu {
 		this.status = status
 		this.loader = gameData.fontLoader;
 		this.loaded = gameData.loaded;
-		console.log(this.loaded);
+		// console.log(this.loaded);
 		this.loadergl = gameData.gltfLoader;
 		this.renderer = gameData.rendererMenu;
 		this.camera = gameData.camera;
@@ -32,7 +32,7 @@ class Menu {
 				if (this.loaded.instance == 0) {
 						this.allLoaded();
 				} else {
-					console.log(this.loaded);
+					// console.log(this.loaded);
 					this.waitForSocketNLoad();
 				}
 	

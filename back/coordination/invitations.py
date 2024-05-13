@@ -34,7 +34,6 @@ class InvitationStack:
 	@staticmethod
 	def find(initier: User, target: User) -> Invitation | None:
 		for invitation in InvitationStack.stack:
-			print(f'voici {invitation.initier} | {invitation.target}')
 			if (invitation.initier == initier and invitation.target == target):
 				return (invitation)
 		return (None)
@@ -98,9 +97,7 @@ class InvitationStack:
 	
 	@staticmethod
 	def update():
-		print(f"la stack {InvitationStack.stack}", file=sys.stderr)
 		current = timezone.now()
 		for invitation in InvitationStack.stack:	
 			if invitation.expired(current):
-				print("l'invitation a expire", file=sys.stderr)
 				InvitationStack.stack.remove(invitation)

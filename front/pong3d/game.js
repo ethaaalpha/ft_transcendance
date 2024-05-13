@@ -167,19 +167,19 @@ class Game {
 		this.score.position.set(1, 27, 0);
 	}
 	socketClose(){
-		console.log('WebSocket connection closed');
-			this.status.status = this.returnValue;
+		// console.log('WebSocket connection closed');
+		this.status.status = this.returnValue;
 	}
 
 	socketInit(socket){
 		socket.onopen = function() {
-			console.log('WebSocket connection established');
+			// console.log('WebSocket connection established');
 		};
 		
 		this.socket.onmessage = async (event) => {
 			const response = JSON.parse(event.data);
 			if (response.event == 'end'){
-				console.log("end");
+				// console.log("end");
 				this.status.status = this.returnValue;
 			}
 			else{
@@ -335,8 +335,8 @@ class Game {
 			this.ballMovement.x = 0;
 			this.ballMovement.z = 0;
 			await sleep(1500);
-			console.log(this.p1Score);
-			console.log(this.p2Score);
+			// console.log(this.p1Score);
+			// console.log(this.p2Score);
 			if (this.p1Score < 5 && this.p2Score < 5);
 				this.fontLoader.load( '/static/pong3d/fonts/default2.json', (font) => this.scoreInit(font));
 			this.explode = false;

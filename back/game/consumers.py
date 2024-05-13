@@ -64,7 +64,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 		while True:
 			await asyncio.sleep(1)
 			if time.time() - self.last_message_time >= self.inactivity_threshold:
-				print(f"User {await self.getUsername()} is inactive.", file=sys.stderr)
+				# print(f"User {await self.getUsername()} is inactive.", file=sys.stderr)
 				if self.game:
 					await self.game.disconnect(await self.getUsername())
 					GameMap.removeGame(self.matchId)

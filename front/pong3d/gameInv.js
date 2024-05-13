@@ -176,19 +176,19 @@ class GameInv {
 		this.score.position.set(-1, -22, 0);
 	}
 	socketClose(event){
-		console.log('WebSocket connection closed');
+		// console.log('WebSocket connection closed');
 			this.status.status = this.returnValue;;
 	}
 
 	socketInit(socket){
 		socket.onopen = function(event) {
-			console.log('WebSocket connection established');
+			// console.log('WebSocket connection established');
 		};
 		
 		this.socket.onmessage = (event) => {
 			const response = JSON.parse(event.data);
 			if (response.event == 'end'){
-				console.log(response.event);
+				// console.log(response.event);
 				this.status.status = this.returnValue;
 			}
 			else 

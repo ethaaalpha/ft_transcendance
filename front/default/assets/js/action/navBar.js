@@ -46,8 +46,8 @@ async function navBarPlay(username) {
 	if (globalVariables.currentUser.isFriend(username) === 'friend') {
 		sentPlayRequest(globalVariables.currentUser.getUsername(), username);
 	} else {
-		// alert
-		console.log("You cannot play with " + username);
+		Alerts.createAlert(Alerts.type.FAILED, "You can't play with " + username);
+		// console.log("You cannot play with " + username);
 	}
 }
 

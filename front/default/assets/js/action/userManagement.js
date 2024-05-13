@@ -21,21 +21,19 @@ function signIn() {
 		(data) => {
 			if (data.status === 403) {
 				Alerts.createAlert(Alerts.type.FAILED, data.data.message);
-				console.log("Bad password");
-				// notif mdp mauvais ?
-				// effacer champ mdp
+				// console.log("Bad password");
 			}
 			else if (data.status === 404) {
-				console.log("You need to create an account");
+				// console.log("You need to create an account");
 				pushUrl('/sign-up');
 			}
 			else if (data.status === 200) {
-				console.log("Successful connection");
+/				// console.log("Successful connection");
 				pushUrl('/');
 				Alerts.createAlert(Alerts.type.SUCCESS, data.data.message);
 			} else {
 				Alerts.createAlert(Alerts.type.FAILED, data.data.message);
-				console.log("Connexion error");
+				// console.log("Connexion error");
 			}
 		}
 	).catch(error => {
@@ -66,7 +64,7 @@ function signUp() {
 			type = Alerts.type.SUCCESS;
 		}
 		Alerts.createAlert(type, data.data.message);
-		console.log(data.data);
+		// console.log(data.data);
 	})
 	.catch(error => {
 		console.error('Error:', error);
@@ -82,7 +80,7 @@ async function signWith42() {
 				return;
 			}
 			Alerts.createAlert(type, data.data.message);
-			console.log(data.data);
+			// console.log(data.data);
 		})
 		.catch(error => {
 			console.error('Error:', error);
@@ -93,7 +91,7 @@ async function signWith42() {
 function signOut() {
 	fetchData("/api/auth/logout", 'POST')
 	.then(() => {
-		console.log("Sign out success");
+		// console.log("Sign out success");
 		globalVariables.currentUser = null;
 		globalVariables.userConversations = null;
 		globalVariables.isInGame = false;
@@ -124,7 +122,7 @@ function forgotPassword() {
 		} else {
 			Alerts.createAlert(Alerts.type.FAILED, data.data.message);
 		}
-		console.log(data.data);
+		// console.log(data.data);
 	})
 	.catch(error => {
 		console.error('Error:', error);
@@ -151,7 +149,7 @@ function modifyPassword() {
 			type = Alerts.type.SUCCESS
 		}
 		Alerts.createAlert(Alerts.type.FAILED, data.data.message);
-		console.log(data.data);
+		// console.log(data.data);
 	})
 	.catch(error => {
 		console.error('Error:', error);
@@ -178,7 +176,7 @@ function modifyEmail() {
 			type = Alerts.type.SUCCESS
 		}
 		Alerts.createAlert(type, data.data.message);
-		console.log(data.data);
+		// console.log(data.data);
 	})
 	.catch(error => {
 		console.error('Error:', error);
@@ -210,7 +208,7 @@ function modifyProfilPicture() {
 			type = Alerts.type.SUCCESS
 		}
 		Alerts.createAlert(type, data.data.message);
-		console.log(data.data);
+		// console.log(data.data);
 	})
 	.catch(error => {
 		console.error('Error:', error);
@@ -221,7 +219,6 @@ function modifyGameTheme(id) { // to modify with nico
 	var themeList = ['d2', 'land', 'adibou', 'penDraw', 'epic', 'colors'];
 	var formData = new FormData();
 	
-	console.log(themeList[id - 1] + ' - ' + id);
 	formData.append("gameTheme", themeList[id - 1]);
 	
 	fetchData("/api/dashboard?filter=gameTheme", 'POST', formData).then(
@@ -238,7 +235,7 @@ function modifyGameTheme(id) { // to modify with nico
 			)
 		}
 		Alerts.createAlert(type, data.data.message);
-		console.log(data.data);
+		// console.log(data.data);
 	})
 	.catch(error => {
 		console.error('Error:', error);
@@ -301,7 +298,7 @@ function manageFriend(username, action) {
 			}
 		}
 		Alerts.createAlert(type, data.data.message);
-		console.log(data.data);
+		// console.log(data.data);
 	})
 	.catch(error => {
 		console.error('Error:', error);

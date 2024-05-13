@@ -6,7 +6,7 @@ class Activity {
 		this.socket = new WebSocket('wss://' + window.location.host + '/api/activity/');
 
 		this.socket.onopen = (e) => {
-			console.log("Activity webcosket connected !");
+			// console.log("Activity websocket connected !");
 		};
 
 		this.socket.onmessage = (e) => {
@@ -24,8 +24,6 @@ class Activity {
 					} else {
 						globalVariables.userConversations.addMessageFromSocket(data, true, true);
 					}
-				} else {
-					console.log("globalVariables.userConversations is undefined");
 				}
 			} else if (event === 'friends') {
 				// alert
@@ -43,7 +41,7 @@ class Activity {
 						globalVariables.currentUser.removeFriend(data.from);
 						break;
 				}
-				console.log("Websocket: friends request received from:" + data.from);
+				// console.log("Websocket: friends request received from:" + data.from);
 			}
 		};
 	}
@@ -51,7 +49,7 @@ class Activity {
 	close() {
 		if (this.socket.readyState === WebSocket.OPEN)
 			this.socket.close();
-		console.log("Activity socket closed");
+		// console.log("Activity socket closed");
 	}
 }
 

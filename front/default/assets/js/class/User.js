@@ -90,7 +90,6 @@ class User {
 	}
 
 	getGameTheme(){
-		console.log(this.gameTheme)
 		if (this.gameTheme != null && this.gameTheme != "")
 			return this.gameTheme;
 		else

@@ -13,8 +13,11 @@ async function routeHandler() {
 	const pathname = window.location.pathname;
 	
 	// console.log("BIG pathname:" + pathname + " globalVariables.isInGame:" + globalVariables.isInGame);
-	if (globalVariables.isInGame && pathname !== '/in-game') {
-		console.log("The user left the game by using back button");//Nico do something here
+	if (globalVariables.isInGame && pathname !== '/in-game' || 
+		globalVariables.isInGame && globalVariables.currentScene === 'in-game') {
+		history.pushState(null, null, '/in-game');
+		Alerts.createAlert(Alerts.type.FAILED, 'You are playing !')
+		return ;
 	}
 
 	// console.log("pathname:" + pathname);
