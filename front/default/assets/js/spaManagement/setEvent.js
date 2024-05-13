@@ -35,7 +35,7 @@ async function setEventListener(scene) {
 			setEventSettingsEmail();
 			break;
 		default:
-			console.log("Invalid scene for setEventListener: ", scene);
+			// console.log("Invalid scene for setEventListener: ", scene);
 	}
 	// console.log("setEventListener: ", scene);
 }

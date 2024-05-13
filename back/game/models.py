@@ -167,7 +167,6 @@ class Match(models.Model):
 		self.save()
 
 	def setData(self, tab):
-		print(tab, file=sys.stderr)
 		self.data = tab
 		self.save()
 
@@ -492,7 +491,7 @@ class Room(models.Model):
 			if player in room.closed.all():
 				return
 			if player in room.eliminated.all():
-				print(f"j'envoie le message end à {player.username}", file=sys.stderr)
+				# print(f"j'envoie le message end à {player.username}", file=sys.stderr)
 				room.send(player, 'end', {'room-id': room.id, 'rank': room.getRank(player)})
 				room.addClosed(player)
 				return

@@ -316,8 +316,8 @@ class GameLocal {
 			this.ballMovement.x = 0;
 			this.ballMovement.z = 0;
 			await sleep(1500)
-			console.log(this.p1Score)
-			console.log(this.p2Score)
+			// console.log(this.p1Score)
+			// console.log(this.p2Score)
 			if (this.p1Score < 5 && this.p2Score < 5)
 				await this.load3d();
 			this.explode = false;
@@ -353,7 +353,7 @@ class GameLocal {
 			requestAnimationFrame(() => this.update())
 	}
 	onKeyDown(event) {
-		console.log(event.code)
+		// console.log(event.code)
 		switch (event.code) {
 			case 'KeyW':
 			case 'KeyZ':

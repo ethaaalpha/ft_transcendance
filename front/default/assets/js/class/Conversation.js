@@ -126,7 +126,7 @@ class Conversations {
 		if (this.conversations[withUser]) {
 			return this.conversations[withUser];
 		} else {
-			console.log(`La conversation avec ${withUser} n'existe pas.`);
+			// console.log(`La conversation avec ${withUser} n'existe pas.`);
 			return [];
 		}
 	}

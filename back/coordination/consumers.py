@@ -44,9 +44,9 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 			if username in connected_list:
 				await self.close()
 
+			connected_list.append(username)
 			await self.accept()
 			await self.channel_layer.group_add(getChannelName(username, 'coord'), self.channel_name)
-			connected_list.append(username)
 
 	async def disconnect(self, code):
 		if not self.user.is_authenticated:
@@ -70,7 +70,6 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 		values[0] is the message
 		values[1] is code -> success (True), failure (False)
 		"""
-		print(f'voici le message a envoyer {values}', file=sys.stderr)
 		await self.send_json({'event': event, 'data': {'message': values[0], 'status': values[1]}})
 
 

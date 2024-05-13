@@ -49,11 +49,11 @@ appli.addEventListener('focus', () => onFocus());
 appli.addEventListener('blur',() => notOnFocus());
 
 function onFocus(){
-    console.log("focus")
+    // console.log("focus")
     status.action = true;
 }
 function notOnFocus(){
-	console.log('unfocus')
+	// console.log('unfocus')
     status.action = false;
 }
 function updateStatus(newStatus) {
@@ -66,7 +66,7 @@ async function initialize() {
             if (status.status != 5)
 				if (globalVariables.coordination) // if delay due to slow loading
 					globalVariables.coordination.data = null;
-            console.log(status)
+            // console.log(status)
 			if (status.status === -1)
 				await loadTexture();
 			else if (status.status === 0) {
@@ -99,11 +99,10 @@ async function initialize() {
 			}
             else if (status.status === 4){
                     showLoadingAnimation();
-                    console.log(status)
+                    // console.log(status)
                     await globalVariables.coordination.waitForNextMatch(ft.roomCode, 5);
                 }
             else if (status.status === 5){
-				console.log("le mode 5")
                 await createGame(4);
             }
             else if (status.status === 6){
@@ -119,18 +118,16 @@ async function initialize() {
 
 function initLoading(){
     loadingManager.onStart = function(url, item, total){
-		console.log(window.location.pathname);
+		// console.log(window.location.pathname);
         if (gameData.loaded.instance == 0 && window.location.pathname != "/profil")
             showLoadingAnimation();
         gameData.loaded.instance += 1
-        console.log("coucou");
 
     }
     loadingManager.onProgress = function(url, item, total){
-        console.log(url);
+        // console.log(url);
     }
     loadingManager.onLoad = function(){
-        console.log("coucou2");
         gameData.loaded.instance -= 1
         if (gameData.loaded.instance == 0)
             hideLoadingAnimation();

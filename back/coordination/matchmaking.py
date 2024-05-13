@@ -21,7 +21,7 @@ class Matchmaking:
 		Matchmaking._stack.append(user)
 
 		if len(Matchmaking._stack) >= 2: # Run when match 2 players
-			print('il y a deux personnes dans la room !', file=sys.stderr)
+			# print('il y a deux personnes dans la room !', file=sys.stderr)
 			playerA: User = Matchmaking._stack[-1]
 			playerB: User = Matchmaking._stack[-2]
 

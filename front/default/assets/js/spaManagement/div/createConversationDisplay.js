@@ -42,8 +42,8 @@ function createFriendRequestDiv(user, parent, received) {
 		text.textContent = 'Friend request sent!'
 		pendingMessage.classList.add('message-sent', 'message');
 	}
-	console.log('voici le parent ' + parent.id)
-	console.log("voici l'enfant " + pendingMessage.classList)
+	// console.log('voici le parent ' + parent.id)
+	// console.log("voici l'enfant " + pendingMessage.classList)
 	pendingMessage.appendChild(text);
 	parent.appendChild(pendingMessage);
 }

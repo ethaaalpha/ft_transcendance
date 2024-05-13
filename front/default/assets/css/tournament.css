@@ -110,11 +110,12 @@
 #tournament-js-code-display {
 	color: #00C2FF;
 	font-style: italic;
-	font-size: 1.6em;
+	font-size: 2vmin;
 	cursor: pointer;
 }
 
 #tournamnent-js-count-display {
+	font-size: 2vmin;
 	color: white;
 }
 
@@ -130,10 +131,10 @@
     	linear-gradient(to top, black 95%, transparent 100%),
     	linear-gradient(to bottom, black 95%, transparent 100%);
 	-webkit-mask-composite: destination-in;
-}
 
+}
 .tournament-form-content-children {
-	font-size: 2.1vmin;
+	font-size: 1.8vmin;
 	margin-bottom: 4%;
 	padding: 2%;
 	padding-left: 2%;

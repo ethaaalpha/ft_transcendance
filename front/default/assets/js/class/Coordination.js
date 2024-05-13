@@ -27,13 +27,13 @@ class Coordination {
 		if (this.socketCo.readyState === WebSocket.OPEN)
 			this.socketCo.close();
 		document.removeEventListener('keydown', this.backInGame);
-		console.log("Coordination socket closed")
+		// console.log("Coordination socket closed")
 	}
 
 	connect() {
 		this.socketCo = new WebSocket("wss://" + window.location.host + "/api/coordination/");
 		this.socketCo.onopen = (event) => {
-			console.log("Coordination socket connected")
+			// console.log("Coordination socket connected")
 		}
 
 		this.socketCo.onmessage = (event) => {
@@ -62,21 +62,6 @@ class Coordination {
 			}
 			else if (tmp.event == "count")
 				ft.eventPlayer(tmp.data.updater, tmp.data.count, tmp.data.max)
-			else if (tmp.event == 'matchmaking' && tmp.data.status == false) {
-				// si le gars essaie de lancer 2 matchmaking en même temps
-				// ici remettre sur la page par défaut
-				// faire une alerte
-			}
-			else if (tmp.event == 'create' && tmp.data.status == false) {
-				// si le gars essaie de jouer à deux endroits en même (ex: matchmaking + je créer une room)
-				// pareil qu'en haut
-				// ft.changeToInactive();
-			}
-			else if (tmp.event == 'tournament' && tmp.data.status == false) {
-				// si le gars essaie de jouer à deux endroits en même (ex: matchmaking + je créer une room)
-				// pareil qu'en haut
-				// ft.changeToInactive();
-			}
 			else if (tmp.event == 'invite' || tmp.event == 'refuse' || tmp.event == 'accept' || tmp.event == 'invited') { // Invitation
 				let type = tmp.data.status ? Alerts.type.SUCCESS : Alerts.type.MESSAGE
 				switch (tmp.event) {
@@ -131,13 +116,13 @@ class Coordination {
 	send(data){
 		if (this.socketCo.readyState === WebSocket.OPEN){
 			this.socketCo.send(JSON.stringify(data));
-			console.log(data);}
-		else
-			console.log("Error socket Coordiantion State");
+			// console.log(data);
+		}
+			// console.log("Error socket Coordination State");
 	}
 
 	async waitForNextMatch(code, nextStatus){
-		console.log(this.data);
+		// console.log(this.data);
 		return new Promise((resolve) => {
 			if (code == "" || code == null){
 				if (this.roomCode != null){
@@ -147,7 +132,7 @@ class Coordination {
 			}
 			const intervalId = setInterval(() => {
 				this.socketCo.send(JSON.stringify({'event': 'next', 'data': {'room-id' : code}}))
-				console.log(status);
+				// console.log(status);
 				if (this.data) {
 					this.inGame = true;
 					if (this.data.event == "end" || this.data.event == "win"){
@@ -167,9 +152,8 @@ class Coordination {
 	async waitForData(time) {
 		return new Promise((resolve) => {
 			const intervalId = setInterval(() => {
-				console.log(this.returnMenu)
+				// console.log(this.returnMenu)
 				if (this.data) {
-					console.log("cou");
 					clearInterval(intervalId);
 					hideLoadingAnimation();
 					resolve();
@@ -186,7 +170,6 @@ class Coordination {
 		return new Promise((resolve) => {
 			const intervalId = setInterval(async () => {
 				if (this.inGame == true) {
-					console.log("cou");
 					clearInterval(intervalId);
 					hideLoadingAnimation();
 					await sleep(600);
