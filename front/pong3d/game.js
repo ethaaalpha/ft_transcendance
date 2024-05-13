@@ -36,7 +36,8 @@ class Game {
 		this.uniforms = {
 			amplitude: {value: 0.0},
 		};
-		this.itemTexture = this.textureLoader.load('/static/pong3d/assets/cube/textures/Sphere_emissive.png');
+		this.itemTexture = this.textureLoader.load('/static/pong3d/assets/paddle.jpg');
+		this.ballTexture = this.textureLoader.load('/static/pong3d/assets/cube/textures/Sphere_emissive.png');
 		this.controls = gameData.controlsGameLocal;
 		this.init()
 			
@@ -58,7 +59,6 @@ class Game {
 
 	allLoaded(){
 		this.appli.appendChild(this.renderer.domElement);
-		console.log("je send ready");
 		this.sendMessageToServer({event : "ready"})
 		this.animate();
 		this.update();
@@ -217,7 +217,7 @@ class Game {
 
 	addBall(x, y, w, h, zsize, z) {
 		const geometry = new THREE.SphereGeometry(1, 10, 10, -1.5);
-		const material = new THREE.MeshBasicMaterial({map: this.itemTexture});
+		const material = new THREE.MeshBasicMaterial({map: this.ballTexture});
 		const cube = new THREE.Mesh(geometry, material);
 		cube.position.set(x, y, z);
 		cube.scale.set(w, h, zsize);
