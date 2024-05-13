@@ -218,7 +218,7 @@ function modifyProfilPicture() {
 }
 
 function modifyGameTheme(id) { // to modify with nico
-	var themeList = ['d2', 'land', 'adibou', 'penDraw', 'epic', 'colors', 'd3'];
+	var themeList = ['d2', 'land', 'adibou', 'penDraw', 'epic', 'colors'];
 	var formData = new FormData();
 	
 	console.log(themeList[id - 1] + ' - ' + id);

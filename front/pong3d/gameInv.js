@@ -43,7 +43,8 @@ class GameInv {
 		this.uniforms = {
 			amplitude: {value: 0.0},
 		};
-		this.itemTexture = this.textureLoader.load('/static/pong3d/assets/cube/textures/Sphere_emissive.png');
+		this.itemTexture = this.textureLoader.load('/static/pong3d/assets/paddle.jpg');
+		this.ballTexture = this.textureLoader.load('/static/pong3d/assets/cube/textures/Sphere_emissive.png');
 		this.controls = gameData.controlsGameLocal;
 		this.controls.rotateSpeed = -1;
 		this.init()
@@ -221,7 +222,7 @@ class GameInv {
 
 	addBall(x, y, w, h, zsize, z) {
 		const geometry = new THREE.SphereGeometry(1, 10, 10, -1.5);
-		const material = new THREE.MeshBasicMaterial({map: this.itemTexture});
+		const material = new THREE.MeshBasicMaterial({map: this.ballTexture});
 		const cube = new THREE.Mesh(geometry, material);
 		cube.position.set(x, y, z);
 		cube.rotation.z += Math.PI;
