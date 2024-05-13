@@ -65,9 +65,7 @@ class Conversations {
 	async addNewConversationFromSocket(from) {
 		const conversationList = document.getElementById("conversation-list");
 
-		console.log('genant')
 		if (window.location.pathname + window.location.search === '/') {
-			console.log('trres malasie')
 			await fetchConversations();
 			await createConversationItem(conversationList, from)
 		}
@@ -76,12 +74,11 @@ class Conversations {
 	addGameInviteFromSocket(from, received) {
 		if (window.location.pathname + window.location.search === '/chat?with=' + from) {
 			const conversationDisplay = document.getElementById("conversation-display-messages-id");
-			createGameRequestDiv(globalVariables.currentUser, conversationDisplay, received);
+			createGameRequestDiv(from, conversationDisplay, received);
 		}
 	}
 
 	addMessageFromGameSocket(messageData, received = false) {
-		console.log(messageData)
 		if (!globalVariables.isInGame)
 			return
 		if (!messageData.hasOwnProperty('from') && !messageData.hasOwnProperty('sendAt')) {

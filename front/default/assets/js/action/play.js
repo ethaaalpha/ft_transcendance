@@ -27,7 +27,6 @@ function receivedPlayRequest(from, to) {
 function receivedPlayAnswer(from, code) {
 	goToInGame();
 	status.status = 6;
-	console.log("hello")
 	// ici faire le go in game avec le status !
 }
 

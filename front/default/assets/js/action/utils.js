@@ -40,7 +40,6 @@ function checkAllSignUp(event, enter = false) {
 
 	var items = [_username, _password, _passwordMatch, _email];
 
-	console.log('je rentre ici')
 	if (enter) {
 		if (emptyValues(items))
 			return false;
