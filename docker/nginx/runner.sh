@@ -16,7 +16,7 @@ fi
 
 # About the profile picture
 echo "Copying default profil picture !"
-cp -f pokemon.png /usr/share/media/
+cp -rf default /usr/share/media/
 
 echo "Running nginx"
 nginx -g "daemon off;" >/dev/null
