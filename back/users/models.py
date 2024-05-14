@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.files.temp import NamedTemporaryFile
 from django.utils.crypto import get_random_string
-from django.contrib.auth import update_session_auth_hash, login, authenticate
+from django.core.validators import FileExtensionValidator
+from django.contrib.auth import login, authenticate
 from django.http import HttpRequest
 from django.utils.timezone import now
 from tools.responses import tResponses
@@ -53,7 +54,7 @@ class Profile(models.Model):
 	user: User = models.OneToOneField(User, on_delete=models.CASCADE, blank=False, related_name='Profile', primary_key=True)
 	friends = models.ManyToManyField(User, symmetrical=True, blank=True)
 	pendingFriendsFrom = models.ManyToManyField(User, related_name="pendingFriendsFrom", symmetrical=False, blank=True)
-	profilePicture = models.ImageField(upload_to=generateUniqueImageID, default=settings.DEFAULT_PROFILE_PICTURE_NAME, editable=True, blank=False)
+	profilePicture = models.ImageField(upload_to=generateUniqueImageID, default=settings.DEFAULT_PROFILE_PICTURE_NAME, editable=True, blank=False, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])])
 	blockedUsers = models.ManyToManyField(User, related_name="blockedUsers", symmetrical=False, blank=True)
 	lastPasswordChange = models.DateTimeField(default=(now() - timedelta(minutes=5)), blank=True)
 	gameTheme = models.CharField(max_length=64, blank=False, choices=GameTheme, default=GameTheme._0)
