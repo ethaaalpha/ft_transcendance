@@ -195,8 +195,20 @@ async function createProfil(username) {
 			durationDiv.id = 'time'
 			leftColumnDiv.appendChild(durationDiv);
 			
+			const dateDiv = document.createElement('div');
+			const dateFormat = new Date(match.date);
+			const year = dateFormat.getFullYear();
+			const month = String(dateFormat.getMonth() + 1).padStart(2, "0");
+			const day = String(dateFormat.getDate()).padStart(2, "0");
+			const hours = String(dateFormat.getHours()).padStart(2, "0");
+			const minutes = String(dateFormat.getMinutes()).padStart(2, "0");
+			const seconds = String(dateFormat.getSeconds()).padStart(2, "0");
+			dateDiv.textContent = `date: ${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+			dateDiv.id = 'date';
+			leftColumnDiv.appendChild(dateDiv);
+
 			const idDiv = document.createElement("div");
-			idDiv.textContent = "#" + match.id;
+			idDiv.textContent = 'blockchain: ' + "#" + match.id;
 			idDiv.id = 'uuid';
 			leftColumnDiv.appendChild(idDiv);
 			
