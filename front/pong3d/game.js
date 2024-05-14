@@ -319,6 +319,7 @@ class Game {
 			this.status['status'] === 6)
 			requestAnimationFrame(() => this.animate());
 		else
+			await sleep(500);
 			this.destroy();
 	}
 
