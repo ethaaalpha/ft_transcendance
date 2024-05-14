@@ -56,7 +56,7 @@ function sendMessageInGame() {
 	if (content === "") {
 		inputElement.value = "";
 		Alerts.createAlert(Alerts.type.FAILED, "Message is empty.");
-		console.error("Error sending message: Message is empty.");
+		// console.error("Error sending message: Message is empty.");
 		return;
 	}
 	inputElement.value = "";

@@ -191,7 +191,7 @@ class GameInv {
 				// console.log(response.event);
 				this.status.status = this.returnValue;
 			}
-			else 
+			else {
 				this.data = response.data;
 				if (this.data.p1Pos && this.data.p1Pos.length === 3)
 					this.player1.position.set(this.data.p1Pos[0],this.data.p1Pos[1],this.data.p1Pos[2])
@@ -204,6 +204,7 @@ class GameInv {
 						this.p2Score = this.data.score[1];
 				}
 				this.goalP = this.data.goalP
+			}
 		};
 		
 		socket.onclose = (event) => this.socketClose(event);

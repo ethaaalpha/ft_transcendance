@@ -137,16 +137,16 @@ function initLoading(){
 async function loadTexture() {
     return new Promise((resolve, reject) => {
         
-        // gameData.RGBELoader.load(globalVariables.currentUser.getGameTheme() + '.hdr', (texture) => {
-        //     texture.mapping = THREE.EquirectangularReflectionMapping;
-        //     var textureRev = texture.clone()
-        //     textureRev.flipY = false;
-		// 	gameData.sceneMenu.background = texture;
-		// 	gameData.sceneMenu.environment = texture;
-        //     gameData.sceneGameLocal.background = texture;
-		// 	gameData.sceneGameLocal.environment = texture;
-        //     gameData.sceneGameInv.background = textureRev;
-		// 	gameData.sceneGameInv.environment = textureRev;
+        gameData.RGBELoader.load(globalVariables.currentUser.getGameTheme() + '.hdr', (texture) => {
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+            var textureRev = texture.clone()
+            textureRev.flipY = false;
+			gameData.sceneMenu.background = texture;
+			gameData.sceneMenu.environment = texture;
+            gameData.sceneGameLocal.background = texture;
+			gameData.sceneGameLocal.environment = texture;
+            gameData.sceneGameInv.background = textureRev;
+			gameData.sceneGameInv.environment = textureRev;
             gameData.controlsMenu = new OrbitControls(gameData.camera, gameData.rendererMenu.domElement);
             gameData.controlsGameLocal = new OrbitControls(gameData.camera, gameData.rendererGameLocal.domElement);
 			gameData.controlsMenu.enableZoom = false;
@@ -156,7 +156,7 @@ async function loadTexture() {
 			status.status = 0;
             resolve();
         });
-    // });
+    });
 }
 
 function updateGameTheme(){

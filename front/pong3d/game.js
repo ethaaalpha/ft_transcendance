@@ -182,7 +182,7 @@ class Game {
 				// console.log("end");
 				this.status.status = this.returnValue;
 			}
-			else{
+			else {
 				this.data = response.data;
 				if (this.data.p2Pos && this.data.p2Pos.length === 3)
 				this.player2.position.set(this.data.p2Pos[0],this.data.p2Pos[1],this.data.p2Pos[2]);
