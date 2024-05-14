@@ -269,9 +269,6 @@ class GameInv {
 		if (this.status['status'] === 1 || this.status['status'] === 2 || this.status['status'] === 5 ||
 			this.status['status'] === 6)
 			requestAnimationFrame(() => this.animate());
-		else
-			await sleep(500);
-			this.destroy()
 	}
 
 	async checkPoint(){
@@ -333,6 +330,11 @@ class GameInv {
 		if (this.status['status'] === 1 || this.status['status'] === 2 || this.status['status'] === 5 || 
 			this.status['status'] === 6)
 			requestAnimationFrame(() => this.update())
+		else {
+			await sleep(500);
+			console.log("after sleep");
+			this.destroy()
+		}
 	}
 	onKeyDown(event) {
 		if (status.action == true){
