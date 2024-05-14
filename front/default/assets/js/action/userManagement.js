@@ -31,7 +31,7 @@ function signIn() {
 				pushUrl('/sign-up');
 			}
 			else if (data.status === 200) {
-/				// console.log("Successful connection");
+				// console.log("Successful connection");
 				pushUrl('/');
 				Alerts.createAlert(Alerts.type.SUCCESS, data.data.message);
 			} else {
@@ -68,7 +68,7 @@ function signUp() {
 			pushUrl('/');
 			type = Alerts.type.SUCCESS;
 		}
-		if (data.data.message)
+		if (data && data.data && data.data.message)
 			Alerts.createAlert(type, data.data.message);
 		// console.log(data.data);
 	})

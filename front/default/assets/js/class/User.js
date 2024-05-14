@@ -24,7 +24,7 @@ class User {
 
 	// setter
 	addFriend(newfriend) {
-		this.friends[newfriend] = { status: 'offline' };
+		this.friends[newfriend] = { status: 'online' };
 	}
 
 	addBlockedUser(block) {
