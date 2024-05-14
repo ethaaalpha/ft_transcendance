@@ -4,7 +4,7 @@ import globalVariables from '/static/default/assets/js/init.js';
 import { updateGameTheme } from '/static/default/assets/js/spaManagement/div/createInGame.js';
 import { fetchUserData } from '/static/default/assets/js/fetch/http.js';
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
-import { checkAllSettingsEmail, checkAllSignIn, checkAllSignUp } from '/static/default/assets/js/action/utils.js';
+import { checkAllSettingsEmail, checkAllSignIn, checkAllSignUp, checkAllSettingsPassword} from '/static/default/assets/js/action/utils.js';
 
 function signIn() {
 	if (!checkAllSignIn(null, true))
@@ -68,7 +68,8 @@ function signUp() {
 			pushUrl('/');
 			type = Alerts.type.SUCCESS;
 		}
-		Alerts.createAlert(type, data.data.message);
+		if (data.data.message)
+			Alerts.createAlert(type, data.data.message);
 		// console.log(data.data);
 	})
 	.catch(error => {
