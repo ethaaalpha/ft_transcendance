@@ -193,6 +193,7 @@ function modifyEmail() {
 }
 
 function modifyProfilPicture() {
+	const validExtensions = ['png', 'jpeg', 'jpg'];
 	var profilePictureInput = document.getElementById("settings-profil-picture-input");
     var files = profilePictureInput.files;
 	var formData = new FormData();
@@ -206,6 +207,12 @@ function modifyProfilPicture() {
 	if (profilePicture.size > 1900000) {
 		Alerts.createAlert(Alerts.type.FAILED, 'File too large (<1.9M)')
 		return 
+	}
+	
+	const fileExtension = profilePicture.name.split('.').pop().toLowerCase(); // Extract file extension
+	if (!fileExtension || !validExtensions.includes(fileExtension)) {
+		Alerts.createAlert(Alerts.type.FAILED, 'Please select a PNG, JPEG, or JPG file.');
+		return;
 	}
 
 	formData.append("profilePicture", profilePicture);
