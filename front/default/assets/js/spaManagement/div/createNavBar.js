@@ -16,7 +16,7 @@ function createNavBar(username) {
 		let hoverRightColor = 'var(--default-green)';
 		let rightExtension = '';
 
-		if (globalVariables.currentScene === "profil") {
+		if ((globalVariables.currentScene === "profil" || globalVariables.currentScene === 'conversation-display') && globalVariables.currentUser.isFriend(username) === 'friend') {
 			if (globalVariables.currentUser.getUsername() !== username) {
 				leftLabel = "Play";
 				leftColor = 'var(--default-blue)';
