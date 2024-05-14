@@ -14,7 +14,6 @@ async function createInGame() {
 		// Back button
 		const backButton = document.createElement("button");
 		backButton.classList.add("arrow-back", "d-flex", "justify-content-start", "align-items-center");
-		// backButton.onclick = function() {};
 
 		const imgButton = document.createElement('img');
 		backButton.appendChild(imgButton)
@@ -39,9 +38,6 @@ async function createInGame() {
 
 		const titleRight = document.createElement('div');
 		titleRight.classList.add("conversation-display-top-person");
-		// titleRight.onclick = function () {
-			// pushUrl('/profil?username=' + user);
-		// }
 		
 		// Title
 		const titleElement = document.createElement("span");
@@ -94,19 +90,19 @@ async function createInGame() {
 
 async function setNewOpponentUsername(username) {
 	try {
-		// Mettre à jour le nom créé dans createInGame
+		// Update username
 		const titleElement = document.getElementById("in-game-send-message-contact-id");
 		if (titleElement) {
 			titleElement.textContent = username;
 		}
 
-		// Mettre à jour la photo de profil créée dans createInGame
+		// Update pp
 		const profilePicture = document.querySelector('.conversation-display-top-person img');
 		if (profilePicture) {
 			profilePicture.src = await fetchProfilPicture(username);
 		}
 
-		// Supprimer toutes les div messages
+		// Remove old chat div
 		const messagesDiv = document.getElementById("in-game-conversation-display-messages-id");
 		if (messagesDiv) {
 			messagesDiv.innerHTML = '';
@@ -120,7 +116,6 @@ async function setNewOpponentUsername(username) {
 function createGame(){
 	var appliParent = document.querySelector('#game-container')
 	setTimeout(function() {
-		// console.log(globalVariables)
 		if (appliParent.clientHeight == 0 || appliParent.clientHeight == 0 || globalVariables.currentUser == null)
 			return(createGame());
 		import('/static/pong3d/main.js')

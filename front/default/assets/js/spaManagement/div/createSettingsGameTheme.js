@@ -64,7 +64,7 @@ function createSettingsGameTheme() {
 					break;
 				}
 			}
-		}; // to modify with Nico
+		};
 
 		const overlayButtonText = document.createElement("span");
 		overlayButtonText.textContent = "Change game theme";

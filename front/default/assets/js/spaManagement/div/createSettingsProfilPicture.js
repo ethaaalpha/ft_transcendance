@@ -28,7 +28,7 @@ function createSettingsProfilPicture() {
 		description.textContent = "So we can see your lovely smile.";
 		settingsProfilPictureDiv.appendChild(description);
 
-		// Block to wrap item
+		// Block to wrap items
 		const blockDiv = document.createElement('div')
 		blockDiv.classList.add('block-scroll')
 		blockDiv.style.setProperty('--top', '5%')

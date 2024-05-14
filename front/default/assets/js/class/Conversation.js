@@ -1,4 +1,4 @@
-import { createGameRequestDiv } from '/static/default/assets/js/spaManagement/div/createConversationDisplay.js';
+import { createGameRequestItem } from '/static/default/assets/js/spaManagement/div/createConversationDisplay.js';
 import { fetchConversations } from '/static/default/assets/js/action/chat.js';
 import globalVariables from '/static/default/assets/js/init.js';
 import { createConversationItem } from '/static/default/assets/js/spaManagement/div/createConversationList.js';
@@ -8,18 +8,6 @@ class Conversations {
 		this.conversations = conversations;
 		this.myUsername = myUsername;
 	}
-
-	// addMessage(from, to, content, sendAt) {
-	// 	const message = { sender: from, content, sendAt: sendAt };
-	// 	let target = from === this.myUsername ? to : from;
-
-	// 	if (!this.conversations[target]) {
-	// 		this.conversations[target] = [];
-	// 	}
-
-	// 	this.conversations[target].push(message);
-	// }
-
 
 	// 0 Classic message, 1 Friend request
 	addMessageFromSocket(messageData, display, received = false, type = 0) {		
@@ -74,7 +62,7 @@ class Conversations {
 	addGameInviteFromSocket(from, received) {
 		if (window.location.pathname + window.location.search === '/chat?with=' + from) {
 			const conversationDisplay = document.getElementById("conversation-display-messages-id");
-			createGameRequestDiv(from, conversationDisplay, received);
+			createGameRequestItem(from, conversationDisplay, received);
 		}
 	}
 

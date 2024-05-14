@@ -5,92 +5,6 @@ import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
 import { manageFriend } from '/static/default/assets/js/action/userManagement.js';
 import { acceptPlayRequest, refusePlayRequest } from '/static/default/assets/js/action/play.js';
 
-function createFriendRequestDiv(user, parent, received) {
-	const pendingMessage = document.createElement('div');
-	const text = document.createElement('span');
-	
-	if (received) {
-		text.textContent = 'Wanna be friend?'
-		
-		const choices = document.createElement('div');
-		choices.classList.add('message-choice');
-		
-		const acceptButton = document.createElement('button');
-		const acceptImg = document.createElement('img');
-		acceptImg.src = '/static/default/assets/images/icons/valid.svg';
-		acceptButton.appendChild(acceptImg)
-		acceptButton.style.setProperty('--message-choice-color', 'rgba(5, 255, 0, 0.25)');
-		acceptButton.onclick = function() {
-			manageFriend(user, 'accept');
-		};
-		
-		const declineButton = document.createElement('button');
-		const declineImg = document.createElement('img');
-		declineImg.src = '/static/default/assets/images/icons/refuse.svg';
-		
-		declineButton.appendChild(declineImg)
-		declineButton.style.setProperty('--message-choice-color', 'rgba(218, 218, 218, 0.25)');
-		declineButton.onclick = function() {
-			manageFriend(user, 'refuse');
-		};
-		
-		pendingMessage.classList.add('message-received', 'message', 'message-pending');
-		choices.appendChild(acceptButton);
-		choices.appendChild(declineButton);
-		text.appendChild(choices);
-	} else {
-		text.textContent = 'Friend request sent!'
-		pendingMessage.classList.add('message-sent', 'message');
-	}
-	// console.log('voici le parent ' + parent.id)
-	// console.log("voici l'enfant " + pendingMessage.classList)
-	pendingMessage.appendChild(text);
-	parent.appendChild(pendingMessage);
-}
-
-function createGameRequestDiv(user, parent, received) {
-	const pendingMessage = document.createElement('div');
-	const text = document.createElement('span');
-
-	pendingMessage.appendChild(text);
-	if (received) {
-		text.textContent = 'Wanna play?'
-
-		const choices = document.createElement('div');
-		choices.classList.add('message-choice');
-
-		const acceptButton = document.createElement('button');
-		const acceptImg = document.createElement('img');
-		acceptImg.src = '/static/default/assets/images/icons/valid.svg';
-
-		acceptButton.appendChild(acceptImg)
-		acceptButton.style.setProperty('--message-choice-color', 'rgba(5, 255, 0, 0.25)');
-		acceptButton.onclick = function() {
-			acceptPlayRequest(user);
-			};
-
-		const declineButton = document.createElement('button');
-		const declineImg = document.createElement('img');
-		declineImg.src = '/static/default/assets/images/icons/refuse.svg';
-				
-		declineButton.appendChild(declineImg)
-		declineButton.style.setProperty('--message-choice-color', 'rgba(218, 218, 218, 0.25)');
-		declineButton.onclick = function() {
-			refusePlayRequest(user);
-		};
-
-		pendingMessage.classList.add('message-received', 'message', 'message-pending');
-		choices.appendChild(acceptButton);
-		choices.appendChild(declineButton);
-		text.appendChild(choices);
-	} else {
-		text.textContent = 'Play request sent!'
-		pendingMessage.classList.add('message-sent', 'message');
-	}
-
-	parent.appendChild(pendingMessage);
-}
-
 async function createConversationDisplay(user) {
 
 	try {
@@ -178,14 +92,14 @@ async function createConversationDisplay(user) {
 		const isPendingFriendTo = globalVariables.currentUser.isPendingFriendTo(user);
 
 		if (isPendingFriendFrom || isPendingFriendTo)
-			createFriendRequestDiv(user, messagesDiv, isPendingFriendFrom ? true : false);
+			createFriendRequestItem(user, messagesDiv, isPendingFriendFrom ? true : false);
 		
 		// Handle pending game requests
 		const isPendingGameFrom = globalVariables.currentUser.isPendingGameFrom(user);
 		const isPendingGameTo = globalVariables.currentUser.isPendingGameTo(user);
 		
 		if (isPendingGameFrom || isPendingGameTo) {
-			createGameRequestDiv(user, messagesDiv, isPendingGameFrom ? true : false);
+			createGameRequestItem(user, messagesDiv, isPendingGameFrom ? true : false);
 		}
 
 		setTimeout(function() {
@@ -216,4 +130,88 @@ async function createConversationDisplay(user) {
 	}
 }
 
-export { createConversationDisplay, createGameRequestDiv };
+function createFriendRequestItem(user, parent, received) {
+	const pendingMessage = document.createElement('div');
+	const text = document.createElement('span');
+	
+	if (received) {
+		text.textContent = 'Wanna be friend?'
+		
+		const choices = document.createElement('div');
+		choices.classList.add('message-choice');
+		
+		const acceptButton = document.createElement('button');
+		const acceptImg = document.createElement('img');
+		acceptImg.src = '/static/default/assets/images/icons/valid.svg';
+		acceptButton.appendChild(acceptImg)
+		acceptButton.style.setProperty('--message-choice-color', 'rgba(5, 255, 0, 0.25)');
+		acceptButton.onclick = function() {
+			manageFriend(user, 'accept');
+		};
+		
+		const declineButton = document.createElement('button');
+		const declineImg = document.createElement('img');
+		declineImg.src = '/static/default/assets/images/icons/refuse.svg';
+		
+		declineButton.appendChild(declineImg)
+		declineButton.style.setProperty('--message-choice-color', 'rgba(218, 218, 218, 0.25)');
+		declineButton.onclick = function() {
+			manageFriend(user, 'refuse');
+		};
+		
+		pendingMessage.classList.add('message-received', 'message', 'message-pending');
+		choices.appendChild(acceptButton);
+		choices.appendChild(declineButton);
+		text.appendChild(choices);
+	} else {
+		text.textContent = 'Friend request sent!'
+		pendingMessage.classList.add('message-sent', 'message');
+	}
+	pendingMessage.appendChild(text);
+	parent.appendChild(pendingMessage);
+}
+
+function createGameRequestItem(user, parent, received) {
+	const pendingMessage = document.createElement('div');
+	const text = document.createElement('span');
+
+	pendingMessage.appendChild(text);
+	if (received) {
+		text.textContent = 'Wanna play?'
+
+		const choices = document.createElement('div');
+		choices.classList.add('message-choice');
+
+		const acceptButton = document.createElement('button');
+		const acceptImg = document.createElement('img');
+		acceptImg.src = '/static/default/assets/images/icons/valid.svg';
+
+		acceptButton.appendChild(acceptImg)
+		acceptButton.style.setProperty('--message-choice-color', 'rgba(5, 255, 0, 0.25)');
+		acceptButton.onclick = function() {
+			acceptPlayRequest(user);
+			};
+
+		const declineButton = document.createElement('button');
+		const declineImg = document.createElement('img');
+		declineImg.src = '/static/default/assets/images/icons/refuse.svg';
+				
+		declineButton.appendChild(declineImg)
+		declineButton.style.setProperty('--message-choice-color', 'rgba(218, 218, 218, 0.25)');
+		declineButton.onclick = function() {
+			refusePlayRequest(user);
+		};
+
+		pendingMessage.classList.add('message-received', 'message', 'message-pending');
+		choices.appendChild(acceptButton);
+		choices.appendChild(declineButton);
+		text.appendChild(choices);
+	} else {
+		text.textContent = 'Play request sent!'
+		pendingMessage.classList.add('message-sent', 'message');
+	}
+
+	parent.appendChild(pendingMessage);
+}
+
+export { createConversationDisplay, createGameRequestItem };

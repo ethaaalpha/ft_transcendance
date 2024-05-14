@@ -26,7 +26,6 @@ class Activity {
 					}
 				}
 			} else if (event === 'friends') {
-				// alert
 				Alerts.createAlert(Alerts.type.MESSAGE, 'Friends relation ' + data.action + ' from ' + data.from);
 				switch (data.action) {
 					case 'received':

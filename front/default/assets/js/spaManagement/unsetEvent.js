@@ -104,19 +104,3 @@ function unsetEventSettingsEmail() {
 
 
 export { unsetEventListener }
-
-// REMOVE ALL
-// function removeAllglobalVariables.EventListeners() {
-// 	for (const eventName in globalVariables.eventListeners) {
-// 		const listeners = globalVariables.eventListeners[eventName];
-// 		for (const elementId in listeners) {
-// 			const eventHandler = listeners[elementId];
-// 			const element = document.getElementById(elementId);
-// 			if (element) {
-// 				element.removeEventListener(eventName, eventHandler);
-// 			}
-// 		}
-// 	}
-
-// 	globalVariables.eventListeners = {};
-// }
