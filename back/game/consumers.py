@@ -1,23 +1,17 @@
-import uuid
 import json
 import sys
-import re
 import asyncio
 import time
 from asgiref.sync import async_to_sync
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
-from activity.notifier import ActivityNotifier
 from activity.tools import getChannelName
-from users.models import Profile
-from conversations.models import Conversation
-from django.contrib.auth.models import User
 from channels.layers import get_channel_layer
-from game.core import Game, GameMap
+from game.core import GameMap
 
 class GameConsumer(AsyncJsonWebsocketConsumer):
 	last_message_time = None
-	inactivity_threshold = 5
+	inactivity_threshold = 10
 	inactivity_check_task = None
 
 	@database_sync_to_async
