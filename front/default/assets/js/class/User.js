@@ -5,7 +5,7 @@ class User {
 		this.pendingGameFrom = [];
 		this.pendingGameTo = [];
 		data.friends.forEach(friend => {
-			this.friends[friend] = { status: 'offline' }; // Définir l'état par défaut à 'offline'
+			this.friends[friend] = { status: 'offline' };
 		});
 		
 		this.update(data);
@@ -27,17 +27,9 @@ class User {
 		this.friends[newfriend] = { status: 'offline' };
 	}
 
-	removeFriend(oldfriend) {
-		delete (this.friends[oldfriend])
-	}
-
 	addBlockedUser(block) {
 		if (!this.blocked.includes(block))
 			this.blocked.push(block);
-	}
-
-	removeBlockedUser(block) {
-		removeElement(this.blocked, block)
 	}
 
 	addPendingFriendTo(newpendingto) {
@@ -57,18 +49,10 @@ class User {
 		}
 	}
 
-	removePendingGameFrom(username) {
-		removeElement(this.pendingGameFrom, username);
-	}
-
 	addPendingGameTo(username) {
 		if (!this.pendingGameTo.includes(username)) {
 			this.pendingGameTo.push(username);
 		}
-	}
-
-	removePendingGameTo(username) {
-		removeElement(this.pendingGameTo, username)
 	}
 
 	setFriendStatus(username, status) {
@@ -144,30 +128,22 @@ class User {
 	}
 
 	// remover
-	// removeFriend(username) {
-	// 	const index = this.friends.indexOf(username);
-	// 	if (index > -1) {
-	// 		this.friends.splice(index, 1);
-	// 	}
-	// }
+	removeBlockedUser(block) {
+		removeElement(this.blocked, block)
+	}
 
-	// removePendingGameFrom(username) {
-	// 	const index = this.pendingGameFrom.indexOf(username);
-	// 	if (index !== -1) {
-	// 		this.pendingGameFrom.splice(index, 1);
-	// 	}
-	// }
+	removePendingGameTo(username) {
+		removeElement(this.pendingGameTo, username)
+	}
 
-	// removePendingGameTo(username) {
-	// 	const index = this.pendingGameTo.indexOf(username);
-	// 	if (index !== -1) {
-	// 		this.pendingGameTo.splice(index, 1);
-	// 	}
-	// }
+	removePendingGameFrom(username) {
+		removeElement(this.pendingGameFrom, username);
+	}
+
+	removeFriend(oldfriend) {
+		delete (this.friends[oldfriend])
+	}
 }
-
-export default User;
-
 
 function removeElement(array, value) {
     const index = array.indexOf(value);
@@ -175,3 +151,5 @@ function removeElement(array, value) {
         array.splice(index, 1);
     }
 }
+
+export default User;

@@ -134,7 +134,6 @@ async function routeSettings() {
 	const item = searchParams.get("item");
 
 	const modify = ['game-theme', 'profil-picture', 'password', 'email'];
-	// console.log('item :::' + item)
 	if (item) {
 		if (modify.includes(item)) {
 			await changeScene('settings-' + item);
@@ -161,7 +160,6 @@ async function routeChat() {
 		}
 	}
 	pushUrl('/');
-
 	// console.log("routeChat: error to replace with alert withUser:" + withUser);
 };
 

@@ -28,7 +28,7 @@ function createSettingsEmail() {
 		description.textContent = "So we can send you love letters.";
 		settingsEmailDiv.appendChild(description);
 
-		// Block to wrap item
+		// Block to wrap items
 		const blockDiv = document.createElement('div')
 		blockDiv.classList.add('block-scroll')
 		blockDiv.style.setProperty('--top', '5%')

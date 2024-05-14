@@ -49,7 +49,7 @@ const sceneInfos = {
 		unhideElementsIds: ["sign-in", "app"],
 		setEventListenerIds: "sign-in",
 		setFocusId: "sign-in",
-		tabName: 'Sign-in',
+		tabName: 'signIn',
 	},
 	"sign-up": {
 		id: "sign-up",
@@ -59,7 +59,7 @@ const sceneInfos = {
 		unhideElementsIds: ["sign-up", "app"],
 		setEventListenerIds: "sign-up",
 		setFocusId: "sign-up",
-		tabName: 'Sign-up',
+		tabName: 'signUp',
 	},
 	"conversation-list": {
 		id: "conversation-list",

@@ -28,7 +28,7 @@ function createSettingsPassword() {
 		description.textContent = "Minimum 5 and a maximum of 32 characters.";
 		settingsPasswordDiv.appendChild(description);
 
-		// Block to wrap item
+		// Block to wrap items
 		const blockDiv = document.createElement('div')
 		blockDiv.classList.add('block-scroll')
 		blockDiv.style.setProperty('--top', '5%')

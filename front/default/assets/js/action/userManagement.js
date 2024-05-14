@@ -209,7 +209,7 @@ function modifyProfilPicture() {
 		return 
 	}
 	
-	const fileExtension = profilePicture.name.split('.').pop().toLowerCase(); // Extract file extension
+	const fileExtension = profilePicture.name.split('.').pop().toLowerCase();
 	if (!fileExtension || !validExtensions.includes(fileExtension)) {
 		Alerts.createAlert(Alerts.type.FAILED, 'Please select a PNG, JPEG, or JPG file.');
 		return;
@@ -231,7 +231,7 @@ function modifyProfilPicture() {
 	});	
 }
 
-function modifyGameTheme(id) { // to modify with nico
+function modifyGameTheme(id) {
 	var themeList = ['d2', 'land', 'adibou', 'penDraw', 'epic', 'colors'];
 	var formData = new FormData();
 	
@@ -278,39 +278,37 @@ function manageFriend(username, action) {
 			const button2 = document.getElementById('friend-relation-button2');
 
 			switch (action) {
-				// 'friend-relation-state'
-					case 'accept':
-						globalVariables.currentUser.addFriend(username);
-						break;
-					case 'remove':
-						globalVariables.currentUser.removeFriend(username);
-						img.src = '/static/default/assets/images/icons/notFriend.svg'
-						button1.onclick = function() {
-							manageFriend(username, "add");
-						};
-						break;
-					case 'add':
-						globalVariables.currentUser.addPendingFriendTo(username);
-						img.src = '/static/default/assets/images/icons/pending.svg'
-						button1.onclick = function() {
-							manageFriend(username, "remove");
-						};
-						break
-					case 'block':
-						globalVariables.currentUser.addBlockedUser(username);
-						button2.classList.add('blocked');
-						button2.onclick = function() {
-							manageFriend(username, "unblock");
-						};
-						break
-					case 'unblock':
-						globalVariables.currentUser.removeBlockedUser(username);
-						button2.classList.remove('blocked')
-						button2.onclick = function() {
-							manageFriend(username, "block");
-						};
-						break;
-	
+				case 'accept':
+					globalVariables.currentUser.addFriend(username);
+					break;
+				case 'remove':
+					globalVariables.currentUser.removeFriend(username);
+					img.src = '/static/default/assets/images/icons/notFriend.svg'
+					button1.onclick = function() {
+						manageFriend(username, "add");
+					};
+					break;
+				case 'add':
+					globalVariables.currentUser.addPendingFriendTo(username);
+					img.src = '/static/default/assets/images/icons/pending.svg'
+					button1.onclick = function() {
+						manageFriend(username, "remove");
+					};
+					break
+				case 'block':
+					globalVariables.currentUser.addBlockedUser(username);
+					button2.classList.add('blocked');
+					button2.onclick = function() {
+						manageFriend(username, "unblock");
+					};
+					break
+				case 'unblock':
+					globalVariables.currentUser.removeBlockedUser(username);
+					button2.classList.remove('blocked')
+					button2.onclick = function() {
+						manageFriend(username, "block");
+					};
+					break;
 			}
 		}
 		Alerts.createAlert(type, data.data.message);
