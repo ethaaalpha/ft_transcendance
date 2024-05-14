@@ -4,9 +4,8 @@ import { manageFriend } from '/static/default/assets/js/action/userManagement.js
 import Alerts from '/static/default/assets/js/class/Alerts.js';
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
 
-function updateProfileStatus(friendStatus) {
-	const connectionStatus = document.getElementById('profile-status');
-
+function updateStatus(friendStatus, id) {
+	const connectionStatus = document.getElementById(id);
 	if (!connectionStatus)
 		return
 
@@ -73,7 +72,7 @@ async function createProfil(username) {
 		leftDiv.appendChild(profileImage);
 		persoInfoDiv.appendChild(leftDiv);
 		persoInfoDiv.appendChild(connectionStatus);
-		updateProfileStatus(friendStatus);
+		updateStatus(friendStatus, 'profile-status');
 
 		// Right div block
 		const rightDiv = document.createElement('div');
@@ -358,4 +357,4 @@ function drawBars(x, y, width, height, color, radius, ctx) {
 	ctx.fill();
 }
 
-export { createProfil, updateProfileStatus};
+export { createProfil, updateStatus};
