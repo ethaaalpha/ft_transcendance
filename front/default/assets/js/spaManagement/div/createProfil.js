@@ -4,6 +4,28 @@ import { manageFriend } from '/static/default/assets/js/action/userManagement.js
 import Alerts from '/static/default/assets/js/class/Alerts.js';
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
 
+function updateProfileStatus(friendStatus) {
+	const connectionStatus = document.getElementById('profile-status');
+
+	if (!connectionStatus)
+		return
+
+	switch (friendStatus) {
+		case 'online':
+			connectionStatus.style.setProperty('--item-color', 'var(--alert-tx-valid)');
+			break;
+		case 'in-game':
+			connectionStatus.style.setProperty('--item-color', 'var(--alert-tx-game)');
+			break;
+		case 'offline':
+			connectionStatus.style.setProperty('--item-color', 'var(--alert-tx-fail)');
+			break
+		default:
+			connectionStatus.style.setProperty('--item-color', 'transparent');
+			break;
+	}
+}
+
 
 async function createProfil(username) {
 
@@ -45,26 +67,13 @@ async function createProfil(username) {
 		// Status
 		const connectionStatus = document.createElement('div');
 		connectionStatus.classList.add('perso-info-container-left-status');
+		connectionStatus.id = 'profile-status';
 		const friendStatus = globalVariables.currentUser.getFriendStatus(username);
-		
-		switch (friendStatus) {
-			case 'online':
-				connectionStatus.style.setProperty('--item-color', 'var(--alert-tx-valid)');
-				break;
-			case 'in-game':
-				connectionStatus.style.setProperty('--item-color', 'var(--alert-tx-game)');
-				break;
-			case 'offline':
-				connectionStatus.style.setProperty('--item-color', 'var(--alert-tx-fail)');
-				break
-			default:
-				connectionStatus.style.setProperty('--item-color', 'transparent');
-				break;
-		}
 		
 		leftDiv.appendChild(profileImage);
 		persoInfoDiv.appendChild(leftDiv);
 		persoInfoDiv.appendChild(connectionStatus);
+		updateProfileStatus(friendStatus);
 
 		// Right div block
 		const rightDiv = document.createElement('div');
@@ -252,8 +261,6 @@ async function createProfil(username) {
 		persoScoresDiv.appendChild(createStatElement(["hits per match", 'hint.svg'], userStats.averagePong, "The average ball hint.", "square", false));
 		persoScoresDiv.appendChild(createStatElement(["soccer field ball distance", 'distance.svg'], userStats.traveledDistance + 'km', "The distance the ball has traveled in all your games.", "rectangle", false));
 
-
-
 	} catch (error) {
 		console.error("Error in createProfil: ", error);
 		throw error;
@@ -351,4 +358,4 @@ function drawBars(x, y, width, height, color, radius, ctx) {
 	ctx.fill();
 }
 
-export { createProfil };
+export { createProfil, updateProfileStatus};
