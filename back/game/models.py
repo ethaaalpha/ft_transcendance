@@ -191,7 +191,8 @@ class Match(models.Model):
 				'score': self.getScore(),
 				'duration': self.duration.seconds,
 				'winner': self.getWinner().username,
-				'distance': round(self.data['distance'])
+				'distance': round(self.data['distance']),
+				'date': self.creation_date,
 				}
 		
 	

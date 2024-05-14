@@ -298,6 +298,7 @@ function manageFriend(username, action) {
 					break
 				case 'block':
 					globalVariables.currentUser.addBlockedUser(username);
+					globalVariables.currentUser.removeFriend(username);
 					button2.classList.add('blocked');
 					button2.onclick = function() {
 						manageFriend(username, "unblock");
