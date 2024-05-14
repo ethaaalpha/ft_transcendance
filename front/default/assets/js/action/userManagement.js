@@ -4,8 +4,11 @@ import globalVariables from '/static/default/assets/js/init.js';
 import { updateGameTheme } from '/static/default/assets/js/spaManagement/div/createInGame.js';
 import { fetchUserData } from '/static/default/assets/js/fetch/http.js';
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
+import { checkAllSettingsEmail, checkAllSignIn, checkAllSignUp } from '/static/default/assets/js/action/utils.js';
 
 function signIn() {
+	if (!checkAllSignIn(null, true))
+		return
 	var username = document.getElementById("sign-in-username").value;
 	var password = document.getElementById("sign-in-password").value;
 
@@ -43,6 +46,8 @@ function signIn() {
 
 
 function signUp() {
+	if (!checkAllSignUp(null, true))
+		return 
 	var username = document.getElementById("sign-up-username").value;
 	var password = document.getElementById("sign-up-password").value;
 	var email = document.getElementById("sign-up-email").value;
@@ -130,6 +135,8 @@ function forgotPassword() {
 }
 
 function modifyPassword() {
+	if (!checkAllSettingsPassword(null, true))
+		return
 	var actualPassword = document.getElementById("settings-actual-password").value;
 	var newPassword = document.getElementById("settings-new-password").value;
 	
@@ -157,6 +164,8 @@ function modifyPassword() {
 }
 
 function modifyEmail() {
+	if (!checkAllSettingsEmail(null, true))
+		return
 	var actualEmail = document.getElementById("settings-actual-email").value;
 	var newEmail = document.getElementById("settings-new-email").value;
 	
