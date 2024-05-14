@@ -3,6 +3,7 @@ import { fetchUserData } from '/static/default/assets/js/fetch/http.js';
 import { fetchConversations } from '/static/default/assets/js/action/chat.js';
 import { fetchProfilPicture } from '/static/default/assets/js/fetch/http.js';
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
+import { updateStatus } from '/static/default/assets/js/spaManagement/div/createProfil.js';
 
 async function createConversationList() {
 	try {
@@ -54,7 +55,20 @@ async function createConversationItem(parent, user) {
 			console.error("Error in getting profil picture of:", error);
 		}
 		img.alt = "Profile Picture";
+
+		const state = document.createElement("div");
+		state.id = 'conversation-list-status-' + user; 
+		state.style.aspectRatio = '1/1';
+		state.style.width = '5%';
+		state.style.borderRadius = '50%';
+		state.style.backgroundColor = 'var(--item-color)';
+		state.style.zIndex = '2';
+		state.style.marginLeft = '-10%';
+		state.style.marginRight = '5%';
+		state.style.marginBottom = '-14%';
+	
 		conversationButton.appendChild(img);
+		conversationButton.appendChild(state);
 
 		const rightBlock = document.createElement("div");
 		rightBlock.classList.add('conversation-list-contact-button-right')
@@ -75,6 +89,7 @@ async function createConversationItem(parent, user) {
 			pushUrl('/chat?with=' + user);
 		}
 		parent.appendChild(conversationButton);
+		updateStatus(globalVariables.currentUser.getFriendStatus(user), state.id);
 	}
 }
 

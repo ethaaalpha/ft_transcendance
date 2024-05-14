@@ -1,6 +1,6 @@
 import globalVariables from '/static/default/assets/js/init.js';
 import Alerts from '/static/default/assets/js/class/Alerts.js';
-import { updateProfileStatus } from '/static/default/assets/js/spaManagement/div/createProfil.js';
+import { updateStatus } from '/static/default/assets/js/spaManagement/div/createProfil.js';
 
 class Activity {
 	constructor() {
@@ -19,7 +19,9 @@ class Activity {
 			if (event === 'state') {
 				globalVariables.currentUser.setFriendStatus(data.user, data.state.toLowerCase());
 				if (window.location.pathname + window.location.search === '/profil?username=' + data.user && globalVariables.currentScene === 'profil')
-					updateProfileStatus(data.state.toLowerCase())
+					updateStatus(data.state.toLowerCase(), 'profile-status')
+				if (globalVariables.currentScene === 'conversation-list')
+					updateStatus(data.state.toLowerCase(), 'conversation-list-status-' + data.user)
 			} else if (event === 'chat') {
 				if (globalVariables.userConversations) {
 					if (window.location.pathname + window.location.search != '/chat?with=' + data.from) {
