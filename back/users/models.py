@@ -15,6 +15,7 @@ from stats.models import Stats
 import os
 import requests
 import shortuuid
+import random
 
 # instance corresponding to the instanse of imagefield automaticcly passed
 def generateUniqueImageID(instance, filename, extension=None):
@@ -32,6 +33,11 @@ def generateUniqueImageID(instance, filename, extension=None):
 
 def generatePassword():
 	return shortuuid.uuid()[:16]
+
+def generateRandomImage():
+	number = random.randint(0, 3)
+	return ('default/' + settings.DEFAULT_PROFILE_PICTURE_NAME[number])
+	
 
 class GameTheme(models.TextChoices):
 	_0 = 'd2'
@@ -54,7 +60,7 @@ class Profile(models.Model):
 	user: User = models.OneToOneField(User, on_delete=models.CASCADE, blank=False, related_name='Profile', primary_key=True)
 	friends = models.ManyToManyField(User, symmetrical=True, blank=True)
 	pendingFriendsFrom = models.ManyToManyField(User, related_name="pendingFriendsFrom", symmetrical=False, blank=True)
-	profilePicture = models.ImageField(upload_to=generateUniqueImageID, default=settings.DEFAULT_PROFILE_PICTURE_NAME, editable=True, blank=False, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])])
+	profilePicture = models.ImageField(upload_to=generateUniqueImageID, default=generateRandomImage, editable=True, blank=False, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])])
 	blockedUsers = models.ManyToManyField(User, related_name="blockedUsers", symmetrical=False, blank=True)
 	lastPasswordChange = models.DateTimeField(default=(now() - timedelta(minutes=5)), blank=True)
 	gameTheme = models.CharField(max_length=64, blank=False, choices=GameTheme, default=GameTheme._0)
