@@ -1,4 +1,3 @@
-import {sleep} from "/static/pong3d/utilsPong.js"
 import globalVariables from "/static/default/assets/js/init.js"
 
 function backgroundRunner(active = true) {
