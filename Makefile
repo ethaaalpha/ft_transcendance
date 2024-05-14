@@ -8,7 +8,7 @@ NEEDED_DIR			= ${LIBS_DIR}
 CONTAINERS		 	= daphne nginx postgresql redis geth
 
 all: 
-	$(MAKE) up
+	$(MAKE) env
 
 up:
 	@mkdir -p ${NEEDED_DIR}
@@ -31,4 +31,10 @@ pyreset:
 	@find ${BACK_DIR} -type d \( -name migrations -o -name __pycache__ \) -exec rm -rf {} +
 	@echo 'Cleaned py cache and migrations !'
 
-.PHONY: pyreset run down clean fclean ${CONTAINERS}
+env:
+	@python3 env.py .env; \
+	if [ $$? -eq 0 ]; then \
+		${MAKE} up; \
+	fi
+
+.PHONY: pyreset run down clean fclean env ${CONTAINERS}
