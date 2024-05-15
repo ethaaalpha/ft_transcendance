@@ -140,8 +140,8 @@ function updateGameTheme(){
 		globalVariables.gameData.sceneGameLocal.environment = texture;
 		globalVariables.gameData.sceneGameInv.background = textureRev;
 		globalVariables.gameData.sceneGameInv.environment = textureRev;
-		gameData.sceneGameLocal.background = texture;
-		gameData.sceneGameLocal.environment = texture;
+		globalVariables.gameData.sceneGameLocal.background = texture;
+		globalVariables.gameData.sceneGameLocal.environment = texture;
 	});
 }
 
