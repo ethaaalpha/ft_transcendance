@@ -70,7 +70,7 @@ class Match(models.Model):
 
 	@staticmethod
 	def historic(user: User, since, n=50, object=False) -> list:
-		matchs = Match.objects.filter(Q(host=user, date__gte=since) | Q(invited=user, date__gte=since)).filter(state=2)[:n]
+		matchs = Match.objects.filter(Q(host=user, date__gte=since) | Q(invited=user, date__gte=since)).filter(state=2).order_by('-creation_date')[:n]
 		if object:
 			return matchs
 		return [m.toJson() for m in matchs]
