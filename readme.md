@@ -30,13 +30,42 @@ git clone https://github.com/ethaaalpha/ft_transcendance
 cd ft_transcendance
 ```
 
+3. Generate or use you're own env file [env-file](#env-file):
+
+The file must be named *.env* and be present at the root of the project.  
+If needed you could generate the *.env* file by using ```make``` or ```make env```.
+
 3. Run the project :
 ```sh
 make
 ```
 
----
+### Env file
+Here is a template example of the .env file with all the needed value :
+```sh
+DOMAIN=
+DB_PASSWORD=
+DB_USER=
+DB_NAME=
+API_CALLBACK=
+API_URL=
+API_UUID=
+API_SECRET=
+API_TOKEN=
+API_INFO=
+EMAIL_HOST_USER=
+EMAIL_HOST_PASSWORD=
+SECRET_KEY=
+NODE1_ACCOUNT_PASSWORD=
+NODE2_ACCOUNT_PASSWORD=
+NETWORK_ID=
+```
+The **email** service is using *smtp.gmail.com* server.
 
-[**Return**](#Top)
 
----
+
+## 📚 Docs
+Here are the links to all the **documentation** and **mindmap** of the project.  
+1. [API](https://lace-colt-015.notion.site/API-Documentation-a2487bcd1b25426f878f6313bcd9f88d?pvs=4)
+2. [MindMap](https://gitmind.com/app/docs/mifuc2mn)
+3. [Database Structure](https://gh.atlasgo.cloud/explore/158d8759)
