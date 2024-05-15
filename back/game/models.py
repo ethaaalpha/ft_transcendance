@@ -80,7 +80,9 @@ class Match(models.Model):
 			return
 		target = self.host if sender == self.invited else self.invited
 		if (self.state != 2): # Avoid old mate to come
-			self.room().send(target, 'chat', {"from": sender.username, "content": content, 'sendAt': str(timezone.now())})
+			r = self.room()
+			if (r):
+				self.room().send(target, 'chat', {"from": sender.username, "content": content, 'sendAt': str(timezone.now())})
 	
 	def send(self, user: User, event: str, data: str, delay = 0):
 		from coordination.consumers import CoordinationConsumer
