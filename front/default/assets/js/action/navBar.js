@@ -11,7 +11,7 @@ function navBarActionHandler(action, username) {
 		case "Settings":
 			navBarSettings();
 			break;
-		case "Profil":
+		case "Profile":
 			navBarProfil();
 			break;
 		case "Play":
@@ -34,11 +34,11 @@ function navBarSettings() {
 }
 
 function navBarProfil() {
-	if (globalVariables.currentScene == "profil") {
+	if (globalVariables.currentScene == "profile") {
 		pushUrl('/');
 	} else {
 		const username = globalVariables.currentUser.getUsername();
-		pushUrl('/profil?username=' + username);
+		pushUrl('/profile?username=' + username);
 	}
 }
 

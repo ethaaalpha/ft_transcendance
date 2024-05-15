@@ -4,7 +4,7 @@ import { modifyProfilPicture } from '/static/default/assets/js/action/userManage
 function createSettingsProfilPicture() {
 
 	try {
-		const settingsProfilPictureDiv = document.getElementById("settings-profil-picture");
+		const settingsProfilPictureDiv = document.getElementById("settings-profile-picture");
 
 		// Back button
 		const backButton = document.createElement("button");
@@ -20,7 +20,7 @@ function createSettingsProfilPicture() {
 		// Title and description
 		const title = document.createElement("span");
 		title.className = "title-2 greened";
-		title.textContent = "Modify profil picture";
+		title.textContent = "Modify profile picture";
 		settingsProfilPictureDiv.appendChild(title);
 
 		const description = document.createElement("span");
@@ -42,7 +42,7 @@ function createSettingsProfilPicture() {
 			
 		const fileInput = document.createElement("input");
 		fileInput.type = "file";
-		fileInput.id = "settings-profil-picture-input";
+		fileInput.id = "settings-profile-picture-input";
 		fileInput.accept = "image/*";
 
 		const fileSpan = document.createElement('span');
@@ -60,7 +60,7 @@ function createSettingsProfilPicture() {
 		button.onclick = modifyProfilPicture;
 		const buttonSpan = document.createElement("span");
 		buttonSpan.className = "btn-title";
-		buttonSpan.textContent = "Change my profil picture";
+		buttonSpan.textContent = "Change my profile picture";
 		button.appendChild(buttonSpan);
 
 		blockDiv.appendChild(customFileInput)

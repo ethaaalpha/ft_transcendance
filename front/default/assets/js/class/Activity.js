@@ -1,6 +1,6 @@
 import globalVariables from '/static/default/assets/js/init.js';
 import Alerts from '/static/default/assets/js/class/Alerts.js';
-import { updateStatus } from '/static/default/assets/js/spaManagement/div/createProfil.js';
+import { updateStatus } from '/static/default/assets/js/spaManagement/div/createProfile.js';
 
 class Activity {
 	constructor() {
@@ -18,7 +18,7 @@ class Activity {
 			console.log(eventData)
 			if (event === 'state') {
 				globalVariables.currentUser.setFriendStatus(data.user, data.state.toLowerCase());
-				if (window.location.pathname + window.location.search === '/profil?username=' + data.user && globalVariables.currentScene === 'profil')
+				if (window.location.pathname + window.location.search === '/profile?username=' + data.user && globalVariables.currentScene === 'profile')
 					updateStatus(data.state.toLowerCase(), 'profile-status')
 				if (globalVariables.currentScene === 'conversation-list')
 					updateStatus(data.state.toLowerCase(), 'conversation-list-status-' + data.user)
