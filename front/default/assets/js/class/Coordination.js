@@ -47,9 +47,23 @@ class Coordination {
 						receivedNewOpponentUsername(usernameOpponent)
 						Alerts.createAlert(Alerts.type.GAME, 'Next opponent : ' + usernameOpponent)
 						break;
-					default:
+					case 'end':
+						const rank = tmp.data.rank;
+						const rankItem = ['st', 'nd', 'rd', 'th']
+						if (rank) {
+							if (rank >= 4 )
+								Alerts.createAlert(Alerts.type.GAME, "You're rank in the tournament is " + rank + rankItem[4]);
+							else
+								Alerts.createAlert(Alerts.type.GAME, "You're rank in the tournament is " + rank + rankItem[rank]);
+						}
 						goToHome();
 						break;
+					case 'win':
+						Alerts.createAlert(Alerts.type.GAME, 'You won the tournament !')
+						goToHome();
+						break;
+					default:
+						goToHome();
 				}
 			}
 			else if (tmp.event == "create" && tmp.data.status == true){
