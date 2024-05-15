@@ -77,7 +77,7 @@ services:
     volumes:
       - media:/usr/share/media
       - ./front:/usr/share/static
-      - ./libs:/usr/share/libs
+      - libs:/usr/share/libs
     ports: 
       - 8080:80
       - 8081:443
@@ -96,3 +96,4 @@ volumes:
   geth:
   postgres:
   media:
+  libs:
