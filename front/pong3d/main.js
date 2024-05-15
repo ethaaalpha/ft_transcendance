@@ -98,6 +98,7 @@ async function initialize() {
 
             }
             else if (status.status === 3){ // Training mode
+				goToInGame();
                 await createGameLocal(0);
 			}
             else if (status.status === 4){

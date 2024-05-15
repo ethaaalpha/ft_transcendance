@@ -25,7 +25,8 @@ class Activity {
 			} else if (event === 'chat') {
 				if (globalVariables.userConversations) {
 					if (window.location.pathname + window.location.search != '/chat?with=' + data.from) {
-						Alerts.createAlert(Alerts.type.MESSAGE, "Message from " + data.from)
+						if (globalVariables.isInGame === false)
+							Alerts.createAlert(Alerts.type.MESSAGE, "Message from " + data.from)
 						globalVariables.userConversations.addMessageFromSocket(data, false, true);
 					} else {
 						globalVariables.userConversations.addMessageFromSocket(data, true, true);
