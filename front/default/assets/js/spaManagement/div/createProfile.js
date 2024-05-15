@@ -262,7 +262,7 @@ async function createProfil(username) {
 		// Display user statistics
 		persoScoresDiv.appendChild(createStatElement(["matches won", 'won.svg'], userStats.numberOfVictory, "The more the better.", "square", false));
 		persoScoresDiv.appendChild(createStatElement(["matches lost", 'loses.svg'], userStats.numberOfLoses, "The less the better.", "square", false));
-		persoScoresDiv.appendChild(createStatElement(["soccer field ball distance", 'distance.svg', dataMatch.reverse().slice(0, 10)], userStats.traveledDistance + 'km', "The distance the ball has traveled in all your games.", "rectangle", true));
+		persoScoresDiv.appendChild(createStatElement(["soccer field ball distance", 'distance.svg', dataMatch.slice(0, 10)], userStats.traveledDistance + 'km', "The distance the ball has traveled in all your games.", "rectangle", true));
 		persoScoresDiv.appendChild(createStatElement(["average duration", 'duration.svg'], userStats.averageDuration, "The average time in game.", "square", false));
 		persoScoresDiv.appendChild(createStatElement(["hits per match", 'hint.svg'], userStats.averagePong, "The average ball hint.", "square", false));
 		persoScoresDiv.appendChild(createStatElement(["win rate percentage", 'winrate.svg'], winrate + '%', "The proportion of victories to total attempts.", "rectangle", false));
