@@ -310,6 +310,10 @@ function manageFriend(username, action) {
 					button2.onclick = function() {
 						manageFriend(username, "block");
 					};
+					img.src = '/static/default/assets/images/icons/notFriend.svg'
+					button1.onclick = function() {
+						manageFriend(username, "add");
+					};
 					break;
 			}
 		}
