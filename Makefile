@@ -1,8 +1,5 @@
 # Directories 
 BACK_DIR			= 'back'
-LIBS_DIR			= 'libs'
-
-NEEDED_DIR			= ${LIBS_DIR}
 
 # Containers
 CONTAINERS		 	= daphne nginx postgresql redis geth
@@ -11,7 +8,6 @@ all:
 	$(MAKE) env
 
 up:
-	@mkdir -p ${NEEDED_DIR}
 	docker compose up --build
 
 down:

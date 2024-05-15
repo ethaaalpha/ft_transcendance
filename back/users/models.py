@@ -35,7 +35,7 @@ def generatePassword():
 	return shortuuid.uuid()[:16]
 
 def generateRandomImage():
-	number = random.randint(0, 3)
+	number = random.randint(0, 2)
 	return ('default/' + settings.DEFAULT_PROFILE_PICTURE_NAME[number])
 	
 
