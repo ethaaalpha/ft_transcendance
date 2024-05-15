@@ -97,7 +97,6 @@ async function signWith42() {
 function signOut() {
 	fetchData("/api/auth/logout", 'POST')
 	.then(() => {
-		// console.log("Sign out success");
 		globalVariables.currentUser = null;
 		globalVariables.userConversations = null;
 		globalVariables.isInGame = false;
@@ -154,9 +153,9 @@ function modifyPassword() {
 		let type = Alerts.type.FAILED;
 		if (data.status === 200) {
 			pushUrl('/settings');
-			type = Alerts.type.SUCCESS
+			type = Alerts.type.SUCCESS;
 		}
-		Alerts.createAlert(Alerts.type.FAILED, data.data.message);
+		Alerts.createAlert(type, data.data.message);
 		// console.log(data.data);
 	})
 	.catch(error => {
@@ -222,7 +221,7 @@ function modifyProfilPicture() {
 		let type = Alerts.type.FAILED;
 		if (data.status === 200) {
 			pushUrl('/settings');
-			type = Alerts.type.SUCCESS
+			type = Alerts.type.SUCCESS;
 		}
 		Alerts.createAlert(type, data.data.message);
 		// console.log(data.data);
@@ -244,7 +243,7 @@ function modifyGameTheme(id) {
 		if (data.status === 200) {
 			globalVariables.gameTheme = id;
 			pushUrl('/settings');
-			type = Alerts.type.SUCCESS
+			type = Alerts.type.SUCCESS;
 			fetchUserData().then(
 				function (){
 					updateGameTheme();
