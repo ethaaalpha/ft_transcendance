@@ -3,7 +3,7 @@ import { fetchUserData } from '/static/default/assets/js/fetch/http.js';
 import { fetchConversations } from '/static/default/assets/js/action/chat.js';
 import { fetchProfilPicture } from '/static/default/assets/js/fetch/http.js';
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
-import { updateStatus } from '/static/default/assets/js/spaManagement/div/createProfil.js';
+import { updateStatus } from '/static/default/assets/js/spaManagement/div/createProfile.js';
 
 async function createConversationList() {
 	try {
@@ -52,7 +52,7 @@ async function createConversationItem(parent, user, noconv = false) {
 			const imgUrl = await fetchProfilPicture(user);
 			img.src = imgUrl;
 		} catch (error) {
-			console.error("Error in getting profil picture of:", error);
+			console.error("Error in getting profile picture of:", error);
 		}
 		img.alt = "Profile Picture";
 

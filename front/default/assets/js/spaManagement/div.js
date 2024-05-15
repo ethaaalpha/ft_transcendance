@@ -4,11 +4,11 @@ import { createSignUp } from '/static/default/assets/js/spaManagement/div/create
 import { createConversationList } from '/static/default/assets/js/spaManagement/div/createConversationList.js';
 import { createConversationDisplay } from '/static/default/assets/js/spaManagement/div/createConversationDisplay.js';
 import { createSearch } from '/static/default/assets/js/spaManagement/div/createSearch.js';
-import { createProfil } from '/static/default/assets/js/spaManagement/div/createProfil.js';
+import { createProfil } from '/static/default/assets/js/spaManagement/div/createProfile.js';
 import { createInGame } from '/static/default/assets/js/spaManagement/div/createInGame.js';
 import { createSettings } from '/static/default/assets/js/spaManagement/div/createSettings.js';
 import { createSettingsGameTheme } from '/static/default/assets/js/spaManagement/div/createSettingsGameTheme.js';
-import { createSettingsProfilPicture } from '/static/default/assets/js/spaManagement/div/createSettingsProfilPicture.js';
+import { createSettingsProfilPicture } from '/static/default/assets/js/spaManagement/div/createSettingsProfilePicture.js';
 import { createSettingsPassword } from '/static/default/assets/js/spaManagement/div/createSettingsPassword.js';
 import { createSettingsEmail } from '/static/default/assets/js/spaManagement/div/createSettingsEmail.js';
 import { createError } from '/static/default/assets/js/spaManagement/div/createError.js';
@@ -51,7 +51,7 @@ async function createChildDiv(divIds, username) {
 				case "search":
 					await createSearch(username);
 					break;
-				case "profil":
+				case "profile":
 					await createProfil(username);
 					break;
 				case "in-game":
@@ -63,7 +63,7 @@ async function createChildDiv(divIds, username) {
 				case "settings-game-theme":
 					createSettingsGameTheme();
 					break;
-				case "settings-profil-picture":
+				case "settings-profile-picture":
 					createSettingsProfilPicture();
 					break;
 				case "settings-password":

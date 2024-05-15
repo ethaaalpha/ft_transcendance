@@ -36,7 +36,7 @@ function createSettings() {
 		// Settings buttons
 		const settingsButtons = [
 			{ label: "Modify game theme", icon: "gamepad.svg", scene: "game-theme" },
-			{ label: "Modify profil picture", icon: "user_settings.svg", scene: "profil-picture" },
+			{ label: "Modify profile picture", icon: "user_settings.svg", scene: "profile-picture" },
 			{ label: "Modify password", icon: "lock.svg", scene: "password" },
 			{ label: "Modify email", icon: "mail.svg", scene: "email" },
 			{ label: "Sign out", icon: "logout.svg", action: signOut }
