@@ -5,20 +5,6 @@
 <h3>◦ PokePong game !</h3>
 </div>
 
----
-
-## 📖 Table of Contents
-- [📖 Table of Contents](#-table-of-contents)
-- [📍 Overview](#-overview)
-- [📦 Features](#-features)
-- [📂 repository Structure](#-repository-structure)
-- [⚙️ Modules](#modules)
-- [🚀 Getting Started](#-getting-started)
-    - [🔧 Installation](#-installation)
-    - [🤖 Running ft_IRC](#-running-ft_IRC)
----
-
-
 ## 📍 Overview
 
 This repository is about the final project of the 42 Commun core. It's a web pong game realised with threejs, django and native js. All of the scores are also stored in a local blockchain.
@@ -49,18 +35,6 @@ cd ft_transcendance
 make
 ```
 
-### 🖧 Running ft_IRC
-
-```sh
-./ircserv <port> <password>
-```
-
-### 🤖 Running bot
-
-```sh
-cd bot
-./rocketBot <Server Address> <Port> <Channel> <Password> <ApiKey> <Channel Password(optional)>
-```
 ---
 
 [**Return**](#Top)
