@@ -20,12 +20,11 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: space-around;
-	background: rgba(0, 0, 0, 0.25);
+	background: rgba(180, 180, 180, 0.25);
 }
 
 .tournament-top  {
 	width: 100%;
-	/* background-color: aquamarine; */
 	display: flex;
 	justify-content: space-between;
 }
@@ -47,7 +46,6 @@
 	justify-content: center;
 	width: 100%;
 	height: 100%;
-	/* background-color: blue; */
 }
 
 .tournament-form-child {
@@ -57,7 +55,6 @@
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
-	/* background-color: red; */
 }
 
 .tournament-form-child-child {
@@ -67,7 +64,6 @@
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;
-	/* background-color: violet; */
 }
 
 .tournament-input select {
