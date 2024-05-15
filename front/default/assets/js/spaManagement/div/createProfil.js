@@ -252,13 +252,20 @@ async function createProfil(username) {
 		// PERSONNAL SCORES
 		const userStats = await fetchUserStats(username);
 
+		let winrate = 0;
+		const totalMatches = userStats.numberOfVictory + userStats.numberOfLoses;
+		if (totalMatches !== 0) {
+			winrate = (userStats.numberOfVictory / totalMatches) * 100;
+			winrate = winrate.toFixed(2);
+		}
+		
 		// Display user statistics
 		persoScoresDiv.appendChild(createStatElement(["matches won", 'won.svg'], userStats.numberOfVictory, "The more the better.", "square", false));
 		persoScoresDiv.appendChild(createStatElement(["matches lost", 'loses.svg'], userStats.numberOfLoses, "The less the better.", "square", false));
 		persoScoresDiv.appendChild(createStatElement(["soccer field ball distance", 'distance.svg', dataMatch.reverse().slice(0, 10)], userStats.traveledDistance + 'km', "The distance the ball has traveled in all your games.", "rectangle", true));
 		persoScoresDiv.appendChild(createStatElement(["average duration", 'duration.svg'], userStats.averageDuration, "The average time in game.", "square", false));
 		persoScoresDiv.appendChild(createStatElement(["hits per match", 'hint.svg'], userStats.averagePong, "The average ball hint.", "square", false));
-		persoScoresDiv.appendChild(createStatElement(["soccer field ball distance", 'distance.svg'], userStats.traveledDistance + 'km', "The distance the ball has traveled in all your games.", "rectangle", false));
+		persoScoresDiv.appendChild(createStatElement(["win rate", 'winrate.svg'], winrate + '%', "The proportion of victories to total attempts.", "rectangle", false));
 
 	} catch (error) {
 		console.error("Error in createProfil: ", error);
