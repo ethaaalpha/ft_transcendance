@@ -14,7 +14,7 @@ class Game {
 		this.appli = gameData.appli;
 		this.status = status;
 		this.resolve = resolve;
-		this.scene = gameData.sceneGameLocal;
+		this.scene = gameData.sceneGame;
 		this.directionalLight = gameData.directionalLight;
 		this.directionalLight2 = gameData.directionalLight2;
 		this.directionalLight3 = gameData.directionalLight3;

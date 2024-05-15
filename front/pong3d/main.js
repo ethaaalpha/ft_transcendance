@@ -28,6 +28,7 @@ var gameData = {
     sceneGameLocal : new THREE.Scene(),
     sceneGameInv : new THREE.Scene(),
     sceneMenu : new THREE.Scene(),
+    sceneGame : new THREE.Scene(),
     rendererMenu : new THREE.WebGLRenderer(),
     rendererGameLocal : new THREE.WebGLRenderer(),
     camera : new THREE.PerspectiveCamera(75, appliParent.clientWidth / appliParent.clientHeight, 0.1, 1000),
@@ -95,7 +96,7 @@ async function initialize() {
 
             }
             else if (status.status === 3){ // Training mode
-                await createGame();
+                await createGameLocal(0);
 			}
             else if (status.status === 4){
                     showLoadingAnimation();
@@ -159,10 +160,6 @@ async function loadTexture() {
     // });
 }
 
-function updateGameTheme(){
-    return;
-}
-
 async function createMenu() {
     return new Promise((resolve) => {
 		view = null;
@@ -186,10 +183,10 @@ async function createGame(returnValue) {
 }
 
 
-async function createGameLocal() {
+async function createGameLocal(returnValue) {
     return new Promise((resolve) => {
 		view = null;
-        view = new GameLocal(status, resolve, updateStatus, gameData);
+        view = new GameLocal(status, resolve, updateStatus, gameData, returnValue);
     });
 }
 
