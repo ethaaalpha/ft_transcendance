@@ -195,7 +195,7 @@ function modifyEmail() {
 
 function modifyProfilPicture() {
 	const validExtensions = ['png', 'jpeg', 'jpg'];
-	var profilePictureInput = document.getElementById("settings-profil-picture-input");
+	var profilePictureInput = document.getElementById("settings-profile-picture-input");
     var files = profilePictureInput.files;
 	var formData = new FormData();
 

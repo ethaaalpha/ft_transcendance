@@ -46,7 +46,7 @@ async function routeHandler() {
 			case "/search":
 				await loadRoute(routeSearch);
 				break;
-			case "/profil":
+			case "/profile":
 				await loadRoute(routeProfil);
 				break;
 			case "/settings":
@@ -119,7 +119,7 @@ async function routeProfil() {
 	if (username) {
 		const exist = await userExist(username);
 		if (exist) {
-			await changeScene('profil', username);
+			await changeScene('profile', username);
 			return ;
 		} else {
 			Alerts.createAlert(Alerts.type.FAILED, username + ' do not exist')
@@ -133,7 +133,7 @@ async function routeSettings() {
 	const searchParams = new URLSearchParams(window.location.search);
 	const item = searchParams.get("item");
 
-	const modify = ['game-theme', 'profil-picture', 'password', 'email'];
+	const modify = ['game-theme', 'profile-picture', 'password', 'email'];
 	if (item) {
 		if (modify.includes(item)) {
 			await changeScene('settings-' + item);

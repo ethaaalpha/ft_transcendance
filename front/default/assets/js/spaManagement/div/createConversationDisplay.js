@@ -46,7 +46,7 @@ async function createConversationDisplay(user) {
 		const titleRight = document.createElement('div');
 		titleRight.classList.add("conversation-display-top-person");
 		titleRight.onclick = function () {
-			pushUrl('/profil?username=' + user);
+			pushUrl('/profile?username=' + user);
 		}
 		
 		// Title

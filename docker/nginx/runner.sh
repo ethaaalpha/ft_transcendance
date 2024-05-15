@@ -15,7 +15,7 @@ else
 fi		
 
 # About the profile picture
-echo "Copying default profil picture !"
+echo "Copying default profile picture !"
 cp -rf default /usr/share/media/
 
 echo "Running nginx"

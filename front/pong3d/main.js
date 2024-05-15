@@ -120,7 +120,7 @@ async function initialize() {
 function initLoading(){
     loadingManager.onStart = function(url, item, total){
 		// console.log(window.location.pathname);
-        if (gameData.loaded.instance == 0 && window.location.pathname != "/profil")
+        if (gameData.loaded.instance == 0 && window.location.pathname != "/profile")
             showLoadingAnimation();
         gameData.loaded.instance += 1
 

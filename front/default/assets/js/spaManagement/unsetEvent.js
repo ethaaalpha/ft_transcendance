@@ -22,7 +22,7 @@ function unsetEventListener(eventToUnset, exception) {
 				case "in-game":
 					unsetEventInGame();
 					break;
-				case "settings-profil-picture":
+				case "settings-profile-picture":
 					unsetEventSettingsProfilPicture();
 					break;
 				case "settings-password":
@@ -87,7 +87,7 @@ function unsetEventInGame() {
 }
 
 function unsetEventSettingsProfilPicture() {
-	removeEventListener("change", "settings-profil-picture");
+	removeEventListener("change", "settings-profile-picture");
 }
 
 function unsetEventSettingsPassword() {

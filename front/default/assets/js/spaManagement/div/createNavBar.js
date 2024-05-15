@@ -16,7 +16,7 @@ function createNavBar(username) {
 		let hoverRightColor = 'var(--default-green)';
 		let rightExtension = '';
 
-		if ((globalVariables.currentScene === "profil" || globalVariables.currentScene === 'conversation-display') && globalVariables.currentUser.isFriend(username) === 'friend') {
+		if ((globalVariables.currentScene === "profile" || globalVariables.currentScene === 'conversation-display') && globalVariables.currentUser.isFriend(username) === 'friend') {
 			if (globalVariables.currentUser.getUsername() !== username) {
 				leftLabel = "Play";
 				leftColor = 'var(--default-blue)';
@@ -28,7 +28,7 @@ function createNavBar(username) {
 				leftBackgroundColor = '#05FF0040';
 				leftExtension += '_green';
 			}
-		} else if (globalVariables.currentScene === "settings" || globalVariables.currentScene === "settings-game-theme" || globalVariables.currentScene === "settings-profil-picture" || globalVariables.currentScene === "settings-password" || globalVariables.currentScene === "settings-email") {
+		} else if (globalVariables.currentScene === "settings" || globalVariables.currentScene === "settings-game-theme" || globalVariables.currentScene === "settings-profile-picture" || globalVariables.currentScene === "settings-password" || globalVariables.currentScene === "settings-email") {
 			rightColor = "#05FF00";
 			rightExtension += '_green';
 			rightBackgroundColor = '#05FF0040';
