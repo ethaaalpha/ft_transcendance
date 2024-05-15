@@ -5,7 +5,7 @@ function createNavBar(username) {
 	try {
 		const navBar = document.getElementById("nav-bar");
 
-		let leftLabel = "Profil";
+		let leftLabel = "Profile";
 		let rightLabel = "Settings";
 		let leftExtension = '';
 		let leftColor = "#B4B4B4";
