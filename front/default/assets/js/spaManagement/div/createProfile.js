@@ -31,7 +31,7 @@ async function createProfil(username) {
 	try {
 		await fetchUserData();
 
-		const profilDisplay = document.getElementById("profil");
+		const profilDisplay = document.getElementById("profile");
 
 		// Back button
 		const backButton = document.createElement("button");

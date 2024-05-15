@@ -65,7 +65,7 @@ def form_changeProfilePicture(profile: Profile, request: HttpRequest) -> HttpRes
 
 	if (form.is_valid()):
 		import sys
-		if (os.path.exists(oldPicture) and os.path.basename(oldPicture) != settings.DEFAULT_PROFILE_PICTURE_NAME):
+		if (os.path.exists(oldPicture) and os.path.basename(oldPicture) not in settings.DEFAULT_PROFILE_PICTURE_NAME):
 			os.remove(oldPicture)		
 		form.save()
 		return (tResponses.OKAY.request("Profile picture successfully changed !"))

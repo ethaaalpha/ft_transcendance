@@ -48,14 +48,7 @@ class Coordination {
 						Alerts.createAlert(Alerts.type.GAME, 'Next opponent : ' + usernameOpponent)
 						break;
 					case 'end':
-						const rank = tmp.data.rank;
-						const rankItem = ['st', 'nd', 'rd', 'th']
-						if (rank) {
-							if (rank >= 4 )
-								Alerts.createAlert(Alerts.type.GAME, "You're rank in the tournament is " + rank + rankItem[4]);
-							else
-								Alerts.createAlert(Alerts.type.GAME, "You're rank in the tournament is " + rank + rankItem[rank]);
-						}
+						Alerts.createAlert(Alerts.type.GAME, "You are eliminated from the tournament is " + rank + rankItem[3]);
 						goToHome();
 						break;
 					case 'win':

@@ -50,7 +50,7 @@ async function createSearch(username) {
 			conversationButton.appendChild(userInfo);
 
 			conversationButton.addEventListener("click", function() {
-				pushUrl('/profil?username=' + searchInput);	
+				pushUrl('/profile?username=' + searchInput);	
 			});
 
 			blockDiv.appendChild(conversationButton)
