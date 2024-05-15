@@ -53,11 +53,8 @@ class Conversations {
 	async addNewConversationFromSocket(from) {
 		const conversationList = document.getElementById("conversation-list");
 
-		console.log('je reste ici avant')
 		if (window.location.pathname + window.location.search === '/') {
-			console.log('je reste ici')
-			await fetchConversations();
-			await createConversationItem(conversationList, from)
+			await createConversationItem(conversationList, from, true)
 		}
 	}
 

@@ -42,9 +42,9 @@ async function createConversationList() {
 	}
 }
 
-async function createConversationItem(parent, user) {
+async function createConversationItem(parent, user, noconv = false) {
 
-	if (globalVariables.userConversations.conversations.hasOwnProperty(user)) {
+	if (globalVariables.userConversations.conversations.hasOwnProperty(user) || noconv) {
 		const conversationButton = document.createElement("button");
 		conversationButton.classList.add("conversation-list-contact-button");
 		const img = document.createElement("img");
@@ -78,8 +78,11 @@ async function createConversationItem(parent, user) {
 
 		const lastMessage = document.createElement('span');
 		lastMessage.textContent = 'Nothing yet :(';
-		if (globalVariables.userConversations.conversations[user][0])
-			lastMessage.textContent = globalVariables.userConversations.conversations[user][0].content;
+	
+		if (!noconv) {
+			if (globalVariables.userConversations.conversations[user][0])
+				lastMessage.textContent = globalVariables.userConversations.conversations[user][0].content;
+		}
 
 		rightBlock.appendChild(userInfo);
 		rightBlock.appendChild(lastMessage);

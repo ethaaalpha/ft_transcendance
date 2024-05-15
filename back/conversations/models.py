@@ -64,8 +64,6 @@ class Conversation(models.Model):
 
 	@staticmethod
 	def consumer_appendToConversation(_from: str, _to: str, _content: str):
-		required = ['from', 'to', 'content']
-
 		sender = Profile.getUserFromUsername(_from)
 		target = Profile.getUserFromUsername(_to)
 		content = _content
