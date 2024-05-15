@@ -48,7 +48,8 @@ class Coordination {
 						Alerts.createAlert(Alerts.type.GAME, 'Next opponent : ' + usernameOpponent)
 						break;
 					case 'end':
-						Alerts.createAlert(Alerts.type.GAME, "You are eliminated from the tournament is " + rank + rankItem[3]);
+						if (tmp.data.rank)
+							Alerts.createAlert(Alerts.type.GAME, "You are eliminated from the tournament");
 						goToHome();
 						break;
 					case 'win':
