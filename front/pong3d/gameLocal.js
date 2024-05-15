@@ -4,9 +4,12 @@ import { TextGeometry } from 'three/module/geometries/TextGeometry.js';
 import { sleep, loadShader, status } from '/static/pong3d/utilsPong.js'
 
 class GameLocal {
-	constructor(status, resolve,statusCallback, gameData) {
+	constructor(status, resolve, statusCallback, gameData, returnValue) {
+		this.gltfLoader = gameData.gltfLoader;
+		this.fontLoader = gameData.fontLoader;
+		this.textureLoader = gameData.textureLoader;
 		this.renderer = gameData.rendererGameLocal;
-		this.loader = gameData.fontLoader;
+		this.loaded = gameData.loaded;
 		this.camera = gameData.camera;
 		this.appli = gameData.appli;
 		this.status = status;
@@ -14,73 +17,85 @@ class GameLocal {
 		this.scene = gameData.sceneGameLocal;
 		this.directionalLight = gameData.directionalLight;
 		this.directionalLight2 = gameData.directionalLight2;
-		this.statusCallback = statusCallback
-		this.messageInterval = 100
+		this.directionalLight3 = gameData.directionalLight3;
+		this.directionalLight4 = gameData.directionalLight4;
+		this.returnValue = returnValue
+		this.statusCallback = statusCallback;
 		this.movementP1 = new THREE.Vector3(0, 0, 0);
 		this.movementP2 = new THREE.Vector3(0, 0, 0);
-		this.speed = 0.8;
-		this.speedBall = 0.20;
-		this.frame = 0;
+		this.speed = 0.4;
+		this.speedBall = 0.2;
 		this.cycleScore = 0.5;
-		this.sign = true
+		this.goalP = false;
+		this.sign = true;
 		this.explode = false;
-		this.player1 = null;
-		this.player2 = null;
 		this.p1Score = 0;
 		this.p2Score = 0;
-		this.score = null;
-		this.ball = null;
-		this.walls = [];
-		this.laser = null;
-		this.ballMovement = new THREE.Vector3(0, -1, 0);
-		this.isCollision = null;
+		this.ballMovement = new THREE.Vector3(0, -0.2, 0);
+		this.isCollision = false;
 		this.cameraRotation = new THREE.Euler();
-		this.controls = null;
-		this.texture = null;
 		this.uniforms = {
 			amplitude: {value: 0.0},
 		};
-		this.textureLoader = gameData.textureLoader;
-		this.itemTexture = this.textureLoader.load('/static/pong3d/assets/pokeball-texture.jpg');
+		this.itemTexture = this.textureLoader.load('/static/pong3d/assets/paddle.jpg');
+		this.ballTexture = this.textureLoader.load('/static/pong3d/assets/cube/textures/Sphere_emissive.png');
 		this.controls = gameData.controlsGameLocal;
-		this.controls.enableZoom = false;
-		this.init().then(() => {
-			this.appli.appendChild(this.renderer.domElement);
-			this.animate();
-			this.update();
-		});
+		this.init()
+			
 	}
 
+	allLoaded(){
+		this.appli.appendChild(this.renderer.domElement);
+		this.animate();
+		this.update();
+	}
+	
 	init() {
-		return new Promise((resolve, reject) => {
-			this.camera.position.set(0, 0, 60);
-			this.directionalLight.position.set(30, -20, 100).normalize();
-			this.scene.add(this.directionalLight);
-			this.directionalLight2.position.set(-30, 20, -100).normalize();
-			this.scene.add(this.directionalLight2);
-			this.ball = this.addBall(0, 0, 1, 1, 1, 0);
-			this.player1 = this.addCube(0, -13, 5, 0.8, 5, 0, {transparent: false, map: this.itemTexture}, 0);
-			this.player2 = this.addCube(0, 13, 5, 0.8, 5, 0, {transparent: false, map: this.itemTexture}, 0);
-			this.walls = [
-				this.addCube(15, 0, 1, 30, 29, 0, { color: 0xe4f2f7, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true}),
-				this.addCube(0, 0, 31, 30, 1, 15, { color: 0xe4f2f7, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true}),
-				this.addCube(0, 0, 31, 30, 1, -15, { color: 0xe4f2f7, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true}),
-				this.addCube(-15, 0, 1, 30, 29, 0, { color: 0xe4f2f7, transparent: true, opacity: 0.3, metalness: 0.5, roughness: 0.1, depthTest: true})
-			];
-			this.laser = this.createLaser();
-			this.keyU = (event) => this.onKeyUp(event)
-			this.keyD = (event) => this.onKeyDown(event)
-			this.onResize = () => this.onWindowResize()
-			document.addEventListener('keydown', this.keyD);
-			document.addEventListener('keyup', this.keyU);
-			window.addEventListener('resize',  this.onResize);
-			this.load3d();
-			resolve();
-			});
+		this.camera.position.set(0, 0, 60);
+		this.directionalLight.position.set(20, 0, 0).normalize();
+		this.scene.add(this.directionalLight);
+		this.directionalLight2.position.set(-20, 0, 0).normalize();
+		this.scene.add(this.directionalLight2);
+		this.directionalLight3.position.set(0, 13, 0).normalize();
+		this.scene.add(this.directionalLight3);
+		this.directionalLight4.position.set(0, -13, 0).normalize();
+		this.scene.add(this.directionalLight4);
+		this.ball = this.addBall(0, 0, 1, 1, 1, 0);
+		this.player1 = this.addCube(0, -13, 4.5, 1.3, 4.5, 0, {transparent: false, map: this.itemTexture}, 0);
+		this.player2 = this.addCube(0, 13, 4.5, 1.3, 4.5, 0, {transparent: false, map: this.itemTexture}, 0);
+		this.walls = [
+			this.addCube(15, 0, 1, 30, 29, 0, { color: 0x05ff00, transparent: true, opacity: 0}),
+			this.addCube(0, 0, 31, 30, 1, 15, { color: 0x05ff00, transparent: true, opacity: 0}),
+			this.addCube(0, 0, 31, 30, 1, -15, { color: 0x05ff00, transparent: true, opacity: 0}),
+			this.addCube(-15, 0, 1, 30, 29, 0, { color: 0x05ff00, transparent: true, opacity: 0})
+		];
+		this.laser = this.createLaser();
+		this.keyU = (event) => this.onKeyUp(event)
+		this.keyD = (event) => this.onKeyDown(event)
+		this.onResize = () => this.onWindowResize()
+		document.addEventListener('keydown', this.keyD);
+		document.addEventListener('keyup', this.keyU);
+		window.addEventListener('resize',  this.onResize);
+		this.load3d();
 	}
 
 	load3d(){
-		this.loader.load( '/static/pong3d/fonts/default2.json', (font) => this.scoreInit(font))
+		this.gltfLoader.load( '/cub2/scene.gltf', (gltf) => {this.createobj(gltf)} );
+		this.fontLoader.load( '/static/pong3d/fonts/default2.json', (font) => this.scoreInit(font))
+		this.allLoaded()
+	}
+
+	async createobj (gltf) {
+		this.animMixer = new THREE.AnimationMixer(gltf.scene);
+		for (let i = 0; i < gltf.animations.length; i++) {
+			const animation = gltf.animations[i];
+			this.animMixer.clipAction(animation).play();
+		}
+		gltf.scene.scale.set(0.95, 0.95, 0.95);
+		gltf.scene.rotation.set(0, 0, 0);
+		gltf.scene.position.set(0, -19, 0);  
+		this.scene.add(gltf.scene);
+		this.renderer.render(this.scene, this.camera);
 	}
 
 	async scoreInit(font){
@@ -90,7 +105,7 @@ class GameLocal {
 			this.score.material.dispose();
 			this.score = null;
 		}
-		let geometry = new TextGeometry( `${this.p1Score}  -  ${this.p2Score}`, {
+		let geometry = new TextGeometry( `${this.p1Score}   ${this.p2Score}`, {
 			font: font,
 			size: 40,
 			height: 5,
@@ -102,10 +117,10 @@ class GameLocal {
 		geometry = tessellateModifier.modify(geometry);
 		const numFaces = geometry.attributes.position.count / 3;
 
-		const colors = new Float32Array( numFaces * 3 * 3 );
-		const displacement = new Float32Array( numFaces * 3 * 3 );
+		const colors = new Float32Array(numFaces * 3 * 3);
+		const displacement = new Float32Array(numFaces * 3 * 3);
 		const color = new THREE.Color();
-		for ( let f = 0; f < numFaces; f ++ ) {
+		for (let f = 0; f < numFaces; f ++) {
 			const index = 9 * f;
 			const h = Math.random() * 0.17 + 0.25;
 			const s = 1
@@ -115,12 +130,12 @@ class GameLocal {
 			const dy = Math.random() * 2 - 1;
 			const dz = Math.random() * 2 - 1;
 			for (let i = 0; i < 3; i ++) {
-				colors[index + (3 * i)] = color.r;
-				colors[index + (3 * i) + 1] = color.g;
-				colors[index + (3 * i) + 2] = color.b;
-				displacement[index + (3 * i)] = dx;
-				displacement[index + (3 * i) + 1] = dy;
-				displacement[index + (3 * i) + 2] = dz;
+				colors[index + ( 3 * i )] = color.r;
+				colors[index + ( 3 * i ) + 1] = color.g;
+				colors[index + ( 3 * i ) + 2] = color.b;
+				displacement[index + ( 3 * i )] = dx;
+				displacement[index + ( 3 * i ) + 1] = dy;
+				displacement[index + ( 3 * i ) + 2] = dz;
 			}
 		}
 		geometry.setAttribute('customColor', new THREE.BufferAttribute(colors, 3));
@@ -133,9 +148,9 @@ class GameLocal {
 		this.score = new THREE.Mesh(geometry, shaderMaterial);
 		this.score.scale.set(0.5, 0.5, 0.5)
 		this.scene.add(this.score);
-		this.score.position.set(1, 22, 0);
+		this.score.position.set(1, 27, 0);
 	}
-	
+
 	addCube(x, y, w, h, zsize, z, color) {
 		const geometry = new THREE.BoxGeometry(1, 1, 1);
 		const material = new THREE.MeshStandardMaterial(color);
@@ -148,7 +163,7 @@ class GameLocal {
 
 	addBall(x, y, w, h, zsize, z) {
 		const geometry = new THREE.SphereGeometry(1, 10, 10, -1.5);
-		const material = new THREE.MeshBasicMaterial({map: this.itemTexture});
+		const material = new THREE.MeshBasicMaterial({map: this.ballTexture});
 		const cube = new THREE.Mesh(geometry, material);
 		cube.position.set(x, y, z);
 		cube.scale.set(w, h, zsize);
@@ -159,27 +174,24 @@ class GameLocal {
 	createLaser() {
 		const geometry = new THREE.BufferGeometry();
 		const material = new THREE.LineBasicMaterial({ color: 0x00ff00 });
-
 		const points = [];
 		points.push(new THREE.Vector3(0, 0, 0));
 		points.push(new THREE.Vector3(0, -13, 0));
-
 		geometry.setFromPoints(points);
-
 		const laser = new THREE.Line(geometry, material);
 		this.scene.add(laser);
 		return laser;
 	}
 
 	
-	checkCollisionWithY(element, collision) {
+	checkCollisionWithP2(element, collision) {
 		const ballBoundingBox = new THREE.Box3().setFromObject(this.ball);
 		const elementBoundingBox = new THREE.Box3().setFromObject(element);
-		
 		collision = ballBoundingBox.intersectsBox(elementBoundingBox);
-		if (collision) {
+		if (collision && this.ballMovement.y > 0) {
+			if (this.ball.position.y < 12 && this.ball.position.y > -12)
+				this.ball.position.y = 11.5;
 			this.ballMovement.set(0, this.ballMovement.y, 0);
-			this.isCollision = element;
 			const relativeCollision = new THREE.Vector3();
 			relativeCollision.subVectors(this.ball.position, element.position);
 			const dotProduct = this.ballMovement.dot(relativeCollision);
@@ -189,44 +201,57 @@ class GameLocal {
 			this.ballMovement.y *= -1;
 			this.ballMovement.x *= -1;
 			this.ballMovement.z *= -1;
+			this.ballMovement.normalize();
+			this.ballMovement.multiplyScalar(this.speedBall)
+		}
+	}
+
+	checkCollisionWithP1(element, collision) {
+		const ballBoundingBox = new THREE.Box3().setFromObject(this.ball);
+		const elementBoundingBox = new THREE.Box3().setFromObject(element);
+		collision = ballBoundingBox.intersectsBox(elementBoundingBox);
+		if (collision && this.ballMovement.y < 0) {
+			if (this.ball.position.y < 12 && this.ball.position.y > -12)
+				this.ball.position.y = -12;
+			this.ballMovement.set(0, this.ballMovement.y, 0);
+			const relativeCollision = new THREE.Vector3();
+			relativeCollision.subVectors(this.ball.position, element.position);
+			const dotProduct = this.ballMovement.dot(relativeCollision);
+			this.ballMovement.sub(relativeCollision.multiplyScalar(2 * dotProduct));
+			this.ballMovement.reflect(relativeCollision.normalize());
+			this.ballMovement.y *= -1;
+			this.ballMovement.x *= -1;
+			this.ballMovement.z *= -1;
+			this.ballMovement.normalize();
+			this.ballMovement.multiplyScalar(this.speedBall);
 		}
 	}
 	
-	checkCollisionTarget(element, axes) {
+	checkCollisionTarget(element, axes , type) {
 		const ballBoundingBox = new THREE.Box3().setFromObject(this.ball);
 		const elementBoundingBox = new THREE.Box3().setFromObject(element);
 		
+		let testAxes;
+		if (type == true)
+			testAxes = axes < 0;
+		else
+			testAxes = axes > 0;
 		const collision = ballBoundingBox.intersectsBox(elementBoundingBox);
-		if (collision && !this.isCollision) {
-			this.isCollision = element;
+		if (collision && testAxes) {
 			axes *= -1;
 		}
 		return axes;
 	}
-	
-	moveBallY(collision) {
-		this.ballMovement.normalize();
-		this.ballMovement.multiplyScalar(this.speedBall);
-		this.ball.position.add(this.ballMovement);
-		while (this.isCollision) {
-			const ballBoundingBox = new THREE.Box3().setFromObject(this.ball);
-			const elementBoundingBox = new THREE.Box3().setFromObject(this.isCollision);
-			collision = ballBoundingBox.intersectsBox(elementBoundingBox);
-			if (!collision)
-			this.isCollision = null;
-		this.ball.position.add(this.ballMovement);
-		}
-	}
 
 	async animate() {
 		if(this.explode == true){
-			this.uniforms.amplitude.value = 1.0 * this.cycleScore
+			this.uniforms.amplitude.value = 1.0 * this.cycleScore;
 			this.cycleScore += 7;
 		}
 		else{
-			if (this.cycleScore >= 0.8)
+			if (this.cycleScore >= 0.35)
 				this.sign = false
-			if(this.cycleScore <= 0.4)
+			if(this.cycleScore <= 0.15)
 				this.sign = true
 			if (this.sign)
 				this.cycleScore += 0.0025;
@@ -236,11 +261,40 @@ class GameLocal {
 		}
 		this.controls.update();
 		this.renderer.render(this.scene, this.camera);
-		if (this.status['status'] === 2){
+		if (this.status['status'] === 3)
 			requestAnimationFrame(() => this.animate());
+	}
+
+	async checkPoint(){
+		let changed = false
+		if (this.ball.position.y <= -13){
+			this.p2Score++;
+			this.ball.position.set(0, 0, 0);
+			this.player1.position.set(0, -13, 0)
+			this.player2.position.set(0, 13, 0)
+			this.laser.position.copy(this.ball.position);
+			changed = true
 		}
-		else
-			this.destroy();
+		else if (this.ball.position.y >= 13){
+			this.p1Score++;
+			this.ball.position.set(0, 0, 0);
+			this.player1.position.set(0, -13, 0)
+			this.player2.position.set(0, 13, 0)
+			this.laser.position.copy(this.ball.position);
+			changed = true
+		}
+		if (changed){
+			this.explode = true;
+			this.ballMovement.x = 0;
+			this.ballMovement.z = 0;
+			await sleep(1500)
+			if (this.p1Score < 5 && this.p2Score < 5)
+				await this.load3d();
+			this.explode = false;
+			this.uniforms.amplitude.value = 0.0;
+			this.cycleScore = 0.1
+
+		}
 	}
 
 	moveP1(){
@@ -293,37 +347,17 @@ class GameLocal {
 		}
 	}
 
-	async checkPoint(){
-		let changed = false
-		if (this.ball.position.y <= -13){
-			this.p2Score++;
-			this.ball.position.set(0, 0, 0);
-			this.player1.position.set(0, -13, 0)
-			this.player2.position.set(0, 13, 0)
-			this.laser.position.copy(this.ball.position);
-			changed = true
-		}
-		else if (this.ball.position.y >= 13){
-			this.p1Score++;
-			this.ball.position.set(0, 0, 0);
-			this.player1.position.set(0, -13, 0)
-			this.player2.position.set(0, 13, 0)
-			this.laser.position.copy(this.ball.position);
-			changed = true
-		}
-		if (changed){
-			this.explode = true;
-			this.ballMovement.x = 0;
-			this.ballMovement.z = 0;
-			await sleep(1500)
-			// console.log(this.p1Score)
-			// console.log(this.p2Score)
-			if (this.p1Score < 5 && this.p2Score < 5)
-				await this.load3d();
-			this.explode = false;
-			this.uniforms.amplitude.value = 0.0;
-			this.cycleScore = 0.1
-
+	moveBallY(collision) {
+		this.ballMovement.normalize();
+		this.ballMovement.multiplyScalar(this.speedBall);
+		this.ball.position.add(this.ballMovement);
+		while (this.isCollision) {
+			const ballBoundingBox = new THREE.Box3().setFromObject(this.ball);
+			const elementBoundingBox = new THREE.Box3().setFromObject(this.isCollision);
+			collision = ballBoundingBox.intersectsBox(elementBoundingBox);
+			if (!collision)
+			this.isCollision = null;
+		this.ball.position.add(this.ballMovement);
 		}
 	}
 
@@ -334,84 +368,95 @@ class GameLocal {
 		const laserVertices = this.laser.geometry.attributes.position;
 		laserVertices.setXYZ(1, 0, -13 - this.ball.position.y, 0);
 		laserVertices.needsUpdate = true;
-		this.ballMovement.x = this.checkCollisionTarget(this.walls[0], this.ballMovement.x);
-		this.ballMovement.x = this.checkCollisionTarget(this.walls[3], this.ballMovement.x);
-		this.ballMovement.z = this.checkCollisionTarget(this.walls[2], this.ballMovement.z);
-		this.ballMovement.z = this.checkCollisionTarget(this.walls[1], this.ballMovement.z);
+		this.ballMovement.x = this.checkCollisionTarget(this.walls[0], this.ballMovement.x, false);
+		this.ballMovement.x = this.checkCollisionTarget(this.walls[3], this.ballMovement.x, true);
+		this.ballMovement.z = this.checkCollisionTarget(this.walls[2], this.ballMovement.z, true);
+		this.ballMovement.z = this.checkCollisionTarget(this.walls[1], this.ballMovement.z, false);
 		this.moveBallY(collision);
-		this.checkCollisionWithY(this.player1, collision);
-		this.checkCollisionWithY(this.player2, collision);
-		await this.checkPoint();
-		
+		this.checkCollisionWithP1(this.player1, collision);
+		this.checkCollisionWithP2(this.player2, collision);
+		const directionZ = new THREE.Vector3(0, 0, 1).applyEuler(this.cameraRotation);
+		directionZ.y = 0;
+		const directionX = new THREE.Vector3(1, 0, 0).applyEuler(this.cameraRotation);
+		directionX.y = 0;
 		this.moveP1();
 		this.moveP2();
-		await sleep(16);
 		if (this.p1Score >= 5 || this.p2Score >= 5){
 			this.status.status = 0
 		}
-		if (this.status['status'] === 2)
+		await this.checkPoint();
+		await sleep(16);
+		if (this.status['status'] === 3)
 			requestAnimationFrame(() => this.update())
+		else {
+			await sleep(500);
+			console.log("after sleep");
+			this.destroy()
+		}
 	}
 	onKeyDown(event) {
-		// console.log(event.code)
-		switch (event.code) {
-			case 'KeyW':
-			case 'KeyZ':
-				this.moveUpP1 = true;
-				break;
-			case 'KeyS':
-				this.moveDownP1 = true;
-				break;
-			case 'KeyA':
-			case 'KeyQ':
-				this.moveLeftP1 = true;
-				break;
-			case 'KeyD':
-				this.moveRightP1 = true;
-				break;
-			case 'ArrowUp':
-				this.moveUpP2 = true;
-				break;
-			case 'ArrowDown':
-				this.moveDownP2 = true;
-				break;
-			case 'ArrowLeft':
-				this.moveLeftP2 = true;
-				break;
-			case 'ArrowRight':
-				this.moveRightP2 = true;
-				break;
+		if (status.action == true){
+			switch (event.code) {
+				case 'KeyW':
+				case 'KeyZ':
+					this.moveUpP1 = true;
+					break;
+				case 'KeyS':
+					this.moveDownP1 = true;
+					break;
+				case 'KeyA':
+				case 'KeyQ':
+					this.moveLeftP1 = true;
+					break;
+				case 'KeyD':
+					this.moveRightP1 = true;
+					break;
+				case 'ArrowUp':
+					this.moveUpP2 = true;
+					break;
+				case 'ArrowDown':
+					this.moveDownP2 = true;
+					break;
+				case 'ArrowLeft':
+					this.moveLeftP2 = true;
+					break;
+				case 'ArrowRight':
+					this.moveRightP2 = true;
+					break;
+			}
 		}
 	}
 
 	onKeyUp(event) {
-		switch (event.code) {
-			case 'KeyW':
-			case 'KeyZ':
-				this.moveUpP1 = false;
-				break;
-			case 'KeyS':
-				this.moveDownP1 = false;
-				break;
-			case 'KeyA':
-			case 'KeyQ':
-				this.moveLeftP1 = false;
-				break;
-			case 'KeyD':
-				this.moveRightP1 = false;
-				break;
-			case 'ArrowUp':
-				this.moveUpP2 = false;
-				break;
-			case 'ArrowDown':
-				this.moveDownP2 = false;
-				break;
-			case 'ArrowLeft':
-				this.moveLeftP2 = false;
-				break;
-			case 'ArrowRight':
-				this.moveRightP2 = false;
-				break;
+		if (status.action == true){
+			switch (event.code) {
+				case 'KeyW':
+				case 'KeyZ':
+					this.moveUpP1 = false;
+					break;
+				case 'KeyS':
+					this.moveDownP1 = false;
+					break;
+				case 'KeyA':
+				case 'KeyQ':
+					this.moveLeftP1 = false;
+					break;
+				case 'KeyD':
+					this.moveRightP1 = false;
+					break;
+				case 'ArrowUp':
+					this.moveUpP2 = false;
+					break;
+				case 'ArrowDown':
+					this.moveDownP2 = false;
+					break;
+				case 'ArrowLeft':
+					this.moveLeftP2 = false;
+					break;
+				case 'ArrowRight':
+					this.moveRightP2 = false;
+					break;
+			}
 		}
 	}
 
@@ -421,24 +466,25 @@ class GameLocal {
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 	}
 
+	
 	destroy() {
 		document.removeEventListener('keydown',this.keyD);
+		document.removeEventListener('keyup',this.keyU);
 		window.removeEventListener('resize',this.onResize);
 		this.appli.removeChild(this.renderer.domElement);
-		this.directionalLight.dispose();
-		this.directionalLight2.dispose();
 		this.scene.clear();
 		this.appli = null;
+		this.p1Score = 0;
+		this.p2Score = 0;
 		this.renderer = null;
 		this.camera = null;
 		this.controls = null;
 		this.scene = null;
 		this.directionalLight = null;
 		this.directionalLight2 = null;
+		this.directionalLight3 = null;
 		this.clock = null;
-		this.texture = null;
-		this.loadergl = null;
-		this.loader = null;
+		this.cameraRotation = null;
 		this.statusCallback(this.status)
 		this.resolve(this.status);
 	}
