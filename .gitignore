@@ -1,5 +1,4 @@
 .idea/
-ft_transcendance.iml
 .vscode/
 .venv/
 .DS_Store
@@ -8,10 +7,9 @@ pip-delete-this-directory.txt
 __pycache__/
 *.pyc
 migrations/
-database/
-libs/
 node_modules/
 package-lock.json
 package.json
+ft_transcendance.iml
 .log
-front/admin
+.env
