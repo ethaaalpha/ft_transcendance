@@ -22,12 +22,13 @@ services:
     container_name: postgresql
     image: postgres:16.2-alpine3.19
     environment:
+      - POSTGRES_DB=$DB_NAME
       - POSTGRES_USER=$DB_USER
       - POSTGRES_PASSWORD=$DB_PASSWORD
     volumes:
       - postgres:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $$DB_USER"]
+      test: ["CMD-SHELL", "pg_isready -U $$DB_USER -d $$DB_NAME"]
       interval: 2s
       timeout: 1s
       retries: 10
@@ -94,6 +95,10 @@ networks:
 
 volumes:
   geth:
+    driver: local
   postgres:
+    driver: local
   media:
+    driver: local
   libs:
+    driver: local
