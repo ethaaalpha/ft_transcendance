@@ -30,10 +30,57 @@ git clone https://github.com/ethaaalpha/ft_transcendance
 cd ft_transcendance
 ```
 
-3. Run the project :
+3. Run the project (read the .env part first) :
 ```sh
 make
 ```
+
+🗺️ Additional Resources
+GitMind Map
+For a visual representation of the project structure and dependencies, please refer to the [GitMind Map](https://chat.mistral.ai/chat/6ed69e7e-f528-4033-ac84-db3a3f74e762#:~:text=and%20pasting%20individually%3A-,GitMind%20Map,-API%20Documentation).
+
+API Documentation
+Detailed information about the API endpoints, request/response formats, and more can be found in the [API Documentation](https://chat.mistral.ai/chat/6ed69e7e-f528-4033-ac84-db3a3f74e762#:~:text=GitMind%20Map-,API%20Documentation,-Database%20Map).
+
+Database Map
+The structure of the project's database can be explored through the [Database Map](https://chat.mistral.ai/chat/6ed69e7e-f528-4033-ac84-db3a3f74e762#:~:text=API%20Documentation-,Database%20Map,-And%20here%27s%20the).
+
+📄 .env File
+The project requires a .env file to function correctly. This file should contain the following variables:
+
+
+# Default Config Docker
+DOMAIN = ''
+
+# PostgreSQL
+DB_PASSWORD = ''
+DB_USER = ''
+DB_NAME = ''
+
+# Django
+
+## API - 42
+API_CALLBACK = ""
+API_URL = ""
+API_UUID = ""
+API_SECRET = ""
+API_TOKEN = ""
+API_INFO = ""
+
+## Mailing
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+
+## Django Key
+SECRET_KEY=''
+
+# Ethereum Network
+NODE1_ACCOUNT_PASSWORD=''
+NODE2_ACCOUNT_PASSWORD=''
+NETWORK_ID=
+Please replace the empty strings ('') with your actual configuration values.
+
+If a .env file is not present in the project directory, make will run env.py and will guide you through the creation process.
 
 ---
 
