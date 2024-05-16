@@ -6,7 +6,7 @@ class Menu {
 		this.status = status
 		this.loader = gameData.fontLoader;
 		this.loaded = gameData.loaded;
-		// console.log(this.loaded);
+		this.otherRenderer = gameData.rendererGameLocal
 		this.loadergl = gameData.gltfLoader;
 		this.renderer = gameData.rendererMenu;
 		this.camera = gameData.camera;
@@ -17,8 +17,8 @@ class Menu {
 		this.directionalLight2 = gameData.directionalLight2;
 		this.raycaster = gameData.raycaster;
 		this.clock = gameData.clock;
-		this.appli = gameData.appli
-		this.parent = gameData.appliParent
+		this.appli = gameData.appli;
+		this.parent = gameData.appliParent;
 		this.button = [];
 		this.animMixer = null;
 		this.load3D();
@@ -228,6 +228,7 @@ class Menu {
 		this.camera.aspect = this.parent.clientWidth / this.parent.clientHeight;
 		this.camera.updateProjectionMatrix();
 		this.renderer.setSize(this.parent.clientWidth, this.parent.clientHeight);
+		this.otherRenderer.setSize(this.parent.clientWidth, this.parent.clientHeight);
 	}
 	getStatus(){
 		return this.status

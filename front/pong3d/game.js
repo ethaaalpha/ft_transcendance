@@ -7,8 +7,10 @@ class Game {
 	constructor(status, resolve, statusCallback, gameData, returnValue) {
 		this.gltfLoader = gameData.gltfLoader;
 		this.fontLoader = gameData.fontLoader;
+		this.parent = gameData.appliParent;
 		this.textureLoader = gameData.textureLoader;
 		this.renderer = gameData.rendererGameLocal;
+		this.otherRenderer = gameData.rendererMenu;
 		this.loaded = gameData.loaded;
 		this.camera = gameData.camera;
 		this.appli = gameData.appli;
@@ -453,9 +455,10 @@ class Game {
 	}
 
 	onWindowResize() {
-		this.camera.aspect = window.innerWidth / window.innerHeight;
+		this.camera.aspect = this.parent.clientWidth / this.parent.clientHeight;
 		this.camera.updateProjectionMatrix();
-		this.renderer.setSize(window.innerWidth, window.innerHeight);
+		this.renderer.setSize(this.parent.clientWidth, this.parent.clientHeight);
+		this.otherRenderer.setSize(this.parent.clientWidth, this.parent.clientHeight);
 	}
 
 	
