@@ -46,7 +46,7 @@ class Game:
         for i in range(len(vec1)):
             vec1[i] += (vec2[i])
         if self.speedBall < 0.45:
-            self.speedBall += 0.00009
+            self.speedBall += 0.00004
 
     async def makeReady(self, name):
         if (name == self.p1):
@@ -70,9 +70,9 @@ class Game:
     async def send_updates(self, delta_time):
         if self.ready[0] and self.ready[1]:
             await self.addVec(self.ballPos, [v * self.speedBall * delta_time for v in self.ballVec])
-            if (self.ballPos[1] > 13.5):
+            if (self.ballPos[1] > 14.5):
                 await self.goal(0)
-            if (self.ballPos[1] < -13.5):
+            if (self.ballPos[1] < -14.5):
                 await self.goal(1)
             await C.GameConsumer.sendMessageToConsumer(self.matchId, self.toJson(), 'move')
 
