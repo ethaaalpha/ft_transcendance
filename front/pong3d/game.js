@@ -61,6 +61,7 @@ class Game {
 		this.appli.appendChild(this.renderer.domElement);
 		this.sendMessageToServer({event : "ready"})
 		this.animate();
+		this.lastTime = performance.now();
 		this.update();
 	}
 	
@@ -333,10 +334,9 @@ class Game {
 			this.ballMovement.x = 0;
 			this.ballMovement.z = 0;
 			await sleep(1500);
-			// console.log(this.p1Score);
-			// console.log(this.p2Score);
 			if (this.p1Score < 5 && this.p2Score < 5);
 				this.fontLoader.load( '/static/pong3d/fonts/default2.json', (font) => this.scoreInit(font));
+			this.lastTime = performance.now();
 			this.explode = false;
 			this.uniforms.amplitude.value = 0.0;
 			this.cycleScore = 0.1;
@@ -346,6 +346,7 @@ class Game {
 	}
 
 	async update() {
+		const time = performance.now();
 		if (this.goalP == false){
 			let collision;
 			this.cameraRotation.copy(this.camera.rotation);
@@ -363,6 +364,8 @@ class Game {
 			directionZ.y = 0;
 			const directionX = new THREE.Vector3(1, 0, 0).applyEuler(this.cameraRotation);
 			directionX.y = 0;
+			this.deltaTime = this.speed * ((time - this.lastTime) * 0.05);
+  			this.lastTime = time;
 			if (this.moveUp)
 				this.movement.sub(directionZ);
 			if (this.moveDown)
@@ -372,7 +375,7 @@ class Game {
 			if (this.moveRight)
 				this.movement.add(directionX);
 			this.movement.normalize();
-			this.movement.multiplyScalar(this.speed);
+			this.movement.multiplyScalar(this.deltaTime);
 			this.player1.position.add(this.movement);
 			if (!this.moveUp && !this.moveDown && !this.moveLeft && !this.moveRight)
 				this.movement.set(0, 0, 0);
@@ -395,7 +398,6 @@ class Game {
 			requestAnimationFrame(() => this.update())
 		else {
 			await sleep(500);
-			console.log("after sleep");
 			this.destroy()
 		}
 	}

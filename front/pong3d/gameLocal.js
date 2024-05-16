@@ -47,6 +47,7 @@ class GameLocal {
 	allLoaded(){
 		this.appli.appendChild(this.renderer.domElement);
 		this.animate();
+		this.lastTime = performance.now();
 		this.update();
 	}
 	
@@ -289,7 +290,8 @@ class GameLocal {
 			this.ballMovement.z = 0;
 			await sleep(1500)
 			if (this.p1Score < 5 && this.p2Score < 5)
-				await this.load3d();
+				this.fontLoader.load( '/static/pong3d/fonts/default2.json', (font) => this.scoreInit(font));
+			this.lastTime = performance.now();
 			this.explode = false;
 			this.uniforms.amplitude.value = 0.0;
 			this.cycleScore = 0.1
@@ -315,7 +317,7 @@ class GameLocal {
 			this.movementP1.add(directionX);
 		}
 		this.movementP1.normalize();
-		this.movementP1.multiplyScalar(this.speed);
+		this.movementP1.multiplyScalar(this.deltaTime);
 		this.player1.position.add(this.movementP1);
 		if (!this.moveUpP1 && !this.moveDownP1 && !this.moveLeftP1 && !this.moveRightP1) {
 			this.movementP1.set(0, 0, 0);
@@ -340,7 +342,7 @@ class GameLocal {
 			this.movementP2.add(directionX);
 		}
 		this.movementP2.normalize();
-		this.movementP2.multiplyScalar(this.speed);
+		this.movementP2.multiplyScalar(this.deltaTime);
 		this.player2.position.add(this.movementP2);
 		if (!this.moveUpP2 && !this.moveDownP2 && !this.moveLeftP2 && !this.moveRightP2) {
 			this.movementP2.set(0, 0, 0);
@@ -362,6 +364,7 @@ class GameLocal {
 	}
 
 	async update() {
+		const time = performance.now();
 		let collision;
 		this.cameraRotation.copy(this.camera.rotation);
 		this.laser.position.copy(this.ball.position);
@@ -379,6 +382,8 @@ class GameLocal {
 		directionZ.y = 0;
 		const directionX = new THREE.Vector3(1, 0, 0).applyEuler(this.cameraRotation);
 		directionX.y = 0;
+		this.deltaTime = this.speed * ((time - this.lastTime) * 0.05);
+  		this.lastTime = time;
 		this.moveP1();
 		this.moveP2();
 		if (this.p1Score >= 5 || this.p2Score >= 5){
@@ -390,7 +395,6 @@ class GameLocal {
 			requestAnimationFrame(() => this.update())
 		else {
 			await sleep(500);
-			console.log("after sleep");
 			this.destroy()
 		}
 	}
