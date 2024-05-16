@@ -49,8 +49,8 @@ The structure of the project's database can be explored through the Database Map
 📄 .env File
 The project requires a .env file to function correctly. This file should contain the following variables:
 
-makefile
-Copy code
+```makefile
+
 # Default Config Docker
 DOMAIN = ''
 
@@ -80,6 +80,7 @@ SECRET_KEY=''
 NODE1_ACCOUNT_PASSWORD=''
 NODE2_ACCOUNT_PASSWORD=''
 NETWORK_ID=
+```
 Please replace the empty strings ('') with your actual configuration values.
 
 If a .env file is not present in the project directory, make will run env.py and will guide you through the creation process.
