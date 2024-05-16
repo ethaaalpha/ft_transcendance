@@ -31,6 +31,7 @@ cd ft_transcendance
 ```
 
 3. Run the project (read the .env part) :
+# If a .env file is not present in the project directory, make will run env.py to set it up.
 ```sh
 make
 ```
@@ -81,7 +82,7 @@ NETWORK_ID=
 ```
 Please replace the empty strings ('') with your actual configuration values.
 
-If a .env file is not present in the project directory, make will run env.py to set it up.
+# If a .env file is not present in the project directory, make will run env.py to set it up.
 
 ---
 
