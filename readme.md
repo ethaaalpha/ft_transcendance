@@ -79,7 +79,9 @@ NODE1_ACCOUNT_PASSWORD=''
 NODE2_ACCOUNT_PASSWORD=''
 NETWORK_ID=
 ```
-Please replace the empty strings ('') with your actual configuration values.
+
+Please replace the empty strings ('') with your actual configuration values.  
+The **email** service is using *smtp.gmail.com* server.
 
 ---
 

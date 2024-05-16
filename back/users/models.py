@@ -19,9 +19,6 @@ import random
 
 # instance corresponding to the instanse of imagefield automaticcly passed
 def generateUniqueImageID(instance, filename, extension=None):
-	if (filename == "pokemon.png"):
-		return (filename)
-	
 	if not extension:
 		extension = filename.split('.')[-1]
 	uniqueId = str(uuid4())
