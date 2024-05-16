@@ -82,8 +82,6 @@ NETWORK_ID=
 ```
 Please replace the empty strings ('') with your actual configuration values.
 
-### If a .env file is not present in the project directory, make will run env.py to set it up.
-
 ---
 
 [**Return**](#Top)
