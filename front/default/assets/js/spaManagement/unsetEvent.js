@@ -87,12 +87,18 @@ function unsetEventSettingsProfilPicture() {
 }
 
 function unsetEventSettingsPassword() {
+	removeEventListener("input", "settings-actual-password");
+    removeEventListener("input", "settings-new-password");
+    removeEventListener("input", "settings-confirm-password");
     removeEventListener("keypress", "settings-actual-password");
     removeEventListener("keypress", "settings-new-password");
     removeEventListener("keypress", "settings-confirm-password");
 }
 
 function unsetEventSettingsEmail() {
+	removeEventListener("input", "settings-actual-email");
+    removeEventListener("input", "settings-new-email");
+    removeEventListener("input", "settings-confirm-email");
     removeEventListener("keypress", "settings-actual-email");
     removeEventListener("keypress", "settings-new-email");
     removeEventListener("keypress", "settings-confirm-email");

@@ -149,7 +149,7 @@ function setEventInGame() {
 }
 
 function setEventSettingsProfilPicture() {
-	addEventListener('change', "settings-profile-picture", function(e) {
+	addEventListener("change", "settings-profile-picture", function(e) {
 		const element = document.getElementById('custom-file-input-span');
 		element.textContent = e.target.files[0].name;
 	})
