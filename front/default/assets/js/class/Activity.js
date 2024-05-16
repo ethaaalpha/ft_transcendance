@@ -1,21 +1,16 @@
 import globalVariables from '/static/default/assets/js/init.js';
 import Alerts from '/static/default/assets/js/class/Alerts.js';
-import { updateStatus } from '/static/default/assets/js/spaManagement/div/createProfile.js';
+import { updateStatus } from '/static/default/assets/js/action/chat.js'
 
 class Activity {
 	constructor() {
 		this.socket = new WebSocket('wss://' + window.location.host + '/api/activity/');
-
-		this.socket.onopen = (e) => {
-			// console.log("Activity websocket connected !");
-		};
 
 		this.socket.onmessage = (e) => {
 			const eventData = JSON.parse(e.data);
 			const event = eventData.event;
 			const data = eventData.data;
 		
-			console.log(eventData)
 			if (event === 'state') {
 				globalVariables.currentUser.setFriendStatus(data.user, data.state.toLowerCase());
 				if (window.location.pathname + window.location.search === '/profile?username=' + data.user && globalVariables.currentScene === 'profile')
@@ -47,15 +42,13 @@ class Activity {
 						globalVariables.currentUser.removeFriend(data.from);
 						break;
 				}
-				// console.log("Websocket: friends request received from:" + data.from);
 			}
 		};
 	}
-
+	
 	close() {
 		if (this.socket.readyState === WebSocket.OPEN)
 			this.socket.close();
-		// console.log("Activity socket closed");
 	}
 }
 

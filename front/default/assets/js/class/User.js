@@ -22,7 +22,6 @@ class User {
 		this.gameTheme = data['gameTheme'];
 	}	
 
-	// setter
 	addFriend(newfriend) {
 		this.friends[newfriend] = { status: 'online' };
 	}
@@ -61,7 +60,6 @@ class User {
 		}
 	}
 
-	// getter
 	getFriendStatus(username) {
 		if (this.friends[username]) {
 			return this.friends[username].status;
@@ -127,7 +125,6 @@ class User {
 		return false;
 	}
 
-	// remover
 	removeBlockedUser(block) {
 		removeElement(this.blocked, block)
 	}
@@ -146,10 +143,10 @@ class User {
 }
 
 function removeElement(array, value) {
-    const index = array.indexOf(value);
-    if (index !== -1) {
-        array.splice(index, 1);
-    }
+	const index = array.indexOf(value);
+	if (index !== -1) {
+		array.splice(index, 1);
+	}
 }
 
 export default User;

@@ -1,5 +1,4 @@
 import { createGameRequestItem } from '/static/default/assets/js/spaManagement/div/createConversationDisplay.js';
-import { fetchConversations } from '/static/default/assets/js/action/chat.js';
 import globalVariables from '/static/default/assets/js/init.js';
 import { createConversationItem } from '/static/default/assets/js/spaManagement/div/createConversationList.js';
 
@@ -9,7 +8,6 @@ class Conversations {
 		this.myUsername = myUsername;
 	}
 
-	// 0 Classic message, 1 Friend request
 	addMessageFromSocket(messageData, display, received = false, type = 0) {		
 		if (!messageData.hasOwnProperty('from') && !messageData.hasOwnProperty('sendAt')) {
 			messageData.from = this.myUsername;
@@ -18,13 +16,11 @@ class Conversations {
 
 		const { from, to, content, sendAt } = messageData;
 		let target = from === this.myUsername ? to : from;
-	
 		const message = { sender: from, content, sendAt };
 	
 		if (!this.conversations[target]) {
 			this.conversations[target] = [];
 		}
-	
 		this.conversations[target].unshift(message);
 
 		if (display) {
@@ -81,7 +77,7 @@ class Conversations {
 		const messageText = document.createElement('span');
 		messageText.textContent = message.content;
 		messageElement.appendChild(messageText)
-	
+
 		if (message.sender === this.myUsername) {
 			messageElement.classList.add("message-sent", "message");
 		} else {
@@ -108,12 +104,10 @@ class Conversations {
 		messagesElement.scrollTop = messagesElement.scrollHeight;
 	}
 
-	//getter
 	getConversation(withUser) {
 		if (this.conversations[withUser]) {
 			return this.conversations[withUser];
 		} else {
-			// console.log(`La conversation avec ${withUser} n'existe pas.`);
 			return [];
 		}
 	}

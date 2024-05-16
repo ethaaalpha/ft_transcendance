@@ -3,8 +3,6 @@ import { setNewOpponentUsername } from "/static/default/assets/js/spaManagement/
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
 import { status } from "/static/pong3d/utilsPong.js"
 
-
-// RECEIVE THINGS FROM WS
 function receivedNewOpponentUsername(username) {
 	setNewOpponentUsername(username);
 
@@ -17,11 +15,7 @@ function receivedNewOpponentUsername(username) {
 		item.classList.remove('d-none');
 }
 
-function receivedPlayRequest(from, to) {
-	globalVariables.currentUser.addPendingGameFrom(from);
-}
-
-function receivedPlayAnswer(from, code) {
+function receivedPlayAnswer() {
 	goToInGame();
 	status.status = 6;
 }
@@ -40,9 +34,7 @@ function goToHome() {
 	}
 }
 
-
-// SEND THINGS TO WS
-function sentPlayRequest(from, to) {	
+function sentPlayRequest(to) {	
 	globalVariables.coordination.send({'event':  'invite', 'data': {'target': to}});
 }
 
@@ -54,4 +46,4 @@ function refusePlayRequest(from) {
 	globalVariables.coordination.send({'event':  'refuse', 'data': {'target': from}});
 }
 
-export { sentPlayRequest, receivedPlayRequest, acceptPlayRequest, refusePlayRequest, goToInGame, goToHome, receivedNewOpponentUsername, receivedPlayAnswer};
+export { sentPlayRequest, acceptPlayRequest, refusePlayRequest, goToInGame, goToHome, receivedNewOpponentUsername, receivedPlayAnswer};

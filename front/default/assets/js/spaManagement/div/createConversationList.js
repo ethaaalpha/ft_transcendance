@@ -3,7 +3,7 @@ import { fetchUserData } from '/static/default/assets/js/fetch/http.js';
 import { fetchConversations } from '/static/default/assets/js/action/chat.js';
 import { fetchProfilPicture } from '/static/default/assets/js/fetch/http.js';
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
-import { updateStatus } from '/static/default/assets/js/spaManagement/div/createProfile.js';
+import { updateStatus } from '/static/default/assets/js/action/chat.js'
 
 async function createConversationList() {
 	try {
@@ -12,7 +12,6 @@ async function createConversationList() {
 
 		const conversationList = document.getElementById("conversation-list");
 
-		// Create parents div
 		const searchbarDiv = document.createElement("div");
 		searchbarDiv.id = "conversation-list-searchbar-container-id";
 
@@ -24,7 +23,6 @@ async function createConversationList() {
 		conversationList.appendChild(searchbarDiv);
 		conversationList.appendChild(conversationDiv);
 
-		// Input search
 		const messageInput = document.createElement("input");
 		messageInput.setAttribute("type", "text");
 		messageInput.setAttribute("placeholder", "Search a contact...");
@@ -32,7 +30,6 @@ async function createConversationList() {
 		messageInput.setAttribute("id", "conversation-list-searchbar-input-id");
 		searchbarDiv.appendChild(messageInput);
 
-		// Create conversation button
 		for (let user in globalVariables.userConversations.conversations)
 			await createConversationItem(conversationDiv, user);
 
@@ -87,7 +84,6 @@ async function createConversationItem(parent, user, noconv = false) {
 		rightBlock.appendChild(userInfo);
 		rightBlock.appendChild(lastMessage);
 		conversationButton.appendChild(rightBlock);
-
 		conversationButton.onclick = function() {
 			pushUrl('/chat?with=' + user);
 		}
@@ -96,4 +92,4 @@ async function createConversationItem(parent, user, noconv = false) {
 	}
 }
 
-export { createConversationList, createConversationItem};
+export { createConversationList, createConversationItem };

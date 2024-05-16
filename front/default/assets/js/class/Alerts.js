@@ -24,11 +24,8 @@ class Alerts {
 		newAlert.appendChild(span)
    		parent.appendChild(newAlert);
 
-
-    	// Remove the alert after 5 seconds
 		await new Promise(resolve => setTimeout(resolve, 4500));
 		newAlert.classList.add('alert-item-destroy')
-
 		await new Promise(resolve => setTimeout(resolve, 500));
 		newAlert.remove();
 	}

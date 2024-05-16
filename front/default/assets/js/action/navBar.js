@@ -20,8 +20,6 @@ function navBarActionHandler(action, username) {
 		case "Chat":
 			navBarChat(username);
 			break;
-		default:
-			// console.log("Invalid button: ", action);
 	}
 }
 
@@ -44,10 +42,9 @@ function navBarProfil() {
 
 async function navBarPlay(username) {
 	if (globalVariables.currentUser.isFriend(username) === 'friend') {
-		sentPlayRequest(globalVariables.currentUser.getUsername(), username);
+		sentPlayRequest(username);
 	} else {
 		Alerts.createAlert(Alerts.type.FAILED, "You can't play with " + username);
-		// console.log("You cannot play with " + username);
 	}
 }
 

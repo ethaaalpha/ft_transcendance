@@ -18,7 +18,6 @@ function setFocus(currentScene) {
 		case "settings-email":
 			focusSettingsEmail();
 			break;
-		default:
 	}
 }
 

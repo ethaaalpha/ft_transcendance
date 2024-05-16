@@ -1,5 +1,5 @@
 function isValidUsername(username) {
-	var usernameRegex = /^(?!42_)[a-zA-Z0-9._-]+$/; // check for invalid chars + start 42_
+	var usernameRegex = /^(?!42_)[a-zA-Z0-9._-]+$/;
 	if (!usernameRegex.test(username))
 		return false
 	if (username.length < 3 || username.length > 9)
@@ -26,8 +26,8 @@ function isValidEmail(email) {
 function emptyValues(elements) {
 	for (let i = 0; i < elements.length; i++) {
 		if (!elements[i].value.trim()) {
-            return true; 
-        }
+			return true; 
+		}
 	}
 	return false;
 }
@@ -44,10 +44,10 @@ function checkAllSignUp(event, enter = false) {
 		if (emptyValues(items))
 			return false;
 		for (var i = 0; i < items.length; i++) {
-            if (items[i].classList.contains('is-invalid')) {
-                return false;
-            }
-        }
+			if (items[i].classList.contains('is-invalid')) {
+				return false;
+			}
+		}
 		return true;
 
 	} else {
@@ -72,12 +72,11 @@ function checkAllSignIn(event, enter = false) {
 		if (emptyValues(items))
 			return false;
 		for (var i = 0; i < items.length; i++) {
-            if (items[i].classList.contains('is-invalid')) {
-                return false;
-            }
-        }
+			if (items[i].classList.contains('is-invalid')) {
+				return false;
+			}
+		}
 		return true;
-
 	} else {
 		if (isValidUsername(_username.value))
 			_username.classList.remove('is-invalid')
@@ -90,24 +89,21 @@ function checkAllSignIn(event, enter = false) {
 	}
 }
 
-
 function checkAllSettingsPassword(event, enter = false) {
 	var _actual = document.getElementById('settings-actual-password');
 	var _new = document.getElementById('settings-new-password');
 	var _confirm = document.getElementById('settings-confirm-password');
 
 	var items = [_actual, _new, _confirm];
-
 	if (enter) {
 		if (emptyValues(items))
 			return false;
 		for (var i = 0; i < items.length; i++) {
-            if (items[i].classList.contains('is-invalid')) {
-                return false;
-            }
-        }
+			if (items[i].classList.contains('is-invalid')) {
+				return false;
+			}
+		}
 		return true;
-
 	} else {
 		items.forEach((i) => {
 			if (isValidPassword(i.value))
@@ -134,12 +130,11 @@ function checkAllSettingsEmail(event, enter = false) {
 		if (emptyValues(items))
 			return false;
 		for (var i = 0; i < items.length; i++) {
-            if (items[i].classList.contains('is-invalid')) {
-                return false;
-            }
-        }
+			if (items[i].classList.contains('is-invalid')) {
+				return false;
+			}
+		}
 		return true;
-
 	} else {
 		items.forEach((i) => {
 			if (isValidEmail(i.value))

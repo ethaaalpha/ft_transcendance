@@ -6,7 +6,6 @@ function createSettings() {
 	try {
 		const settingsDiv = document.getElementById("settings");
 
-		// Back button
 		const backButton = document.createElement("button");
 		backButton.className = "arrow-back d-flex justify-content-start align-items-center";
 		backButton.onclick = function() {
@@ -17,7 +16,6 @@ function createSettings() {
 		backButton.appendChild(backButtonImage);
 		settingsDiv.appendChild(backButton);
 
-		// Title and description
 		const title = document.createElement("span");
 		title.className = "title-2 greened";
 		title.textContent = "Settings";
@@ -28,12 +26,10 @@ function createSettings() {
 		description.textContent = "Change everything we allow you to.";
 		settingsDiv.appendChild(description);
 
-		// Settings choice block
 		const blockDiv = document.createElement('div')
 		blockDiv.classList.add('block-scroll')
 		blockDiv.style.setProperty('--top', '3%')
 
-		// Settings buttons
 		const settingsButtons = [
 			{ label: "Modify game theme", icon: "gamepad.svg", scene: "game-theme" },
 			{ label: "Modify profile picture", icon: "user_settings.svg", scene: "profile-picture" },

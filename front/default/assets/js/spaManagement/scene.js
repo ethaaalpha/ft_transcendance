@@ -5,6 +5,7 @@ import { unsetEventListener } from '/static/default/assets/js/spaManagement/unse
 import { setFocus } from '/static/default/assets/js/spaManagement/setFocus.js';
 
 let sceneChangeLock = false;
+let sceneQueue = [];
 
 async function changeScene(newScene, username) {
 	if (sceneChangeLock) {
@@ -13,7 +14,6 @@ async function changeScene(newScene, username) {
 	}
 
 	sceneChangeLock = true;
-
 	try {
 		const sceneInfo = sceneInfos[newScene];
 		await changeSceneHandler(sceneInfo, username);
@@ -28,8 +28,6 @@ async function changeScene(newScene, username) {
 		}
 	}
 }
-
-let sceneQueue = [];
 
 function addToSceneQueue(newScene, username) {
 	sceneQueue = [{ scene: newScene, username: username }];
@@ -178,7 +176,7 @@ const parentsToHide = [
 	"settings-email",
 	"nav-bar",
 	"home",
-	'app',
+	"app"
 ];
 
 const parentsToremove = [
@@ -211,20 +209,17 @@ const eventsToUnset = [
 ];
 
 async function changeSceneHandler(sceneInfo, username) {
-	// CLEAN NEW SCENE | IF SAME SCENE
 	if (sceneInfo.id == globalVariables.currentScene) {
 		removeChildDiv(sceneInfo.removeNewSceneIds);
 		hideElements(sceneInfo.id);
 	}
 	globalVariables.currentScene = sceneInfo.id;
 	
-	// CREATE NEW SCENE
 	await createChildDiv(sceneInfo.createChildDivIds, username);
 	if (sceneInfo.setEventListenerIds) {
 		setEventListener(sceneInfo.setEventListenerIds);
 	}
 
-	// TRANSITION TO NEW SCENE
 	hideElements(...parentsToHide);
 	unhideElements(...sceneInfo.unhideElementsIds);
 	if (sceneInfo.setFocusId) {
@@ -232,13 +227,11 @@ async function changeSceneHandler(sceneInfo, username) {
 	}
 	document.title = sceneInfo.tabName;
 
-	// CLEAN OLD SCENES
 	unsetEventListener(eventsToUnset, sceneInfo.id);
 	const oldScenesToRemove = parentsToremove.filter(parentId => !sceneInfo.removeOldScenesIds.includes(parentId));
 	removeChildDiv(oldScenesToRemove);
 }
 
-// Utils
 function hideElements(...elementIds) {
 	elementIds.forEach(elementId => {
 		const element = document.getElementById(elementId);

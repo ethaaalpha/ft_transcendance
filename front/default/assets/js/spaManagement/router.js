@@ -12,15 +12,12 @@ async function routeHandler() {
 	const connected = await isConnected();
 	const pathname = window.location.pathname;
 	
-	// console.log("BIG pathname:" + pathname + " globalVariables.isInGame:" + globalVariables.isInGame);
 	if (globalVariables.isInGame && pathname !== '/in-game' || 
 		globalVariables.isInGame && globalVariables.currentScene === 'in-game') {
 		history.pushState(null, null, '/in-game');
 		Alerts.createAlert(Alerts.type.FAILED, 'You are playing !')
 		return ;
 	}
-
-	// console.log("pathname:" + pathname);
 	if (!connected) {
 		backgroundRunner();
 		switch (pathname) {
@@ -72,21 +69,6 @@ async function routeHandler() {
 	}
 };
 
-// Mouse Loading
-async function loadRoute(routeFunction) {
-	try {
-        document.body.style.cursor = 'wait';
-        await routeFunction();
-    } finally {
-        document.body.style.cursor = 'default';
-    }
-}
-
-// HANDLER
-async function routeHome() {
-	await changeScene('conversation-list');
-}
-
 async function routeSignIn() {
 	await changeScene('sign-in');
 };
@@ -108,7 +90,6 @@ async function routeSearch() {
 			Alerts.createAlert(Alerts.type.FAILED, username + ' do not exist')
 		}
 	}
-	// console.log("routeSearch: error to replace with alert");
 	pushUrl('/')
 };
 
@@ -125,7 +106,6 @@ async function routeProfil() {
 			Alerts.createAlert(Alerts.type.FAILED, username + ' do not exist')
 		}
 	}
-	// console.log("routeProfil: error to replace with alert");
 	pushUrl('/');
 };
 
@@ -144,7 +124,6 @@ async function routeSettings() {
 		return ;
 	}
 	pushUrl('/settings');
-	// console.log("routeSettings: error to replace with alert item:" + item);
 };
 
 async function routeChat() {
@@ -160,7 +139,14 @@ async function routeChat() {
 		}
 	}
 	pushUrl('/');
-	// console.log("routeChat: error to replace with alert withUser:" + withUser);
+};
+
+async function routeInGame() {
+	if (globalVariables.isInGame) {
+		changeScene('in-game');
+	} else {
+		pushUrl('/');
+	}
 };
 
 async function routeError() {
@@ -170,13 +156,18 @@ async function routeError() {
 		await changeScene('error', 'none');
 }
 
-async function routeInGame() {
-	if (globalVariables.isInGame) {
-		changeScene('in-game');
-	} else {
-		pushUrl('/');
+async function routeHome() {
+	await changeScene('conversation-list');
+}
+
+async function loadRoute(routeFunction) {
+	try {
+		document.body.style.cursor = 'wait';
+		await routeFunction();
+	} finally {
+		document.body.style.cursor = 'default';
 	}
-};
+}
 
 function pushUrl(newUrl) {
 	history.pushState({}, '', newUrl);

@@ -62,7 +62,6 @@ def form_changeProfilePicture(profile: Profile, request: HttpRequest) -> HttpRes
 	form: ProfilePictureForm = ProfilePictureForm(request.POST, request.FILES, instance=profile)
 
 	if (form.is_valid()):
-		import sys
 		if (os.path.exists(oldPicture) and os.path.basename(oldPicture) not in settings.DEFAULT_PROFILE_PICTURE_NAME):
 			os.remove(oldPicture)		
 		form.save()

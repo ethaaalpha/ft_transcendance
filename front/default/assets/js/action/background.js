@@ -26,7 +26,6 @@ function backgroundRunner(active = true) {
 			}
         }
     }
-
     toggleAnimation();
 }
 

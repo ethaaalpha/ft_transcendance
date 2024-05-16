@@ -3,7 +3,7 @@ import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
 import { sendMessage } from '/static/default/assets/js/action/chat.js';
 import { signIn, signUp, modifyEmail, modifyPassword } from '/static/default/assets/js/action/userManagement.js';
 import { sendMessageInGame } from '/static/default/assets/js/action/chat.js';
-import { checkAllSignIn, checkAllSignUp, checkAllSettingsPassword, checkAllSettingsEmail } from '/static/default/assets/js/action/utils.js';
+import { checkAllSignIn, checkAllSignUp, checkAllSettingsPassword, checkAllSettingsEmail } from '/static/default/assets/js/action/checker.js';
 
 async function setEventListener(scene) {
 	switch (scene) {
@@ -34,13 +34,9 @@ async function setEventListener(scene) {
 		case 'settings-email':
 			setEventSettingsEmail();
 			break;
-		default:
-			// console.log("Invalid scene for setEventListener: ", scene);
 	}
-	// console.log("setEventListener: ", scene);
 }
 
-// ADD
 function addEventListener(eventName, elementId, eventHandler) {
 	const element = document.getElementById(elementId);
 	if (!element) {
@@ -53,14 +49,11 @@ function addEventListener(eventName, elementId, eventHandler) {
 	}
 
 	globalVariables.eventListeners[eventName][elementId] = eventHandler;
-
 	element.addEventListener(eventName, eventHandler);
 }
 
-// HANDLER
 function setEventSignIn() {
 	addEventListener("input", "sign-in-username", checkAllSignIn);
-
 	addEventListener("input", "sign-in-password", checkAllSignIn);
 
 	addEventListener("keypress", "sign-in-username", function(event) {
@@ -80,11 +73,8 @@ function setEventSignIn() {
 
 function setEventSignUp() {
 	addEventListener("input", "sign-up-username", checkAllSignUp);
-
 	addEventListener("input", "sign-up-password", checkAllSignUp);
-
 	addEventListener("input", "sign-up-password-confirm", checkAllSignUp);
-	
 	addEventListener("input", "sign-up-email", checkAllSignUp);
 
 	addEventListener("keypress", "sign-up-username", function(event) {
@@ -167,9 +157,7 @@ function setEventSettingsProfilPicture() {
 
 function setEventSettingsPassword() {
 	addEventListener("input", "settings-actual-password", checkAllSettingsPassword);
-
 	addEventListener("input", "settings-new-password", checkAllSettingsPassword)
-	
 	addEventListener("input", "settings-confirm-password", checkAllSettingsPassword);
 
 	addEventListener("keypress", "settings-actual-password", function(event) {

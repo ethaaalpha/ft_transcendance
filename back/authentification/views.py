@@ -141,7 +141,6 @@ def reset_password(request: HttpRequest):
 	else:
 		return tResponses.BAD_REQUEST.request("Get request not supported here !")
 
-# This will register the user and authentificate him !
 def register(request: HttpRequest):
 	if (request.method == "POST"):
 		form = RegisterForm(request.POST)

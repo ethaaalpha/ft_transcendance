@@ -1,12 +1,10 @@
 :root {
-	/* defaults */
 	--default-radius: 1em;
 	--default-gray: #B4B4B4;
 	--default-baba: #DADADA;
 	--default-green: #05FF00;
 	--default-blue: #00C2FF;
 
-	/* alerts */
 	--alert-bg-game: rgba(0, 194, 255, 0.4);
 	--alert-tx-game: #00C2FF;
 

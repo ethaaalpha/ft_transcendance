@@ -3,7 +3,6 @@ import globalVariables from '/static/default/assets/js/init.js';
 import User from '/static/default/assets/js/class/User.js';
 import Alerts from '/static/default/assets/js/class/Alerts.js';
 
-// GETTER
 async function isConnected() {
 	try {
 		const logged = await fetchUserData();
@@ -30,7 +29,6 @@ async function userExist(username) {
 	}
 }
 
-// FETCH
 async function fetchUserData(username = null) {
 	let request = '/api/dashboard';
 	return new Promise((resolve, reject) => {

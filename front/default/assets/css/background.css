@@ -3,28 +3,27 @@ body {
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
-  }
+}
   
-  .background {
+.background {
 	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
 	z-index: -1;
-  }
+}
   
-  .backgroundZ0 {
+.backgroundZ0 {
 	background-image: url('../images/background/Z0.png');
 	background-repeat: repeat-x;
 	background-size: auto 100%;
 	background-position: 0 0;
-  }
+}
   
-  .backgroundZ1 {
+.backgroundZ1 {
 	background-image: url('../images/background/Z1.png');
 	background-repeat: repeat-x;
 	background-size: auto 100%;
 	background-position: 0 0;
-  }
-  
+}

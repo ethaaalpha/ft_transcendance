@@ -2,13 +2,10 @@ import { modifyGameTheme } from '/static/default/assets/js/action/userManagement
 import globalVariables from '/static/default/assets/js/init.js';
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
 
-
 function createSettingsGameTheme() {
-
 	try {
 		const settingsGameThemeDiv = document.getElementById("settings-game-theme");
 
-		// Back button
 		const backButton = document.createElement("button");
 		backButton.className = "arrow-back d-flex justify-content-start align-items-center";
 		backButton.onclick = function() {
@@ -19,7 +16,6 @@ function createSettingsGameTheme() {
 		backButton.appendChild(backButtonImage);
 		settingsGameThemeDiv.appendChild(backButton);
 
-		// Title and description
 		const title = document.createElement("span");
 		title.className = "title-2 greened";
 		title.textContent = "Modify game theme";
@@ -30,13 +26,11 @@ function createSettingsGameTheme() {
 		description.textContent = "Go through parallel universes.";
 		settingsGameThemeDiv.appendChild(description);
 
-		// Menu container
 		const menuContainer = document.createElement("div");
 		menuContainer.id = "settings-game-theme-menu";
 		menuContainer.className = "settings-game-theme-container";
 		settingsGameThemeDiv.appendChild(menuContainer);
 		
-		// Image button
 		for (let i = 0; i < 6; i++) {
 			const div = document.createElement("div");
 			
@@ -51,7 +45,6 @@ function createSettingsGameTheme() {
 			menuContainer.appendChild(div);
 		}
 
-		// Overlay button
 		const overlayButton = document.createElement("button");
 		overlayButton.className = "modify-btn btn btn-block btn-light d-flex align-items-center justify-content-start bordered-button-expanded";
 		overlayButton.style.setProperty("--main_color", "#B4B4B4");

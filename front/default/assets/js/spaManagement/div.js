@@ -76,7 +76,6 @@ async function createChildDiv(divIds, username) {
 					createError();
 					break;
 				default:
-					console.log("Invalid divId: ", divId);
 					throw new Error("Invalid divId");
 			}
 		}

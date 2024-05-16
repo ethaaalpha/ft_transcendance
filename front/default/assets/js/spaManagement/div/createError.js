@@ -1,6 +1,6 @@
 function createError() {
 	const img = document.createElement('img')
-	img.src = '/static/default/assets/images/lore/rocket.gif'
+	img.src = '/static/default/assets/images/error/rocket.gif'
 	img.style.width = '100%';
 	img.style.marginBottom = '5%'
 

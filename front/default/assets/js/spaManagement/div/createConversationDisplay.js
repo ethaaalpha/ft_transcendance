@@ -15,7 +15,6 @@ async function createConversationDisplay(user) {
 		conversationDisplay.classList.add('conversation-display');
 		conversationDisplay.innerHTML = "";
 
-		// Back button
 		const backButton = document.createElement("button");
 		backButton.classList.add("arrow-back", "d-flex", "justify-content-start", "align-items-center");
 		backButton.onclick = function() {
@@ -26,7 +25,6 @@ async function createConversationDisplay(user) {
 		imgButton.src = '/static/default/assets/images/icons/arrow.svg';
 		backButton.appendChild(imgButton)
 		
-		// Create parents div
 		const titleDiv = document.createElement("div");
 		titleDiv.id = "conversation-display-title-id";
 		titleDiv.classList.add("conversation-display-top");
@@ -49,7 +47,6 @@ async function createConversationDisplay(user) {
 			pushUrl('/profile?username=' + user);
 		}
 		
-		// Title
 		const titleElement = document.createElement("span");
 		titleElement.textContent = user;
 		titleElement.classList.add("title-3");
@@ -60,17 +57,13 @@ async function createConversationDisplay(user) {
 		
 		titleRight.appendChild(profilePicture)
 		titleRight.appendChild(titleElement)
-
 		titleDiv.appendChild(titleRight);
-
 		blockBottom.appendChild(messagesDiv);
 		blockBottom.appendChild(inputDiv)
 
-		// Adding to global div
 		conversationDisplay.appendChild(titleDiv);
 		conversationDisplay.appendChild(blockBottom);
 
-		// Messages
 		for (let i = conversation.length - 1; i >= 0; i--) {
 			const message = conversation[i];
 			const messageElement = document.createElement("div");
@@ -83,18 +76,15 @@ async function createConversationDisplay(user) {
 			} else {
 				messageElement.classList.add("message-received", "message");
 			}
-
 			messagesDiv.appendChild(messageElement);
 		}
 
-		// Handle pending friend requests
 		const isPendingFriendFrom = globalVariables.currentUser.isPendingFriendFrom(user);
 		const isPendingFriendTo = globalVariables.currentUser.isPendingFriendTo(user);
 
 		if (isPendingFriendFrom || isPendingFriendTo)
 			createFriendRequestItem(user, messagesDiv, isPendingFriendFrom ? true : false);
 		
-		// Handle pending game requests
 		const isPendingGameFrom = globalVariables.currentUser.isPendingGameFrom(user);
 		const isPendingGameTo = globalVariables.currentUser.isPendingGameTo(user);
 		
@@ -106,7 +96,6 @@ async function createConversationDisplay(user) {
 			messagesDiv.scrollTop = messagesDiv.scrollHeight;
 		}, 1);
 
-		// Input message
 		const messageInput = document.createElement("input");
 		messageInput.setAttribute("type", "text");
 		messageInput.setAttribute("placeholder", "Enter your message...");
@@ -116,7 +105,6 @@ async function createConversationDisplay(user) {
 		const imageInput = document.createElement('img');
 		imageInput.src = '/static/default/assets/images/icons/send.svg';
 		
-		// Send button
 		const sendButton = document.createElement("button");
 		sendButton.classList.add("send-button");
 		sendButton.setAttribute("id", "send-message-button-id");

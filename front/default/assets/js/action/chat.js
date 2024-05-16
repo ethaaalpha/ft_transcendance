@@ -3,6 +3,27 @@ import Conversations from '/static/default/assets/js/class/Conversation.js';
 import { fetchData } from '/static/default/assets/js/fetch/api.js';;
 import Alerts from '/static/default/assets/js/class/Alerts.js';
 
+function updateStatus(friendStatus, id) {
+	const connectionStatus = document.getElementById(id);
+	if (!connectionStatus)
+		return
+
+	switch (friendStatus) {
+		case 'online':
+			connectionStatus.style.setProperty('--item-color', 'var(--alert-tx-valid)');
+			break;
+		case 'in-game':
+			connectionStatus.style.setProperty('--item-color', 'var(--alert-tx-game)');
+			break;
+		case 'offline':
+			connectionStatus.style.setProperty('--item-color', 'var(--alert-tx-fail)');
+			break
+		default:
+			connectionStatus.style.setProperty('--item-color', 'transparent');
+			break;
+	}
+}
+
 async function fetchConversations() {
 	try {
 		const username = globalVariables.currentUser.getUsername();
@@ -47,7 +68,6 @@ function sendMessage() {
 }
 
 function sendMessageInGame() {
-	const to = document.getElementById("in-game-send-message-contact-id").textContent;
 	const contentInput = document.getElementById("in-game-send-message-input-id");
 	const content = contentInput.value.trim();
 	let inputElement = document.getElementById("in-game-send-message-input-id");
@@ -55,7 +75,6 @@ function sendMessageInGame() {
 	if (content === "") {
 		inputElement.value = "";
 		Alerts.createAlert(Alerts.type.FAILED, "Message is empty.");
-		// console.error("Error sending message: Message is empty.");
 		return;
 	}
 	inputElement.value = "";
@@ -68,4 +87,4 @@ function sendMessageInGame() {
 	globalVariables.userConversations.addMessageFromGameSocket(data);
 }
 
-export { fetchConversations, sendMessage, sendMessageInGame };
+export { fetchConversations, sendMessage, sendMessageInGame, updateStatus };

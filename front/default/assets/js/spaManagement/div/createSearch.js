@@ -6,7 +6,6 @@ async function createSearch(username) {
 		const searchInput = username;
 		const searchParentDiv = document.getElementById("search");
 
-		// Create parents div
 		const searchBarDiv = document.createElement("div");
 		searchBarDiv.id = "search-searchbar-container-id";
 		searchBarDiv.classList.add("search-searchbar-container");
@@ -14,11 +13,9 @@ async function createSearch(username) {
 		const conversationDiv = document.createElement("div");
 		conversationDiv.id = "search-contact-container-id";
 		conversationDiv.classList.add("search-contact-container");
-
 		searchParentDiv.appendChild(searchBarDiv);
 		searchParentDiv.appendChild(conversationDiv);
 
-		// Input search
 		const messageInput = document.createElement("input");
 		messageInput.setAttribute("type", "text");
 		messageInput.setAttribute("placeholder", "Search a contact...");
@@ -27,7 +24,6 @@ async function createSearch(username) {
 		messageInput.value = searchInput;
 		searchBarDiv.appendChild(messageInput);
 
-		// Block to wrap item
 		const blockDiv = document.createElement('div')
 		blockDiv.classList.add('block-scroll')
 		blockDiv.style.setProperty('--top', '5%')
@@ -46,16 +42,14 @@ async function createSearch(username) {
 			const userInfo = document.createElement("div");
 			userInfo.classList.add("search-user");
 			userInfo.textContent = searchInput;
-
 			conversationButton.appendChild(userInfo);
-
 			conversationButton.addEventListener("click", function() {
 				pushUrl('/profile?username=' + searchInput);	
 			});
 
 			blockDiv.appendChild(conversationButton)
 			conversationDiv.appendChild(blockDiv);
-		}
+		} 
 		else
 			console.error('Error fetching user data:', error);
 

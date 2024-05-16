@@ -48,8 +48,6 @@
 	font-style: normal;
 }
 
-
-/* chatDisplay */
 .conversation-block-bottom {
 	flex-direction: column;
 	height: 88%;
@@ -73,7 +71,6 @@
 	flex-direction: column;
 }
 
-/* messages types */
 .message {
 	display: inline-flex;
 	align-items: center;
@@ -132,8 +129,6 @@
 	width: 100%;
 }
 
-
-/* top displayer */
 .conversation-display-top {
 	height: 12%;
 	width: 100%;

@@ -39,7 +39,6 @@
 	cursor: pointer;
 }
 
-
 .tournament-row {
 	display: flex;
 	align-items: center;
@@ -97,7 +96,6 @@
 	color: var(--default-green);
 }
 
-/* OTHER */
 .tournament-top-text {
 	display: flex;
 	flex-direction: column;
@@ -124,8 +122,8 @@
 	height: 80%;
 	padding-top: 2%;
 	-webkit-mask: 
-    	linear-gradient(to top, black 95%, transparent 100%),
-    	linear-gradient(to bottom, black 95%, transparent 100%);
+		linear-gradient(to top, black 95%, transparent 100%),
+		linear-gradient(to bottom, black 95%, transparent 100%);
 	-webkit-mask-composite: destination-in;
 
 }

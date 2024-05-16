@@ -2,11 +2,9 @@ import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
 import { modifyEmail } from '/static/default/assets/js/action/userManagement.js';
 
 function createSettingsEmail() {
-
 	try {
 		const settingsEmailDiv = document.getElementById("settings-email");
 
-		// Back button
 		const backButton = document.createElement("button");
 		backButton.className = "arrow-back d-flex justify-content-start align-items-center";
 		backButton.onclick = function() {
@@ -17,7 +15,6 @@ function createSettingsEmail() {
 		backButton.appendChild(backButtonImage);
 		settingsEmailDiv.appendChild(backButton);
 
-		// Title and description
 		const title = document.createElement("span");
 		title.className = "title-2 greened";
 		title.textContent = "Modify email";
@@ -28,12 +25,10 @@ function createSettingsEmail() {
 		description.textContent = "So we can send you love letters.";
 		settingsEmailDiv.appendChild(description);
 
-		// Block to wrap items
 		const blockDiv = document.createElement('div')
 		blockDiv.classList.add('block-scroll')
 		blockDiv.style.setProperty('--top', '5%')
 
-		// Email inputs
 		const emailInputs = ["Actual email", "New email", "Confirm email"];
 		emailInputs.forEach(inputLabel => {
 			const formGroup = document.createElement("div");
@@ -51,16 +46,15 @@ function createSettingsEmail() {
 			blockDiv.appendChild(formGroup);
 		});
 
-		// Button
 		const button = document.createElement("button");
 		button.className = "btn btn-light bordered-button-expanded";
 		button.style.setProperty("--main_color", "#DADADA");
 		button.onclick = modifyEmail;
+
 		const buttonSpan = document.createElement("span");
 		buttonSpan.className = "btn-title";
 		buttonSpan.textContent = "Change my email";
 		button.appendChild(buttonSpan);
-
 		blockDiv.appendChild(button);
 		settingsEmailDiv.appendChild(blockDiv);
 		

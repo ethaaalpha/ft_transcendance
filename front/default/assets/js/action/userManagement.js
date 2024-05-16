@@ -4,7 +4,7 @@ import globalVariables from '/static/default/assets/js/init.js';
 import { updateGameTheme } from '/static/default/assets/js/spaManagement/div/createInGame.js';
 import { fetchUserData } from '/static/default/assets/js/fetch/http.js';
 import { pushUrl } from '/static/default/assets/js/spaManagement/router.js';
-import { checkAllSettingsEmail, checkAllSignIn, checkAllSignUp, checkAllSettingsPassword} from '/static/default/assets/js/action/utils.js';
+import { checkAllSettingsEmail, checkAllSignIn, checkAllSignUp, checkAllSettingsPassword} from '/static/default/assets/js/action/checker.js';
 
 function signIn() {
 	if (!checkAllSignIn(null, true))
@@ -24,19 +24,15 @@ function signIn() {
 		(data) => {
 			if (data.status === 403) {
 				Alerts.createAlert(Alerts.type.FAILED, data.data.message);
-				// console.log("Bad password");
 			}
 			else if (data.status === 404) {
-				// console.log("You need to create an account");
 				pushUrl('/sign-up');
 			}
 			else if (data.status === 200) {
-				// console.log("Successful connection");
 				pushUrl('/');
 				Alerts.createAlert(Alerts.type.SUCCESS, data.data.message);
 			} else {
 				Alerts.createAlert(Alerts.type.FAILED, data.data.message);
-				// console.log("Connexion error");
 			}
 		}
 	).catch(error => {
@@ -47,7 +43,7 @@ function signIn() {
 
 function signUp() {
 	if (!checkAllSignUp(null, true))
-		return 
+		return
 	var username = document.getElementById("sign-up-username").value;
 	var password = document.getElementById("sign-up-password").value;
 	var email = document.getElementById("sign-up-email").value;
@@ -70,7 +66,6 @@ function signUp() {
 		}
 		if (data && data.data && data.data.message)
 			Alerts.createAlert(type, data.data.message);
-		// console.log(data.data);
 	})
 	.catch(error => {
 		console.error('Error:', error);
@@ -86,7 +81,6 @@ async function signWith42() {
 				return;
 			}
 			Alerts.createAlert(type, data.data.message);
-			// console.log(data.data);
 		})
 		.catch(error => {
 			console.error('Error:', error);
@@ -127,7 +121,6 @@ function forgotPassword() {
 		} else {
 			Alerts.createAlert(Alerts.type.FAILED, data.data.message);
 		}
-		// console.log(data.data);
 	})
 	.catch(error => {
 		console.error('Error:', error);
@@ -156,7 +149,6 @@ function modifyPassword() {
 			type = Alerts.type.SUCCESS;
 		}
 		Alerts.createAlert(type, data.data.message);
-		// console.log(data.data);
 	})
 	.catch(error => {
 		console.error('Error:', error);
@@ -185,7 +177,6 @@ function modifyEmail() {
 			type = Alerts.type.SUCCESS
 		}
 		Alerts.createAlert(type, data.data.message);
-		// console.log(data.data);
 	})
 	.catch(error => {
 		console.error('Error:', error);
@@ -195,15 +186,15 @@ function modifyEmail() {
 function modifyProfilPicture() {
 	const validExtensions = ['png', 'jpeg', 'jpg'];
 	var profilePictureInput = document.getElementById("settings-profile-picture-input");
-    var files = profilePictureInput.files;
+	var files = profilePictureInput.files;
 	var formData = new FormData();
 
-    if (!files || !files[0]) {
+	if (!files || !files[0]) {
 		Alerts.createAlert(Alerts.type.FAILED, 'No file selected')
-        return; 
-    }
+		return; 
+	}
 	
-	const profilePicture = files[0]; // Because just one file (first one)
+	const profilePicture = files[0];
 	if (profilePicture.size > 1900000) {
 		Alerts.createAlert(Alerts.type.FAILED, 'File too large (<1.9M)')
 		return 
@@ -224,7 +215,6 @@ function modifyProfilPicture() {
 			type = Alerts.type.SUCCESS;
 		}
 		Alerts.createAlert(type, data.data.message);
-		// console.log(data.data);
 	})
 	.catch(error => {
 		console.error('Error:', error);
@@ -251,7 +241,6 @@ function modifyGameTheme(id) {
 			)
 		}
 		Alerts.createAlert(type, data.data.message);
-		// console.log(data.data);
 	})
 	.catch(error => {
 		console.error('Error:', error);
@@ -267,7 +256,7 @@ function manageFriend(username, action) {
 
 	formData.append("action", action);
 	formData.append("username", username);
-	
+
 	fetchData("/api/dashboard/friends", 'POST', formData).then(
 	(data) => {
 		let type = Alerts.type.FAILED;
@@ -317,7 +306,6 @@ function manageFriend(username, action) {
 			}
 		}
 		Alerts.createAlert(type, data.data.message);
-		// console.log(data.data);
 	})
 	.catch(error => {
 		console.error('Error:', error);

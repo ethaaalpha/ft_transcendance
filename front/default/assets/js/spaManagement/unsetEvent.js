@@ -31,14 +31,11 @@ function unsetEventListener(eventToUnset, exception) {
 				case "settings-email":
 					unsetEventSettingsEmail();
 					break;
-				default:
-					// console.log("Invalid event for unsetEventListener: ", event);
 			}
 		}
 	});
 }
 
-// REMOVE
 function removeEventListener(eventName, elementId) {
 	if (!globalVariables.eventListeners || !globalVariables.eventListeners[eventName]) return;
 
@@ -50,7 +47,6 @@ function removeEventListener(eventName, elementId) {
 	}
 }
 
-// HANDLER
 function unsetEventSignIn() {
 	removeEventListener("input", "sign-in-username");
 	removeEventListener("input", "sign-in-password");
@@ -101,6 +97,5 @@ function unsetEventSettingsEmail() {
     removeEventListener("keypress", "settings-new-email");
     removeEventListener("keypress", "settings-confirm-email");
 }
-
 
 export { unsetEventListener }
