@@ -21,11 +21,9 @@ class GameInv {
 		this.directionalLight3 = gameData.directionalLight3;
 		this.directionalLight4 = gameData.directionalLight4;
 		this.statusCallback = statusCallback;
-		this.lastMessageSentTime = 0;
 		this.messageInterval = 10;
 		this.movement = new THREE.Vector3(0, 0, 0);
 		this.speed = 0.4;
-		this.frame = 0;
 		this.cycleScore = 0.5;
 		this.sign = true
 		this.explode = false;
@@ -68,6 +66,7 @@ class GameInv {
 		this.appli.appendChild(this.renderer.domElement);
 		this.sendMessageToServer({event : "ready"});
 		this.animate();
+		this.lastTime = performance.now();
 		this.update();
 	}
 
@@ -284,6 +283,7 @@ class GameInv {
 			await sleep(1500)
 			if (this.p1Score < 5 && this.p2Score < 5)
 				this.fontLoader.load( '/static/pong3d/fonts/default2.json', (font) => this.scoreInit(font));
+			this.lastTime = performance.now();
 			this.explode = false;
 			this.uniforms.amplitude.value = 0.0;
 			this.cycleScore = 0.1
@@ -293,6 +293,7 @@ class GameInv {
 	}
 	async update() {
 		if (this.goalP == false){
+			const time = performance.now();
 			this.cameraRotation.copy(this.camera.rotation);
 			this.laser.position.copy(this.ball.position);
 			const laserVertices = this.laser.geometry.attributes.position;
@@ -302,6 +303,8 @@ class GameInv {
 			directionZ.y = 0;
 			const directionX = new THREE.Vector3(1, 0, 0).applyEuler(this.cameraRotation);
 			directionX.y = 0;
+			this.deltaTime = this.speed * ((time - this.lastTime) * 0.05);
+  			this.lastTime = time;
 			if (this.moveUp)
 				this.movement.sub(directionZ);
 			if (this.moveDown)
@@ -311,7 +314,7 @@ class GameInv {
 			if (this.moveRight)
 				this.movement.add(directionX);
 			this.movement.normalize();
-			this.movement.multiplyScalar(this.speed);
+			this.movement.multiplyScalar(this.deltaTime);
 			this.player2.position.add(this.movement);
 			if (!this.moveUp && !this.moveDown && !this.moveLeft && !this.moveRight)
 				this.movement.set(0, 0, 0);
@@ -332,7 +335,6 @@ class GameInv {
 			requestAnimationFrame(() => this.update())
 		else {
 			await sleep(500);
-			console.log("after sleep");
 			this.destroy()
 		}
 	}
