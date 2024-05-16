@@ -6,7 +6,7 @@
 </div>
 
 ## 📍 Overview
-This repository is about the final project of the 42 Commun core. It's a web pong game realised with threejs, django and native js. All of the scores are also stored in a local blockchain.
+This repository is about the final project of the 42 Commun core. It's a web pong game realised with threejs, django, bootstarp toolkit and native js. All of the scores are also stored in a local blockchain.
 ---
 
 ## 🚀 Getting Started
