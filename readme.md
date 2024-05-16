@@ -18,7 +18,7 @@ Please ensure you have the following dependencies installed on your system:
 
 `make, python3, docker`
 
-### 🔧 Installation
+## 🔧 Installation
 
 1. Clone the git repository:
 ```sh
@@ -31,7 +31,7 @@ cd ft_transcendance
 ```
 
 3. Run the project (read the .env part) :
-# If a .env file is not present in the project directory, make will run env.py to set it up.
+### If a .env file is not present in the project directory, make will run env.py to set it up.
 ```sh
 make
 ```
@@ -82,7 +82,7 @@ NETWORK_ID=
 ```
 Please replace the empty strings ('') with your actual configuration values.
 
-# If a .env file is not present in the project directory, make will run env.py to set it up.
+### If a .env file is not present in the project directory, make will run env.py to set it up.
 
 ---
 
