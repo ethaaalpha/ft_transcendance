@@ -54,10 +54,8 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 
 		username = await self.getUsername()
 
-		# need to leave the matchmaking queue
 		await sync_to_async(Matchmaking.removePlayerToQueue)(self.user)
 
-		# need to leave all the rooms not launched | and change state to is playing to None
 		await database_sync_to_async(Room.disconnectAPlayer)(self.user)
 		await self.desactivePlaying()
 
@@ -80,13 +78,11 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 		})
 	
 	async def receive_json(self, content: dict, **kwargs):
-		print(f'reçu: {content}', file=sys.stderr)
 		if 'event' in content and 'data' in content:
 			data = content.get('data')
 			user = await self.getUser()
 			target = data.get('target')
 			match content['event']:
-				# to request some matchmaking !
 				case 'matchmaking':
 					if 'action' in data:
 						match data['action']:
@@ -97,7 +93,6 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 				case 'next':
 					if 'room-id' in data:
 						await sync_to_async(Room.next_client)(user, data['room-id'])
-				# to join a private tournament !
 				case 'tournament':
 					if 'action' in data and 'room-id' in data:
 						match data['action']:
@@ -107,16 +102,12 @@ class CoordinationConsumer(AsyncJsonWebsocketConsumer):
 								data = await sync_to_async(Room.leaveRoom)(user, data['room-id'])
 								if data[1]:
 									await self.messageResponse('end', data)
-				# case to create a private tournament
 				case 'create':
 					if 'mode' in data:
 						await self.messageResponse('create', await sync_to_async(Room.createRoomConsumer)(user, mode=Mode.fromText(data['mode'])))
-				# in game chat !
 				case 'chat':
 					if 'content' in data:
-						# handle le chat message !
 						await sync_to_async(Match.speakConsumer)(user, data.get('content'))	
-				# For invitation game (1v1 friends)
 				case 'invite':
 					if target:
 						await self.messageResponse('invite', await sync_to_async(InvitationStack.invite)(await self.getUser(), await self.getUser(username=target)))

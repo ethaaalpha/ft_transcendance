@@ -8,7 +8,7 @@ class Stats(models.Model):
 	numberOfLoses = models.PositiveBigIntegerField(default=0)
 	numberOfTournament = models.PositiveBigIntegerField(default=0)
 	traveledDistance = models.PositiveBigIntegerField(default=0)
-	averageDuration = models.PositiveIntegerField(default=0) # value in seconds
+	averageDuration = models.PositiveIntegerField(default=0)
 	averagePong = models.PositiveIntegerField(default=0)
 	
 	def addResult(self, hasWin: bool):

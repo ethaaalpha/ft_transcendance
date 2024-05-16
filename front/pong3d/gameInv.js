@@ -164,7 +164,6 @@ class GameInv {
 		}
 		geometry.setAttribute( 'customColor', new THREE.BufferAttribute( colors, 3 ) );
 		geometry.setAttribute( 'displacement', new THREE.BufferAttribute( displacement, 3 ) );
-		//
 		const shaderMaterial = new THREE.ShaderMaterial( {
 		 	uniforms: this.uniforms,
 		 	vertexShader: await loadShader('/static/pong3d/shader.vert'),
@@ -177,19 +176,13 @@ class GameInv {
 		this.score.position.set(-1, -22, 0);
 	}
 	socketClose(event){
-		// console.log('WebSocket connection closed');
-			this.status.status = this.returnValue;;
+		this.status.status = this.returnValue;;
 	}
 
 	socketInit(socket){
-		socket.onopen = function(event) {
-			// console.log('WebSocket connection established');
-		};
-		
 		this.socket.onmessage = (event) => {
 			const response = JSON.parse(event.data);
 			if (response.event == 'end'){
-				// console.log(response.event);
 				this.status.status = this.returnValue;
 			}
 			else {

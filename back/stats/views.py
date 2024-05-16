@@ -16,7 +16,6 @@ def strToDate(date: str):
 		return False
 	return True
 
-# Entrypoint to interact with the historic match | stats part !
 def entryPoint(request: HttpRequest) -> HttpResponse:
 	if (request.method == 'GET'):
 		"""

@@ -134,12 +134,11 @@ class FormTournament {
 	}
 
 	defaultValues(){
-		this.state = 0; // 0 mean first 1 mean second
+		this.state = 0;
 		this.roomCode = null;
 		this.historic = [];
 		this.count = 0;
 		this.max = 0;
-
 
 		document.getElementById('tournament-js-create').removeEventListener("click", this.eventCreate);
 		document.getElementById('tournament-js-join').removeEventListener("click", this.eventJoin);
@@ -206,7 +205,6 @@ class FormTournament {
 
 	}
 
-	// Extern entry
 	changeToRoom(roomCode) {
 		if (roomCode != null)
 			this.roomCode = roomCode;

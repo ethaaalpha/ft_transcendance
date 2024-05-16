@@ -13,7 +13,6 @@ ADD tools.py /script/
 ADD genesis.json .
 RUN mkdir -p bnode node1 node2 keys_acc
 
-# 8545
 EXPOSE 8545
 
 CMD ["sh" , "/script/runner.sh"]

@@ -11,7 +11,7 @@ class Web3Interactions:
 	def __init__(self) -> None:
 		self.link = Web3(Web3.HTTPProvider(f'http://{getIp('geth')}:8545'))
 		self.link.middleware_onion.inject(geth_poa_middleware, layer=0)
-		self.link.eth.default_account = self.link.eth.accounts[0] # Select account to provide liquidity to upload
+		self.link.eth.default_account = self.link.eth.accounts[0]
 
 	def loads(self):
 		if len(solcx.get_installed_solc_versions()) == 0:

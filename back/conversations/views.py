@@ -4,8 +4,7 @@ from django.contrib.auth.models import User
 from conversations.models import Conversation
 from tools.responses import tResponses
 from tools.functions import isOtherKeysInList, areKeysFromList
-	
-# Entrypoint to interact with the conversations part !
+
 def entryPoint(request: HttpRequest) -> HttpResponse:
 	if (request.method == 'GET'):
 		"""

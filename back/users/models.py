@@ -17,7 +17,6 @@ import requests
 import shortuuid
 import random
 
-# instance corresponding to the instanse of imagefield automaticcly passed
 def generateUniqueImageID(instance, filename, extension=None):
 	if not extension:
 		extension = filename.split('.')[-1]
@@ -64,7 +63,6 @@ class Profile(models.Model):
 	isPlaying = models.BooleanField(default=False)
 	state = models.IntegerField(default=0)
 	
-	# shortcut to user #
 	def getUsername(self):
 		return (self.user.username)
 	
@@ -130,7 +128,6 @@ class Profile(models.Model):
 		self.save()
 		return (tResponses.OKAY.request("You successfully change your password !"))
 
-	# Will check if the passed user is blocked
 	def is_block(self, target):
 		if isinstance(target, Profile):
 			target = target.user
@@ -152,7 +149,6 @@ class Profile(models.Model):
 			return True
 		return False
 	
-	# return 1 in case of failure then 0
 	@staticmethod
 	def login(request: HttpRequest, username:str, password=None):
 		user = Profile.getUserFromUsername(username)
@@ -167,17 +163,16 @@ class Profile(models.Model):
 		login(request, user)
 		return 0
 	
-	# return 0 if success then 1 
 	@staticmethod
 	def login42(request: HttpRequest, username: str, email: str, image: str):
 		username = f'42_{username}'
 		existing_account = Profile.getUserFromUsername(username)
 
-		if not existing_account: #mean that we want to login
+		if not existing_account:
 			existing_account = Profile.registerUser(username, email)
 			if not existing_account :
 				return 1
-			# Now retrieving 42 Profile picture
+
 			response = requests.get(image)
 			if response.status_code == 200:
 				img_temp = NamedTemporaryFile(delete=True)
@@ -193,7 +188,6 @@ class Profile(models.Model):
 		login(request, existing_account)
 		return (0)
 	
-	# This will create all the related content of the user like Profile, Stats and others
 	@staticmethod
 	def createUserOnetoOne(user: User):
 		if not hasattr(user, 'Profile'):
@@ -203,7 +197,6 @@ class Profile(models.Model):
 			stats = Stats(user=user)
 			stats.save()
 
-	# Return an user on success or an None object
 	@staticmethod
 	def registerUser(username: str, email: str, password=None) -> User:
 		target = Profile.getUserFromUsername(username)

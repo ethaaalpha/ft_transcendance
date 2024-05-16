@@ -47,7 +47,6 @@ def login(request: HttpRequest):
 		"""
 		match mode:
 			case "42":
-				# possiblement à modifier !
 				params = {
 					"client_id" : settings.API_UUID,
 					"redirect_uri" : settings.API_CALLBACK,
@@ -130,7 +129,6 @@ def reset_password(request: HttpRequest):
 				newPass = generatePassword()
 				response = user.Profile.changePassword(newPass)
 	
-				# send the mail if it's okay !
 				if response.status_code == 200:
 					email_body_unstriped = render_to_string('reset-password.html', {'username': user.username, 'password': newPass})
 					email_subject = 'PokePong -- Password Reset'
@@ -153,7 +151,7 @@ def register(request: HttpRequest):
 			email = form.cleaned_data['email']
 			password = form.cleaned_data['password']
 
-			if (Profile.getUserFromUsername(username)): #prohibit duplicate user
+			if (Profile.getUserFromUsername(username)):
 				return tResponses.FORBIDDEN.request("This username is already used !")
 			
 			user = Profile.registerUser(username, email, password)

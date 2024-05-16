@@ -13,8 +13,6 @@ import { goToHome } from '/static/default/assets/js/action/play.js';
 import globalVariables from '/static/default/assets/js/init.js';
 import Alerts from '/static/default/assets/js/class/Alerts.js';
 
-
-var data = null;
 var view = null;
 var appli = document.querySelector('#app');
 var appliParent = document.querySelector('#game-container')
@@ -50,11 +48,9 @@ appli.addEventListener('focus', () => onFocus());
 appli.addEventListener('blur',() => notOnFocus());
 
 function onFocus(){
-    // console.log("focus")
     status.action = true;
 }
 function notOnFocus(){
-	// console.log('unfocus')
     status.action = false;
 }
 function updateStatus(newStatus) {
@@ -67,25 +63,24 @@ async function initialize() {
             if (gameData.controlsGameLocal)
                 gameData.controlsGameLocal.rotateSpeed = 1;
             if (status.status != 5)
-				if (globalVariables.coordination) // if delay due to slow loading
+				if (globalVariables.coordination)
 					globalVariables.coordination.data = null;
-            // console.log(status)
 			if (status.status === -1)
 				await loadTexture();
 			else if (status.status === 0) {
-				goToHome(); // Here for matchmaking case
+				goToHome();
 				await createMenu();
 			}
-			else if (status.status === 1){ // Matchmaking
+			else if (status.status === 1){
 				goToInGame();
                 Alerts.createAlert(Alerts.type.GAME, 'Press escape to go back to the menu');
-				if (globalVariables.coordination) // if delay due to slow loading
+				if (globalVariables.coordination)
                 	globalVariables.coordination.send({'event': 'matchmaking', 'data': {'action' : 'join'}})
                 showLoadingAnimation();
                 await globalVariables.coordination.waitForData(50);
     		    await createGame(0);
             }
-            else if (status.status === 2){ // Tournament
+            else if (status.status === 2){ 
 				goToInGame();
 				ft.changeToWait()
                 hideLoadingAnimation();
@@ -97,13 +92,12 @@ async function initialize() {
 					showLoadingAnimation();
 
             }
-            else if (status.status === 3){ // Training mode
+            else if (status.status === 3){
 				goToInGame();
                 await createGameLocal(0);
 			}
             else if (status.status === 4){
                     showLoadingAnimation();
-                    // console.log(status)
                     await globalVariables.coordination.waitForNextMatch(ft.roomCode, 5);
                 }
             else if (status.status === 5){
@@ -122,15 +116,12 @@ async function initialize() {
 
 function initLoading(){
     loadingManager.onStart = function(url, item, total){
-		// console.log(window.location.pathname);
         if (gameData.loaded.instance == 0 && window.location.pathname != "/profile")
             showLoadingAnimation();
         gameData.loaded.instance += 1
 
     }
-    loadingManager.onProgress = function(url, item, total){
-        // console.log(url);
-    }
+
     loadingManager.onLoad = function(){
         gameData.loaded.instance -= 1
         if (gameData.loaded.instance == 0)

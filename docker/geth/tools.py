@@ -36,11 +36,10 @@ def blocktest():
 	exit(1)
 
 def transact(address_to: str):
-	# Must be use from GETH Container (inside console)
 	url = "http://localhost:8545"
 
 	w3 = Web3(Web3.HTTPProvider(url))
-	w3.middleware_onion.inject(geth_poa_middleware, layer=0) # This because POA -> geth 14 Pos
+	w3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
 	account = w3.eth.accounts[4]
 	amount_in_wei = w3.to_wei(0.4, 'ether')

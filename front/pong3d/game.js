@@ -170,19 +170,13 @@ class Game {
 		this.score.position.set(1, 27, 0);
 	}
 	socketClose(){
-		// console.log('WebSocket connection closed');
 		this.status.status = this.returnValue;
 	}
 
-	socketInit(socket){
-		socket.onopen = function() {
-			// console.log('WebSocket connection established');
-		};
-		
+	socketInit(socket){	
 		this.socket.onmessage = async (event) => {
 			const response = JSON.parse(event.data);
 			if (response.event == 'end'){
-				// console.log("end");
 				this.status.status = this.returnValue;
 			}
 			else {

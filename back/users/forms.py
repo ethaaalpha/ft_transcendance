@@ -47,11 +47,9 @@ def form_changePassword(profile: Profile, request: HttpRequest) -> HttpResponse:
 		actualPassword = form.cleaned_data['actualPassword']
 		password = form.cleaned_data['newPassword']
 
-		# Security check to request the password changes !
 		if not (profile.user.check_password(actualPassword)):
 			return (tResponses.FORBIDDEN.request("Password do not match !"))
 		
-		# OK - Now able to change the password !
 		value: HttpResponse = profile.changePassword(password)
 		if value.status_code == 200:
 			update_session_auth_hash(request, profile.user)

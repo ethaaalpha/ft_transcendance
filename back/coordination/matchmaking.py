@@ -20,8 +20,7 @@ class Matchmaking:
 			return check
 		Matchmaking._stack.append(user)
 
-		if len(Matchmaking._stack) >= 2: # Run when match 2 players
-			# print('il y a deux personnes dans la room !', file=sys.stderr)
+		if len(Matchmaking._stack) >= 2:
 			playerA: User = Matchmaking._stack[-1]
 			playerB: User = Matchmaking._stack[-2]
 
@@ -30,7 +29,6 @@ class Matchmaking:
 
 			room: Room = Room.createRoom(playerA, Mode.CLASSIC)
 			
-			# this is supposed to start to start the room
 			room.addPlayer(playerB)
 		return ("Successfully added to the matchmaking queue !", True)
 	

@@ -68,7 +68,7 @@ def main():
 		return (1)
 	
 	path = sys.argv[1]
-	# Check if .env already exist
+
 	if not (os.path.exists(path)):
 		print('Env file do not exist !')
 		create(path)

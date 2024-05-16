@@ -52,7 +52,6 @@ def add(user: User, target: User, targetProfile: Profile):
 	target.save()
 	ActivityNotifier.sendFriendRequest(user.username, target.username, 'received')
 
-	# Re-active Conversation if desactived
 	conv = Conversation.getConversation([user, target])
 	if conv:
 		conv.setState(True)
@@ -65,7 +64,6 @@ def remove(user: User, target: User, targetProfile: Profile):
 	targetProfile.friends.remove(user)
 	target.save()
 
-	# Desactive Conversation if actived
 	conv = Conversation.getConversation([user, target])
 	if conv:
 		conv.setState(False)
@@ -112,7 +110,6 @@ def refuse(user: User, target: User, targetProfile: Profile):
 	user.save()
 	ActivityNotifier.sendFriendRequest(user.username, target.username, 'refused')
 
-	# Desactive Conversation if actived
 	conv = Conversation.getConversation([user, target])
 	if conv:
 		conv.setState(False)

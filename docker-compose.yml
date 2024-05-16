@@ -47,7 +47,7 @@ services:
 
   daphne:
     container_name: daphne
-    platform: linux/x86_64 #because of solc compiler
+    platform: linux/x86_64
     build:
       context: docker/daphne
       dockerfile: daphne.dockerfile

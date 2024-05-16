@@ -30,9 +30,8 @@ class Menu {
 		setTimeout(
 			function () {
 				if (this.loaded.instance == 0) {
-						this.allLoaded();
+					this.allLoaded();
 				} else {
-					// console.log(this.loaded);
 					this.waitForSocketNLoad();
 				}
 	
@@ -44,7 +43,6 @@ class Menu {
 		this.animate();
 	}
 	init() {
-		
 		this.directionalLight.position.set(100, 100, 500).normalize();
 		this.scene.add(this.directionalLight);
 		this.directionalLight2.position.set(-100, 100, -500).normalize();
@@ -119,7 +117,7 @@ class Menu {
 	}
 
 	load3D () {
-		//this.loadergl.load( '/cube/scene.gltf', (gltf) => {this.createobj(gltf)} );
+		this.loadergl.load( '/cube/scene.gltf', (gltf) => {this.createobj(gltf)} );
 		this.loader.load( '/static/pong3d/fonts/default2.json', (font) => { this.createTxt(font);});
 	}
 	async createobj (gltf) {
@@ -161,7 +159,6 @@ class Menu {
 	}
 
 	onKeyDown(event) {
-		// console.log(event.keyCode)
 		if (status.action == true){
 			switch (event.keyCode) {
 				case 83:

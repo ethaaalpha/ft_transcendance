@@ -27,7 +27,6 @@ class Invitation:
 		delta: timedelta = now - self.timestamp
 		return True if delta.seconds > 30 else False
  
-#invitation stack that will contain all the current invitation
 class InvitationStack:
 	stack = []
 
@@ -44,11 +43,11 @@ class InvitationStack:
 		
 		if (initier.username == target.username):
 			return ("Can't play with your self", False)
-		# check doublon
+		
 		for invitation in InvitationStack.stack:
 			if (invitation.initier == initier):
 				return ("You already invited somebody please wait at least 30 seconds between each invite !", False)
-		# check if they are friend
+		
 		if not (initier.Profile.is_friend(target)):
 			return ("You must be friend with this person to do that !", False)
 		
@@ -83,12 +82,11 @@ class InvitationStack:
 			initierCheck = isAvailableToPlay(initier)
 			targetCheck = isAvailableToPlay(target)
 
-			if not initierCheck[1] or not targetCheck[1]: # Here to avoid multi-playing
+			if not initierCheck[1] or not targetCheck[1]:
 				inv.notify('target', 'refuse', "Something bad happend you can't play together !", False)
 				return (["Something bad happend you can't play together"], False)
 			
 
-			# create match here !!
 			room: Room = Room.createRoom(initier, Mode.INVITATION)
 			room.addPlayer(target)
 			inv.notify('initier', 'accept', ["Invitation accepted !", target.username, room.id] , True)

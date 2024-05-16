@@ -23,36 +23,31 @@ class ContractBuilder():
 	@staticmethod
 	def create(score, match_instance):
 		"""
-		Return Contract or None in case of blockchain fail !
+		Return Contract solc-x compiler or None in case of blockchain fail !
+		fail: reverted transaction or timeout block
 		"""
 		w3Int: Web3Interactions = Web3Interactions()
 		w3Int.loads()
 		w3: Web3 = w3Int.getW3()
 
-		# Compile using py-solc-x integration !
 		comp = ContractBuilder.compile()
-		abi = comp[0] # Interface to interact with the contract
-		bytecode = comp[1] # Bytecode of the contract
+		abi = comp[0]
+		bytecode = comp[1]
 
-		# Require transaction for the contract and wait for the receipt (validation)
 		contract = w3.eth.contract(abi=abi, bytecode=bytecode)
-		# print("je commence un smart contrat !", file=sys.stderr)
-		tx_hash = contract.constructor(score[0] & 0xFF, score[1] & 0xFF).transact()  # Parameters required by the Contract (constructor method)
+		tx_hash = contract.constructor(score[0] & 0xFF, score[1] & 0xFF).transact() 
 
 		try:
 			tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash, timeout=240)
 		except:
-			# Mean that the transaction couldn't be registered in the blockchain (timeout)
 			return match_instance.setScore(None)
 
-		if (tx_receipt.status == 0): # Check if transaction was reverted !
+		if (tx_receipt.status == 0): 
 			return match_instance.setScore(None)
 		
-		# Create contract object in database and link it to the match !
 		contract_m = Contract(abi=abi, address=tx_receipt['contractAddress'])
 		contract_m.save()
 		match_instance.setScore(contract_m)
-		# print("j'ai fini le smart contart", file=sys.stderr)
 	
 	@staticmethod
 	def threaded(score, match_instance):
