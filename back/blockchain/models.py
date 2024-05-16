@@ -35,9 +35,9 @@ class ContractBuilder():
 		bytecode = comp[1]
 
 		contract = w3.eth.contract(abi=abi, bytecode=bytecode)
-		tx_hash = contract.constructor(score[0] & 0xFF, score[1] & 0xFF).transact() 
 
 		try:
+			tx_hash = contract.constructor(score[0] & 0xFF, score[1] & 0xFF).transact() 
 			tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash, timeout=240)
 		except:
 			return match_instance.setScore(None)
