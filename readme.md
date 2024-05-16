@@ -35,7 +35,7 @@ cd ft_transcendance
 make
 ```
 
-🗺️ Additional Resources
+### 🗺️ Additional Resources
 
 GitMind Map
 For a visual representation of the project structure and dependencies, please refer to the [GitMind Map](https://chat.mistral.ai/chat/6ed69e7e-f528-4033-ac84-db3a3f74e762#:~:text=and%20pasting%20individually%3A- GitMind Map).
@@ -46,7 +46,7 @@ Detailed information about the API endpoints, request/response formats, and more
 Database Map
 The structure of the project's database can be explored through the Database Map.
 
-📄 .env File
+### 📄 .env File
 The project requires a .env file to function correctly. This file should contain the following variables:
 
 ```makefile
