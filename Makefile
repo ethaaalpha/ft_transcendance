@@ -5,7 +5,7 @@ BACK_DIR			= 'back'
 CONTAINERS		 	= daphne nginx postgresql redis
 
 # Runner
-RUNNER='docker compose up --build'
+RUNNER=docker compose up --build
 
 all: 
 	$(MAKE) env
