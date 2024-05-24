@@ -61,8 +61,8 @@ services:
       - ./front:/usr/share/static
       - libs:/usr/share/libs
     ports: 
-      - 8080:80
-      - 8081:443
+      - 80:80
+      - 81:443
     depends_on:
       - daphne
     restart: on-failure

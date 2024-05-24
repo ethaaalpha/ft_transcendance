@@ -2,14 +2,20 @@
 BACK_DIR			= 'back'
 
 # Containers
-CONTAINERS		 	= daphne nginx postgresql redis geth
+CONTAINERS		 	= daphne nginx postgresql redis
+
+# Runner
+RUNNER='docker compose up --build'
 
 all: 
 	$(MAKE) env
 
 up:
-	docker compose up --build
+	${RUNNER}
 
+detach:
+	${RUNNER} -d
+	
 down:
 	docker compose down
 
