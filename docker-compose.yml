@@ -1,23 +1,6 @@
 version: '3.8'
 
 services:
-  geth:
-    container_name: geth
-    build:
-      context: docker/geth
-      dockerfile: geth.dockerfile
-    env_file: 
-      - .env
-    volumes:
-      - geth:/ethereum/
-    networks:
-      - pongNetwork
-    healthcheck:
-      test: ["CMD-SHELL", "python /script/tools.py test"]
-      interval: 3s
-      timeout: 10s
-      retries: 20
-
   postgresql:
     container_name: postgresql
     image: postgres:16.2-alpine3.19
@@ -47,7 +30,7 @@ services:
 
   daphne:
     container_name: daphne
-    platform: linux/x86_64 #because of solc compiler
+    # platform: linux/x86_64 #because of solc compiler
     build:
       context: docker/daphne
       dockerfile: daphne.dockerfile
@@ -60,8 +43,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
-      geth:
-        condition: service_healthy
     env_file:
       - .env
     restart: on-failure
@@ -94,8 +75,6 @@ networks:
     driver: bridge
 
 volumes:
-  geth:
-    driver: local
   postgres:
     driver: local
   media:

@@ -127,7 +127,7 @@ class Match(models.Model):
 		self.setWinner(winner)
 		loser = self.getLoser()
 
-		ContractBuilder.threaded(score, self) # Blockchain Runner !
+		# ContractBuilder.threaded(score, self) # Blockchain Runner !
 		self.setDuration(timezone.now() - self.start_time)
 		self.setState(2)
 		self.setData({'distance': kwargs['distance'], 'duration': self.duration.total_seconds(), 'pong': kwargs['tap']})  #change to real values
