@@ -135,7 +135,10 @@ def reset_password(request: HttpRequest):
 					email_body_unstriped = render_to_string('reset-password.html', {'username': user.username, 'password': newPass})
 					email_subject = 'PokePong -- Password Reset'
 					email_body = strip_tags(email_body_unstriped)
-					send_mail(email_subject, email_body, from_email=None, recipient_list=[user.email], html_message=email_body_unstriped)
+					try:
+						send_mail(email_subject, email_body, from_email=None, recipient_list=[user.email], html_message=email_body_unstriped)
+					except:
+						return (tResponses.BAD_REQUEST.request("Mail server is actually down!"))
 				return response
 			else:
 				return tResponses.BAD_REQUEST.request("Form failed !")

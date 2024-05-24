@@ -32,7 +32,7 @@ import stats.views as sV
 
 
 urlpatterns = [
-	path('api/admin/', admin.site.urls),
+	# path('api/admin/', admin.site.urls),
 	path('api/dashboard', ensure_csrf_cookie(logged_required(uV.entryPoint))),
 	path('api/dashboard/friends', ensure_csrf_cookie(logged_required(fV.entryPoint))),
 	path('api/dashboard/conversations', ensure_csrf_cookie(logged_required(cV.entryPoint))),
