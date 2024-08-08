@@ -15,7 +15,7 @@ constantly==23.10.4
 cryptography==42.0.6
 cytoolz==0.12.3
 daphne==4.1.2
-Django==5.0.4
+Django==5.0.8
 eth-account==0.11.2
 eth-hash==0.7.0
 eth-keyfile==0.8.1
